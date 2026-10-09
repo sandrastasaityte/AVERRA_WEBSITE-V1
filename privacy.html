@@ -1,0 +1,1570 @@
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Privacy Policy | AVERRA Staffing Solutions Ltd</title>
+
+    <meta
+        name="description"
+        content="Read the privacy policy of AVERRA Staffing Solutions Ltd. Learn how we handle personal information relating to UK clients, candidates, international professionals and website visitors."
+    >
+    <meta name="author" content="AVERRA Staffing Solutions Ltd">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1f33">
+
+    <link rel="canonical" href="https://averrastaffing.co.uk/privacy.html">
+    <link rel="stylesheet" href="style.css">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Privacy Policy | AVERRA Staffing Solutions Ltd">
+    <meta
+        property="og:description"
+        content="Understand how AVERRA approaches personal information, privacy and data protection."
+    >
+    <meta property="og:url" content="https://averrastaffing.co.uk/privacy.html">
+    <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Privacy Policy | AVERRA Staffing Solutions Ltd">
+    <meta
+        name="twitter:description"
+        content="Privacy and data protection information for AVERRA website visitors, clients and professionals."
+    >
+
+    <script src="imageData.js" defer></script>
+    <script src="script.js" defer></script>
+
+    <style>
+        /* =====================================================
+           AVERRA PRIVACY PAGE
+           Scoped styling: privacy.html only
+        ===================================================== */
+
+        .privacy-page {
+            --privacy-navy: #0b1f33;
+            --privacy-dark: #071522;
+            --privacy-blue: #1d5f91;
+            --privacy-gold: #c89b3c;
+            --privacy-ink: #253447;
+            --privacy-muted: #657386;
+            --privacy-border: #e2e8ef;
+            --privacy-paper: #ffffff;
+            --privacy-background: #f5f7fa;
+            color: var(--privacy-ink);
+        }
+
+        .privacy-page *,
+        .privacy-page *::before,
+        .privacy-page *::after {
+            box-sizing: border-box;
+        }
+
+        .privacy-page a {
+            overflow-wrap: anywhere;
+        }
+
+        .privacy-page .privacy-hero {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(64px, 9vw, 112px) 0;
+            color: #ffffff;
+            background:
+                radial-gradient(
+                    circle at 85% 18%,
+                    rgba(200, 155, 60, 0.18),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    125deg,
+                    var(--privacy-dark),
+                    var(--privacy-navy) 65%,
+                    #123653
+                );
+        }
+
+        .privacy-page .privacy-hero::after {
+            position: absolute;
+            right: -100px;
+            bottom: -220px;
+            width: 430px;
+            height: 430px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+
+        .privacy-page .privacy-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+        }
+
+        .privacy-page .privacy-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 20px;
+            color: #e5c579;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .privacy-page .privacy-eyebrow::before {
+            width: 30px;
+            height: 2px;
+            background: var(--privacy-gold);
+            content: "";
+        }
+
+        .privacy-page .privacy-hero h1 {
+            max-width: 760px;
+            margin: 0 0 22px;
+            color: #ffffff;
+            font-size: clamp(2.5rem, 6vw, 4.6rem);
+            font-weight: 750;
+            letter-spacing: -0.045em;
+            line-height: 1.08;
+        }
+
+        .privacy-page .privacy-hero p {
+            max-width: 740px;
+            margin: 0;
+            color: #d6e0eb;
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            line-height: 1.85;
+        }
+
+        .privacy-page .privacy-hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            margin-top: 28px;
+            color: #cbd7e3;
+            font-size: 0.9rem;
+        }
+
+        .privacy-page .privacy-hero-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .privacy-page .privacy-hero-meta span::before {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--privacy-gold);
+            content: "";
+        }
+
+        .privacy-page .privacy-layout {
+            display: grid;
+            grid-template-columns: minmax(230px, 285px) minmax(0, 1fr);
+            gap: clamp(28px, 5vw, 64px);
+            align-items: start;
+            padding-top: 64px;
+            padding-bottom: 76px;
+        }
+
+        .privacy-page .privacy-sidebar {
+            position: sticky;
+            top: 24px;
+            padding: 24px;
+            border: 1px solid var(--privacy-border);
+            border-radius: 16px;
+            background: var(--privacy-paper);
+            box-shadow: 0 10px 32px rgba(11, 31, 51, 0.04);
+        }
+
+        .privacy-page .privacy-sidebar h2 {
+            margin: 0 0 18px;
+            color: var(--privacy-navy);
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+
+        .privacy-page .privacy-toc {
+            display: grid;
+            gap: 3px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .privacy-page .privacy-toc a {
+            display: block;
+            padding: 8px 10px;
+            border-radius: 7px;
+            color: #526174;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            text-decoration: none;
+            transition:
+                color 160ms ease,
+                background 160ms ease;
+        }
+
+        .privacy-page .privacy-toc a:hover,
+        .privacy-page .privacy-toc a:focus-visible {
+            color: var(--privacy-navy);
+            background: #f0f4f8;
+        }
+
+        .privacy-page .privacy-document {
+            min-width: 0;
+            padding: clamp(24px, 4vw, 48px);
+            border: 1px solid var(--privacy-border);
+            border-radius: 18px;
+            background: var(--privacy-paper);
+            box-shadow: 0 12px 38px rgba(11, 31, 51, 0.035);
+        }
+
+        .privacy-page .privacy-notice {
+            margin-bottom: 36px;
+            padding: 20px 22px;
+            border: 1px solid #ead8ae;
+            border-left: 4px solid var(--privacy-gold);
+            border-radius: 10px;
+            background: #fffaf0;
+        }
+
+        .privacy-page .privacy-notice strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--privacy-navy);
+        }
+
+        .privacy-page .privacy-notice p {
+            margin: 0;
+            color: #5e6470;
+            font-size: 0.93rem;
+            line-height: 1.75;
+        }
+
+        .privacy-page .privacy-section {
+            padding: 30px 0;
+            border-bottom: 1px solid var(--privacy-border);
+            scroll-margin-top: 30px;
+        }
+
+        .privacy-page .privacy-section:first-of-type {
+            padding-top: 0;
+        }
+
+        .privacy-page .privacy-section:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .privacy-page .privacy-section h2 {
+            margin: 0 0 17px;
+            color: var(--privacy-navy);
+            font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+            font-weight: 750;
+            letter-spacing: -0.025em;
+            line-height: 1.4;
+        }
+
+        .privacy-page .privacy-section h3 {
+            margin: 24px 0 10px;
+            color: var(--privacy-navy);
+            font-size: 1.06rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .privacy-page .privacy-section h2 + h3 {
+            margin-top: 0;
+        }
+
+        .privacy-page .privacy-section p {
+            margin: 0 0 15px;
+            color: #4c5a6b;
+            font-size: 0.97rem;
+            line-height: 1.85;
+        }
+
+        .privacy-page .privacy-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .privacy-page .privacy-section ul {
+            display: grid;
+            gap: 9px;
+            margin: 15px 0 20px;
+            padding-left: 22px;
+        }
+
+        .privacy-page .privacy-section li {
+            padding-left: 3px;
+            color: #4c5a6b;
+            font-size: 0.96rem;
+            line-height: 1.75;
+        }
+
+        .privacy-page .privacy-section li::marker {
+            color: var(--privacy-gold);
+        }
+
+        .privacy-page .privacy-section a {
+            color: var(--privacy-blue);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .privacy-page .privacy-section a:hover {
+            color: var(--privacy-navy);
+        }
+
+        .privacy-page .privacy-contact-card {
+            margin-top: 20px;
+            padding: 24px;
+            border: 1px solid var(--privacy-border);
+            border-radius: 12px;
+            background: var(--privacy-background);
+        }
+
+        .privacy-page .privacy-contact-card h3 {
+            margin-top: 0;
+        }
+
+        .privacy-page .privacy-contact-card p + p {
+            margin-top: 9px;
+        }
+
+        .privacy-page .privacy-contact-card strong {
+            color: var(--privacy-navy);
+        }
+
+        .privacy-page .privacy-contact-card a {
+            overflow-wrap: anywhere;
+        }
+
+        .privacy-page .privacy-bottom-cta {
+            padding: 68px 0;
+            color: #ffffff;
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(200, 155, 60, 0.17),
+                    transparent 30%
+                ),
+                var(--privacy-navy);
+        }
+
+        .privacy-page .privacy-bottom-cta-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+
+        .privacy-page .privacy-bottom-cta h2 {
+            max-width: 650px;
+            margin: 0 0 12px;
+            color: #ffffff;
+            font-size: clamp(1.7rem, 3vw, 2.5rem);
+            letter-spacing: -0.035em;
+            line-height: 1.2;
+        }
+
+        .privacy-page .privacy-bottom-cta p {
+            max-width: 650px;
+            margin: 0;
+            color: #d1dce7;
+            line-height: 1.8;
+        }
+
+        .privacy-page .privacy-cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+
+        .privacy-page .privacy-cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 13px 21px;
+            border: 1px solid var(--privacy-gold);
+            border-radius: 7px;
+            background: var(--privacy-gold);
+            color: var(--privacy-dark);
+            font-size: 0.94rem;
+            font-weight: 750;
+            text-align: center;
+            text-decoration: none;
+            transition:
+                background 160ms ease,
+                transform 160ms ease;
+        }
+
+        .privacy-page .privacy-cta-button:hover {
+            transform: translateY(-2px);
+            background: #e0b657;
+        }
+
+        .privacy-page .privacy-cta-link {
+            color: #ffffff;
+            font-weight: 650;
+            text-underline-offset: 4px;
+        }
+
+        .privacy-page .privacy-cta-link:hover {
+            color: #e5c579;
+        }
+
+        .privacy-page .privacy-back-to-top {
+            display: inline-block;
+            margin-top: 22px;
+            font-size: 0.9rem;
+            font-weight: 650;
+        }
+
+        .privacy-page .privacy-back-to-top a {
+            color: var(--privacy-blue);
+            text-decoration: none;
+        }
+
+        .privacy-page .privacy-back-to-top a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-page .privacy-section :focus-visible,
+        .privacy-page .privacy-sidebar a:focus-visible,
+        .privacy-page .privacy-bottom-cta a:focus-visible {
+            outline: 3px solid var(--privacy-gold);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .privacy-page .privacy-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .privacy-page .privacy-sidebar {
+                position: static;
+            }
+
+            .privacy-page .privacy-toc {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                column-gap: 12px;
+            }
+
+            .privacy-page .privacy-bottom-cta-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .privacy-page .privacy-hero {
+                padding: 58px 0 64px;
+            }
+
+            .privacy-page .privacy-layout {
+                padding-top: 30px;
+                padding-bottom: 42px;
+            }
+
+            .privacy-page .privacy-sidebar {
+                padding: 18px;
+            }
+
+            .privacy-page .privacy-toc {
+                grid-template-columns: 1fr;
+            }
+
+            .privacy-page .privacy-document {
+                padding: 22px 18px;
+                border-radius: 12px;
+            }
+
+            .privacy-page .privacy-section {
+                padding: 25px 0;
+            }
+
+            .privacy-page .privacy-notice {
+                padding: 17px;
+            }
+
+            .privacy-page .privacy-contact-card {
+                padding: 18px;
+            }
+
+            .privacy-page .privacy-cta-actions {
+                align-items: stretch;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .privacy-page .privacy-cta-button {
+                width: 100%;
+            }
+
+            .privacy-page .privacy-bottom-cta {
+                padding: 48px 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .privacy-page *,
+            .privacy-page *::before,
+            .privacy-page *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body id="top">
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="privacy-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="site-header">
+        <div class="container header-container">
+
+            <a
+                href="index.html"
+                class="site-logo"
+                aria-label="AVERRA Staffing Solutions home"
+            >
+                <img
+                    src="images/Logo.jpeg"
+                    alt="AVERRA Staffing Solutions Ltd"
+                    class="site-logo-image"
+                    width="220"
+                    height="80"
+                >
+            </a>
+
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="industries.html" class="nav-link">Industries</a>
+                <a href="how-it-works.html" class="nav-link">How It Works</a>
+                <a href="careers.html" class="nav-link">Careers</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </nav>
+
+            <a
+                href="contact.html"
+                class="button button-primary header-button"
+            >
+                Talk to Us
+            </a>
+
+            <button
+                class="mobile-menu-button"
+                id="mobileMenuButton"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="main-navigation"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </div>
+    </header>
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main id="main-content">
+
+        <!-- PAGE HERO -->
+
+        <section class="privacy-hero" aria-labelledby="privacy-page-title">
+            <div class="container">
+                <div class="privacy-hero-inner">
+
+                    <div class="privacy-eyebrow">Legal information</div>
+
+                    <h1 id="privacy-page-title">Privacy Policy</h1>
+
+                    <p>
+                        We take the responsible handling of personal
+                        information seriously. This policy explains how
+                        AVERRA Staffing Solutions Ltd may collect, use,
+                        store, share and protect information when you
+                        visit our website, contact us or engage with
+                        our staffing and outsourcing services.
+                    </p>
+
+                    <div class="privacy-hero-meta">
+                        <span>Website privacy</span>
+                        <span>Client and candidate information</span>
+                        <span>International staffing</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- POLICY AND CONTENT NAVIGATION -->
+
+        <section class="section section-light" aria-label="Privacy policy">
+            <div class="container privacy-layout">
+
+                <aside class="privacy-sidebar" aria-label="Policy contents">
+                    <h2>On this page</h2>
+
+                    <nav aria-label="Privacy policy contents">
+                        <ul class="privacy-toc">
+                            <li><a href="#about">1. About this policy</a></li>
+                            <li><a href="#controller">2. Who we are</a></li>
+                            <li><a href="#information">3. Information we collect</a></li>
+                            <li><a href="#sources">4. Information sources</a></li>
+                            <li><a href="#purposes">5. How we use information</a></li>
+                            <li><a href="#lawful-basis">6. Lawful bases</a></li>
+                            <li><a href="#recruitment">7. Recruitment information</a></li>
+                            <li><a href="#sensitive-data">8. Sensitive information</a></li>
+                            <li><a href="#sharing">9. Sharing information</a></li>
+                            <li><a href="#international">10. International transfers</a></li>
+                            <li><a href="#retention">11. Data retention</a></li>
+                            <li><a href="#security">12. Data security</a></li>
+                            <li><a href="#cookies">13. Cookies</a></li>
+                            <li><a href="#marketing">14. Marketing</a></li>
+                            <li><a href="#rights">15. Your rights</a></li>
+                            <li><a href="#complaints">16. Complaints</a></li>
+                            <li><a href="#children">17. Children's privacy</a></li>
+                            <li><a href="#automated">18. Automated decisions</a></li>
+                            <li><a href="#changes">19. Policy changes</a></li>
+                            <li><a href="#contact-privacy">20. Contact us</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <article class="privacy-document">
+
+                    <div class="privacy-notice">
+                        <strong>Important information</strong>
+                        <p>
+                            This page describes AVERRA's intended privacy
+                            approach and the types of processing that may
+                            occur. Before publication, the company should
+                            confirm that the statements reflect its actual
+                            operations, systems, suppliers, retention
+                            practices and legal obligations.
+                        </p>
+                    </div>
+
+                    <section class="privacy-section" id="about">
+                        <h2>1. About this Privacy Policy</h2>
+
+                        <p>
+                            AVERRA Staffing Solutions Ltd ("AVERRA",
+                            "we", "us" or "our") respects privacy and aims
+                            to handle personal information fairly,
+                            lawfully and transparently.
+                        </p>
+
+                        <p>
+                            This policy applies to personal information
+                            processed in connection with our website,
+                            business enquiries, client relationships,
+                            staffing and outsourcing services, and
+                            recruitment-related activities.
+                        </p>
+
+                        <p>It may be relevant to:</p>
+
+                        <ul>
+                            <li>Website visitors and people contacting us.</li>
+                            <li>Current and prospective business clients.</li>
+                            <li>Business contacts, suppliers and advisers.</li>
+                            <li>Candidates and international professionals.</li>
+                            <li>Individuals involved in staffing engagements.</li>
+                        </ul>
+
+                        <p>
+                            This policy should be read alongside any
+                            separate privacy notice, contract or data
+                            processing agreement that applies to a
+                            particular relationship or service.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="controller">
+                        <h2>2. Who we are</h2>
+
+                        <p>
+                            AVERRA Staffing Solutions Ltd is a UK-based
+                            staffing and outsourcing business connecting
+                            UK businesses with skilled international
+                            professionals, including professionals based
+                            in India.
+                        </p>
+
+                        <p>
+                            Depending on the particular activity, AVERRA
+                            may act as a data controller, a data processor,
+                            or in another role defined by applicable law
+                            and the relevant contractual arrangements.
+                            The applicable role depends on who determines
+                            the purposes and means of processing.
+                        </p>
+
+                        <div class="privacy-contact-card">
+                            <h3>Company details</h3>
+
+                            <p>
+                                <strong>Legal name:</strong>
+                                AVERRA Staffing Solutions Ltd
+                            </p>
+
+                            <p>
+                                <strong>Country:</strong>
+                                United Kingdom
+                            </p>
+
+                            <p>
+                                <strong>Email:</strong>
+                                <a href="mailto:info@averrastaffing.co.uk">
+                                    info@averrastaffing.co.uk
+                                </a>
+                            </p>
+
+                            <p>
+                                <strong>Website:</strong>
+                                <a href="https://averrastaffing.co.uk/">
+                                    averrastaffing.co.uk
+                                </a>
+                            </p>
+
+                            <p>
+                                <strong>Company number:</strong>
+                                [INSERT VERIFIED COMPANIES HOUSE NUMBER]
+                            </p>
+
+                            <p>
+                                <strong>Registered office:</strong>
+                                [INSERT VERIFIED REGISTERED OFFICE ADDRESS]
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="privacy-section" id="information">
+                        <h2>3. Information we may collect</h2>
+
+                        <p>
+                            The information processed depends on how
+                            you interact with AVERRA and the services
+                            involved. We aim to collect information
+                            that is relevant and proportionate to
+                            the purpose.
+                        </p>
+
+                        <h3>Business and client information</h3>
+
+                        <ul>
+                            <li>Name and professional job title.</li>
+                            <li>Company or organisation details.</li>
+                            <li>Business email address and telephone number.</li>
+                            <li>Business correspondence and enquiry details.</li>
+                            <li>Staffing requirements, role profiles and skills needs.</li>
+                            <li>Proposal, contract and service-related information.</li>
+                            <li>Billing and payment records where applicable.</li>
+                        </ul>
+
+                        <h3>Candidate and professional information</h3>
+
+                        <ul>
+                            <li>Name and contact details.</li>
+                            <li>CV or résumé, employment history and work experience.</li>
+                            <li>Professional skills, qualifications and certifications.</li>
+                            <li>Availability and relevant role preferences.</li>
+                            <li>Salary or compensation expectations where relevant.</li>
+                            <li>Information provided during interviews or assessments.</li>
+                            <li>References or eligibility information where lawfully required.</li>
+                            <li>Records necessary to administer an agreed professional engagement.</li>
+                        </ul>
+
+                        <h3>Website and technical information</h3>
+
+                        <p>
+                            Depending on our hosting, security and website
+                            configuration, technical information may
+                            include IP addresses, browser and device
+                            details, operating system, access times,
+                            requested pages, security logs and limited
+                            usage information.
+                        </p>
+
+                        <p>
+                            We will not assume that every type of
+                            technical or analytics data is collected.
+                            The actual information depends on the
+                            tools and settings in use.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="sources">
+                        <h2>4. Where information comes from</h2>
+
+                        <p>We may obtain information:</p>
+
+                        <ul>
+                            <li>Directly from you when you contact us or complete a form.</li>
+                            <li>When you email or telephone us.</li>
+                            <li>When you provide a CV, application or professional profile.</li>
+                            <li>From a client, referrer or professional contact.</li>
+                            <li>From public professional sources where appropriate.</li>
+                            <li>From service providers supporting an authorised business activity.</li>
+                        </ul>
+
+                        <p>
+                            If information is obtained from another
+                            source, we will consider the applicable
+                            transparency requirements and provide
+                            information about the processing where
+                            required by law.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="purposes">
+                        <h2>5. How we use personal information</h2>
+
+                        <p>
+                            Depending on the relationship and applicable
+                            law, we may process personal information to:
+                        </p>
+
+                        <ul>
+                            <li>Respond to enquiries and communicate with you.</li>
+                            <li>Understand business staffing requirements.</li>
+                            <li>Prepare proposals, quotations and service agreements.</li>
+                            <li>Identify and assess potentially suitable professionals.</li>
+                            <li>Support recruitment, introductions and staffing arrangements.</li>
+                            <li>Deliver and administer agreed services.</li>
+                            <li>Manage client, supplier and professional relationships.</li>
+                            <li>Maintain business, invoicing and accounting records.</li>
+                            <li>Protect systems, investigate suspected misuse and improve security.</li>
+                            <li>Maintain and improve our website and services where permitted.</li>
+                            <li>Meet legal obligations and establish, exercise or defend legal claims.</li>
+                        </ul>
+
+                        <p>
+                            We will not use personal information for
+                            purposes that are incompatible with the
+                            original purpose without an appropriate
+                            lawful basis and any required transparency
+                            measures.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="lawful-basis">
+                        <h2>6. Lawful bases for processing</h2>
+
+                        <p>
+                            Where UK data protection law applies, we
+                            will identify an appropriate lawful basis
+                            for each relevant processing activity.
+                            Depending on the circumstances, this may be:
+                        </p>
+
+                        <ul>
+                            <li>
+                                <strong>Contract:</strong>
+                                where processing is necessary to enter
+                                into or perform a contract with you.
+                            </li>
+                            <li>
+                                <strong>Legitimate interests:</strong>
+                                where we or another party have a
+                                legitimate interest, and that interest
+                                is not overridden by your rights and
+                                interests.
+                            </li>
+                            <li>
+                                <strong>Legal obligation:</strong>
+                                where processing is necessary to comply
+                                with a legal requirement.
+                            </li>
+                            <li>
+                                <strong>Consent:</strong>
+                                where we rely on your valid consent
+                                for a specific purpose.
+                            </li>
+                            <li>
+                                <strong>Other lawful grounds:</strong>
+                                where a different basis permitted by
+                                applicable law applies.
+                            </li>
+                        </ul>
+
+                        <p>
+                            The lawful basis depends on the actual
+                            purpose and context. Where we rely on
+                            consent, you can withdraw it at any time.
+                            Withdrawal does not affect the lawfulness
+                            of processing carried out before withdrawal.
+                        </p>
+
+                        <p>
+                            Where special category data is involved,
+                            an additional condition under applicable
+                            data protection law may also be required.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="recruitment">
+                        <h2>7. Recruitment and candidate information</h2>
+
+                        <p>
+                            Where you apply for a role, provide a
+                            professional profile or are considered
+                            for a staffing opportunity, we may use
+                            relevant information to assess experience,
+                            skills, availability and suitability.
+                        </p>
+
+                        <p>
+                            Where appropriate and lawful, candidate
+                            information may be shared with a client
+                            for consideration for a relevant role.
+                            We aim to limit the information shared
+                            to what is reasonably necessary for the
+                            recruitment or staffing purpose.
+                        </p>
+
+                        <p>
+                            You should avoid sending unnecessary
+                            confidential information or sensitive
+                            personal data with a general enquiry.
+                            Please contact us if you need a suitable
+                            secure method for supplying documents.
+                        </p>
+
+                        <p>
+                            If a client determines the purposes and
+                            means of its own recruitment processing,
+                            that client may have separate privacy
+                            responsibilities. The respective roles
+                            should be established for each arrangement.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="sensitive-data">
+                        <h2>8. Special category and sensitive information</h2>
+
+                        <p>
+                            We do not intend to collect unnecessary
+                            sensitive personal information through
+                            general website enquiries.
+                        </p>
+
+                        <p>
+                            Special category data under UK data
+                            protection law can include information
+                            about health, racial or ethnic origin,
+                            religious or philosophical beliefs,
+                            political opinions, trade union membership,
+                            genetic or biometric data used for
+                            identification, and sex life or sexual
+                            orientation.
+                        </p>
+
+                        <p>
+                            If such information is genuinely necessary
+                            for a particular lawful activity, we will
+                            assess the applicable legal conditions and
+                            safeguards before processing it.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="sharing">
+                        <h2>9. Sharing personal information</h2>
+
+                        <p>
+                            AVERRA does not sell personal information.
+                            Where appropriate and lawful, information
+                            may be shared with:
+                        </p>
+
+                        <ul>
+                            <li>Clients or prospective clients for relevant staffing purposes.</li>
+                            <li>Professionals involved in an agreed service or engagement.</li>
+                            <li>Website hosting, email and technology providers.</li>
+                            <li>CRM, recruitment, document storage or security providers, where used.</li>
+                            <li>Professional advisers and insurers where relevant.</li>
+                            <li>Payment providers and financial institutions where necessary.</li>
+                            <li>Regulators, courts, law enforcement or public authorities where required or legally permitted.</li>
+                        </ul>
+
+                        <p>
+                            We seek to ensure that sharing is limited
+                            to an appropriate purpose and supported
+                            by the relevant legal basis, contractual
+                            terms and safeguards.
+                        </p>
+
+                        <h3>Service providers</h3>
+
+                        <p>
+                            Some providers may process personal
+                            information on our behalf. Where a
+                            provider acts as a processor, we will
+                            seek to put in place the written
+                            arrangements and security measures
+                            required by applicable law.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="international">
+                        <h2>10. International data transfers</h2>
+
+                        <p>
+                            AVERRA's business model may involve
+                            UK businesses working with professionals
+                            based in India or other countries.
+                            As a result, certain personal information
+                            may need to be made available to people
+                            or service providers outside the UK.
+                        </p>
+
+                        <p>
+                            An international transfer may be subject
+                            to specific UK data protection requirements.
+                            Where those requirements apply, we will
+                            assess the transfer and use an appropriate
+                            lawful transfer mechanism and safeguards.
+                            Depending on the circumstances, this may
+                            involve UK adequacy regulations, an
+                            applicable international data transfer
+                            agreement or addendum, or another lawful
+                            mechanism.
+                        </p>
+
+                        <p>
+                            We will also consider whether access by
+                            overseas recipients is necessary, what
+                            information is involved, and what
+                            additional technical or organisational
+                            protections are appropriate.
+                        </p>
+
+                        <p>
+                            The fact that a professional is based
+                            overseas does not, by itself, establish
+                            which transfer mechanism is required.
+                            The actual parties, data flows and
+                            applicable law must be assessed.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="retention">
+                        <h2>11. How long we keep information</h2>
+
+                        <p>
+                            We aim to retain personal information
+                            only for as long as reasonably necessary
+                            for the purpose for which it was collected,
+                            taking account of legal requirements and
+                            legitimate business needs.
+                        </p>
+
+                        <p>Retention periods may depend on:</p>
+
+                        <ul>
+                            <li>The type and sensitivity of the information.</li>
+                            <li>The purpose for which it was collected.</li>
+                            <li>Whether a business or staffing relationship continues.</li>
+                            <li>Applicable accounting, tax or other legal requirements.</li>
+                            <li>Disputes, complaints or the need to establish or defend legal claims.</li>
+                        </ul>
+
+                        <p>
+                            When information is no longer needed,
+                            we will take appropriate steps to delete
+                            it, anonymise it or securely dispose of it,
+                            subject to any legal requirement to retain it.
+                        </p>
+
+                        <p>
+                            Specific retention periods should be
+                            established in AVERRA's internal retention
+                            schedule and applied to the systems actually
+                            used by the business.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="security">
+                        <h2>12. Data security</h2>
+
+                        <p>
+                            We aim to use technical and organisational
+                            measures appropriate to the nature of the
+                            information and the risks involved.
+                            Depending on the systems used, these may
+                            include access restrictions, account
+                            security, confidentiality obligations,
+                            secure storage, backups and appropriate
+                            supplier controls.
+                        </p>
+
+                        <p>
+                            Access to personal information should be
+                            limited to people who need it for an
+                            authorised purpose.
+                        </p>
+
+                        <p>
+                            No internet transmission or electronic
+                            storage system can be guaranteed to be
+                            completely secure. If a personal data
+                            breach occurs, we will assess the incident
+                            and take action, including notifying the
+                            relevant authority or affected individuals
+                            where required by law.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="cookies">
+                        <h2>13. Cookies and similar technologies</h2>
+
+                        <p>
+                            Our website may use cookies or similar
+                            technologies, depending on the features
+                            and third-party services that are enabled.
+                            These technologies may support essential
+                            website functions, security, performance
+                            or analytics.
+                        </p>
+
+                        <p>
+                            Non-essential cookies and similar
+                            technologies will be used only in
+                            accordance with applicable consent
+                            requirements. If analytics, embedded
+                            content or other tracking tools are
+                            introduced, the relevant information
+                            and controls should be provided before
+                            those technologies are used where required.
+                        </p>
+
+                        <p>
+                            The actual cookies in use should be
+                            verified against the deployed website.
+                            This policy does not confirm that a
+                            particular analytics or advertising
+                            service is installed.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="marketing">
+                        <h2>14. Marketing communications</h2>
+
+                        <p>
+                            AVERRA may communicate with business
+                            contacts about its services where
+                            permitted by applicable law.
+                            The rules for electronic marketing
+                            can depend on the type of recipient,
+                            the communication channel and the
+                            circumstances in which contact details
+                            were obtained.
+                        </p>
+
+                        <p>
+                            Where consent is required, we will
+                            obtain it before sending the relevant
+                            marketing communication. Where a
+                            different legal permission applies,
+                            we will comply with the conditions
+                            attached to that permission.
+                        </p>
+
+                        <p>
+                            You can ask us to stop sending direct
+                            marketing communications at any time
+                            by contacting
+                            <a href="mailto:info@averrastaffing.co.uk">
+                                info@averrastaffing.co.uk
+                            </a>.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="rights">
+                        <h2>15. Your data protection rights</h2>
+
+                        <p>
+                            Depending on the circumstances and
+                            applicable law, you may have the right to:
+                        </p>
+
+                        <ul>
+                            <li>Request access to personal information we hold about you.</li>
+                            <li>Request correction of inaccurate or incomplete information.</li>
+                            <li>Request erasure of information in certain circumstances.</li>
+                            <li>Request restriction of processing in certain circumstances.</li>
+                            <li>Object to certain processing, including direct marketing.</li>
+                            <li>Request data portability where the legal conditions apply.</li>
+                            <li>Withdraw consent where processing relies on consent.</li>
+                            <li>Raise a concern about how your personal information is handled.</li>
+                        </ul>
+
+                        <p>
+                            These rights are not absolute and may be
+                            subject to conditions or exemptions.
+                            We may need to verify your identity
+                            before dealing with a request.
+                        </p>
+
+                        <h3>How to make a request</h3>
+
+                        <p>
+                            Email
+                            <a href="mailto:info@averrastaffing.co.uk">
+                                info@averrastaffing.co.uk
+                            </a>
+                            with the details of your request.
+                            Please do not include unnecessary
+                            sensitive information in your initial
+                            message.
+                        </p>
+
+                        <p>
+                            We will respond within the period
+                            required by applicable law. If an
+                            extension or refusal is legally
+                            permitted, we will explain this
+                            where required.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="complaints">
+                        <h2>16. Complaints</h2>
+
+                        <p>
+                            If you are concerned about how AVERRA
+                            has handled your personal information,
+                            please contact us first so that we
+                            can review your concern.
+                        </p>
+
+                        <p>
+                            You may also have the right to complain
+                            to the UK Information Commissioner's
+                            Office (ICO).
+                        </p>
+
+                        <p>
+                            Official guidance is available from
+                            the
+                            <a
+                                href="https://ico.org.uk/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Information Commissioner's Office
+                            </a>.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="children">
+                        <h2>17. Children's privacy</h2>
+
+                        <p>
+                            Our website and services are intended
+                            primarily for businesses, professional
+                            contacts, candidates and people involved
+                            in staffing or outsourcing activities.
+                            The website is not specifically directed
+                            at children.
+                        </p>
+
+                        <p>
+                            If you believe a child has provided
+                            personal information to us in
+                            circumstances where it should not
+                            have been collected, please contact
+                            us so that we can assess the matter.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="external-sites">
+                        <h2>18. External websites</h2>
+
+                        <p>
+                            Our website may link to websites or
+                            services operated by third parties.
+                            Those third parties have their own
+                            privacy practices and policies.
+                            AVERRA is not responsible for the
+                            operation or privacy practices of
+                            external sites it does not control.
+                        </p>
+
+                        <p>
+                            We recommend reviewing the privacy
+                            information of an external service
+                            before providing personal information
+                            through it.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="automated">
+                        <h2>19. Automated decision-making</h2>
+
+                        <p>
+                            The use of automated tools in recruitment
+                            or staffing must be assessed according
+                            to how those tools operate and the
+                            effect they may have on individuals.
+                        </p>
+
+                        <p>
+                            Where AVERRA uses automated processing
+                            that falls within applicable legal
+                            restrictions on solely automated
+                            decisions with legal or similarly
+                            significant effects, we will assess
+                            and implement the safeguards and
+                            information requirements that apply.
+                        </p>
+
+                        <p>
+                            This policy should be updated if
+                            AVERRA introduces screening, profiling
+                            or decision-making tools that materially
+                            change how candidates or other
+                            individuals are assessed.
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="changes">
+                        <h2>20. Changes to this Privacy Policy</h2>
+
+                        <p>
+                            We may update this policy to reflect
+                            changes to our services, technology,
+                            business operations or legal obligations.
+                        </p>
+
+                        <p>
+                            The current version will be published
+                            on this page with an updated revision
+                            date. Where required by law, we will
+                            provide additional information about
+                            material changes.
+                        </p>
+
+                        <p>
+                            <strong>Policy version:</strong>
+                            1.0
+                        </p>
+
+                        <p>
+                            <strong>Last updated:</strong>
+                            9 October 2026
+                        </p>
+                    </section>
+
+                    <section class="privacy-section" id="contact-privacy">
+                        <h2>21. Contact AVERRA</h2>
+
+                        <p>
+                            If you have questions about this policy,
+                            want to make a data protection request
+                            or need to raise a privacy concern,
+                            please contact us.
+                        </p>
+
+                        <div class="privacy-contact-card">
+                            <h3>AVERRA Staffing Solutions Ltd</h3>
+
+                            <p>
+                                <strong>Email:</strong>
+                                <a href="mailto:info@averrastaffing.co.uk">
+                                    info@averrastaffing.co.uk
+                                </a>
+                            </p>
+
+                            <p>
+                                <strong>Website:</strong>
+                                <a href="https://averrastaffing.co.uk/">
+                                    https://averrastaffing.co.uk/
+                                </a>
+                            </p>
+
+                            <p>
+                                <strong>Company number:</strong>
+                                [INSERT VERIFIED COMPANIES HOUSE NUMBER]
+                            </p>
+
+                            <p>
+                                <strong>Registered office:</strong>
+                                [INSERT VERIFIED REGISTERED OFFICE ADDRESS]
+                            </p>
+
+                            <p>
+                                <strong>Country:</strong>
+                                United Kingdom
+                            </p>
+                        </div>
+
+                        <p class="privacy-back-to-top">
+                            <a href="#top">Back to top ↑</a>
+                        </p>
+                    </section>
+
+                </article>
+            </div>
+        </section>
+
+        <!-- FINAL CALL TO ACTION -->
+
+        <section class="privacy-bottom-cta" aria-labelledby="privacy-contact-heading">
+            <div class="container privacy-bottom-cta-inner">
+
+                <div>
+                    <div class="privacy-eyebrow">AVERRA Staffing Solutions</div>
+
+                    <h2 id="privacy-contact-heading">
+                        Questions about your personal information?
+                    </h2>
+
+                    <p>
+                        Contact our team if you have a privacy
+                        question, need to exercise a data protection
+                        right or want to raise a concern.
+                    </p>
+                </div>
+
+                <div class="privacy-cta-actions">
+                    <a
+                        class="privacy-cta-button"
+                        href="mailto:info@averrastaffing.co.uk?subject=Privacy%20Enquiry"
+                    >
+                        Email Our Team
+                    </a>
+
+                    <a class="privacy-cta-link" href="contact.html">
+                        Contact page
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="site-footer">
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div class="footer-brand">
+                    <a
+                        href="index.html"
+                        class="footer-logo"
+                        aria-label="AVERRA Staffing Solutions home"
+                    >
+                        <img
+                            src="images/Logo.jpeg"
+                            alt="AVERRA Staffing Solutions Ltd"
+                            class="footer-logo-image"
+                            width="220"
+                            height="80"
+                            loading="lazy"
+                        >
+                    </a>
+
+                    <p>Connecting UK businesses with global talent.</p>
+
+                    <p>
+                        Staffing and outsourcing solutions for
+                        modern UK businesses.
+                    </p>
+
+                    <p class="footer-email">
+                        <a href="mailto:info@averrastaffing.co.uk">
+                            info@averrastaffing.co.uk
+                        </a>
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="industries.html">Industries</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Solutions</h3>
+                    <ul>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="how-it-works.html">How It Works</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="faq.html">Frequently Asked Questions</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li>
+                            <a href="privacy.html" aria-current="page">
+                                Privacy Policy
+                            </a>
+                        </li>
+                        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    &copy;
+                    <span data-current-year>2026</span>
+                    AVERRA Staffing Solutions Ltd. All rights reserved.
+                </p>
+
+                <p>United Kingdom</p>
+            </div>
+
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

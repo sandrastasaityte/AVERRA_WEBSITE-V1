@@ -1,0 +1,1243 @@
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Services | Remote Staffing & Outsourcing | AVERRA</title>
+
+    <meta name="description" content="Discover AVERRA's remote staffing and outsourcing services for UK businesses, including architecture, accounting, finance, engineering, IT, administration, HR and customer support professionals.">
+
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1f33">
+    <link rel="canonical" href="https://averrastaffing.co.uk/services.html">
+
+    <link rel="icon" href="images/Logo.jpeg">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ================================================
+           AVERRA SERVICES PAGE
+           Scoped styles: services-page
+           ================================================ */
+
+        .services-page {
+            --services-navy: #0b1f33;
+            --services-dark: #071522;
+            --services-blue: #1d5f91;
+            --services-gold: #c89b3c;
+            --services-light: #f4f7fa;
+            --services-text: #4d5c6c;
+            --services-border: #e0e7ed;
+            color: var(--services-navy);
+        }
+
+        .services-page *,
+        .services-page *::before,
+        .services-page *::after {
+            box-sizing: border-box;
+        }
+
+        .services-page a {
+            transition: color 0.2s ease,
+                        background-color 0.2s ease,
+                        border-color 0.2s ease,
+                        transform 0.2s ease;
+        }
+
+        .services-page .services-container {
+            width: min(1180px, calc(100% - 40px));
+            margin-inline: auto;
+        }
+
+        .services-page .services-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 100px 0 88px;
+            color: #ffffff;
+            background:
+                radial-gradient(
+                    circle at 85% 15%,
+                    rgba(29, 95, 145, 0.5),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--services-dark),
+                    var(--services-navy) 58%,
+                    #123858
+                );
+        }
+
+        .services-page .services-hero::after {
+            content: "";
+            position: absolute;
+            width: 390px;
+            height: 390px;
+            right: -140px;
+            bottom: -230px;
+            border: 1px solid rgba(200, 155, 60, 0.35);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 35px rgba(200, 155, 60, 0.04),
+                0 0 0 75px rgba(200, 155, 60, 0.035);
+            pointer-events: none;
+        }
+
+        .services-page .services-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+        }
+
+        .services-page .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 22px;
+            color: var(--services-gold);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .services-page .eyebrow::before {
+            content: "";
+            display: inline-block;
+            width: 32px;
+            height: 2px;
+            background: currentColor;
+        }
+
+        .services-page .services-hero h1 {
+            max-width: 820px;
+            margin: 0 0 24px;
+            color: #ffffff;
+            font-size: clamp(2.5rem, 6vw, 4.6rem);
+            line-height: 1.06;
+            letter-spacing: -0.045em;
+        }
+
+        .services-page .services-hero h1 span {
+            color: var(--services-gold);
+        }
+
+        .services-page .services-hero p {
+            max-width: 710px;
+            margin: 0;
+            color: #dce6ef;
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            line-height: 1.85;
+        }
+
+        .services-page .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 34px;
+        }
+
+        .services-page .service-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50px;
+            padding: 13px 23px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            font-size: 0.94rem;
+            font-weight: 750;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .services-page .service-button-primary {
+            color: var(--services-dark);
+            background: var(--services-gold);
+        }
+
+        .services-page .service-button-primary:hover {
+            color: var(--services-dark);
+            background: #dfb85e;
+            transform: translateY(-2px);
+        }
+
+        .services-page .service-button-secondary {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.45);
+            background: transparent;
+        }
+
+        .services-page .service-button-secondary:hover {
+            color: #ffffff;
+            border-color: var(--services-gold);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .services-page .services-intro {
+            padding: 78px 0 36px;
+            background: #ffffff;
+        }
+
+        .services-page .section-heading {
+            max-width: 760px;
+            margin: 0 auto 44px;
+            text-align: center;
+        }
+
+        .services-page .section-heading .eyebrow {
+            justify-content: center;
+        }
+
+        .services-page .section-heading h2 {
+            margin: 0 0 17px;
+            color: var(--services-navy);
+            font-size: clamp(1.9rem, 4vw, 3rem);
+            line-height: 1.2;
+            letter-spacing: -0.035em;
+        }
+
+        .services-page .section-heading p {
+            margin: 0;
+            color: var(--services-text);
+            font-size: 1.04rem;
+            line-height: 1.8;
+        }
+
+        .services-page .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            padding-bottom: 78px;
+        }
+
+        .services-page .service-card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            padding: 29px;
+            border: 1px solid var(--services-border);
+            border-radius: 9px;
+            background: #ffffff;
+            box-shadow: 0 8px 26px rgba(11, 31, 51, 0.035);
+            transition:
+                transform 0.22s ease,
+                box-shadow 0.22s ease,
+                border-color 0.22s ease;
+        }
+
+        .services-page .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(200, 155, 60, 0.7);
+            box-shadow: 0 18px 42px rgba(11, 31, 51, 0.09);
+        }
+
+        .services-page .service-icon {
+            display: grid;
+            place-items: center;
+            width: 54px;
+            height: 54px;
+            margin-bottom: 22px;
+            border-radius: 8px;
+            color: var(--services-gold);
+            background: var(--services-navy);
+            font-size: 1.45rem;
+        }
+
+        .services-page .service-card h3 {
+            margin: 0 0 12px;
+            color: var(--services-navy);
+            font-size: 1.23rem;
+            line-height: 1.35;
+        }
+
+        .services-page .service-card > p {
+            margin: 0 0 19px;
+            color: var(--services-text);
+            font-size: 0.96rem;
+            line-height: 1.75;
+        }
+
+        .services-page .service-card ul {
+            display: grid;
+            gap: 10px;
+            margin: 0 0 24px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .services-page .service-card li {
+            position: relative;
+            padding-left: 21px;
+            color: #344657;
+            font-size: 0.91rem;
+            line-height: 1.55;
+        }
+
+        .services-page .service-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--services-blue);
+            font-weight: 800;
+        }
+
+        .services-page .service-card .service-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-top: auto;
+            color: var(--services-blue);
+            font-size: 0.94rem;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .services-page .service-card .service-link:hover {
+            color: #123858;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .services-page .service-link span {
+            transition: transform 0.2s ease;
+        }
+
+        .services-page .service-link:hover span {
+            transform: translateX(4px);
+        }
+
+        .services-page .specialist-section {
+            padding: 82px 0;
+            background: var(--services-light);
+        }
+
+        .services-page .specialist-layout {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            align-items: center;
+            gap: 64px;
+        }
+
+        .services-page .specialist-copy .eyebrow {
+            margin-bottom: 18px;
+        }
+
+        .services-page .specialist-copy h2 {
+            margin: 0 0 20px;
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            line-height: 1.2;
+            letter-spacing: -0.035em;
+        }
+
+        .services-page .specialist-copy p {
+            color: var(--services-text);
+            line-height: 1.85;
+        }
+
+        .services-page .specialist-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .services-page .specialist-item {
+            padding: 17px 18px;
+            border: 1px solid #dfe7ee;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        .services-page .specialist-item strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--services-navy);
+            font-size: 0.98rem;
+        }
+
+        .services-page .specialist-item span {
+            display: block;
+            color: var(--services-text);
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .services-page .how-section {
+            padding: 82px 0;
+            background: #ffffff;
+        }
+
+        .services-page .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .services-page .step {
+            padding-top: 22px;
+            border-top: 2px solid var(--services-gold);
+        }
+
+        .services-page .step-number {
+            display: block;
+            margin-bottom: 15px;
+            color: var(--services-blue);
+            font-size: 0.8rem;
+            font-weight: 850;
+            letter-spacing: 0.14em;
+        }
+
+        .services-page .step h3 {
+            margin: 0 0 10px;
+            color: var(--services-navy);
+            font-size: 1.12rem;
+        }
+
+        .services-page .step p {
+            margin: 0;
+            color: var(--services-text);
+            font-size: 0.94rem;
+            line-height: 1.75;
+        }
+
+        .services-page .service-cta {
+            padding: 76px 0;
+            color: #ffffff;
+            background:
+                radial-gradient(
+                    circle at 100% 0,
+                    rgba(29, 95, 145, 0.5),
+                    transparent 36%
+                ),
+                var(--services-navy);
+        }
+
+        .services-page .cta-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .services-page .cta-copy {
+            max-width: 720px;
+        }
+
+        .services-page .cta-copy h2 {
+            margin: 0 0 16px;
+            color: #ffffff;
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            line-height: 1.2;
+        }
+
+        .services-page .cta-copy p {
+            margin: 0;
+            color: #dce6ef;
+            line-height: 1.8;
+        }
+
+        .services-page .cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .services-page .service-disclaimer {
+            margin-top: 26px;
+            color: #dce6ef;
+            font-size: 0.83rem;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 960px) {
+            .services-page .service-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .services-page .specialist-layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .services-page .steps-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .services-page .cta-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .services-page .services-container {
+                width: min(100% - 32px, 1180px);
+            }
+
+            .services-page .services-hero {
+                padding: 70px 0 64px;
+            }
+
+            .services-page .services-intro,
+            .services-page .specialist-section,
+            .services-page .how-section {
+                padding-top: 58px;
+                padding-bottom: 58px;
+            }
+
+            .services-page .service-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding-bottom: 58px;
+            }
+
+            .services-page .service-card {
+                padding: 24px;
+            }
+
+            .services-page .specialist-list,
+            .services-page .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-page .hero-actions,
+            .services-page .cta-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .services-page .service-button {
+                width: 100%;
+            }
+
+            .services-page .service-cta {
+                padding: 58px 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .services-page *,
+            .services-page *::before,
+            .services-page *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+    </style>
+
+    <script src="imageData.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-container">
+
+            <a href="index.html"
+               class="site-logo"
+               aria-label="AVERRA Staffing Solutions home">
+
+                <img
+                    src="images/Logo.jpeg"
+                    class="site-logo-image"
+                    alt="AVERRA Staffing Solutions Ltd"
+                >
+            </a>
+
+            <button
+                class="mobile-menu-button"
+                id="mobileMenuButton"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-controls="main-navigation"
+                aria-expanded="false"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="main-nav" id="main-navigation"
+                 aria-label="Main navigation">
+
+                <a class="nav-link" href="index.html">Home</a>
+                <a class="nav-link" href="about.html">About</a>
+                <a class="nav-link active"
+                   href="services.html"
+                   aria-current="page">Services</a>
+                <a class="nav-link" href="industries.html">Industries</a>
+                <a class="nav-link" href="how-it-works.html">How It Works</a>
+                <a class="nav-link" href="careers.html">Careers</a>
+                <a class="nav-link" href="faq.html">FAQ</a>
+                <a class="nav-link" href="contact.html">Contact</a>
+
+                <a class="nav-cta" href="contact.html">
+                    Talk to Us
+                </a>
+
+            </nav>
+        </div>
+    </header>
+
+    <main class="services-page">
+
+        <!-- HERO -->
+        <section class="services-hero">
+            <div class="services-container">
+                <div class="services-hero-content">
+
+                    <div class="eyebrow">
+                        Our Services
+                    </div>
+
+                    <h1>
+                        The right people.
+                        <span>More possibilities.</span>
+                    </h1>
+
+                    <p>
+                        AVERRA helps UK businesses access skilled
+                        international professionals for specialist,
+                        operational and administrative work. From
+                        architecture and accounting to engineering,
+                        technology and customer support, we help you
+                        explore a more flexible way to build your team.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="service-button service-button-primary"
+                           href="contact.html">
+                            Discuss Your Requirements
+                        </a>
+
+                        <a class="service-button service-button-secondary"
+                           href="#service-categories">
+                            Explore Our Services
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICE INTRODUCTION -->
+        <section class="services-intro" id="service-categories">
+            <div class="services-container">
+
+                <div class="section-heading">
+                    <div class="eyebrow">What We Support</div>
+
+                    <h2>
+                        Professional talent for your business
+                    </h2>
+
+                    <p>
+                        Whether you need support with technical
+                        projects, financial operations or day-to-day
+                        business activities, we work with you to define
+                        the role, required skills, working arrangements
+                        and level of support that suit your organisation.
+                    </p>
+                </div>
+
+                <div class="service-grid">
+
+                    <!-- ARCHITECTURE -->
+                    <article class="service-card" id="architecture">
+                        <div class="service-icon" aria-hidden="true">⌂</div>
+
+                        <h3>Architecture &amp; Design</h3>
+
+                        <p>
+                            Support your architecture practice and
+                            design teams with remote professionals
+                            who assist with project documentation,
+                            drawings and design coordination.
+                        </p>
+
+                        <ul>
+                            <li>CAD drafting and drawing production</li>
+                            <li>BIM modelling and Revit support</li>
+                            <li>3D modelling and visualisation</li>
+                            <li>Drawing revisions and documentation</li>
+                            <li>Schedules and project administration</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss architecture support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- ACCOUNTING -->
+                    <article class="service-card" id="accounting">
+                        <div class="service-icon" aria-hidden="true">£</div>
+
+                        <h3>Accounting &amp; Bookkeeping</h3>
+
+                        <p>
+                            Strengthen your finance function with
+                            operational support for bookkeeping,
+                            reconciliations, accounts administration
+                            and routine financial processing.
+                        </p>
+
+                        <ul>
+                            <li>Bookkeeping and transaction processing</li>
+                            <li>Accounts payable and receivable</li>
+                            <li>Bank and balance-sheet reconciliations</li>
+                            <li>Invoice and expense administration</li>
+                            <li>Month-end preparation and reporting support</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss accounting support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- FINANCE -->
+                    <article class="service-card" id="finance">
+                        <div class="service-icon" aria-hidden="true">▤</div>
+
+                        <h3>Finance &amp; Treasury Operations</h3>
+
+                        <p>
+                            Build capacity across finance operations
+                            with support for reporting, cash
+                            administration, reconciliations and
+                            financial data management.
+                        </p>
+
+                        <ul>
+                            <li>Financial data preparation</li>
+                            <li>Cash-flow and treasury reporting support</li>
+                            <li>Management information preparation</li>
+                            <li>Payment administration and tracking</li>
+                            <li>Financial spreadsheet maintenance</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss finance support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- ENGINEERING -->
+                    <article class="service-card" id="engineering">
+                        <div class="service-icon" aria-hidden="true">⚙</div>
+
+                        <h3>Engineering &amp; Technical Support</h3>
+
+                        <p>
+                            Give your technical teams additional
+                            capacity for design support, technical
+                            documentation, calculations preparation
+                            and project coordination.
+                        </p>
+
+                        <ul>
+                            <li>CAD and technical drawing support</li>
+                            <li>Design documentation</li>
+                            <li>Technical schedules and specifications</li>
+                            <li>Engineering data management</li>
+                            <li>Project documentation assistance</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss engineering support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- IT -->
+                    <article class="service-card" id="technology">
+                        <div class="service-icon" aria-hidden="true">⌘</div>
+
+                        <h3>IT &amp; Technology</h3>
+
+                        <p>
+                            Support your technology operations with
+                            skilled professionals for development,
+                            systems administration, testing and
+                            technical service activities.
+                        </p>
+
+                        <ul>
+                            <li>Web development and maintenance</li>
+                            <li>Software development support</li>
+                            <li>Quality assurance and testing</li>
+                            <li>Technical documentation</li>
+                            <li>Data and reporting support</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss IT support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- ADMIN -->
+                    <article class="service-card" id="administration">
+                        <div class="service-icon" aria-hidden="true">▣</div>
+
+                        <h3>Business Administration</h3>
+
+                        <p>
+                            Free up your internal team by delegating
+                            recurring administrative tasks and
+                            structured operational work to remote
+                            business support professionals.
+                        </p>
+
+                        <ul>
+                            <li>Data entry and database updates</li>
+                            <li>Document preparation and management</li>
+                            <li>Scheduling and inbox administration</li>
+                            <li>CRM maintenance and record keeping</li>
+                            <li>Research and reporting preparation</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss admin support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- CUSTOMER SUPPORT -->
+                    <article class="service-card" id="customer-support">
+                        <div class="service-icon" aria-hidden="true">◎</div>
+
+                        <h3>Customer Support</h3>
+
+                        <p>
+                            Help your business respond consistently
+                            to customers with additional support for
+                            enquiries, service requests and routine
+                            customer administration.
+                        </p>
+
+                        <ul>
+                            <li>Email and ticket-based support</li>
+                            <li>Customer records and CRM updates</li>
+                            <li>Order and enquiry administration</li>
+                            <li>Appointment coordination</li>
+                            <li>Customer service reporting</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss customer support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- HR -->
+                    <article class="service-card" id="human-resources">
+                        <div class="service-icon" aria-hidden="true">♙</div>
+
+                        <h3>HR &amp; Recruitment Support</h3>
+
+                        <p>
+                            Improve the capacity of your people
+                            function with help managing recruitment
+                            administration, candidate records and
+                            routine HR processes.
+                        </p>
+
+                        <ul>
+                            <li>CV and application administration</li>
+                            <li>Interview scheduling</li>
+                            <li>Candidate database maintenance</li>
+                            <li>Onboarding documentation</li>
+                            <li>HR records and reporting assistance</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss HR support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- SALES -->
+                    <article class="service-card" id="sales-marketing">
+                        <div class="service-icon" aria-hidden="true">↗</div>
+
+                        <h3>Sales &amp; Marketing</h3>
+
+                        <p>
+                            Give your commercial team more time to
+                            build relationships through organised
+                            sales administration, marketing execution
+                            and research support.
+                        </p>
+
+                        <ul>
+                            <li>Lead research and CRM updates</li>
+                            <li>Sales pipeline administration</li>
+                            <li>Content and campaign coordination</li>
+                            <li>Market and competitor research</li>
+                            <li>Presentation and proposal preparation</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss sales support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- DATA -->
+                    <article class="service-card" id="data-reporting">
+                        <div class="service-icon" aria-hidden="true">▥</div>
+
+                        <h3>Data &amp; Reporting</h3>
+
+                        <p>
+                            Turn recurring data tasks into a more
+                            organised workflow with support for
+                            spreadsheet preparation, data quality
+                            and routine business reporting.
+                        </p>
+
+                        <ul>
+                            <li>Excel and spreadsheet preparation</li>
+                            <li>Data cleansing and validation</li>
+                            <li>Dashboard and report preparation</li>
+                            <li>Business information consolidation</li>
+                            <li>Routine data quality checks</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss data support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- PROCUREMENT -->
+                    <article class="service-card" id="procurement">
+                        <div class="service-icon" aria-hidden="true">⇄</div>
+
+                        <h3>Procurement &amp; Operations</h3>
+
+                        <p>
+                            Support your operational workflows with
+                            organised purchasing administration,
+                            supplier records, order tracking and
+                            process coordination.
+                        </p>
+
+                        <ul>
+                            <li>Purchase order administration</li>
+                            <li>Supplier data and documentation</li>
+                            <li>Order and delivery tracking</li>
+                            <li>Operational reporting</li>
+                            <li>Process and records management</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss operations support
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                    <!-- DEDICATED TEAMS -->
+                    <article class="service-card" id="dedicated-teams">
+                        <div class="service-icon" aria-hidden="true">◇</div>
+
+                        <h3>Dedicated Remote Teams</h3>
+
+                        <p>
+                            Build a tailored remote team around
+                            your business processes, workload,
+                            preferred skills and agreed ways of
+                            working.
+                        </p>
+
+                        <ul>
+                            <li>Role-specific remote professionals</li>
+                            <li>Support for ongoing workloads</li>
+                            <li>Agreed working hours and responsibilities</li>
+                            <li>Defined communication processes</li>
+                            <li>Scalable team arrangements by agreement</li>
+                        </ul>
+
+                        <a class="service-link" href="contact.html">
+                            Discuss your team requirements
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIALIST ROLES -->
+        <section class="specialist-section">
+            <div class="services-container specialist-layout">
+
+                <div class="specialist-copy">
+                    <div class="eyebrow">Role-Based Recruitment</div>
+
+                    <h2>
+                        Start with the role you need to fill
+                    </h2>
+
+                    <p>
+                        Every business has different priorities.
+                        Rather than offering a one-size-fits-all
+                        solution, AVERRA works with clients to
+                        understand the tasks, experience, software
+                        knowledge and communication requirements
+                        of each position.
+                    </p>
+
+                    <p>
+                        We can discuss individual remote roles or
+                        combinations of roles that support a wider
+                        business function. Availability and suitability
+                        are confirmed during the requirements and
+                        candidate-selection process.
+                    </p>
+
+                    <a class="service-button service-button-primary"
+                       href="contact.html">
+                        Tell Us About Your Vacancy
+                    </a>
+                </div>
+
+                <div class="specialist-list">
+
+                    <div class="specialist-item">
+                        <strong>Architectural Technicians</strong>
+                        <span>CAD drawings, BIM support and technical documentation.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>Accounts Assistants</strong>
+                        <span>Reconciliations, invoicing and bookkeeping support.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>Finance Analysts</strong>
+                        <span>Spreadsheet analysis, reporting and data preparation.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>CAD &amp; BIM Professionals</strong>
+                        <span>Digital models, drawing updates and design coordination.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>Software Developers</strong>
+                        <span>Development tasks, maintenance and technical projects.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>Virtual Assistants</strong>
+                        <span>Scheduling, administration and business coordination.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>Customer Service Assistants</strong>
+                        <span>Customer enquiries, tickets and record updates.</span>
+                    </div>
+
+                    <div class="specialist-item">
+                        <strong>Sales Support Executives</strong>
+                        <span>Lead research, CRM administration and pipeline support.</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="how-section">
+            <div class="services-container">
+
+                <div class="section-heading">
+                    <div class="eyebrow">A Clear Process</div>
+
+                    <h2>
+                        From business need to remote support
+                    </h2>
+
+                    <p>
+                        We begin by understanding your requirements
+                        and then work towards an agreed staffing
+                        arrangement with clear responsibilities.
+                    </p>
+                </div>
+
+                <div class="steps-grid">
+
+                    <article class="step">
+                        <span class="step-number">STEP 01</span>
+                        <h3>Define your needs</h3>
+                        <p>
+                            Tell us about your business, workload,
+                            required skills, systems and preferred
+                            working arrangements.
+                        </p>
+                    </article>
+
+                    <article class="step">
+                        <span class="step-number">STEP 02</span>
+                        <h3>Agree the role</h3>
+                        <p>
+                            Discuss responsibilities, experience,
+                            working hours, communication and
+                            commercial terms.
+                        </p>
+                    </article>
+
+                    <article class="step">
+                        <span class="step-number">STEP 03</span>
+                        <h3>Review suitable candidates</h3>
+                        <p>
+                            Where suitable candidates are available,
+                            review relevant experience and suitability
+                            before proceeding.
+                        </p>
+                    </article>
+
+                    <article class="step">
+                        <span class="step-number">STEP 04</span>
+                        <h3>Begin the arrangement</h3>
+                        <p>
+                            Agree onboarding, access controls,
+                            reporting lines and communication
+                            before work begins.
+                        </p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="service-cta">
+            <div class="services-container">
+
+                <div class="cta-inner">
+                    <div class="cta-copy">
+                        <div class="eyebrow">Let's Talk</div>
+
+                        <h2>
+                            What would you like your team to achieve?
+                        </h2>
+
+                        <p>
+                            Share the role, project or business
+                            process you need help with. We will
+                            discuss your requirements and explore
+                            whether AVERRA can provide a suitable
+                            remote staffing solution.
+                        </p>
+                    </div>
+
+                    <div class="cta-actions">
+                        <a class="service-button service-button-primary"
+                           href="contact.html">
+                            Contact AVERRA
+                        </a>
+
+                        <a class="service-button service-button-secondary"
+                           href="how-it-works.html">
+                            How It Works
+                        </a>
+                    </div>
+                </div>
+
+                <p class="service-disclaimer">
+                    Service availability, candidate suitability,
+                    qualifications, scope of work, pricing and
+                    engagement terms are subject to confirmation
+                    and written agreement. Regulated professional
+                    activities must be undertaken only by appropriately
+                    qualified and authorised individuals where required.
+                </p>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+
+            <div class="footer-brand">
+                <a href="index.html"
+                   aria-label="AVERRA Staffing Solutions home">
+                    <img
+                        src="images/Logo.jpeg"
+                        class="site-logo-image"
+                        alt="AVERRA Staffing Solutions Ltd"
+                        loading="lazy"
+                    >
+                </a>
+
+                <p>
+                    Connecting UK businesses with global talent
+                    through flexible remote staffing and
+                    outsourcing solutions.
+                </p>
+            </div>
+
+            <div class="footer-column">
+                <h3>Explore</h3>
+                <ul>
+                    <li><a href="about.html">About AVERRA</a></li>
+                    <li><a href="services.html">Our Services</a></li>
+                    <li><a href="industries.html">Industries</a></li>
+                    <li><a href="how-it-works.html">How It Works</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Information</h3>
+                <ul>
+                    <li><a href="careers.html">Careers</a></li>
+                    <li><a href="faq.html">Frequently Asked Questions</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li>
+                        <a href="mailto:info@averrastaffing.co.uk">
+                            info@averrastaffing.co.uk
+                        </a>
+                    </li>
+                    <li><a href="contact.html">Contact our team</a></li>
+                    <li>United Kingdom</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="container footer-bottom">
+            <p>
+                &copy; <span class="current-year"
+                            data-current-year></span>
+                AVERRA Staffing Solutions Ltd. All rights reserved.
+            </p>
+
+            <p>Connecting UK businesses with global talent.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
