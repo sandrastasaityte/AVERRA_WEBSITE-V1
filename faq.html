@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -9,6 +8,7 @@
 
     <title>Frequently Asked Questions | AVERRA Staffing Solutions Ltd</title>
     <meta name="description" content="Explore answers about AVERRA Staffing Solutions, remote staffing, outsourcing to India, professional roles, pricing, onboarding, contracts, data protection and careers.">
+
     <link rel="canonical" href="https://averrastaffing.co.uk/faq.html">
     <link rel="icon" href="images/Logo.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="style.css">
@@ -18,10 +18,12 @@
     <meta property="og:description" content="Find out how AVERRA connects UK businesses with global professionals through remote staffing and outsourcing.">
     <meta property="og:url" content="https://averrastaffing.co.uk/faq.html">
     <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
-    <meta property="og:image" content="https://averrastaffing.co.uk/images/hero-global-talent.jpg">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/frequent-questions.jpg">
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Frequently Asked Questions | AVERRA">
     <meta name="twitter:description" content="Answers about remote staffing, outsourcing, onboarding and working with AVERRA.">
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/frequent-questions.jpg">
 
     <style>
         :root {
@@ -75,9 +77,9 @@
             padding: clamp(68px, 9vw, 112px) 0 78px;
             color: var(--faq-white);
             background:
-                radial-gradient(circle at 85% 16%, rgba(200, 155, 60, 0.2), transparent 28%),
-                radial-gradient(circle at 5% 100%, rgba(29, 95, 145, 0.36), transparent 38%),
-                linear-gradient(130deg, var(--faq-navy-dark), var(--faq-navy) 65%, #123653);
+                linear-gradient(rgba(7, 21, 34, 0.91), rgba(11, 31, 51, 0.94)),
+                url("images/frequent-questions.jpg") center 45% / cover no-repeat,
+                linear-gradient(130deg, var(--faq-navy-dark), var(--faq-navy));
         }
 
         .faq-hero::before,
@@ -618,6 +620,7 @@
 
             .faq-hero {
                 padding: 62px 0 58px;
+                background-position: center;
             }
 
             .faq-hero h1 {
@@ -1443,7 +1446,7 @@
             <h2>Explore</h2>
             <a href="about.html">About us</a>
             <a href="services.html">Our services</a>
-            <a href="industries.html">Industries</a>
+
             <a href="how-it-works.html">How it works</a>
             <a href="careers.html">Careers</a>
         </div>
@@ -1506,7 +1509,6 @@
     }
 
     let activeCategory = "all";
-    let allExpanded = false;
 
     function normalise(value) {
         return String(value || "")
@@ -1528,19 +1530,22 @@
         }
 
         const visibleItems = getVisibleItems();
+
         const everyVisibleOpen = visibleItems.length > 0 &&
             visibleItems.every(function (item) {
                 const details = item.querySelector("details");
                 return details && details.open;
             });
 
-        allExpanded = everyVisibleOpen;
-
-        expandToggle.textContent = allExpanded
+        expandToggle.textContent = everyVisibleOpen
             ? "Collapse all visible answers"
             : "Expand all visible answers";
 
-        expandToggle.setAttribute("aria-pressed", String(allExpanded));
+        expandToggle.setAttribute(
+            "aria-pressed",
+            String(everyVisibleOpen)
+        );
+
         expandToggle.hidden = visibleItems.length === 0;
     }
 
@@ -1551,8 +1556,10 @@
         faqItems.forEach(function (item) {
             const category = item.dataset.faqCategory || "";
             const text = normalise(item.textContent);
+
             const matchesCategory =
                 activeCategory === "all" || category === activeCategory;
+
             const matchesSearch = !query || text.includes(query);
             const visible = matchesCategory && matchesSearch;
 
@@ -1560,10 +1567,13 @@
 
             if (!visible) {
                 const details = item.querySelector("details");
+
                 if (details) {
                     details.open = false;
                 }
-            } else {
+            }
+
+            if (visible) {
                 visibleItems += 1;
             }
         });
@@ -1615,6 +1625,7 @@
     if (expandToggle) {
         expandToggle.addEventListener("click", function () {
             const visibleItems = getVisibleItems();
+
             const shouldExpand = !visibleItems.every(function (item) {
                 const details = item.querySelector("details");
                 return details && details.open;
@@ -1622,6 +1633,7 @@
 
             visibleItems.forEach(function (item) {
                 const details = item.querySelector("details");
+
                 if (details) {
                     details.open = shouldExpand;
                 }
@@ -1644,6 +1656,7 @@
 
         faqItems.forEach(function (item) {
             const details = item.querySelector("details");
+
             if (details) {
                 details.open = false;
             }

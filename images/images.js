@@ -1,181 +1,82 @@
-
 /* =========================================================
    AVERRA STAFFING SOLUTIONS LTD
    CENTRAL WEBSITE IMAGE MANAGEMENT SYSTEM
-   File: imageData.js
-   Version: 2.0
+   File: images.js
+   Version: 5.0
    =========================================================
 
    FEATURES
-   - Centralised image configuration
-   - Existing image filenames and object keys preserved
-   - Backwards-compatible helper function names
-   - Safe image path normalisation
-   - Image inventory and duplicate detection
-   - Browser-based image validation
-   - Accurate asynchronous validation reporting
-   - Promise-based validation
-   - Optional fallback image support
-   - Protection against repeated image errors
-   - Lazy loading and asynchronous decoding
-   - Accessible image metadata checks
-   - Dynamic image observation
-   - Console diagnostics
-   - No external libraries required
+   - Centralised image catalogue
+   - Exact supplied image filenames
+   - Existing catalogue keys preserved
+   - Backward-compatible helper functions
+   - Safe image path generation
+   - Nested image lookup
+   - Complete image inventory
+   - Duplicate reference detection
+   - Browser image loading validation
+   - Missing image and error reporting
+   - Image dimension reporting
+   - Validation timeouts
+   - HTML image element error handling
+   - Browser console audit reports
+   - No external dependencies
 
-   PROJECT STRUCTURE
+   DIRECTORY STRUCTURE
 
-   AVERRA_WEBSITE/
+   website/
    ├── index.html
    ├── about.html
    ├── services.html
-   ├── industries.html
    ├── careers.html
    ├── contact.html
-   ├── pricing.html
-   ├── privacy-policy.html
-   ├── terms.html
-   ├── imageData.js
+   ├── images.js
    ├── style.css
+   ├── script.js
    └── images/
        ├── Logo.jpeg
-       ├── hero-global-talent.jpg
        ├── about-global-network.jpg
-       ├── about-team.jpg
        ├── about-uk-india.jpg
-       ├── services-finance-accounting.jpg
-       ├── services-operations-admin.jpg
-       ├── services-customer-support.jpg
-       ├── services-sales-marketing.jpg
-       ├── services-it-technology.jpg
-       ├── services-engineering.jpg
-       ├── services-hr-recruitment.jpg
-       ├── services-dedicated-teams.jpg
-       ├── industries-finance.jpg
-       ├── industries-technology.jpg
-       ├── industries-engineering.jpg
-       ├── industries-professional-services.jpg
-       ├── industries-healthcare.jpg
-       ├── industries-ecommerce.jpg
-       └── careers-global-opportunities.jpg
+       └── ...
 
-   HTML USAGE
-
-   <script src="imageData.js" defer></script>
-
-   IMPORTANT
-
-   This file manages image references and browser loading.
-   It does not create or download image files.
-
-========================================================= */
+   ========================================================= */
 
 "use strict";
 
-
 /* =========================================================
    1. CONFIGURATION
-========================================================= */
+   ========================================================= */
 
-var AVERRA_IMAGE_CONFIG = {
+var AVERRA_IMAGE_FOLDER = "images/";
 
-    /* Website image directory. */
-    imageFolder: "images/",
+var AVERRA_IMAGE_VALIDATION_TIMEOUT = 10000;
 
-    /* Automatically check registered images on page load. */
-    autoValidate: true,
-
-    /* Enable diagnostic messages in the console. */
-    debug: true,
-
-    /* Log each successful validation. */
-    logSuccessfulLoads: false,
-
-    /* Optional fallback filename inside images/.
-       Leave empty to disable automatic fallbacks. */
-    fallbackImage: "",
-
-    /* Prevent repeated fallback attempts. */
-    errorAttribute: "data-averra-image-error-handled",
-
-    /* Prevent duplicate error listeners. */
-    listenerAttribute: "data-averra-image-listener-attached",
-
-    /* Mark elements processed by this system. */
-    processedAttribute: "data-averra-image-processed",
-
-    /* Maximum time allowed for each image validation. */
-    validationTimeout: 15000,
-
-    /* Automatically process dynamically inserted images. */
-    observeDynamicImages: true,
-
-    /* Enable native lazy loading where appropriate. */
-    enableLazyLoading: true,
-
-    /* Default loading strategy. */
-    defaultLoading: "lazy",
-
-    /* Default image decoding strategy. */
-    defaultDecoding: "async",
-
-    /* null preserves the browser's default behaviour.
-       A string such as "anonymous" can be configured. */
-    crossOrigin: null
-
-};
-
+var AVERRA_IMAGE_SUPPORTED_EXTENSIONS = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp",
+    ".gif",
+    ".svg",
+    ".avif"
+];
 
 /* =========================================================
-   2. CENTRAL IMAGE DATA
-   Preserve existing filenames and keys.
-========================================================= */
+   2. IMAGE ASSET CATALOGUE
+   ========================================================= */
 
 var imageData = {
-
-    /* -----------------------------------------------------
-       LOGO
-    ----------------------------------------------------- */
 
     logo: {
         file: "Logo.jpeg",
         alt: "AVERRA Staffing Solutions Ltd logo"
     },
 
-
-    /* -----------------------------------------------------
-       HOMEPAGE
-    ----------------------------------------------------- */
-
-    homepage: {
-
-        hero: {
-            file: "hero-global-talent.jpg",
-            alt: "International professionals supporting UK businesses"
-        },
-
-        globalNetwork: {
-            file: "about-global-network.jpg",
-            alt: "Global professional network connecting businesses with international talent"
-        }
-
-    },
-
-
-    /* -----------------------------------------------------
-       ABOUT AVERRA
-    ----------------------------------------------------- */
-
     about: {
 
         globalNetwork: {
             file: "about-global-network.jpg",
-            alt: "AVERRA connecting UK businesses with international professionals"
-        },
-
-        team: {
-            file: "about-team.jpg",
-            alt: "Professional team supporting staffing and outsourcing services"
+            alt: "Global professional network connecting UK businesses with international talent"
         },
 
         ukIndia: {
@@ -185,426 +86,381 @@ var imageData = {
 
     },
 
+    architecture: {
 
-    /* -----------------------------------------------------
-       SERVICES
-    ----------------------------------------------------- */
-
-    services: {
-
-        financeAccounting: {
-            file: "services-finance-accounting.jpg",
-            alt: "Finance and accounting professionals providing business support"
+        architecture1: {
+            file: "architecture1.jpg",
+            alt: "Architecture and building design"
         },
 
-        operationsAdmin: {
-            file: "services-operations-admin.jpg",
-            alt: "Operations and administration professionals supporting business teams"
+        architecture2: {
+            file: "architecture2.jpg",
+            alt: "Architectural design and professional planning"
         },
 
-        customerSupport: {
-            file: "services-customer-support.jpg",
-            alt: "Customer support professionals assisting customers and clients"
+        architecture3: {
+            file: "architecture3.jpg",
+            alt: "Architecture project and building design"
         },
 
-        salesMarketing: {
-            file: "services-sales-marketing.jpg",
-            alt: "Sales and marketing professionals supporting business growth"
-        },
-
-        itTechnology: {
-            file: "services-it-technology.jpg",
-            alt: "IT and technology professionals supporting digital operations"
-        },
-
-        engineering: {
-            file: "services-engineering.jpg",
-            alt: "Engineering professionals working on technical projects"
-        },
-
-        hrRecruitment: {
-            file: "services-hr-recruitment.jpg",
-            alt: "HR and recruitment professionals supporting talent acquisition"
-        },
-
-        dedicatedTeams: {
-            file: "services-dedicated-teams.jpg",
-            alt: "Dedicated remote professionals working as an extension of a client team"
+        architecture5: {
+            file: "architecture5.jpg",
+            alt: "Architecture and technical design services"
         }
 
     },
 
+    business: {
 
-    /* -----------------------------------------------------
-       INDUSTRIES
-    ----------------------------------------------------- */
-
-    industries: {
-
-        finance: {
-            file: "industries-finance.jpg",
-            alt: "Finance professionals supporting financial services businesses"
+        professionals: {
+            file: "business-professionals.jpg",
+            alt: "Business professionals collaborating"
         },
 
-        technology: {
-            file: "industries-technology.jpg",
-            alt: "Technology professionals supporting digital business operations"
+        globalTeam: {
+            file: "global-team.jpg",
+            alt: "International professionals working as a global team"
         },
 
-        engineering: {
-            file: "industries-engineering.jpg",
-            alt: "Engineering professionals supporting technical projects"
+        teamMeetings: {
+            file: "team-meetings.jpg",
+            alt: "Professional team meeting"
         },
 
-        professionalServices: {
-            file: "industries-professional-services.jpg",
-            alt: "Professional services teams delivering specialist business expertise"
-        },
-
-        healthcare: {
-            file: "industries-healthcare.jpg",
-            alt: "Healthcare professionals working in a professional care environment"
-        },
-
-        ecommerce: {
-            file: "industries-ecommerce.jpg",
-            alt: "E-commerce professionals supporting online business operations"
+        meetingsProfessional: {
+            file: "meetings professional.jpg",
+            alt: "Professionals participating in a business meeting"
         }
 
     },
-
-
-    /* -----------------------------------------------------
-       CAREERS
-    ----------------------------------------------------- */
 
     careers: {
 
         globalOpportunities: {
-            file: "careers-global-opportunities.jpg",
-            alt: "International career opportunities for professionals exploring work with AVERRA"
+            file: "career-global-opportunities.jpg",
+            alt: "Global career opportunities for professionals"
+        }
+
+    },
+
+    communication: {
+
+        email: {
+            file: "email2.png",
+            alt: "Email communication"
+        },
+
+        message: {
+            file: "message.png",
+            alt: "Business messaging"
+        },
+
+        virtualCall: {
+            file: "virtual-call.jpg",
+            alt: "Professionals communicating through a virtual call"
+        },
+
+        virtualMeetings: {
+            file: "virtual-meetings.jpg",
+            alt: "Remote professionals attending a virtual meeting"
+        },
+
+        virtualCalls: {
+            file: "virtuals calls.jpg",
+            alt: "Virtual calls between remote professionals"
+        }
+
+    },
+
+    finance: {
+
+        finance: {
+            file: "finance.jpg",
+            alt: "Finance and accounting services"
+        },
+
+        financeOffice: {
+            file: "finance-office.png",
+            alt: "Finance professionals working in an office"
+        },
+
+        financeVirtualReality: {
+            file: "finance-virtual-reality.jpg",
+            alt: "Technology-enabled financial services"
+        },
+
+        virtualFinance: {
+            file: "Virtual-finance-2.jpg",
+            alt: "Virtual finance and accounting support"
+        }
+
+    },
+
+    workplace: {
+
+        employeeVirtual: {
+            file: "employee-v-virtual.png",
+            alt: "Comparison of employee and virtual working arrangements"
+        },
+
+        remoteWorker: {
+            file: "remote-worker.png",
+            alt: "Professional working remotely"
+        },
+
+        virtualOffice: {
+            file: "virtual-office.png",
+            alt: "Virtual office and remote working"
+        },
+
+        virtualOfficePhoto: {
+            file: "virtualOffice.jpg",
+            alt: "Virtual office environment"
+        },
+
+        virtualImage: {
+            file: "virtual-image.jpg",
+            alt: "Virtual work and digital collaboration"
+        },
+
+        meetings: {
+            file: "meetings professional.jpg",
+            alt: "Business professionals collaborating remotely"
+        }
+
+    },
+
+    locations: {
+
+        location: {
+            file: "location.jpg",
+            alt: "Business location"
+        },
+
+        location2: {
+            file: "location2.jpg",
+            alt: "Business location and workplace"
+        },
+
+        registeredOffice: {
+            file: "registered-office.png",
+            alt: "Registered business office"
+        }
+
+    },
+
+    general: {
+
+        images: {
+            file: "images.jpg",
+            alt: "General business image"
+        },
+
+        frequentQuestions: {
+            file: "frequent-questions.jpg",
+            alt: "Frequently asked questions and customer support"
         }
 
     }
 
 };
 
+/* =========================================================
+   3. INTERNAL HELPERS
+   ========================================================= */
+
+/**
+ * Check whether a filename is a safe, plain filename.
+ *
+ * Directory traversal, path separators, query strings
+ * and URL fragments are not accepted.
+ */
+function averraIsValidImageFilename(filename) {
+
+    if (typeof filename !== "string") {
+        return false;
+    }
+
+    var name = filename.trim();
+
+    if (!name) {
+        return false;
+    }
+
+    if (
+        name === "." ||
+        name === ".." ||
+        name.indexOf("..") !== -1 ||
+        name.indexOf("/") !== -1 ||
+        name.indexOf("\\") !== -1 ||
+        name.indexOf("?") !== -1 ||
+        name.indexOf("#") !== -1 ||
+        /[\u0000-\u001F\u007F]/.test(name)
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Encode filenames for URL use.
+ *
+ * Spaces are encoded correctly.
+ * Filename capitalization is preserved.
+ */
+function averraEncodeFilename(filename) {
+
+    try {
+        return encodeURIComponent(filename);
+    } catch (error) {
+        return "";
+    }
+}
+
+/**
+ * Return the extension of a filename.
+ */
+function averraGetImageExtension(filename) {
+
+    if (!averraIsValidImageFilename(filename)) {
+        return "";
+    }
+
+    var lastDot = filename.lastIndexOf(".");
+
+    if (lastDot < 0) {
+        return "";
+    }
+
+    return filename.slice(lastDot).toLowerCase();
+}
+
+/**
+ * Check whether an extension is supported.
+ *
+ * This is a filename check, not proof that the
+ * file contains a valid image.
+ */
+function averraIsSupportedImageExtension(filename) {
+
+    var extension = averraGetImageExtension(filename);
+
+    return AVERRA_IMAGE_SUPPORTED_EXTENSIONS.indexOf(
+        extension
+    ) !== -1;
+}
 
 /* =========================================================
-   3. INTERNAL UTILITIES
-========================================================= */
+   4. IMAGE PATH HELPERS
+   ========================================================= */
 
-function averraIsObject(value) {
-
-    return Boolean(
-        value &&
-        typeof value === "object" &&
-        !Array.isArray(value)
-    );
-
-}
-
-
-function averraLog() {
+/**
+ * Generate a relative image path.
+ *
+ * Example:
+ * images/Logo.jpeg
+ */
+function averraGetImagePath(image) {
 
     if (
-        !AVERRA_IMAGE_CONFIG.debug ||
-        typeof console === "undefined"
-    ) {
-        return;
-    }
-
-    var args = Array.prototype.slice.call(arguments);
-
-    if (typeof console.info === "function") {
-        console.info.apply(console, args);
-    }
-
-}
-
-
-function averraWarn() {
-
-    if (typeof console === "undefined") {
-        return;
-    }
-
-    var args = Array.prototype.slice.call(arguments);
-
-    if (typeof console.warn === "function") {
-        console.warn.apply(console, args);
-    }
-
-}
-
-
-function averraError() {
-
-    if (typeof console === "undefined") {
-        return;
-    }
-
-    var args = Array.prototype.slice.call(arguments);
-
-    if (typeof console.error === "function") {
-        console.error.apply(console, args);
-    }
-
-}
-
-
-function averraGetImageFolder() {
-
-    var folder = AVERRA_IMAGE_CONFIG.imageFolder;
-
-    if (
-        typeof folder !== "string" ||
-        !folder.trim()
-    ) {
-        return "images/";
-    }
-
-    folder = folder.trim().replace(/\\/g, "/");
-
-    if (
-        folder.indexOf("//") === 0 ||
-        /^[a-z][a-z0-9+.-]*:/i.test(folder) ||
-        folder.indexOf("?") !== -1 ||
-        folder.indexOf("#") !== -1
-    ) {
-        return "images/";
-    }
-
-    folder = folder.replace(/^\/+/, "");
-
-    var folderParts = folder.split("/");
-
-    if (
-        folderParts.some(function (part) {
-            return part === ".." || part === ".";
-        })
-    ) {
-        return "images/";
-    }
-
-    if (folder.charAt(folder.length - 1) !== "/") {
-        folder += "/";
-    }
-
-    return folder;
-
-}
-
-
-/* =========================================================
-   4. IMAGE FILENAME NORMALISATION
-========================================================= */
-
-/*
-   Accepted examples:
-
-   Logo.jpeg
-   images/Logo.jpeg
-   images/services/example.jpg
-
-   Rejected examples:
-
-   Empty paths
-   External URLs
-   Protocol-relative URLs
-   Parent-directory traversal
-   Backslashes
-   Query strings
-   Fragment identifiers
-   Control characters
-
-   Returns a path relative to the configured image folder.
-*/
-
-function normaliseImageFilename(filename) {
-
-    if (
-        typeof filename !== "string" ||
-        !filename.trim()
+        !image ||
+        typeof image.file !== "string"
     ) {
         return "";
     }
 
-    var value = filename.trim();
+    var filename = image.file.trim();
 
-    if (
-        /^[a-z][a-z0-9+.-]*:/i.test(value) ||
-        value.indexOf("//") === 0 ||
-        value.indexOf("\\") !== -1 ||
-        value.indexOf("?") !== -1 ||
-        value.indexOf("#") !== -1 ||
-        /[\u0000-\u001F\u007F]/.test(value)
-    ) {
+    if (!averraIsValidImageFilename(filename)) {
         return "";
     }
 
-    value = value.replace(/^\/+/, "");
+    var encodedFilename = averraEncodeFilename(filename);
 
-    var folder = averraGetImageFolder();
-
-    if (value.indexOf(folder) === 0) {
-        value = value.substring(folder.length);
-    }
-
-    if (
-        !value ||
-        value.charAt(value.length - 1) === "/"
-    ) {
+    if (!encodedFilename) {
         return "";
     }
 
-    var parts = value.split("/");
-
-    for (var i = 0; i < parts.length; i++) {
-
-        if (
-            !parts[i] ||
-            parts[i] === "." ||
-            parts[i] === ".." ||
-            /[\u0000-\u001F\u007F]/.test(parts[i])
-        ) {
-            return "";
-        }
-
-    }
-
-    return value;
-
+    return AVERRA_IMAGE_FOLDER + encodedFilename;
 }
 
-
-/* =========================================================
-   5. IMAGE RECORD VALIDATION
-========================================================= */
-
-function isValidImageRecord(image) {
-
-    return Boolean(
-        averraIsObject(image) &&
-        typeof image.file === "string" &&
-        normaliseImageFilename(image.file)
-    );
-
-}
-
-
-/* =========================================================
-   6. IMAGE PATH HELPER
-========================================================= */
-
-/*
-   Example:
-
-   getImagePath(imageData.homepage.hero)
-
-   Result:
-
-   images/hero-global-talent.jpg
-*/
-
+/**
+ * Backward-compatible image path helper.
+ */
 function getImagePath(image) {
 
-    if (!isValidImageRecord(image)) {
-        return "";
-    }
-
-    return averraGetImageFolder() +
-        normaliseImageFilename(image.file);
-
+    return averraGetImagePath(image);
 }
 
-
-/* =========================================================
-   7. IMAGE OBJECT HELPER
-========================================================= */
-
-/*
-   Example:
-
-   var hero = getImage(imageData.homepage.hero);
-
-   Result:
-
-   {
-       src: "images/hero-global-talent.jpg",
-       alt: "International professionals supporting UK businesses"
-   }
-*/
-
+/**
+ * Return the source and alternative text for an image.
+ */
 function getImage(image) {
 
-    if (!isValidImageRecord(image)) {
-
+    if (
+        !image ||
+        typeof image.file !== "string"
+    ) {
         return {
             src: "",
             alt: ""
         };
-
     }
 
     return {
-
-        src: getImagePath(image),
-
+        src: averraGetImagePath(image),
         alt: typeof image.alt === "string"
             ? image.alt
             : ""
-
     };
-
 }
 
-
-/* =========================================================
-   8. IMAGE URL HELPER
-========================================================= */
-
-/*
-   Example:
-
-   getImageUrl("hero-global-talent.jpg")
-
-   Result:
-
-   images/hero-global-talent.jpg
-*/
-
+/**
+ * Generate an image URL directly from a filename.
+ */
 function getImageUrl(filename) {
 
-    var normalised = normaliseImageFilename(filename);
-
-    if (!normalised) {
+    if (typeof filename !== "string") {
         return "";
     }
 
-    return averraGetImageFolder() + normalised;
-
+    return averraGetImagePath({
+        file: filename
+    });
 }
 
-
 /* =========================================================
-   9. GET IMAGE BY SECTION AND KEY
-========================================================= */
+   5. NESTED IMAGE LOOKUP
+   ========================================================= */
 
-/*
-   Examples:
-
-   getImageByKey("homepage", "hero")
-   getImageByKey("services", "financeAccounting")
-   getImageByKey("industries", "technology")
-*/
-
+/**
+ * Retrieve an image by section and key.
+ *
+ * Examples:
+ *
+ * getImageByKey("about", "globalNetwork")
+ * getImageByKey("business", "globalTeam")
+ * getImageByKey("finance", "financeOffice")
+ *
+ * Nested keys are also supported:
+ *
+ * getImageByKey("about", "globalNetwork")
+ *
+ * Returns:
+ * { src: "...", alt: "..." }
+ */
 function getImageByKey(section, key) {
 
     if (
         typeof section !== "string" ||
         typeof key !== "string" ||
-        !Object.prototype.hasOwnProperty.call(imageData, section)
+        !section.trim() ||
+        !key.trim() ||
+        !Object.prototype.hasOwnProperty.call(
+            imageData,
+            section
+        )
     ) {
         return {
             src: "",
@@ -612,52 +468,119 @@ function getImageByKey(section, key) {
         };
     }
 
-    var sectionData = imageData[section];
+    var current = imageData[section];
 
-    if (
-        !averraIsObject(sectionData) ||
-        !Object.prototype.hasOwnProperty.call(sectionData, key)
-    ) {
-        return {
-            src: "",
-            alt: ""
-        };
-    }
+    var keys = key.split(".");
 
-    return getImage(sectionData[key]);
+    for (var i = 0; i < keys.length; i++) {
 
-}
-
-
-/* =========================================================
-   10. GET ALL REGISTERED IMAGES
-========================================================= */
-
-function getAllImages() {
-
-    var images = [];
-
-    function collectImages(sectionData, sectionName) {
-
-        if (!averraIsObject(sectionData)) {
-            return;
+        if (
+            !current ||
+            typeof current !== "object" ||
+            !Object.prototype.hasOwnProperty.call(
+                current,
+                keys[i]
+            )
+        ) {
+            return {
+                src: "",
+                alt: ""
+            };
         }
 
-        Object.keys(sectionData).forEach(function (key) {
+        current = current[keys[i]];
+    }
 
-            var item = sectionData[key];
+    return getImage(current);
+}
 
-            if (isValidImageRecord(item)) {
+/**
+ * Retrieve an image using its full catalogue path.
+ *
+ * Examples:
+ *
+ * getImageByPath("logo")
+ * getImageByPath("about.globalNetwork")
+ * getImageByPath("finance.virtualFinance")
+ * getImageByPath("workplace.remoteWorker")
+ */
+function getImageByPath(path) {
 
-                images.push({
+    if (
+        typeof path !== "string" ||
+        !path.trim()
+    ) {
+        return {
+            src: "",
+            alt: ""
+        };
+    }
 
-                    section: sectionName,
+    var keys = path.split(".");
+    var current = imageData;
+
+    for (var i = 0; i < keys.length; i++) {
+
+        if (
+            !current ||
+            typeof current !== "object" ||
+            !Object.prototype.hasOwnProperty.call(
+                current,
+                keys[i]
+            )
+        ) {
+            return {
+                src: "",
+                alt: ""
+            };
+        }
+
+        current = current[keys[i]];
+    }
+
+    return getImage(current);
+}
+
+/* =========================================================
+   6. COMPLETE IMAGE INVENTORY
+   ========================================================= */
+
+/**
+ * Return all image references in the catalogue.
+ *
+ * Each result contains:
+ * section, name, file, src, alt
+ */
+function getAllImages() {
+
+    var results = [];
+
+    function scan(object, section) {
+
+        Object.keys(object).forEach(function (key) {
+
+            var item = object[key];
+
+            if (
+                item &&
+                typeof item === "object" &&
+                !Array.isArray(item) &&
+                typeof item.file === "string"
+            ) {
+
+                results.push({
+
+                    section: section,
 
                     name: key,
 
-                    file: normaliseImageFilename(item.file),
+                    key: section
+                        ? section + "." + key
+                        : key,
 
-                    src: getImagePath(item),
+                    file: item.file,
+
+                    src: averraGetImagePath(item),
 
                     alt: typeof item.alt === "string"
                         ? item.alt
@@ -665,11 +588,17 @@ function getAllImages() {
 
                 });
 
-            } else if (averraIsObject(item)) {
+            } else if (
+                item &&
+                typeof item === "object" &&
+                !Array.isArray(item)
+            ) {
 
-                collectImages(
+                scan(
                     item,
-                    sectionName + "." + key
+                    section
+                        ? section + "." + key
+                        : key
                 );
 
             }
@@ -678,1329 +607,688 @@ function getAllImages() {
 
     }
 
-    Object.keys(imageData).forEach(function (section) {
+    scan(imageData, "");
 
-        var item = imageData[section];
-
-        if (isValidImageRecord(item)) {
-
-            images.push({
-
-                section: section,
-
-                name: section,
-
-                file: normaliseImageFilename(item.file),
-
-                src: getImagePath(item),
-
-                alt: typeof item.alt === "string"
-                    ? item.alt
-                    : ""
-
-            });
-
-        } else if (averraIsObject(item)) {
-
-            collectImages(item, section);
-
-        }
-
-    });
-
-    return images;
-
+    return results;
 }
 
-
-/* =========================================================
-   11. GET UNIQUE PHYSICAL IMAGE FILES
-========================================================= */
-
-/*
-   Repeated references to the same image are included only
-   once in the validation inventory.
-
-   Comparison is case-insensitive for duplicate reporting.
-   Actual hosted paths can still be case-sensitive.
-*/
-
+/**
+ * Return unique image files.
+ *
+ * Duplicate comparison ignores filename case.
+ * Original filenames are not modified.
+ */
 function getUniqueImages() {
 
-    var allImages = getAllImages();
-    var uniqueImages = [];
-    var seenPaths = Object.create(null);
+    var seen = Object.create(null);
 
-    allImages.forEach(function (item) {
+    return getAllImages().filter(function (item) {
 
-        var key = item.src.toLowerCase();
+        var key = item.file.toLowerCase();
 
-        if (!key || seenPaths[key]) {
-            return;
+        if (seen[key]) {
+            return false;
         }
 
-        seenPaths[key] = true;
+        seen[key] = true;
 
-        uniqueImages.push(item);
-
+        return true;
     });
-
-    return uniqueImages;
-
 }
 
+/**
+ * Return duplicated image references.
+ */
+function getDuplicateImages() {
 
-/* =========================================================
-   12. IMAGE INVENTORY SUMMARY
-========================================================= */
+    var groups = Object.create(null);
 
-function getImageInventory() {
+    getAllImages().forEach(function (item) {
 
-    var allImages = getAllImages();
-    var uniqueImages = getUniqueImages();
-    var sectionCounts = {};
+        var key = item.file.toLowerCase();
 
-    allImages.forEach(function (item) {
-
-        if (!sectionCounts[item.section]) {
-            sectionCounts[item.section] = 0;
+        if (!groups[key]) {
+            groups[key] = [];
         }
 
-        sectionCounts[item.section]++;
+        groups[key].push(item);
 
     });
+
+    return Object.keys(groups)
+        .filter(function (key) {
+            return groups[key].length > 1;
+        })
+        .map(function (key) {
+
+            return {
+                file: groups[key][0].file,
+                references: groups[key]
+            };
+
+        });
+}
+
+/**
+ * Return the complete catalogue summary.
+ */
+function getImageInventory() {
+
+    var all = getAllImages();
+    var unique = getUniqueImages();
+    var duplicates = getDuplicateImages();
 
     return {
 
-        totalReferences: allImages.length,
+        totalReferences: all.length,
 
-        uniqueFiles: uniqueImages.length,
+        uniqueFiles: unique.length,
 
         duplicateReferences:
-            allImages.length - uniqueImages.length,
+            all.length - unique.length,
 
-        sections: sectionCounts,
+        duplicateFiles: duplicates.length,
 
-        images: allImages,
+        invalidFilenames: all.filter(function (item) {
+            return !averraIsValidImageFilename(item.file);
+        }),
 
-        uniqueImages: uniqueImages
+        unsupportedExtensions: all.filter(function (item) {
+            return !averraIsSupportedImageExtension(item.file);
+        }),
 
-    };
+        images: all,
 
-}
+        uniqueImages: unique,
 
-
-/* =========================================================
-   13. FIND IMAGE REFERENCES BY FILENAME
-========================================================= */
-
-function findImagesByFilename(filename) {
-
-    var normalised = normaliseImageFilename(filename);
-
-    if (!normalised) {
-        return [];
-    }
-
-    var target = normalised.toLowerCase();
-
-    return getAllImages().filter(function (item) {
-
-        return item.file.toLowerCase() === target;
-
-    });
-
-}
-
-
-/* =========================================================
-   14. FIND IMAGE RECORD BY SECTION AND KEY
-========================================================= */
-
-function findImageRecord(section, key) {
-
-    if (
-        typeof section !== "string" ||
-        typeof key !== "string" ||
-        !Object.prototype.hasOwnProperty.call(imageData, section)
-    ) {
-        return null;
-    }
-
-    var sectionData = imageData[section];
-
-    if (
-        !averraIsObject(sectionData) ||
-        !Object.prototype.hasOwnProperty.call(sectionData, key)
-    ) {
-        return null;
-    }
-
-    var record = sectionData[key];
-
-    return isValidImageRecord(record) ? record : null;
-
-}
-
-
-/* =========================================================
-   15. GET IMAGES BY SECTION
-========================================================= */
-
-function getImagesBySection(section) {
-
-    if (
-        typeof section !== "string" ||
-        !Object.prototype.hasOwnProperty.call(imageData, section)
-    ) {
-        return [];
-    }
-
-    return getAllImages().filter(function (item) {
-
-        return item.section === section ||
-            item.section.indexOf(section + ".") === 0;
-
-    });
-
-}
-
-
-/* =========================================================
-   16. BROWSER IMAGE VALIDATION
-========================================================= */
-
-/*
-   Tests each unique registered image using browser loading.
-
-   IMPORTANT:
-   The return value is populated asynchronously. Use the
-   callback or validateImagesAsync() to obtain final results.
-
-   Example:
-
-   validateImages(function (results) {
-       console.log(results);
-   });
-
-   Results:
-
-   {
-       total: 0,
-       loaded: 0,
-       missing: 0,
-       details: []
-   }
-*/
-
-function validateImages(callback) {
-
-    var uniqueImages = getUniqueImages();
-
-    var results = {
-
-        total: uniqueImages.length,
-
-        loaded: 0,
-
-        missing: 0,
-
-        details: []
+        duplicates: duplicates
 
     };
+}
 
-    var completed = 0;
-    var finalised = false;
+/* =========================================================
+   7. BROWSER IMAGE VALIDATION
+   ========================================================= */
 
-    function finishValidation() {
+/**
+ * Test whether a single image can load.
+ *
+ * The browser requests the image at the configured path.
+ *
+ * Results:
+ * loaded
+ * load-error
+ * invalid-path
+ * unsupported-extension
+ * browser-unavailable
+ * timeout
+ */
+function averraValidateImage(image, options) {
 
-        if (finalised) {
+    options = options || {};
+
+    var timeout = Number(options.timeout);
+
+    if (
+        !Number.isFinite(timeout) ||
+        timeout <= 0
+    ) {
+        timeout = AVERRA_IMAGE_VALIDATION_TIMEOUT;
+    }
+
+    return new Promise(function (resolve) {
+
+        var filename = image &&
+            typeof image.file === "string"
+            ? image.file.trim()
+            : "";
+
+        var src = averraGetImagePath(image);
+
+        if (!src) {
+
+            resolve({
+
+                file: filename,
+
+                src: "",
+
+                valid: false,
+
+                status: "invalid-path",
+
+                width: 0,
+
+                height: 0
+
+            });
+
             return;
         }
 
-        finalised = true;
+        if (!averraIsSupportedImageExtension(filename)) {
 
-        results.details.sort(function (a, b) {
+            resolve({
 
-            return a.file.localeCompare(b.file);
+                file: filename,
 
-        });
+                src: src,
 
-        if (AVERRA_IMAGE_CONFIG.debug) {
+                valid: false,
 
-            if (typeof console !== "undefined") {
+                status: "unsupported-extension",
 
-                if (typeof console.group === "function") {
-                    console.group(
-                        "[AVERRA Images] Validation report"
-                    );
-                }
+                width: 0,
 
-                if (typeof console.log === "function") {
+                height: 0
 
-                    console.log(
-                        "Unique image files:",
-                        results.total
-                    );
+            });
 
-                    console.log(
-                        "Successfully loaded:",
-                        results.loaded
-                    );
-
-                    console.log(
-                        "Missing, inaccessible or timed out:",
-                        results.missing
-                    );
-
-                }
-
-                if (typeof console.table === "function") {
-                    console.table(results.details);
-                }
-
-                results.details.forEach(function (detail) {
-
-                    if (detail.status !== "loaded") {
-
-                        averraError(
-                            "[AVERRA Images] Image check failed:",
-                            detail.src,
-                            "(" + detail.status + ")"
-                        );
-
-                    }
-
-                });
-
-                if (typeof console.groupEnd === "function") {
-                    console.groupEnd();
-                }
-
-            }
-
+            return;
         }
 
-        if (typeof callback === "function") {
-            callback(results);
+        if (typeof Image === "undefined") {
+
+            resolve({
+
+                file: filename,
+
+                src: src,
+
+                valid: false,
+
+                status: "browser-unavailable",
+
+                width: 0,
+
+                height: 0
+
+            });
+
+            return;
         }
-
-    }
-
-    if (typeof Image === "undefined") {
-
-        averraWarn(
-            "[AVERRA Images] Browser image validation is unavailable."
-        );
-
-        results.details.push({
-
-            file: "",
-
-            src: "",
-
-            status: "unavailable"
-
-        });
-
-        results.total = 0;
-
-        if (typeof callback === "function") {
-            callback(results);
-        }
-
-        return results;
-
-    }
-
-    if (uniqueImages.length === 0) {
-
-        finishValidation();
-
-        return results;
-
-    }
-
-    uniqueImages.forEach(function (item) {
 
         var testImage = new Image();
 
-        var finished = false;
+        var completed = false;
 
-        var timeoutId = null;
+        var timer = null;
 
-        function finish(status) {
+        function finish(result) {
 
-            if (finished) {
+            if (completed) {
                 return;
             }
 
-            finished = true;
+            completed = true;
 
-            if (timeoutId !== null) {
-                clearTimeout(timeoutId);
+            if (timer !== null) {
+                clearTimeout(timer);
             }
 
             testImage.onload = null;
             testImage.onerror = null;
 
-            if (status === "loaded") {
+            resolve(result);
+        }
 
-                results.loaded++;
+        timer = setTimeout(function () {
 
-                if (AVERRA_IMAGE_CONFIG.logSuccessfulLoads) {
+            finish({
 
-                    averraLog(
-                        "[AVERRA Images] Loaded:",
-                        item.src
-                    );
+                file: filename,
 
-                }
+                src: src,
 
-            } else {
+                valid: false,
 
-                results.missing++;
+                status: "timeout",
 
-            }
+                width: 0,
 
-            results.details.push({
-
-                file: item.file,
-
-                src: item.src,
-
-                status: status
+                height: 0
 
             });
 
-            completed++;
-
-            if (completed === uniqueImages.length) {
-                finishValidation();
-            }
-
-        }
+        }, timeout);
 
         testImage.onload = function () {
-            finish("loaded");
+
+            var width = testImage.naturalWidth || 0;
+
+            var height = testImage.naturalHeight || 0;
+
+            var valid = width > 0 && height > 0;
+
+            finish({
+
+                file: filename,
+
+                src: src,
+
+                valid: valid,
+
+                status: valid
+                    ? "loaded"
+                    : "invalid-image",
+
+                width: width,
+
+                height: height
+
+            });
+
         };
 
         testImage.onerror = function () {
-            finish("missing");
+
+            finish({
+
+                file: filename,
+
+                src: src,
+
+                valid: false,
+
+                status: "load-error",
+
+                width: 0,
+
+                height: 0
+
+            });
+
         };
 
-        timeoutId = setTimeout(function () {
+        testImage.src = src;
 
-            finish("timeout");
+    });
+}
 
-        }, Math.max(
-            1000,
-            Number(AVERRA_IMAGE_CONFIG.validationTimeout) || 15000
-        ));
+/**
+ * Validate every unique catalogue image.
+ *
+ * Returns a Promise.
+ *
+ * Example:
+ *
+ * validateAllImages().then(function (report) {
+ *     console.table(report.results);
+ * });
+ */
+function validateAllImages(options) {
 
-        testImage.src = item.src;
+    options = options || {};
 
-        /* Account for cached images. */
+    var images = getUniqueImages();
+
+    return Promise.all(
+
+        images.map(function (item) {
+
+            return averraValidateImage(item, options);
+
+        })
+
+    ).then(function (results) {
+
+        var passed = results.filter(function (item) {
+            return item.valid;
+        });
+
+        var failed = results.filter(function (item) {
+            return !item.valid;
+        });
+
+        return {
+
+            total: results.length,
+
+            passed: passed.length,
+
+            failed: failed.length,
+
+            success: failed.length === 0,
+
+            results: results,
+
+            missingImages: failed,
+
+            checkedAt: new Date().toISOString()
+
+        };
+
+    });
+
+}
+
+/* =========================================================
+   8. IMAGE AUDIT REPORT
+   ========================================================= */
+
+/**
+ * Run the image validation audit and print a report.
+ */
+function auditImages(options) {
+
+    var inventory = getImageInventory();
+
+    return validateAllImages(options).then(function (report) {
+
+        console.group(
+            "AVERRA Staffing Solutions Ltd — Image Audit"
+        );
+
+        console.log(
+            "Catalogue references:",
+            inventory.totalReferences
+        );
+
+        console.log(
+            "Unique catalogue filenames:",
+            inventory.uniqueFiles
+        );
+
+        console.log(
+            "Duplicate references:",
+            inventory.duplicateReferences
+        );
+
+        console.log(
+            "Unique images successfully loaded:",
+            report.passed
+        );
+
+        console.log(
+            "Images that failed validation:",
+            report.failed
+        );
+
+        console.log(
+            "Audit completed:",
+            report.checkedAt
+        );
+
+        if (inventory.duplicates.length > 0) {
+
+            console.warn(
+                "Duplicate image references:",
+                inventory.duplicates
+            );
+
+        }
+
+        if (inventory.invalidFilenames.length > 0) {
+
+            console.error(
+                "Invalid filenames:",
+                inventory.invalidFilenames
+            );
+
+        }
+
+        if (report.results.length > 0) {
+
+            console.table(report.results);
+
+        }
+
+        if (report.missingImages.length > 0) {
+
+            console.warn(
+                "Images requiring attention:",
+                report.missingImages
+            );
+
+        }
+
+        console.groupEnd();
+
+        return {
+
+            inventory: inventory,
+
+            validation: report
+
+        };
+
+    }).catch(function (error) {
+
+        console.error(
+            "AVERRA image audit failed:",
+            error
+        );
+
+        throw error;
+
+    });
+
+}
+
+/* =========================================================
+   9. CHECK EXISTING HTML IMAGE ELEMENTS
+   ========================================================= */
+
+/**
+ * Check image elements already present on the page.
+ *
+ * This function does not change their sources.
+ *
+ * Example:
+ * auditPageImages()
+ */
+function auditPageImages() {
+
+    if (
+        typeof document === "undefined" ||
+        typeof document.querySelectorAll !== "function"
+    ) {
+
+        return {
+
+            total: 0,
+
+            loaded: 0,
+
+            failed: 0,
+
+            results: []
+
+        };
+
+    }
+
+    var elements = Array.prototype.slice.call(
+        document.querySelectorAll("img")
+    );
+
+    var results = elements.map(function (element) {
+
+        var loaded = element.complete &&
+            element.naturalWidth > 0;
+
+        var failed = element.complete &&
+            element.naturalWidth === 0;
+
+        return {
+
+            src: element.currentSrc || element.src || "",
+
+            alt: element.alt || "",
+
+            loaded: loaded,
+
+            failed: failed,
+
+            status: loaded
+                ? "loaded"
+                : failed
+                    ? "load-error"
+                    : "pending",
+
+            width: element.naturalWidth || 0,
+
+            height: element.naturalHeight || 0
+
+        };
+
+    });
+
+    return {
+
+        total: results.length,
+
+        loaded: results.filter(function (item) {
+            return item.loaded;
+        }).length,
+
+        failed: results.filter(function (item) {
+            return item.failed;
+        }).length,
+
+        pending: results.filter(function (item) {
+            return item.status === "pending";
+        }).length,
+
+        results: results
+
+    };
+
+}
+
+/* =========================================================
+   10. OPTIONAL LIVE IMAGE ERROR HANDLING
+   ========================================================= */
+
+/**
+ * Attach error reporting to existing and future image
+ * elements within a selected root element.
+ *
+ * This function logs image errors. It does not replace
+ * images automatically or hide failed images.
+ *
+ * Example:
+ * monitorImageErrors()
+ */
+function monitorImageErrors(root) {
+
+    if (
+        typeof document === "undefined" ||
+        typeof document.addEventListener !== "function"
+    ) {
+        return false;
+    }
+
+    root = root || document;
+
+    if (
+        typeof root.addEventListener !== "function"
+    ) {
+        return false;
+    }
+
+    if (root.__averraImageErrorMonitorAttached) {
+        return true;
+    }
+
+    root.__averraImageErrorMonitorAttached = true;
+
+    root.addEventListener("error", function (event) {
+
+        var target = event.target;
+
         if (
-            testImage.complete &&
-            testImage.naturalWidth > 0
+            !target ||
+            target.tagName !== "IMG"
         ) {
-            finish("loaded");
-        }
-
-    });
-
-    return results;
-
-}
-
-
-/* =========================================================
-   17. PROMISE-BASED IMAGE VALIDATION
-========================================================= */
-
-/*
-   Recommended for scripts that need final results.
-
-   Example:
-
-   validateImagesAsync().then(function (results) {
-
-       console.log("Loaded:", results.loaded);
-
-       console.log("Missing:", results.missing);
-
-   });
-*/
-
-function validateImagesAsync() {
-
-    return new Promise(function (resolve) {
-
-        validateImages(function (results) {
-
-            resolve(results);
-
-        });
-
-    });
-
-}
-
-
-/* =========================================================
-   18. CHECK WHETHER ONE IMAGE EXISTS
-========================================================= */
-
-/*
-   Example:
-
-   checkImageExists(
-       "hero-global-talent.jpg",
-       function (exists) {
-           console.log(exists);
-       }
-   );
-*/
-
-function checkImageExists(filename, callback) {
-
-    var src = getImageUrl(filename);
-
-    if (!src || typeof Image === "undefined") {
-
-        if (typeof callback === "function") {
-            callback(false);
-        }
-
-        return;
-
-    }
-
-    var testImage = new Image();
-
-    var finished = false;
-
-    var timeoutId = null;
-
-    function finish(exists) {
-
-        if (finished) {
             return;
         }
 
-        finished = true;
-
-        if (timeoutId !== null) {
-            clearTimeout(timeoutId);
-        }
-
-        testImage.onload = null;
-        testImage.onerror = null;
-
-        if (typeof callback === "function") {
-            callback(exists);
-        }
-
-    }
-
-    testImage.onload = function () {
-        finish(true);
-    };
-
-    testImage.onerror = function () {
-        finish(false);
-    };
-
-    timeoutId = setTimeout(function () {
-
-        finish(false);
-
-    }, Math.max(
-        1000,
-        Number(AVERRA_IMAGE_CONFIG.validationTimeout) || 15000
-    ));
-
-    testImage.src = src;
-
-    if (
-        testImage.complete &&
-        testImage.naturalWidth > 0
-    ) {
-        finish(true);
-    }
-
-}
-
-
-/* =========================================================
-   19. IMAGE ERROR HANDLER
-========================================================= */
-
-/*
-   Optional usage:
-
-   handleImageError(img, "image-placeholder.jpg");
-
-   The fallback must be located inside images/.
-
-   Each image element gets no more than one fallback
-   attempt, preventing infinite fallback loops.
-*/
-
-function handleImageError(img, fallbackPath) {
-
-    if (
-        !img ||
-        !img.tagName ||
-        img.tagName.toLowerCase() !== "img"
-    ) {
-        return;
-    }
-
-    var errorAttribute =
-        AVERRA_IMAGE_CONFIG.errorAttribute;
-
-    if (img.getAttribute(errorAttribute) === "true") {
-        return;
-    }
-
-    img.setAttribute(errorAttribute, "true");
-
-    averraError(
-        "[AVERRA Images] Failed to load:",
-        img.currentSrc || img.src || "(no source)"
-    );
-
-    var fallback = fallbackPath ||
-        AVERRA_IMAGE_CONFIG.fallbackImage;
-
-    if (!fallback) {
-        return;
-    }
-
-    var fallbackUrl = getImageUrl(fallback);
-
-    if (!fallbackUrl) {
-
-        averraWarn(
-            "[AVERRA Images] Invalid fallback image:",
-            fallback
-        );
-
-        return;
-
-    }
-
-    /*
-       Avoid attempting to load the same failed image
-       as its own fallback.
-    */
-
-    var currentSource = img.getAttribute("src") || "";
-
-    if (currentSource === fallbackUrl) {
-
-        averraWarn(
-            "[AVERRA Images] Fallback matches the failed source:",
-            fallbackUrl
-        );
-
-        return;
-
-    }
-
-    img.src = fallbackUrl;
-
-}
-
-
-/* =========================================================
-   20. ATTACH IMAGE ERROR HANDLING
-========================================================= */
-
-function attachImageError(img, fallbackPath) {
-
-    if (
-        !img ||
-        !img.addEventListener ||
-        !img.getAttribute ||
-        !img.setAttribute
-    ) {
-        return;
-    }
-
-    var listenerAttribute =
-        AVERRA_IMAGE_CONFIG.listenerAttribute;
-
-    if (img.getAttribute(listenerAttribute) === "true") {
-        return;
-    }
-
-    img.setAttribute(listenerAttribute, "true");
-
-    img.addEventListener("error", function () {
-
-        handleImageError(img, fallbackPath);
-
-    });
-
-}
-
-
-/* =========================================================
-   21. PROCESS AN HTML IMAGE ELEMENT
-========================================================= */
-
-/*
-   Preserves existing src, alt, loading and decoding values.
-
-   Existing HTML images do not need to be rewritten merely
-   to receive error handling and default loading attributes.
-*/
-
-function processImageElement(img) {
-
-    if (
-        !img ||
-        !img.tagName ||
-        img.tagName.toLowerCase() !== "img"
-    ) {
-        return;
-    }
-
-    attachImageError(img);
-
-    if (AVERRA_IMAGE_CONFIG.enableLazyLoading) {
-
-        var isLogo = img.closest
-            ? Boolean(
-                img.closest(
-                    "header, nav, .logo, .site-logo, .site-header"
-                )
-            )
-            : false;
-
-        if (!img.hasAttribute("loading")) {
-
-            img.setAttribute(
-                "loading",
-                isLogo
-                    ? "eager"
-                    : AVERRA_IMAGE_CONFIG.defaultLoading
-            );
-
-        }
-
-    }
-
-    if (
-        AVERRA_IMAGE_CONFIG.defaultDecoding &&
-        !img.hasAttribute("decoding")
-    ) {
-
-        img.setAttribute(
-            "decoding",
-            AVERRA_IMAGE_CONFIG.defaultDecoding
-        );
-
-    }
-
-    /*
-       Apply crossOrigin only when explicitly configured.
-    */
-
-    if (
-        typeof AVERRA_IMAGE_CONFIG.crossOrigin === "string" &&
-        !img.hasAttribute("crossorigin")
-    ) {
-
-        img.crossOrigin = AVERRA_IMAGE_CONFIG.crossOrigin;
-
-    }
-
-    img.setAttribute(
-        AVERRA_IMAGE_CONFIG.processedAttribute,
-        "true"
-    );
-
-}
-
-
-/* =========================================================
-   22. PROCESS EXISTING PAGE IMAGES
-========================================================= */
-
-function initialiseImageErrorHandling() {
-
-    if (
-        typeof document === "undefined" ||
-        !document.querySelectorAll
-    ) {
-        return;
-    }
-
-    var images = document.querySelectorAll("img");
-
-    Array.prototype.forEach.call(images, function (img) {
-
-        processImageElement(img);
-
-    });
-
-}
-
-
-/* =========================================================
-   23. OBSERVE DYNAMICALLY ADDED IMAGES
-========================================================= */
-
-var AVERRA_IMAGE_OBSERVER = null;
-
-
-function observeDynamicImages() {
-
-    if (
-        !AVERRA_IMAGE_CONFIG.observeDynamicImages ||
-        typeof document === "undefined" ||
-        typeof MutationObserver === "undefined" ||
-        !document.documentElement
-    ) {
-        return null;
-    }
-
-    if (AVERRA_IMAGE_OBSERVER) {
-        return AVERRA_IMAGE_OBSERVER;
-    }
-
-    AVERRA_IMAGE_OBSERVER = new MutationObserver(
-        function (mutations) {
-
-            mutations.forEach(function (mutation) {
-
-                Array.prototype.forEach.call(
-                    mutation.addedNodes,
-                    function (node) {
-
-                        if (
-                            !node ||
-                            node.nodeType !== 1
-                        ) {
-                            return;
-                        }
-
-                        if (
-                            node.tagName &&
-                            node.tagName.toLowerCase() === "img"
-                        ) {
-
-                            processImageElement(node);
-
-                        }
-
-                        if (node.querySelectorAll) {
-
-                            var nestedImages =
-                                node.querySelectorAll("img");
-
-                            Array.prototype.forEach.call(
-                                nestedImages,
-                                function (img) {
-
-                                    processImageElement(img);
-
-                                }
-                            );
-
-                        }
-
-                    }
-                );
-
-            });
-
-        }
-    );
-
-    AVERRA_IMAGE_OBSERVER.observe(
-        document.documentElement,
-        {
-            childList: true,
-            subtree: true
-        }
-    );
-
-    return AVERRA_IMAGE_OBSERVER;
-
-}
-
-
-/* =========================================================
-   24. STOP DYNAMIC IMAGE OBSERVATION
-========================================================= */
-
-function stopObservingDynamicImages() {
-
-    if (AVERRA_IMAGE_OBSERVER) {
-
-        AVERRA_IMAGE_OBSERVER.disconnect();
-
-        AVERRA_IMAGE_OBSERVER = null;
-
-    }
-
-}
-
-
-/* =========================================================
-   25. CREATE AN IMAGE ELEMENT
-========================================================= */
-
-/*
-   Example:
-
-   var hero = createImageElement(
-       imageData.homepage.hero,
-       "averra-hero-image"
-   );
-
-   document.querySelector(".hero").appendChild(hero);
-*/
-
-function createImageElement(image, className) {
-
-    if (
-        typeof document === "undefined" ||
-        !document.createElement ||
-        !isValidImageRecord(image)
-    ) {
-        return null;
-    }
-
-    var details = getImage(image);
-
-    if (!details.src) {
-        return null;
-    }
-
-    var img = document.createElement("img");
-
-    img.src = details.src;
-
-    img.alt = details.alt;
-
-    if (
-        typeof className === "string" &&
-        className.trim()
-    ) {
-
-        img.className = className.trim();
-
-    }
-
-    processImageElement(img);
-
-    return img;
-
-}
-
-
-/* =========================================================
-   26. PRINT IMAGE INVENTORY
-========================================================= */
-
-/*
-   Browser console:
-
-   printImageInventory();
-*/
-
-function printImageInventory() {
-
-    var inventory = getImageInventory();
-
-    if (typeof console !== "undefined") {
-
-        if (typeof console.group === "function") {
-            console.group("[AVERRA Images] Image inventory");
-        }
-
-        if (typeof console.log === "function") {
-
-            console.log(
-                "Total image references:",
-                inventory.totalReferences
-            );
-
-            console.log(
-                "Unique physical files:",
-                inventory.uniqueFiles
-            );
-
-            console.log(
-                "Repeated references:",
-                inventory.duplicateReferences
-            );
-
-        }
-
-        if (typeof console.table === "function") {
-            console.table(inventory.images);
-        }
-
-        if (typeof console.log === "function") {
-
-            console.log(
-                "Counts by section:",
-                inventory.sections
-            );
-
-        }
-
-        if (typeof console.groupEnd === "function") {
-            console.groupEnd();
-        }
-
-    }
-
-    return inventory;
-
-}
-
-
-/* =========================================================
-   27. PRINT MISSING IMAGE REPORT
-========================================================= */
-
-/*
-   Browser console:
-
-   printMissingImages();
-
-   The callback-based validation runs asynchronously.
-*/
-
-function printMissingImages() {
-
-    return validateImages(function (results) {
-
-        var missingImages = results.details.filter(
-            function (item) {
-
-                return item.status !== "loaded";
-
+        console.error(
+            "[AVERRA] Image failed to load:",
+            {
+                src: target.currentSrc || target.src || "",
+                alt: target.alt || "",
+                element: target
             }
         );
 
-        if (typeof console !== "undefined") {
+    }, true);
 
-            if (typeof console.group === "function") {
-
-                console.group(
-                    "[AVERRA Images] Missing image report"
-                );
-
-            }
-
-            if (typeof console.log === "function") {
-
-                console.log(
-                    "Images requiring attention:",
-                    missingImages.length
-                );
-
-            }
-
-            if (typeof console.table === "function") {
-                console.table(missingImages);
-            }
-
-            if (typeof console.groupEnd === "function") {
-                console.groupEnd();
-            }
-
-        }
-
-    });
+    return true;
 
 }
 
-
 /* =========================================================
-   28. CHECK IMAGE CONFIGURATION INTEGRITY
-========================================================= */
+   11. BACKWARD-COMPATIBLE GLOBAL EXPORTS
+   ========================================================= */
 
-/*
-   Checks:
-   - Invalid image records
-   - References without alt text
-   - Repeated physical image files
+if (typeof window !== "undefined") {
 
-   Repeated files are not necessarily errors. For example,
-   the homepage and About page intentionally share the
-   global network image.
-*/
+    window.AVERRA_IMAGE_FOLDER =
+        AVERRA_IMAGE_FOLDER;
 
-function checkImageConfiguration() {
+    window.AVERRA_IMAGE_VALIDATION_TIMEOUT =
+        AVERRA_IMAGE_VALIDATION_TIMEOUT;
 
-    var inventory = getImageInventory();
+    window.AVERRA_IMAGE_SUPPORTED_EXTENSIONS =
+        AVERRA_IMAGE_SUPPORTED_EXTENSIONS;
 
-    var invalidRecords = [];
+    window.imageData = imageData;
 
-    var missingAltText = [];
+    window.averraIsValidImageFilename =
+        averraIsValidImageFilename;
 
-    var duplicateFiles = [];
+    window.averraIsSupportedImageExtension =
+        averraIsSupportedImageExtension;
 
-    function inspect(data, path) {
+    window.averraGetImagePath =
+        averraGetImagePath;
 
-        if (!averraIsObject(data)) {
-            return;
-        }
+    window.getImagePath =
+        getImagePath;
 
-        Object.keys(data).forEach(function (key) {
+    window.getImage =
+        getImage;
 
-            var item = data[key];
+    window.getImageUrl =
+        getImageUrl;
 
-            var itemPath = path
-                ? path + "." + key
-                : key;
+    window.getImageByKey =
+        getImageByKey;
 
-            if (
-                averraIsObject(item) &&
-                Object.prototype.hasOwnProperty.call(item, "file")
-            ) {
+    window.getImageByPath =
+        getImageByPath;
 
-                if (!isValidImageRecord(item)) {
+    window.getAllImages =
+        getAllImages;
 
-                    invalidRecords.push({
+    window.getUniqueImages =
+        getUniqueImages;
 
-                        reference: itemPath,
+    window.getDuplicateImages =
+        getDuplicateImages;
 
-                        file: typeof item.file === "string"
-                            ? item.file
-                            : ""
+    window.getImageInventory =
+        getImageInventory;
 
-                    });
+    window.averraValidateImage =
+        averraValidateImage;
 
-                    return;
+    window.validateAllImages =
+        validateAllImages;
 
-                }
+    window.auditImages =
+        auditImages;
 
-                if (
-                    typeof item.alt !== "string" ||
-                    !item.alt.trim()
-                ) {
+    window.auditPageImages =
+        auditPageImages;
 
-                    missingAltText.push({
-
-                        reference: itemPath,
-
-                        file: item.file
-
-                    });
-
-                }
-
-            } else if (averraIsObject(item)) {
-
-                inspect(item, itemPath);
-
-            }
-
-        });
-
-    }
-
-    inspect(imageData, "");
-
-    var seen = Object.create(null);
-
-    inventory.images.forEach(function (item) {
-
-        var key = item.file.toLowerCase();
-
-        if (!seen[key]) {
-            seen[key] = [];
-        }
-
-        seen[key].push(item);
-
-    });
-
-    Object.keys(seen).forEach(function (key) {
-
-        if (seen[key].length > 1) {
-
-            duplicateFiles.push({
-
-                file: key,
-
-                references: seen[key].length,
-
-                sections: seen[key].map(function (item) {
-
-                    return item.section + "." + item.name;
-
-                })
-
-            });
-
-        }
-
-    });
-
-    var report = {
-
-        valid: invalidRecords.length === 0,
-
-        totalReferences: inventory.totalReferences,
-
-        uniqueFiles: inventory.uniqueFiles,
-
-        invalidRecords: invalidRecords,
-
-        missingAltText: missingAltText,
-
-        duplicateFiles: duplicateFiles
-
-    };
-
-    if (AVERRA_IMAGE_CONFIG.debug) {
-
-        if (typeof console !== "undefined") {
-
-            if (typeof console.group === "function") {
-
-                console.group(
-                    "[AVERRA Images] Configuration integrity"
-                );
-
-            }
-
-            if (typeof console.log === "function") {
-
-                console.log(
-                    "Valid configuration:",
-                    report.valid
-                );
-
-                console.log(
-                    "Invalid records:",
-                    report.invalidRecords.length
-                );
-
-                console.log(
-                    "References without alt text:",
-                    report.missingAltText.length
-                );
-
-                console.log(
-                    "Repeated image files:",
-                    report.duplicateFiles.length
-                );
-
-            }
-
-            if (typeof console.table === "function") {
-
-                console.table(report.invalidRecords);
-
-                console.table(report.missingAltText);
-
-                console.table(report.duplicateFiles);
-
-            }
-
-            if (typeof console.groupEnd === "function") {
-                console.groupEnd();
-            }
-
-        }
-
-    }
-
-    return report;
+    window.monitorImageErrors =
+        monitorImageErrors;
 
 }
 
-
 /* =========================================================
-   29. INITIALISE THE AVERRA IMAGE SYSTEM
-========================================================= */
-
-(function initialiseAverraImages() {
-
-    if (typeof document === "undefined") {
-        return;
-    }
-
-    var initialised = false;
-
-    function start() {
-
-        if (initialised) {
-            return;
-        }
-
-        initialised = true;
-
-        /* Process all images already in the document. */
-        initialiseImageErrorHandling();
-
-        /* Process images inserted later by other scripts. */
-        observeDynamicImages();
-
-        if (AVERRA_IMAGE_CONFIG.debug) {
-
-            var inventory = getImageInventory();
-
-            averraLog(
-                "[AVERRA Images] Configuration loaded."
-            );
-
-            averraLog(
-                "[AVERRA Images] Unique files registered:",
-                inventory.uniqueFiles
-            );
-
-            averraLog(
-                "[AVERRA Images] Total image references:",
-                inventory.totalReferences
-            );
-
-        }
-
-        /* Start validation only after initialisation. */
-        if (AVERRA_IMAGE_CONFIG.autoValidate) {
-
-            validateImages();
-
-        }
-
-    }
-
-    /*
-       Works whether the script loads before or after
-       DOMContentLoaded.
-    */
-
-    if (document.readyState === "loading") {
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            start,
-            { once: true }
-        );
-
-    } else {
-
-        start();
-
-    }
-
-})();
-
-
-/* =========================================================
-   END OF AVERRA IMAGE MANAGEMENT SYSTEM
-========================================================= */
+   12. END OF IMAGE MANAGEMENT SYSTEM
+   ========================================================= */
