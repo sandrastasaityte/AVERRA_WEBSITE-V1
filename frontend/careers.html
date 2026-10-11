@@ -1,0 +1,1464 @@
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1f33">
+    <meta name="color-scheme" content="light">
+
+    <title>Careers &amp; Global Opportunities | AVERRA Staffing Solutions Ltd</title>
+
+    <meta name="description" content="Register your interest in potential remote career opportunities with AVERRA Staffing Solutions Ltd across finance, accounting, administration, customer support, technology and professional services.">
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://averrastaffing.co.uk/careers.html">
+    <link rel="icon" href="images/Logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --career-navy: #0b1f33;
+            --career-dark: #071522;
+            --career-blue: #1d5f91;
+            --career-gold: #c89b3c;
+            --career-light: #f4f7fa;
+            --career-white: #ffffff;
+            --career-text: #334155;
+            --career-muted: #64748b;
+            --career-border: #dce4ec;
+            --career-radius: 16px;
+            --career-shadow: 0 16px 42px rgba(11, 31, 51, .08);
+        }
+
+        .careers-page,
+        .careers-page * {
+            box-sizing: border-box;
+        }
+
+        .careers-page {
+            margin: 0;
+            color: var(--career-text);
+            background: var(--career-white);
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+            overflow-wrap: break-word;
+        }
+
+        .careers-page img {
+            display: block;
+            max-width: 100%;
+        }
+
+        .careers-page a {
+            text-underline-offset: 3px;
+        }
+
+        .careers-container {
+            width: min(1180px, calc(100% - 40px));
+            margin-inline: auto;
+        }
+
+        .careers-section {
+            padding: 76px 0;
+        }
+
+        .careers-eyebrow {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: var(--career-blue);
+            font-size: .78rem;
+            font-weight: 800;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+
+        .careers-eyebrow::before {
+            display: inline-block;
+            width: 27px;
+            height: 2px;
+            margin: 0 10px 4px 0;
+            background: var(--career-gold);
+            content: "";
+        }
+
+        .careers-heading {
+            margin: 0 0 20px;
+            color: var(--career-navy);
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1.15;
+            letter-spacing: -.035em;
+        }
+
+        .careers-lead {
+            max-width: 760px;
+            margin: 0;
+            color: var(--career-muted);
+            font-size: 1.05rem;
+            line-height: 1.85;
+        }
+
+        .careers-button {
+            display: inline-flex;
+            min-height: 49px;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 12px 23px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font: inherit;
+            font-size: .94rem;
+            font-weight: 750;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .careers-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .careers-button-gold {
+            color: var(--career-navy);
+            background: #e3bd6a;
+        }
+
+        .careers-button-gold:hover {
+            background: #f0cf86;
+        }
+
+        .careers-button-blue {
+            color: var(--career-white);
+            background: var(--career-blue);
+        }
+
+        .careers-button-blue:hover {
+            background: var(--career-navy);
+        }
+
+        .careers-button-outline {
+            color: var(--career-white);
+            border-color: rgba(255, 255, 255, .42);
+            background: transparent;
+        }
+
+        .careers-button-outline:hover {
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .careers-page a:focus-visible,
+        .careers-page button:focus-visible,
+        .careers-page input:focus-visible,
+        .careers-page select:focus-visible,
+        .careers-page textarea:focus-visible {
+            outline: 3px solid var(--career-gold);
+            outline-offset: 3px;
+        }
+
+        /* HEADER */
+
+        .careers-header {
+            position: relative;
+            z-index: 10;
+            border-bottom: 1px solid var(--career-border);
+            background: var(--career-white);
+        }
+
+        .careers-header-inner {
+            display: flex;
+            min-height: 88px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .careers-logo {
+            display: inline-flex;
+            flex-shrink: 0;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .careers-logo img {
+            width: 175px;
+            max-height: 72px;
+            object-fit: contain;
+        }
+
+        .careers-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 22px;
+        }
+
+        .careers-navigation a {
+            color: var(--career-navy);
+            font-size: .9rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .careers-navigation a:hover,
+        .careers-navigation a[aria-current="page"] {
+            color: var(--career-blue);
+        }
+
+        .careers-navigation .careers-nav-cta {
+            padding: 10px 15px;
+            border-radius: 7px;
+            color: var(--career-white);
+            background: var(--career-navy);
+        }
+
+        .careers-navigation .careers-nav-cta:hover {
+            color: var(--career-white);
+            background: var(--career-blue);
+        }
+
+        /* HERO */
+
+        .careers-hero {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            padding: 85px 0;
+            color: var(--career-white);
+            background:
+                radial-gradient(circle at 85% 20%, rgba(29, 95, 145, .48), transparent 35%),
+                linear-gradient(125deg, var(--career-dark), var(--career-navy) 65%, #123b5d);
+        }
+
+        .careers-hero::after {
+            position: absolute;
+            z-index: -1;
+            right: -170px;
+            bottom: -300px;
+            width: 570px;
+            height: 570px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+
+        .careers-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+            align-items: center;
+            gap: 55px;
+        }
+
+        .careers-hero .careers-eyebrow {
+            color: #f0cf86;
+        }
+
+        .careers-hero h1 {
+            max-width: 750px;
+            margin: 0 0 23px;
+            color: var(--career-white);
+            font-size: clamp(2.7rem, 5.4vw, 4.5rem);
+            line-height: 1.05;
+            letter-spacing: -.055em;
+        }
+
+        .careers-hero h1 span {
+            color: #e3bd6a;
+        }
+
+        .careers-hero-copy {
+            max-width: 650px;
+            margin: 0;
+            color: #d7e2ec;
+            font-size: 1.08rem;
+            line-height: 1.9;
+        }
+
+        .careers-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 30px;
+        }
+
+        .careers-hero-card {
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .075);
+            box-shadow: 0 20px 55px rgba(0, 0, 0, .13);
+        }
+
+        .careers-hero-card h2 {
+            margin: 0 0 12px;
+            color: var(--career-white);
+            font-size: 1.45rem;
+            line-height: 1.4;
+        }
+
+        .careers-hero-card > p {
+            margin: 0 0 22px;
+            color: #d7e2ec;
+        }
+
+        .careers-check-list {
+            display: grid;
+            gap: 14px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .careers-check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            color: #edf3f8;
+        }
+
+        .careers-check {
+            display: inline-flex;
+            width: 25px;
+            height: 25px;
+            flex: 0 0 25px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #f0cf86;
+            background: rgba(227, 189, 106, .15);
+            font-weight: 800;
+        }
+
+        /* INTRODUCTION */
+
+        .careers-intro-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+            align-items: center;
+            gap: 55px;
+        }
+
+        .careers-intro-copy p {
+            margin: 0 0 17px;
+            color: var(--career-muted);
+        }
+
+        .careers-intro-copy p:last-child {
+            margin-bottom: 0;
+        }
+
+        .careers-image {
+            width: 100%;
+            min-height: 310px;
+            max-height: 430px;
+            border-radius: var(--career-radius);
+            background: var(--career-light);
+            object-fit: cover;
+        }
+
+        .careers-image-caption {
+            margin-top: 11px;
+            color: var(--career-muted);
+            font-size: .82rem;
+        }
+
+        .careers-highlight {
+            margin-top: 25px;
+            padding: 21px;
+            border-left: 4px solid var(--career-gold);
+            border-radius: 0 10px 10px 0;
+            background: var(--career-light);
+        }
+
+        .careers-highlight strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--career-navy);
+        }
+
+        .careers-highlight p {
+            margin: 0;
+            color: var(--career-muted);
+            font-size: .94rem;
+        }
+
+        /* CAREER AREAS */
+
+        .careers-areas {
+            background: var(--career-light);
+        }
+
+        .careers-section-heading {
+            max-width: 780px;
+            margin: 0 auto 42px;
+            text-align: center;
+        }
+
+        .careers-section-heading .careers-lead {
+            margin: 0 auto;
+        }
+
+        .careers-areas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .careers-area-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 27px;
+            border: 1px solid var(--career-border);
+            border-radius: 14px;
+            background: var(--career-white);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .careers-area-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--career-shadow);
+        }
+
+        .careers-area-icon {
+            display: inline-flex;
+            width: 49px;
+            height: 49px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 17px;
+            border-radius: 12px;
+            color: var(--career-blue);
+            background: #eaf2f9;
+            font-size: 1.35rem;
+        }
+
+        .careers-area-card h3 {
+            margin: 0 0 10px;
+            color: var(--career-navy);
+            font-size: 1.15rem;
+            line-height: 1.4;
+        }
+
+        .careers-area-card p {
+            margin: 0 0 16px;
+            color: var(--career-muted);
+            font-size: .94rem;
+            line-height: 1.8;
+        }
+
+        .careers-area-card a {
+            margin-top: auto;
+            color: var(--career-blue);
+            font-size: .91rem;
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        .careers-area-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* CANDIDATE JOURNEY */
+
+        .careers-journey-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .careers-journey-step {
+            padding: 24px;
+            border-top: 3px solid var(--career-gold);
+            border-radius: 0 0 12px 12px;
+            background: var(--career-light);
+        }
+
+        .careers-step-number {
+            display: inline-flex;
+            width: 38px;
+            height: 38px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            border-radius: 50%;
+            color: var(--career-white);
+            background: var(--career-navy);
+            font-weight: 800;
+        }
+
+        .careers-journey-step h3 {
+            margin: 0 0 9px;
+            color: var(--career-navy);
+            font-size: 1.06rem;
+        }
+
+        .careers-journey-step p {
+            margin: 0;
+            color: var(--career-muted);
+            font-size: .91rem;
+            line-height: 1.75;
+        }
+
+        /* REGISTRATION */
+
+        .careers-registration {
+            background: var(--career-light);
+        }
+
+        .careers-registration-grid {
+            display: grid;
+            grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+            align-items: start;
+            gap: 55px;
+        }
+
+        .careers-registration-copy {
+            padding-top: 8px;
+        }
+
+        .careers-registration-copy p {
+            color: var(--career-muted);
+        }
+
+        .careers-registration-list {
+            display: grid;
+            gap: 13px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .careers-registration-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--career-text);
+            font-size: .95rem;
+        }
+
+        .careers-registration-list span {
+            color: var(--career-blue);
+            font-weight: 800;
+        }
+
+        .careers-form-card {
+            padding: 34px;
+            border: 1px solid var(--career-border);
+            border-radius: 17px;
+            background: var(--career-white);
+            box-shadow: var(--career-shadow);
+        }
+
+        .careers-form-card h2 {
+            margin: 0 0 9px;
+            color: var(--career-navy);
+            font-size: 1.75rem;
+            line-height: 1.3;
+        }
+
+        .careers-form-intro {
+            margin: 0 0 25px;
+            color: var(--career-muted);
+            font-size: .94rem;
+        }
+
+        .careers-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .careers-form-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 17px;
+        }
+
+        .careers-field {
+            display: grid;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .careers-field label {
+            color: var(--career-navy);
+            font-size: .9rem;
+            font-weight: 750;
+        }
+
+        .careers-field input,
+        .careers-field select,
+        .careers-field textarea {
+            width: 100%;
+            min-height: 47px;
+            padding: 12px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            color: var(--career-navy);
+            background: var(--career-white);
+            font: inherit;
+            font-size: .94rem;
+        }
+
+        .careers-field textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .careers-field input::placeholder,
+        .careers-field textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .careers-required {
+            color: #b42318;
+        }
+
+        .careers-consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--career-muted);
+            font-size: .84rem;
+            line-height: 1.65;
+        }
+
+        .careers-consent input {
+            width: 17px;
+            height: 17px;
+            flex: 0 0 17px;
+            margin-top: 4px;
+            accent-color: var(--career-blue);
+        }
+
+        .careers-consent a {
+            color: var(--career-blue);
+            font-weight: 700;
+        }
+
+        .careers-form .careers-button {
+            width: 100%;
+            border: 0;
+        }
+
+        .careers-form-note {
+            margin: -5px 0 0;
+            color: var(--career-muted);
+            font-size: .79rem;
+            line-height: 1.6;
+        }
+
+        .careers-form-status {
+            display: none;
+            padding: 14px;
+            border-radius: 8px;
+            color: var(--career-navy);
+            background: #edf4fa;
+            font-size: .9rem;
+        }
+
+        /* FAQ */
+
+        .careers-faq-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .careers-faq-list {
+            display: grid;
+            gap: 13px;
+            margin-top: 32px;
+        }
+
+        .careers-faq-list details {
+            padding: 20px 22px;
+            border: 1px solid var(--career-border);
+            border-radius: 11px;
+            background: var(--career-white);
+        }
+
+        .careers-faq-list summary {
+            position: relative;
+            padding-right: 28px;
+            color: var(--career-navy);
+            font-weight: 750;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .careers-faq-list summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .careers-faq-list summary::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: var(--career-blue);
+            font-size: 1.25rem;
+            content: "+";
+        }
+
+        .careers-faq-list details[open] summary::after {
+            content: "−";
+        }
+
+        .careers-faq-list details p {
+            margin: 13px 0 0;
+            color: var(--career-muted);
+            font-size: .94rem;
+            line-height: 1.8;
+        }
+
+        /* FINAL CTA */
+
+        .careers-final-cta {
+            padding: 65px 0;
+            color: var(--career-white);
+            background: var(--career-navy);
+        }
+
+        .careers-final-cta-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 35px;
+        }
+
+        .careers-final-cta h2 {
+            margin: 0 0 12px;
+            color: var(--career-white);
+            font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+            line-height: 1.2;
+        }
+
+        .careers-final-cta p {
+            max-width: 700px;
+            margin: 0;
+            color: #d7e2ec;
+        }
+
+        /* FOOTER */
+
+        .careers-footer {
+            padding: 27px 0;
+            color: #cbd5e1;
+            background: var(--career-dark);
+        }
+
+        .careers-footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .careers-footer p {
+            margin: 0;
+            font-size: .85rem;
+        }
+
+        .careers-footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 17px;
+        }
+
+        .careers-footer a {
+            color: #e2e8f0;
+            font-size: .85rem;
+            text-decoration: none;
+        }
+
+        .careers-footer a:hover {
+            color: #f0cf86;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 950px) {
+            .careers-hero-grid,
+            .careers-intro-grid,
+            .careers-registration-grid {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+
+            .careers-hero-grid {
+                max-width: 760px;
+            }
+
+            .careers-hero-card {
+                max-width: 650px;
+            }
+
+            .careers-areas-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .careers-journey-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .careers-final-cta-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .careers-container {
+                width: calc(100% - 30px);
+            }
+
+            .careers-section {
+                padding: 54px 0;
+            }
+
+            .careers-header-inner {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 15px 0;
+            }
+
+            .careers-logo img {
+                width: 155px;
+            }
+
+            .careers-navigation {
+                justify-content: flex-start;
+                gap: 12px 17px;
+            }
+
+            .careers-navigation a {
+                font-size: .84rem;
+            }
+
+            .careers-hero {
+                padding: 60px 0;
+            }
+
+            .careers-hero h1 {
+                font-size: clamp(2.4rem, 10vw, 3.5rem);
+            }
+
+            .careers-hero-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .careers-button {
+                width: 100%;
+            }
+
+            .careers-hero-card,
+            .careers-form-card {
+                padding: 23px;
+            }
+
+            .careers-areas-grid,
+            .careers-journey-grid,
+            .careers-form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .careers-image {
+                min-height: 230px;
+            }
+
+            .careers-footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .careers-footer-links {
+                gap: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .careers-page *,
+            .careers-page *::before,
+            .careers-page *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="careers-page">
+
+    <header class="careers-header">
+        <div class="careers-container careers-header-inner">
+
+            <a class="careers-logo" href="index.html" aria-label="AVERRA home">
+                <img
+                    src="images/Logo.jpeg"
+                    alt="AVERRA Staffing Solutions Ltd logo"
+                    width="175"
+                    height="72"
+                >
+            </a>
+
+            <nav class="careers-navigation" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="services.html">Services</a>
+                <a href="how-it-works.html">How It Works</a>
+                <a href="careers.html" aria-current="page">Careers</a>
+                <a href="lets-contact.html" class="careers-nav-cta">Let's Talk</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main>
+        <section class="careers-hero">
+            <div class="careers-container careers-hero-grid">
+
+                <div>
+                    <span class="careers-eyebrow">Careers at AVERRA</span>
+
+                    <h1>
+                        Your skills.
+                        Your ambition.
+                        <span>Global opportunities.</span>
+                    </h1>
+
+                    <p class="careers-hero-copy">
+                        At AVERRA Staffing Solutions Ltd, we believe
+                        professional talent can connect businesses and people
+                        across borders. We aim to connect skilled professionals
+                        with potential remote opportunities that match their
+                        experience, interests and career ambitions.
+                    </p>
+
+                    <div class="careers-hero-actions">
+                        <a href="#register-interest" class="careers-button careers-button-gold">
+                            Register Your Interest <span aria-hidden="true">→</span>
+                        </a>
+
+                        <a href="#career-areas" class="careers-button careers-button-outline">
+                            Explore Career Areas
+                        </a>
+                    </div>
+                </div>
+
+                <aside class="careers-hero-card">
+                    <h2>Build your professional future</h2>
+
+                    <p>
+                        We are developing connections between UK businesses
+                        and international professionals, with a focus on
+                        flexible remote staffing and outsourcing solutions.
+                    </p>
+
+                    <ul class="careers-check-list">
+                        <li><span class="careers-check" aria-hidden="true">✓</span> Explore professional career areas.</li>
+                        <li><span class="careers-check" aria-hidden="true">✓</span> Share your skills and experience.</li>
+                        <li><span class="careers-check" aria-hidden="true">✓</span> Register interest in future opportunities.</li>
+                        <li><span class="careers-check" aria-hidden="true">✓</span> Discover potential remote working arrangements.</li>
+                    </ul>
+                </aside>
+
+            </div>
+        </section>
+
+        <section class="careers-section">
+            <div class="careers-container careers-intro-grid">
+
+                <div class="careers-intro-copy">
+                    <span class="careers-eyebrow">Our approach</span>
+
+                    <h2 class="careers-heading">
+                        Talent should not be limited by geography
+                    </h2>
+
+                    <p>
+                        AVERRA Staffing Solutions Ltd is a UK-based staffing
+                        and outsourcing business focused on connecting UK
+                        organisations with international professional talent.
+                    </p>
+
+                    <p>
+                        Our approach centres on helping businesses explore
+                        flexible staffing options while giving professionals
+                        a way to express interest in suitable remote roles.
+                    </p>
+
+                    <p>
+                        Potential opportunities may include finance,
+                        accounting, administration, customer support,
+                        technology, engineering and other professional services.
+                    </p>
+
+                    <div class="careers-highlight">
+                        <strong>Registering interest is not a job offer.</strong>
+                        <p>
+                            Opportunities depend on client demand, role
+                            requirements, experience, location, work
+                            authorisation and applicable engagement arrangements.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <img
+                        class="careers-image"
+                        src="images/career-global-opportunities.jpg"
+                        alt="Professionals exploring international career opportunities"
+                        width="650"
+                        height="430"
+                        loading="lazy"
+                        onerror="this.onerror=null;this.src='images/global-team.jpg';"
+                    >
+
+                    <p class="careers-image-caption">
+                        Connecting professional skills with potential
+                        opportunities across international markets.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="careers-section careers-areas" id="career-areas">
+            <div class="careers-container">
+
+                <div class="careers-section-heading">
+                    <span class="careers-eyebrow">Explore your options</span>
+
+                    <h2 class="careers-heading">Career areas we are interested in</h2>
+
+                    <p class="careers-lead">
+                        We welcome expressions of interest from professionals
+                        with different skills and backgrounds. These are
+                        potential areas of interest, not confirmed vacancies.
+                    </p>
+                </div>
+
+                <div class="careers-areas-grid">
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">£</span>
+                        <h3>Finance and Accounting</h3>
+                        <p>
+                            Finance assistance, accounts payable and receivable,
+                            bookkeeping support, reconciliations and financial reporting.
+                        </p>
+                        <a href="#register-interest" data-career="Finance and Accounting">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">▤</span>
+                        <h3>Administration and Operations</h3>
+                        <p>
+                            Administrative support, data management, documentation,
+                            scheduling, research and business process support.
+                        </p>
+                        <a href="#register-interest" data-career="Administration and Operations">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">✉</span>
+                        <h3>Customer Support</h3>
+                        <p>
+                            Customer enquiries, email support, service coordination,
+                            client administration and relationship support.
+                        </p>
+                        <a href="#register-interest" data-career="Customer Support">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">⌘</span>
+                        <h3>IT and Technology</h3>
+                        <p>
+                            Software development, technical support, data analysis,
+                            systems administration and quality assurance.
+                        </p>
+                        <a href="#register-interest" data-career="IT and Technology">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">⌂</span>
+                        <h3>Engineering and Architecture</h3>
+                        <p>
+                            Drafting, design assistance, technical documentation,
+                            CAD-related work and engineering administration.
+                        </p>
+                        <a href="#register-interest" data-career="Engineering and Architecture">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">◎</span>
+                        <h3>Sales, Marketing and Recruitment</h3>
+                        <p>
+                            Lead research, sales administration, digital marketing,
+                            recruitment coordination and candidate sourcing.
+                        </p>
+                        <a href="#register-interest" data-career="Sales, Marketing and Recruitment">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">▥</span>
+                        <h3>Data and Business Analysis</h3>
+                        <p>
+                            Data preparation, reporting, spreadsheet analysis,
+                            dashboard support and business performance analysis.
+                        </p>
+                        <a href="#register-interest" data-career="Data and Business Analysis">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">◈</span>
+                        <h3>Human Resources</h3>
+                        <p>
+                            HR administration, employee records, onboarding
+                            coordination, recruitment administration and people operations.
+                        </p>
+                        <a href="#register-interest" data-career="Human Resources">Register your interest →</a>
+                    </article>
+
+                    <article class="careers-area-card">
+                        <span class="careers-area-icon" aria-hidden="true">＋</span>
+                        <h3>Other Professional Skills</h3>
+                        <p>
+                            Have a different professional background? Tell us
+                            about your expertise, qualifications and interests.
+                        </p>
+                        <a href="#register-interest" data-career="Other Professional Skills">Register your interest →</a>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="careers-section">
+            <div class="careers-container">
+
+                <div class="careers-section-heading">
+                    <span class="careers-eyebrow">How it works</span>
+                    <h2 class="careers-heading">Your journey with AVERRA</h2>
+                    <p class="careers-lead">
+                        We aim to understand your experience and preferences
+                        before considering you for a suitable opportunity.
+                    </p>
+                </div>
+
+                <div class="careers-journey-grid">
+                    <article class="careers-journey-step">
+                        <span class="careers-step-number">01</span>
+                        <h3>Share your details</h3>
+                        <p>Tell us about your background, skills, preferred career area and contact information.</p>
+                    </article>
+
+                    <article class="careers-journey-step">
+                        <span class="careers-step-number">02</span>
+                        <h3>Initial review</h3>
+                        <p>If a suitable opportunity arises, we may contact you for further information.</p>
+                    </article>
+
+                    <article class="careers-journey-step">
+                        <span class="careers-step-number">03</span>
+                        <h3>Discuss suitability</h3>
+                        <p>We may discuss your experience, availability, location and expectations.</p>
+                    </article>
+
+                    <article class="careers-journey-step">
+                        <span class="careers-step-number">04</span>
+                        <h3>Potential matching</h3>
+                        <p>If a suitable client requirement exists, we may discuss the role and next steps.</p>
+                    </article>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="careers-section careers-registration" id="register-interest">
+            <div class="careers-container careers-registration-grid">
+
+                <div class="careers-registration-copy">
+                    <span class="careers-eyebrow">Join our talent network</span>
+                    <h2 class="careers-heading">Tell us about yourself</h2>
+
+                    <p>
+                        Interested in potential remote professional opportunities?
+                        Submit your details to express interest in AVERRA's
+                        developing talent network.
+                    </p>
+
+                    <p>
+                        Tell us which career area interests you, what experience
+                        you bring and what kind of opportunity you would like to explore.
+                    </p>
+
+                    <ul class="careers-registration-list">
+                        <li><span aria-hidden="true">✓</span> Share your professional interests.</li>
+                        <li><span aria-hidden="true">✓</span> Describe your skills and experience.</li>
+                        <li><span aria-hidden="true">✓</span> Tell us your preferred working arrangements.</li>
+                        <li><span aria-hidden="true">✓</span> Express interest in relevant future opportunities.</li>
+                    </ul>
+
+                    <div class="careers-highlight">
+                        <strong>Important information</strong>
+                        <p>
+                            This is an expression-of-interest form, not an
+                            application for a confirmed vacancy. Do not include
+                            passwords, bank details or identity document numbers.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="careers-form-card">
+                    <h2>Register your interest</h2>
+                    <p class="careers-form-intro">
+                        Complete the fields below. Required fields are marked with an asterisk (*).
+                    </p>
+
+                    <form class="careers-form" id="candidate-registration-form">
+
+                        <div class="careers-form-row">
+                            <div class="careers-field">
+                                <label for="candidate-first-name">First name <span class="careers-required">*</span></label>
+                                <input type="text" id="candidate-first-name" name="First name"
+                                    autocomplete="given-name" maxlength="80" placeholder="Your first name" required>
+                            </div>
+
+                            <div class="careers-field">
+                                <label for="candidate-last-name">Last name <span class="careers-required">*</span></label>
+                                <input type="text" id="candidate-last-name" name="Last name"
+                                    autocomplete="family-name" maxlength="80" placeholder="Your last name" required>
+                            </div>
+                        </div>
+
+                        <div class="careers-form-row">
+                            <div class="careers-field">
+                                <label for="candidate-email">Email address <span class="careers-required">*</span></label>
+                                <input type="email" id="candidate-email" name="Email address"
+                                    autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+                            </div>
+
+                            <div class="careers-field">
+                                <label for="candidate-location">Country of residence <span class="careers-required">*</span></label>
+                                <select id="candidate-location" name="Country of residence"
+                                    autocomplete="country-name" required>
+                                    <option value="">Select country</option>
+                                    <option value="India">India</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="Lithuania">Lithuania</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="careers-form-row">
+                            <div class="careers-field">
+                                <label for="candidate-career-area">Career area <span class="careers-required">*</span></label>
+                                <select id="candidate-career-area" name="Career area" required>
+                                    <option value="">Select career area</option>
+                                    <option value="Finance and Accounting">Finance and Accounting</option>
+                                    <option value="Administration and Operations">Administration and Operations</option>
+                                    <option value="Customer Support">Customer Support</option>
+                                    <option value="IT and Technology">IT and Technology</option>
+                                    <option value="Engineering and Architecture">Engineering and Architecture</option>
+                                    <option value="Sales, Marketing and Recruitment">Sales, Marketing and Recruitment</option>
+                                    <option value="Data and Business Analysis">Data and Business Analysis</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Other Professional Skills">Other Professional Skills</option>
+                                </select>
+                            </div>
+
+                            <div class="careers-field">
+                                <label for="candidate-experience">Professional experience</label>
+                                <select id="candidate-experience" name="Professional experience">
+                                    <option value="">Select experience</option>
+                                    <option value="Entry level">Entry level</option>
+                                    <option value="Less than 2 years">Less than 2 years</option>
+                                    <option value="2 to 5 years">2–5 years</option>
+                                    <option value="6 to 10 years">6–10 years</option>
+                                    <option value="More than 10 years">More than 10 years</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="careers-field">
+                            <label for="candidate-working-preference">Preferred working arrangement</label>
+                            <select id="candidate-working-preference" name="Preferred working arrangement">
+                                <option value="">Select preference</option>
+                                <option value="Fully remote">Fully remote</option>
+                                <option value="Hybrid">Hybrid</option>
+                                <option value="Flexible">Flexible</option>
+                                <option value="Open to discussion">Open to discussion</option>
+                            </select>
+                        </div>
+
+                        <div class="careers-field">
+                            <label for="candidate-skills">Skills and experience</label>
+                            <textarea id="candidate-skills" name="Skills and experience" maxlength="3000"
+                                placeholder="Describe your skills, qualifications, software knowledge or relevant experience."></textarea>
+                        </div>
+
+                        <div class="careers-field">
+                            <label for="candidate-message">What kind of opportunity are you looking for?</label>
+                            <textarea id="candidate-message" name="Additional information" maxlength="2000"
+                                placeholder="Tell us about your interests, availability or preferred role."></textarea>
+                        </div>
+
+                        <label class="careers-consent" for="candidate-privacy-consent">
+                            <input type="checkbox" id="candidate-privacy-consent" name="Privacy acknowledgement"
+                                value="Acknowledged" required>
+                            <span>
+                                I have read the
+                                <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+                                and understand that my details will be included in an email to AVERRA
+                                so the company can respond to my expression of interest.
+                                <span class="careers-required">*</span>
+                            </span>
+                        </label>
+
+                        <div class="careers-form-status" id="candidate-form-status"
+                            role="status" aria-live="polite"></div>
+
+                        <button type="submit" class="careers-button careers-button-blue">
+                            Prepare My Registration Email →
+                        </button>
+
+                        <p class="careers-form-note">
+                            This form opens your configured email application. It does not upload
+                            or store your details on the website. You must review and send the email.
+                        </p>
+
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <section class="careers-final-cta">
+            <div class="careers-container careers-final-cta-inner">
+                <div>
+                    <h2>Let's connect your talent with opportunity.</h2>
+                    <p>
+                        Share your professional interests or contact AVERRA to learn more
+                        about remote staffing and international talent.
+                    </p>
+                </div>
+
+                <a href="lets-contact.html" class="careers-button careers-button-gold">
+                    Contact AVERRA →
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="careers-footer">
+        <div class="careers-container careers-footer-inner">
+
+            <p>
+                &copy; <span id="careers-current-year">2026</span>
+                AVERRA Staffing Solutions Ltd. All rights reserved.
+            </p>
+
+            <nav class="careers-footer-links" aria-label="Footer navigation">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="services.html">Services</a>
+                <a href="careers.html" aria-current="page">Careers</a>
+                <a href="FAQ.html">FAQs</a>
+                <a href="lets-contact.html">Let's Talk</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </nav>
+
+            <p>
+                <a href="mailto:info@averrastaffing.co.uk">
+                    info@averrastaffing.co.uk
+                </a>
+            </p>
+
+        </div>
+    </footer>
+
+</div>
+
+<script src="script.js" defer></script>
+
+<script>
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
+    const yearElement = document.getElementById("careers-current-year");
+
+    if (yearElement) {
+        yearElement.textContent = String(new Date().getFullYear());
+    }
+
+    const careerSelect = document.getElementById("candidate-career-area");
+    const careerLinks = document.querySelectorAll("[data-career]");
+
+    careerLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+            if (careerSelect) {
+                careerSelect.value = link.dataset.career || "";
+            }
+        });
+    });
+
+    const registrationForm = document.getElementById("candidate-registration-form");
+    const statusElement = document.getElementById("candidate-form-status");
+
+    if (!registrationForm || !statusElement) {
+        return;
+    }
+
+    registrationForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (!registrationForm.reportValidity()) {
+            return;
+        }
+
+        const formData = new FormData(registrationForm);
+        const recipient = "info@averrastaffing.co.uk";
+        const subject = "AVERRA Careers - Candidate Expression of Interest";
+
+        const lines = [
+            "AVERRA STAFFING SOLUTIONS LTD",
+            "CANDIDATE EXPRESSION OF INTEREST",
+            "",
+            "Please find my details below.",
+            ""
+        ];
+
+        formData.forEach(function (value, key) {
+            lines.push(key + ": " + String(value));
+            lines.push("");
+        });
+
+        const mailtoUrl =
+            "mailto:" + recipient +
+            "?subject=" + encodeURIComponent(subject) +
+            "&body=" + encodeURIComponent(lines.join("\n"));
+
+        statusElement.style.display = "block";
+        statusElement.textContent =
+            "Your email application should open with your details. " +
+            "Review the information and press Send to submit your registration. " +
+            "If no email application opens, contact info@averrastaffing.co.uk directly.";
+
+        window.location.href = mailtoUrl;
+    });
+});
+</script>
+
+</body>
+</html>

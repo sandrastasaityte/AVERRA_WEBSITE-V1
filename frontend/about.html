@@ -1,0 +1,1423 @@
+
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1f33">
+    <meta name="color-scheme" content="light">
+
+    <title>About AVERRA | AVERRA Staffing Solutions Ltd</title>
+
+    <meta
+        name="description"
+        content="Discover AVERRA Staffing Solutions Ltd, connecting UK businesses with international professionals through flexible remote staffing and outsourcing solutions."
+    >
+
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://averrastaffing.co.uk/about.html">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Central website image catalogue -->
+    <script src="images.js" defer></script>
+    <script src="script.js" defer></script>
+
+    <style>
+        :root {
+            --navy: #0b1f33;
+            --navy-dark: #071522;
+            --blue: #1d5f91;
+            --gold: #c89b3c;
+            --gold-light: #e2bd6c;
+            --white: #ffffff;
+            --off-white: #f5f7fa;
+            --text: #344256;
+            --muted: #68778a;
+            --border: #e1e7ee;
+            --container-width: 1180px;
+            --section-space: 76px;
+            --radius: 10px;
+            --shadow: 0 8px 28px rgb(11 31 51 / 7%);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 110px;
+        }
+
+        body.about-page {
+            margin: 0;
+            background: var(--white);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        body.about-page img {
+            display: block;
+            max-width: 100%;
+        }
+
+        body.about-page a {
+            color: inherit;
+        }
+
+        body.about-page button,
+        body.about-page input {
+            font: inherit;
+        }
+
+        body.about-page .container {
+            width: min(var(--container-width), calc(100% - 40px));
+            margin-inline: auto;
+        }
+
+        /* Header and logo */
+
+        body.about-page .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 3px 18px rgb(7 21 34 / 5%);
+        }
+
+        body.about-page .header-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+            min-height: 88px;
+        }
+
+        body.about-page .site-logo {
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+            text-decoration: none;
+        }
+
+        body.about-page .site-logo-image {
+            width: 185px;
+            height: auto;
+            max-height: 68px;
+            object-fit: contain;
+            object-position: left center;
+        }
+
+        body.about-page .main-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 22px;
+        }
+
+        body.about-page .nav-link {
+            position: relative;
+            padding: 10px 0;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        body.about-page .nav-link::after {
+            position: absolute;
+            right: 0;
+            bottom: 3px;
+            left: 0;
+            height: 2px;
+            background: var(--gold);
+            content: "";
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease;
+        }
+
+        body.about-page .nav-link:hover::after,
+        body.about-page .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+        body.about-page .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 10px 18px;
+            border: 1px solid var(--gold);
+            border-radius: 5px;
+            background: var(--gold);
+            color: var(--navy-dark);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        body.about-page .nav-cta:hover {
+            border-color: var(--gold-light);
+            background: var(--gold-light);
+        }
+
+        body.about-page .mobile-menu-button {
+            display: none;
+            width: 44px;
+            height: 44px;
+            padding: 9px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        body.about-page .mobile-menu-button span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            margin: 5px 0;
+            background: var(--navy);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        body.about-page .mobile-menu-button[aria-expanded="true"] span:first-child {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        body.about-page .mobile-menu-button[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        body.about-page .mobile-menu-button[aria-expanded="true"] span:last-child {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Hero */
+
+        body.about-page .page-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 88px 0 94px;
+            background:
+                radial-gradient(
+                    ellipse at 90% 10%,
+                    rgb(29 95 145 / 35%),
+                    transparent 40%
+                ),
+                linear-gradient(
+                    125deg,
+                    var(--navy-dark),
+                    var(--navy) 60%,
+                    #123b5d
+                );
+            color: var(--white);
+        }
+
+        body.about-page .page-hero::after {
+            position: absolute;
+            right: -130px;
+            bottom: -240px;
+            width: 500px;
+            height: 500px;
+            border: 1px solid rgb(200 155 60 / 30%);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 45px rgb(200 155 60 / 5%),
+                0 0 0 95px rgb(200 155 60 / 4%);
+            content: "";
+            pointer-events: none;
+        }
+
+        body.about-page .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+        }
+
+        body.about-page .eyebrow {
+            display: inline-block;
+            margin: 0 0 15px;
+            color: var(--gold-light);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        body.about-page .page-hero h1 {
+            max-width: 820px;
+            margin: 0 0 22px;
+            color: var(--white);
+            font-size: clamp(38px, 5vw, 60px);
+            line-height: 1.12;
+            letter-spacing: -1.5px;
+        }
+
+        body.about-page .page-hero p {
+            max-width: 760px;
+            margin: 0;
+            color: #e1eaf3;
+            font-size: 18px;
+        }
+
+        body.about-page .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px;
+        }
+
+        /* Buttons */
+
+        body.about-page .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 12px 21px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        body.about-page .button:hover {
+            transform: translateY(-1px);
+        }
+
+        body.about-page .button-primary {
+            background: var(--gold);
+            color: var(--navy-dark);
+        }
+
+        body.about-page .button-primary:hover {
+            background: var(--gold-light);
+        }
+
+        body.about-page .button-secondary {
+            border-color: rgb(255 255 255 / 45%);
+            background: transparent;
+            color: var(--white);
+        }
+
+        body.about-page .button-secondary:hover {
+            border-color: var(--gold-light);
+            background: rgb(255 255 255 / 7%);
+        }
+
+        /* General sections */
+
+        body.about-page .section {
+            padding: var(--section-space) 0;
+        }
+
+        body.about-page .section-light {
+            background: var(--off-white);
+        }
+
+        body.about-page .section-heading {
+            max-width: 780px;
+            margin: 0 auto 42px;
+            text-align: center;
+        }
+
+        body.about-page .section-heading .eyebrow {
+            margin-bottom: 10px;
+            color: var(--blue);
+        }
+
+        body.about-page .section-heading h2 {
+            margin: 0 0 16px;
+            color: var(--navy);
+            font-size: clamp(29px, 3.5vw, 42px);
+            line-height: 1.2;
+            letter-spacing: -0.8px;
+        }
+
+        body.about-page .section-heading p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        /* Who we are */
+
+        body.about-page .about-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            align-items: center;
+            gap: 52px;
+        }
+
+        body.about-page .about-copy h2 {
+            margin: 0 0 18px;
+            color: var(--navy);
+            font-size: clamp(28px, 3.3vw, 40px);
+            line-height: 1.23;
+        }
+
+        body.about-page .about-copy p {
+            margin: 0 0 16px;
+        }
+
+        body.about-page .about-copy p:last-child {
+            margin-bottom: 0;
+        }
+
+        body.about-page .about-image-wrap {
+            position: relative;
+            min-width: 0;
+            min-height: 360px;
+        }
+
+        body.about-page .about-image {
+            width: 100%;
+            height: 360px;
+            border-radius: 12px;
+            background: #e6edf4;
+            object-fit: cover;
+        }
+
+        body.about-page .image-caption {
+            position: absolute;
+            right: -12px;
+            bottom: 22px;
+            max-width: 270px;
+            padding: 20px 23px;
+            border-left: 4px solid var(--gold);
+            border-radius: 5px;
+            background: var(--navy);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgb(7 21 34 / 15%);
+        }
+
+        body.about-page .image-caption strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        body.about-page .image-caption span {
+            display: block;
+            color: #d8e3ee;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Values */
+
+        body.about-page .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        body.about-page .value-card {
+            height: 100%;
+            padding: 29px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--white);
+            box-shadow: 0 5px 20px rgb(11 31 51 / 3%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        body.about-page .value-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        body.about-page .value-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            background: #edf3f8;
+            color: var(--blue);
+            font-size: 24px;
+        }
+
+        body.about-page .value-card h3 {
+            margin: 0 0 10px;
+            color: var(--navy);
+            font-size: 20px;
+            line-height: 1.35;
+        }
+
+        body.about-page .value-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* Business model */
+
+        body.about-page .model-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 25px;
+        }
+
+        body.about-page .model-card {
+            height: 100%;
+            padding: 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--white);
+            box-shadow: 0 5px 20px rgb(11 31 51 / 3%);
+        }
+
+        body.about-page .model-card h3 {
+            margin: 0 0 12px;
+            color: var(--navy);
+            font-size: 22px;
+            line-height: 1.35;
+        }
+
+        body.about-page .model-card p {
+            margin: 0 0 18px;
+            color: var(--muted);
+        }
+
+        body.about-page .check-list {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        body.about-page .check-list li {
+            position: relative;
+            padding-left: 27px;
+        }
+
+        body.about-page .check-list li::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--blue);
+            font-size: 18px;
+            font-weight: 800;
+            content: "✓";
+        }
+
+        /* Working approach */
+
+        body.about-page .approach-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        body.about-page .approach-card {
+            height: 100%;
+            padding: 24px;
+            border-top: 3px solid var(--gold);
+            border-radius: 0 0 8px 8px;
+            background: var(--white);
+            box-shadow: 0 7px 24px rgb(11 31 51 / 5%);
+        }
+
+        body.about-page .approach-card h3 {
+            margin: 0 0 10px;
+            color: var(--navy);
+            font-size: 19px;
+            line-height: 1.35;
+        }
+
+        body.about-page .approach-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        body.about-page .approach-action {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        /* Contact call to action */
+
+        body.about-page .cta-section {
+            padding: 68px 0;
+            background: linear-gradient(
+                120deg,
+                var(--navy-dark),
+                var(--navy),
+                #17466b
+            );
+            color: var(--white);
+        }
+
+        body.about-page .cta-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 35px;
+        }
+
+        body.about-page .cta-content > div {
+            max-width: 760px;
+        }
+
+        body.about-page .cta-content h2 {
+            margin: 0 0 12px;
+            color: var(--white);
+            font-size: clamp(28px, 3.5vw, 40px);
+            line-height: 1.2;
+        }
+
+        body.about-page .cta-content p {
+            max-width: 700px;
+            margin: 0;
+            color: #dce6ef;
+        }
+
+        body.about-page .cta-content .button {
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+
+        body.about-page .site-footer {
+            padding: 58px 0 0;
+            background: #061321;
+            color: #d5dfeb;
+        }
+
+        body.about-page .footer-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr 1fr 1fr;
+            gap: 36px;
+            padding-bottom: 42px;
+        }
+
+        body.about-page .footer-brand {
+            display: inline-flex;
+            align-items: flex-start;
+            margin-bottom: 17px;
+            text-decoration: none;
+        }
+
+        body.about-page .footer-logo-image {
+            width: 185px;
+            height: auto;
+            max-height: 68px;
+            object-fit: contain;
+            object-position: left center;
+        }
+
+        body.about-page .footer-about p {
+            max-width: 310px;
+            margin: 0;
+            color: #aebdcd;
+            font-size: 14px;
+        }
+
+        body.about-page .footer-column h2 {
+            margin: 0 0 17px;
+            color: var(--white);
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        body.about-page .footer-links {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        body.about-page .footer-links a {
+            color: #b9c6d4;
+            font-size: 14px;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+            transition: color 0.2s ease;
+        }
+
+        body.about-page .footer-links a:hover {
+            color: var(--gold-light);
+        }
+
+        body.about-page .footer-bottom {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px 0;
+            border-top: 1px solid rgb(255 255 255 / 12%);
+            color: #aebdcd;
+            font-size: 13px;
+        }
+
+        body.about-page .footer-bottom p {
+            margin: 0;
+        }
+
+        /* Keyboard focus */
+
+        body.about-page a:focus-visible,
+        body.about-page button:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 4px;
+        }
+
+        /* Tablet layout */
+
+        @media (max-width: 1050px) {
+            body.about-page .header-container {
+                gap: 18px;
+            }
+
+            body.about-page .site-logo-image {
+                width: 160px;
+            }
+
+            body.about-page .main-nav {
+                gap: 15px;
+            }
+
+            body.about-page .nav-link {
+                font-size: 13px;
+            }
+
+            body.about-page .values-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            body.about-page .approach-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            body.about-page .footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* Mobile navigation and layout */
+
+        @media (max-width: 800px) {
+            body.about-page .header-container {
+                min-height: 76px;
+            }
+
+            body.about-page .site-logo-image {
+                width: 160px;
+                max-height: 58px;
+            }
+
+            body.about-page .mobile-menu-button {
+                display: block;
+                flex-shrink: 0;
+            }
+
+            body.about-page .main-nav {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: 0;
+                display: none;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px 20px 20px;
+                border-top: 1px solid var(--border);
+                background: var(--white);
+                box-shadow: 0 12px 20px rgb(7 21 34 / 8%);
+            }
+
+            body.about-page .main-nav.is-open {
+                display: flex;
+                flex-direction: column;
+            }
+
+            body.about-page .nav-link {
+                padding: 13px 0;
+                border-bottom: 1px solid var(--border);
+                font-size: 15px;
+            }
+
+            body.about-page .nav-link::after {
+                display: none;
+            }
+
+            body.about-page .nav-cta {
+                margin-top: 14px;
+            }
+
+            body.about-page .page-hero {
+                padding: 68px 0 74px;
+            }
+
+            body.about-page .about-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            body.about-page .about-image-wrap {
+                min-height: 310px;
+            }
+
+            body.about-page .about-image {
+                height: 310px;
+            }
+
+            body.about-page .image-caption {
+                right: 10px;
+                bottom: 16px;
+            }
+
+            body.about-page .model-grid {
+                grid-template-columns: 1fr;
+            }
+
+            body.about-page .cta-content {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 560px) {
+            body.about-page .container {
+                width: calc(100% - 30px);
+            }
+
+            body.about-page .page-hero {
+                padding: 56px 0 62px;
+            }
+
+            body.about-page .page-hero h1 {
+                font-size: clamp(34px, 9vw, 42px);
+                letter-spacing: -0.8px;
+            }
+
+            body.about-page .page-hero p {
+                font-size: 16px;
+            }
+
+            body.about-page .hero-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            body.about-page .hero-actions .button {
+                width: 100%;
+            }
+
+            body.about-page .section {
+                padding: 55px 0;
+            }
+
+            body.about-page .section-heading {
+                margin-bottom: 30px;
+            }
+
+            body.about-page .values-grid,
+            body.about-page .approach-grid,
+            body.about-page .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            body.about-page .value-card,
+            body.about-page .model-card {
+                padding: 24px;
+            }
+
+            body.about-page .about-image-wrap {
+                min-height: 260px;
+            }
+
+            body.about-page .about-image {
+                height: 280px;
+            }
+
+            body.about-page .image-caption {
+                right: 8px;
+                bottom: 12px;
+                max-width: 245px;
+                padding: 15px 17px;
+            }
+
+            body.about-page .footer-bottom {
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body.about-page *,
+            body.about-page *::before,
+            body.about-page *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="about-page">
+
+    <header class="site-header">
+        <div class="container header-container">
+
+            <a
+                href="index.html"
+                class="site-logo"
+                aria-label="AVERRA Staffing Solutions home"
+            >
+                <img
+                    src="images/Logo.jpeg"
+                    data-image-key="general.logo"
+                    class="site-logo-image"
+                    alt="AVERRA Staffing Solutions Ltd"
+                    width="185"
+                    height="62"
+                >
+            </a>
+
+            <button
+                class="mobile-menu-button"
+                id="mobileMenuButton"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-controls="main-navigation"
+                aria-expanded="false"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav
+                class="main-nav"
+                id="main-navigation"
+                aria-label="Main navigation"
+            >
+                <a class="nav-link" href="index.html">Home</a>
+                <a
+                    class="nav-link active"
+                    href="about.html"
+                    aria-current="page"
+                >About</a>
+                <a class="nav-link" href="services.html">Services</a>
+                <a class="nav-link" href="how-it-works.html">How It Works</a>
+                <a class="nav-link" href="careers.html">Careers</a>
+                <a class="nav-cta" href="lets-contact.html">Talk to Us</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main>
+
+        <!-- About hero -->
+        <section class="page-hero">
+            <div class="container">
+                <div class="hero-content">
+
+                    <span class="eyebrow">About AVERRA</span>
+
+                    <h1>Connecting UK Businesses with Global Talent</h1>
+
+                    <p>
+                        AVERRA Staffing Solutions Ltd is a UK-based staffing and
+                        outsourcing business focused on connecting companies with
+                        international professionals and flexible remote support.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="services.html">
+                            Explore Our Services
+                        </a>
+
+                        <a class="button button-secondary" href="lets-contact.html">
+                            Talk to Us
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Who we are -->
+        <section class="section" id="who-we-are">
+            <div class="container">
+                <div class="about-grid">
+
+                    <div class="about-copy">
+
+                        <span class="eyebrow" style="color: var(--blue);">
+                            Who We Are
+                        </span>
+
+                        <h2>
+                            A practical connection between UK businesses and
+                            international talent
+                        </h2>
+
+                        <p>
+                            AVERRA Staffing Solutions Ltd helps UK businesses explore
+                            flexible ways to access professional support from an
+                            international talent pool.
+                        </p>
+
+                        <p>
+                            Businesses may need additional capacity for finance,
+                            administration, customer support, technology, engineering,
+                            design or other professional functions. We aim to understand
+                            those requirements and discuss suitable remote staffing
+                            and outsourcing arrangements.
+                        </p>
+
+                        <p>
+                            Our approach is built around clear communication, defined
+                            responsibilities and a shared understanding of the work
+                            that needs to be delivered.
+                        </p>
+
+                        <p>
+                            We recognise that every organisation is different. Our aim
+                            is to help businesses explore staffing options that fit
+                            their operational priorities, team structure and plans for
+                            growth.
+                        </p>
+
+                    </div>
+
+                    <div class="about-image-wrap">
+
+                        <img
+                            class="about-image"
+                            src="images/about-global-network.jpg"
+                            data-image-key="about.globalNetwork"
+                            alt="International business network representing global professional collaboration"
+                            loading="lazy"
+                            width="800"
+                            height="600"
+                        >
+
+                        <div class="image-caption">
+                            <strong>Global talent. Shared goals.</strong>
+                            <span>
+                                Connecting businesses with international professionals.
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Company values -->
+        <section class="section section-light" id="our-purpose">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">Our Purpose</span>
+
+                    <h2>What AVERRA Stands For</h2>
+
+                    <p>
+                        We believe remote staffing works best when expectations are
+                        clear, communication is consistent and the right skills are
+                        matched to the work.
+                    </p>
+                </div>
+
+                <div class="values-grid">
+
+                    <article class="value-card">
+                        <div class="value-icon" aria-hidden="true">◎</div>
+                        <h3>People and Skills</h3>
+                        <p>
+                            We focus on understanding role requirements and the
+                            professional skills businesses need to support their work.
+                        </p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon" aria-hidden="true">↔</div>
+                        <h3>International Collaboration</h3>
+                        <p>
+                            We aim to help UK businesses explore opportunities to
+                            collaborate with professionals across international markets.
+                        </p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon" aria-hidden="true">◇</div>
+                        <h3>Flexible Solutions</h3>
+                        <p>
+                            We recognise that different organisations require different
+                            levels of support, experience and working arrangements.
+                        </p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon" aria-hidden="true">✓</div>
+                        <h3>Clear Expectations</h3>
+                        <p>
+                            We value defined responsibilities, agreed deliverables and
+                            open communication throughout a staffing arrangement.
+                        </p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon" aria-hidden="true">⌘</div>
+                        <h3>Practical Support</h3>
+                        <p>
+                            We focus on understanding business processes and identifying
+                            areas where additional professional support may be useful.
+                        </p>
+                    </article>
+
+                    <article class="value-card">
+                        <div class="value-icon" aria-hidden="true">↗</div>
+                        <h3>Long-Term Relationships</h3>
+                        <p>
+                            We aim to build professional relationships through
+                            communication, accountability and a shared focus on
+                            business needs.
+                        </p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Business model -->
+        <section class="section" id="business-model">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">Our Business Model</span>
+
+                    <h2>Remote Staffing and Outsourcing</h2>
+
+                    <p>
+                        We help businesses explore professional support models based
+                        on their requirements, the scope of work and the agreed terms.
+                    </p>
+                </div>
+
+                <div class="model-grid">
+
+                    <article class="model-card">
+                        <h3>Remote Professional Support</h3>
+
+                        <p>
+                            Remote professionals can support agreed business activities
+                            without needing to work from the client's physical office.
+                            The appropriate arrangement depends on the role and contract.
+                        </p>
+
+                        <ul class="check-list">
+                            <li>Finance and accounting administration</li>
+                            <li>Business and operational support</li>
+                            <li>Technical and digital work</li>
+                            <li>Customer and administrative services</li>
+                        </ul>
+                    </article>
+
+                    <article class="model-card">
+                        <h3>Dedicated Staffing Arrangements</h3>
+
+                        <p>
+                            Where appropriate, businesses can discuss a more dedicated
+                            staffing arrangement with defined responsibilities,
+                            communication expectations and agreed commercial terms.
+                        </p>
+
+                        <ul class="check-list">
+                            <li>Role and skills requirements agreed in advance</li>
+                            <li>Scope of work and responsibilities documented</li>
+                            <li>Communication and reporting arrangements established</li>
+                            <li>Service terms and payment arrangements agreed</li>
+                        </ul>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Working approach -->
+        <section class="section section-light" id="working-together">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">Working Together</span>
+
+                    <h2>A Clear and Collaborative Approach</h2>
+
+                    <p>
+                        Our process is designed to help establish the requirements
+                        before a staffing arrangement begins.
+                    </p>
+                </div>
+
+                <div class="approach-grid">
+
+                    <article class="approach-card">
+                        <h3>1. Understand</h3>
+                        <p>
+                            We discuss your business, current challenges, required skills
+                            and the support you are looking for.
+                        </p>
+                    </article>
+
+                    <article class="approach-card">
+                        <h3>2. Define</h3>
+                        <p>
+                            We identify the proposed role, responsibilities, scope of work
+                            and relevant commercial expectations.
+                        </p>
+                    </article>
+
+                    <article class="approach-card">
+                        <h3>3. Coordinate</h3>
+                        <p>
+                            We discuss suitable staffing options and coordinate next steps
+                            in line with the agreed arrangement.
+                        </p>
+                    </article>
+
+                    <article class="approach-card">
+                        <h3>4. Communicate</h3>
+                        <p>
+                            We aim to maintain clear communication and review requirements
+                            as the business relationship develops.
+                        </p>
+                    </article>
+
+                </div>
+
+                <div class="approach-action">
+                    <a class="button button-primary" href="how-it-works.html">
+                        Discover How It Works
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact CTA -->
+        <section class="cta-section" id="contact-averra">
+            <div class="container">
+                <div class="cta-content">
+
+                    <div>
+                        <span class="eyebrow">Let's Connect</span>
+
+                        <h2>Let's discuss your business requirements</h2>
+
+                        <p>
+                            Whether you need finance, administration, technical or
+                            other professional support, contact AVERRA to discuss
+                            your requirements and potential staffing options.
+                        </p>
+                    </div>
+
+                    <a class="button button-primary" href="lets-contact.html">
+                        Talk to Us
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div class="footer-about">
+                    <a
+                        href="index.html"
+                        class="footer-brand"
+                        aria-label="AVERRA Staffing Solutions home"
+                    >
+                        <img
+                            src="images/Logo.jpeg"
+                            data-image-key="general.logo"
+                            class="footer-logo-image"
+                            alt="AVERRA Staffing Solutions Ltd"
+                            width="185"
+                            height="62"
+                            loading="lazy"
+                        >
+                    </a>
+
+                    <p>
+                        Connecting UK businesses with international professionals
+                        through flexible remote staffing and outsourcing solutions.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h2>Explore</h2>
+
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li>
+                            <a href="about.html" aria-current="page">About AVERRA</a>
+                        </li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="industries.html">Industries</a></li>
+                        <li><a href="how-it-works.html">How It Works</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h2>Information</h2>
+
+                    <ul class="footer-links">
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="FAQ.html">Frequently Asked Questions</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h2>Contact</h2>
+
+                    <ul class="footer-links">
+                        <li>
+                            <a href="mailto:info@averrastaffing.co.uk">
+                                info@averrastaffing.co.uk
+                            </a>
+                        </li>
+                        <li>
+                            <a href="lets-contact.html">Contact Our Team</a>
+                        </li>
+                        <li>United Kingdom</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    &copy; <span id="currentYear">2026</span>
+                    AVERRA Staffing Solutions Ltd. All rights reserved.
+                </p>
+
+                <p>Connecting UK businesses with global talent.</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            "use strict";
+
+            function initialiseAboutPage() {
+                const menuButton = document.getElementById("mobileMenuButton");
+                const navigation = document.getElementById("main-navigation");
+                const currentYear = document.getElementById("currentYear");
+
+                if (currentYear) {
+                    currentYear.textContent = String(new Date().getFullYear());
+                }
+
+                if (!menuButton || !navigation) {
+                    return;
+                }
+
+                function closeMenu() {
+                    navigation.classList.remove("is-open");
+                    menuButton.setAttribute("aria-expanded", "false");
+                    menuButton.setAttribute(
+                        "aria-label",
+                        "Open navigation menu"
+                    );
+                }
+
+                function toggleMenu() {
+                    const isOpen = navigation.classList.toggle("is-open");
+
+                    menuButton.setAttribute(
+                        "aria-expanded",
+                        String(isOpen)
+                    );
+
+                    menuButton.setAttribute(
+                        "aria-label",
+                        isOpen
+                            ? "Close navigation menu"
+                            : "Open navigation menu"
+                    );
+                }
+
+                menuButton.addEventListener("click", toggleMenu);
+
+                navigation.querySelectorAll("a").forEach(function (link) {
+                    link.addEventListener("click", closeMenu);
+                });
+
+                document.addEventListener("keydown", function (event) {
+                    if (event.key === "Escape") {
+                        closeMenu();
+                        menuButton.focus();
+                    }
+                });
+
+                document.addEventListener("click", function (event) {
+                    if (
+                        navigation.classList.contains("is-open") &&
+                        !navigation.contains(event.target) &&
+                        !menuButton.contains(event.target)
+                    ) {
+                        closeMenu();
+                    }
+                });
+
+                window.addEventListener("resize", function () {
+                    if (window.innerWidth > 800) {
+                        closeMenu();
+                    }
+                });
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener(
+                    "DOMContentLoaded",
+                    initialiseAboutPage,
+                    { once: true }
+                );
+            } else {
+                initialiseAboutPage();
+            }
+        })();
+    </script>
+
+</body>
+</html>
