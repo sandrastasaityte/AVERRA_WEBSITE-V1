@@ -12,15 +12,17 @@
 
     <meta
         name="description"
-        content="Discover AVERRA Staffing Solutions Ltd's remote staffing and outsourcing services, connecting UK businesses with skilled international professionals."
+        content="Explore AVERRA Staffing Solutions Ltd's remote staffing and outsourcing services, connecting UK businesses with skilled professionals in India across finance, technology, administration and more."
     >
 
     <meta name="robots" content="index, follow">
+    <meta name="author" content="AVERRA Staffing Solutions Ltd">
 
     <link rel="canonical" href="https://averrastaffing.co.uk/services.html">
     <link rel="stylesheet" href="style.css">
 
-    <script src="imageData.js" defer></script>
+    <!-- Central website image manager and shared site script -->
+    <script src="images/images.js" defer></script>
     <script src="script.js" defer></script>
 
     <style>
@@ -37,15 +39,19 @@
             --border: #e1e7ee;
             --container-width: 1180px;
             --section-space: 76px;
+            --card-radius: 10px;
+            --shadow-soft: 0 8px 28px rgb(11 31 51 / 5%);
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 100px;
+            scroll-padding-top: 110px;
         }
 
         body.services-page {
@@ -54,6 +60,7 @@
             background: var(--white);
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
 
         body.services-page a {
@@ -65,10 +72,34 @@
             max-width: 100%;
         }
 
+        body.services-page button,
+        body.services-page a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body.services-page .container {
             width: min(var(--container-width), calc(100% - 40px));
             margin-inline: auto;
         }
+
+        body.services-page .skip-link {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 2000;
+            padding: 12px 16px;
+            transform: translateY(-150%);
+            border-radius: 5px;
+            background: var(--white);
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        body.services-page .skip-link:focus {
+            transform: translateY(0);
+        }
+
+        /* HEADER */
 
         body.services-page .site-header {
             position: sticky;
@@ -80,6 +111,7 @@
         }
 
         body.services-page .header-container {
+            position: relative;
             min-height: 88px;
             display: flex;
             align-items: center;
@@ -87,7 +119,6 @@
             gap: 28px;
         }
 
-        /* Text-only brand, with no logo image. */
         body.services-page .site-logo {
             display: inline-flex;
             flex-direction: column;
@@ -184,7 +215,22 @@
             height: 2px;
             margin: 5px 0;
             background: var(--navy);
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
+
+        body.services-page .mobile-menu-button[aria-expanded="true"] span:first-child {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        body.services-page .mobile-menu-button[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        body.services-page .mobile-menu-button[aria-expanded="true"] span:last-child {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* HERO */
 
         body.services-page .page-hero {
             position: relative;
@@ -260,8 +306,16 @@
             border-radius: 5px;
             font-size: 14px;
             font-weight: 700;
+            text-align: center;
             text-decoration: none;
-            transition: background 0.2s ease, border-color 0.2s ease;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        body.services-page .button:hover {
+            transform: translateY(-1px);
         }
 
         body.services-page .button-primary {
@@ -283,6 +337,8 @@
             border-color: var(--gold-light);
             background: rgb(255 255 255 / 7%);
         }
+
+        /* SHARED SECTIONS */
 
         body.services-page .section {
             padding: var(--section-space) 0;
@@ -317,6 +373,8 @@
             font-size: 16px;
         }
 
+        /* INTRODUCTION */
+
         body.services-page .intro-grid {
             display: grid;
             grid-template-columns: 1.15fr 0.85fr;
@@ -333,6 +391,10 @@
 
         body.services-page .intro-copy p {
             margin: 0 0 16px;
+        }
+
+        body.services-page .intro-copy p:last-child {
+            margin-bottom: 0;
         }
 
         body.services-page .intro-panel {
@@ -372,6 +434,8 @@
             content: "✓";
         }
 
+        /* SERVICE CARDS */
+
         body.services-page .services-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -384,14 +448,18 @@
             min-width: 0;
             padding: 28px;
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: var(--card-radius);
             background: var(--white);
-            box-shadow: 0 5px 20px rgb(11 31 51 / 3%);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-soft);
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
         }
 
         body.services-page .service-card:hover {
             transform: translateY(-4px);
+            border-color: #cad7e4;
             box-shadow: 0 14px 30px rgb(11 31 51 / 9%);
         }
 
@@ -434,6 +502,8 @@
             color: var(--gold);
         }
 
+        /* ROLE GRID */
+
         body.services-page .role-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -455,6 +525,8 @@
             color: var(--gold);
             content: "✓";
         }
+
+        /* PROCESS */
 
         body.services-page .process-grid {
             display: grid;
@@ -497,6 +569,13 @@
             font-size: 14px;
         }
 
+        body.services-page .process-link {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        /* CALL TO ACTION */
+
         body.services-page .cta-section {
             padding: 68px 0;
             background: linear-gradient(120deg, var(--navy-dark), var(--navy), #17466b);
@@ -526,6 +605,8 @@
         body.services-page .cta-content .button {
             flex-shrink: 0;
         }
+
+        /* FOOTER */
 
         body.services-page .site-footer {
             padding: 58px 0 0;
@@ -605,11 +686,26 @@
             margin: 0;
         }
 
+        /* ACCESSIBILITY */
+
         body.services-page a:focus-visible,
         body.services-page button:focus-visible {
             outline: 3px solid var(--gold);
             outline-offset: 4px;
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            body.services-page *,
+            body.services-page *::before,
+            body.services-page *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+
+        /* TABLET */
 
         @media (max-width: 1050px) {
             body.services-page .main-nav {
@@ -632,6 +728,8 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
+
+        /* MOBILE NAVIGATION */
 
         @media (max-width: 800px) {
             body.services-page .header-container {
@@ -695,6 +793,8 @@
             }
         }
 
+        /* SMALL MOBILE */
+
         @media (max-width: 560px) {
             :root {
                 --section-space: 55px;
@@ -753,19 +853,12 @@
                 flex-direction: column;
             }
         }
-
-        @media (prefers-reduced-motion: reduce) {
-            body.services-page *,
-            body.services-page *::before,
-            body.services-page *::after {
-                scroll-behavior: auto !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
     </style>
 </head>
 
 <body class="services-page">
+
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="site-header">
         <div class="container header-container">
@@ -800,19 +893,23 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content">
 
-        <section class="page-hero">
+        <!-- HERO -->
+        <section class="page-hero" aria-labelledby="services-page-title">
             <div class="container">
                 <div class="hero-content">
+
                     <span class="eyebrow">Our Services</span>
 
-                    <h1>Global Talent. Flexible Staffing. Smarter Business.</h1>
+                    <h1 id="services-page-title">
+                        Global Talent. Flexible Staffing. Smarter Business.
+                    </h1>
 
                     <p>
-                        AVERRA Staffing Solutions Ltd connects UK businesses with skilled
-                        international professionals through remote staffing, dedicated
-                        teams and tailored outsourcing support.
+                        AVERRA Staffing Solutions Ltd connects UK businesses with
+                        skilled professionals based in India through remote staffing
+                        and tailored outsourcing solutions.
                     </p>
 
                     <div class="hero-actions">
@@ -824,18 +921,22 @@
                             Explore Our Services
                         </a>
                     </div>
+
                 </div>
             </div>
         </section>
 
-        <section class="section">
+        <!-- INTRODUCTION -->
+        <section class="section" aria-labelledby="intro-title">
             <div class="container">
                 <div class="intro-grid">
 
                     <div class="intro-copy">
                         <span class="eyebrow">A Practical Approach</span>
 
-                        <h2>Professional support built around your business</h2>
+                        <h2 id="intro-title">
+                            Professional support built around your business
+                        </h2>
 
                         <p>
                             Every business has different priorities. You may need help
@@ -846,26 +947,26 @@
 
                         <p>
                             AVERRA helps UK businesses explore flexible remote staffing
-                            solutions by connecting them with international professionals
-                            whose skills align with their operational needs.
+                            solutions by connecting them with professionals in India
+                            whose skills can align with their operational needs.
                         </p>
 
                         <p>
-                            Our approach focuses on clear requirements, suitable
-                            professional skills, agreed responsibilities and ongoing
-                            communication.
+                            We focus on understanding your requirements, defining
+                            responsibilities and establishing clear communication
+                            before a staffing arrangement begins.
                         </p>
                     </div>
 
-                    <aside class="intro-panel">
-                        <h3>How our solutions can help</h3>
+                    <aside class="intro-panel" aria-labelledby="benefits-title">
+                        <h3 id="benefits-title">How our solutions can help</h3>
 
                         <ul class="check-list">
                             <li>Access a broader international talent pool</li>
-                            <li>Build flexible remote support around your needs</li>
+                            <li>Explore flexible remote staffing arrangements</li>
                             <li>Support routine and specialist business functions</li>
                             <li>Define responsibilities and expected deliverables</li>
-                            <li>Scale support as business requirements change</li>
+                            <li>Review staffing needs as your business develops</li>
                         </ul>
                     </aside>
 
@@ -873,16 +974,26 @@
             </div>
         </section>
 
-        <section class="section section-light" id="our-services">
+        <!-- SERVICES -->
+        <section
+            class="section section-light"
+            id="our-services"
+            aria-labelledby="services-heading"
+        >
             <div class="container">
 
                 <div class="section-heading">
                     <span class="eyebrow">What We Offer</span>
-                    <h2>Our Staffing and Outsourcing Services</h2>
+
+                    <h2 id="services-heading">
+                        Our Staffing and Outsourcing Services
+                    </h2>
+
                     <p>
-                        Explore the professional functions that may be supported through
-                        remote employees and tailored outsourcing arrangements.
-                        Availability depends on the agreed role and requirements.
+                        Explore professional functions that may be supported through
+                        remote staffing and tailored outsourcing arrangements.
+                        Specific services and candidate availability are subject to
+                        the agreed requirements.
                     </p>
                 </div>
 
@@ -914,7 +1025,7 @@
                             <li>Bookkeeping assistance</li>
                             <li>Accounts payable and receivable</li>
                             <li>Invoice processing</li>
-                            <li>Account reconciliations</li>
+                            <li>Account reconciliation support</li>
                         </ul>
                     </article>
 
@@ -922,7 +1033,7 @@
                         <div class="service-icon" aria-hidden="true">↗</div>
                         <h3>Finance &amp; Treasury Operations</h3>
                         <p>
-                            Operational support for finance teams seeking help with
+                            Operational support for finance teams that need help with
                             reporting, cash processes and financial administration.
                         </p>
                         <ul>
@@ -942,7 +1053,7 @@
                         </p>
                         <ul>
                             <li>Technical documentation</li>
-                            <li>Project coordination</li>
+                            <li>Project coordination assistance</li>
                             <li>Drawing administration</li>
                             <li>Technical data management</li>
                         </ul>
@@ -952,8 +1063,8 @@
                         <div class="service-icon" aria-hidden="true">⌘</div>
                         <h3>IT &amp; Technology</h3>
                         <p>
-                            Remote technology professionals to support agreed technical
-                            tasks and digital business operations.
+                            Remote technology professionals for agreed technical tasks
+                            and digital business operations.
                         </p>
                         <ul>
                             <li>Software development support</li>
@@ -967,8 +1078,8 @@
                         <div class="service-icon" aria-hidden="true">▤</div>
                         <h3>Business Administration</h3>
                         <p>
-                            Practical support for recurring administrative tasks that
-                            help teams organise their work.
+                            Practical assistance with recurring administrative tasks
+                            that help teams organise their work.
                         </p>
                         <ul>
                             <li>Document management</li>
@@ -982,8 +1093,8 @@
                         <div class="service-icon" aria-hidden="true">◎</div>
                         <h3>Customer Support</h3>
                         <p>
-                            Customer service assistance designed around your business
-                            processes, communication standards and service needs.
+                            Customer service assistance shaped around your business
+                            processes and communication standards.
                         </p>
                         <ul>
                             <li>Email and ticket support</li>
@@ -997,8 +1108,8 @@
                         <div class="service-icon" aria-hidden="true">♙</div>
                         <h3>HR &amp; Recruitment Support</h3>
                         <p>
-                            Administrative help for recruitment coordination and human
-                            resources processes.
+                            Administrative assistance for recruitment coordination
+                            and human resources processes.
                         </p>
                         <ul>
                             <li>CV and application administration</li>
@@ -1013,7 +1124,7 @@
                         <h3>Sales &amp; Marketing</h3>
                         <p>
                             Assistance with lead research, sales administration and
-                            marketing activities.
+                            agreed marketing activities.
                         </p>
                         <ul>
                             <li>Lead research and list building</li>
@@ -1027,8 +1138,8 @@
                         <div class="service-icon" aria-hidden="true">▥</div>
                         <h3>Data &amp; Reporting</h3>
                         <p>
-                            Help with organising business information and preparing
-                            reports for review and decision-making.
+                            Help organising business information and preparing reports
+                            for review and decision-making.
                         </p>
                         <ul>
                             <li>Spreadsheet preparation</li>
@@ -1057,8 +1168,8 @@
                         <div class="service-icon" aria-hidden="true">◇</div>
                         <h3>Dedicated Remote Teams</h3>
                         <p>
-                            Explore a dedicated remote staffing arrangement built around
-                            the roles, skills and capacity your business requires.
+                            Explore a remote staffing arrangement built around the
+                            roles, skills and capacity your business requires.
                         </p>
                         <ul>
                             <li>Role-specific professional support</li>
@@ -1072,12 +1183,17 @@
             </div>
         </section>
 
-        <section class="section">
+        <!-- PROFESSIONAL ROLES -->
+        <section class="section" aria-labelledby="roles-heading">
             <div class="container">
 
                 <div class="section-heading">
                     <span class="eyebrow">Professional Capabilities</span>
-                    <h2>Roles to Match Your Requirements</h2>
+
+                    <h2 id="roles-heading">
+                        Roles to Match Your Requirements
+                    </h2>
+
                     <p>
                         Tell us about your business, the work involved and the experience
                         you require. We can discuss suitable role profiles and potential
@@ -1107,22 +1223,29 @@
             </div>
         </section>
 
-        <section class="section section-light">
+        <!-- HOW IT WORKS -->
+        <section
+            class="section section-light"
+            aria-labelledby="process-heading"
+        >
             <div class="container">
 
                 <div class="section-heading">
                     <span class="eyebrow">Our Approach</span>
-                    <h2>How It Works</h2>
+
+                    <h2 id="process-heading">How It Works</h2>
+
                     <p>
                         A straightforward process helps establish your requirements,
-                        identify suitable support and agree how the arrangement will work.
+                        identify potential staffing options and agree how the arrangement
+                        will work.
                     </p>
                 </div>
 
                 <div class="process-grid">
 
                     <article class="process-step">
-                        <span class="step-number">01</span>
+                        <span class="step-number" aria-label="Step 1">01</span>
                         <h3>Discuss</h3>
                         <p>
                             Explain your business needs, required skills, expected tasks
@@ -1131,7 +1254,7 @@
                     </article>
 
                     <article class="process-step">
-                        <span class="step-number">02</span>
+                        <span class="step-number" aria-label="Step 2">02</span>
                         <h3>Define</h3>
                         <p>
                             Agree the role profile, scope of work, communication
@@ -1140,7 +1263,7 @@
                     </article>
 
                     <article class="process-step">
-                        <span class="step-number">03</span>
+                        <span class="step-number" aria-label="Step 3">03</span>
                         <h3>Arrange</h3>
                         <p>
                             Review suitable staffing options and coordinate onboarding
@@ -1149,7 +1272,7 @@
                     </article>
 
                     <article class="process-step">
-                        <span class="step-number">04</span>
+                        <span class="step-number" aria-label="Step 4">04</span>
                         <h3>Collaborate</h3>
                         <p>
                             Maintain communication, review agreed deliverables and discuss
@@ -1159,7 +1282,7 @@
 
                 </div>
 
-                <div style="margin-top: 32px; text-align: center;">
+                <div class="process-link">
                     <a class="button button-primary" href="how-it-works.html">
                         Learn How It Works
                     </a>
@@ -1168,16 +1291,22 @@
             </div>
         </section>
 
-        <section class="cta-section">
+        <!-- FINAL CALL TO ACTION -->
+        <section class="cta-section" aria-labelledby="cta-heading">
             <div class="container">
                 <div class="cta-content">
 
                     <div>
                         <span class="eyebrow">Let's Talk</span>
-                        <h2>Looking for the right remote staffing solution?</h2>
+
+                        <h2 id="cta-heading">
+                            Looking for the right remote staffing solution?
+                        </h2>
+
                         <p>
                             Tell us about your business and the support you need.
-                            We will discuss your requirements and explore possible next steps.
+                            We will discuss your requirements and explore possible
+                            next steps.
                         </p>
                     </div>
 
@@ -1191,19 +1320,24 @@
 
     </main>
 
+    <!-- FOOTER -->
     <footer class="site-footer">
         <div class="container">
 
             <div class="footer-grid">
 
                 <div class="footer-about">
-                    <a href="index.html" class="footer-brand" aria-label="AVERRA home">
+                    <a
+                        href="index.html"
+                        class="footer-brand"
+                        aria-label="AVERRA Staffing Solutions home"
+                    >
                         <span class="logo-name">AVERRA</span>
                         <span class="logo-subtitle">STAFFING SOLUTIONS</span>
                     </a>
 
                     <p>
-                        Connecting UK businesses with international professionals
+                        Connecting UK businesses with skilled professionals in India
                         through flexible remote staffing and outsourcing solutions.
                     </p>
                 </div>
@@ -1249,6 +1383,7 @@
                     &copy; <span id="currentYear">2026</span>
                     AVERRA Staffing Solutions Ltd. All rights reserved.
                 </p>
+
                 <p>Connecting UK businesses with global talent.</p>
             </div>
 
@@ -1256,43 +1391,87 @@
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        (function () {
+            "use strict";
+
             const menuButton = document.getElementById("mobileMenuButton");
             const navigation = document.getElementById("main-navigation");
             const currentYear = document.getElementById("currentYear");
+            const mobileBreakpoint = window.matchMedia("(max-width: 800px)");
+
+            function setMenuState(isOpen, returnFocus) {
+                if (!menuButton || !navigation) {
+                    return;
+                }
+
+                navigation.classList.toggle("is-open", isOpen);
+                menuButton.setAttribute("aria-expanded", String(isOpen));
+                menuButton.setAttribute(
+                    "aria-label",
+                    isOpen ? "Close navigation menu" : "Open navigation menu"
+                );
+
+                if (returnFocus) {
+                    menuButton.focus();
+                }
+            }
+
+            function handleViewportChange() {
+                if (!mobileBreakpoint.matches) {
+                    setMenuState(false, false);
+                }
+            }
 
             if (currentYear) {
-                currentYear.textContent = new Date().getFullYear();
+                currentYear.textContent = String(new Date().getFullYear());
             }
 
             if (menuButton && navigation) {
                 menuButton.addEventListener("click", function () {
-                    const isOpen = navigation.classList.toggle("is-open");
+                    const isOpen =
+                        menuButton.getAttribute("aria-expanded") === "true";
 
-                    menuButton.setAttribute("aria-expanded", String(isOpen));
-                    menuButton.setAttribute(
-                        "aria-label",
-                        isOpen ? "Close navigation menu" : "Open navigation menu"
-                    );
+                    setMenuState(!isOpen, false);
                 });
 
                 navigation.querySelectorAll("a").forEach(function (link) {
                     link.addEventListener("click", function () {
-                        navigation.classList.remove("is-open");
-                        menuButton.setAttribute("aria-expanded", "false");
-                        menuButton.setAttribute("aria-label", "Open navigation menu");
+                        setMenuState(false, false);
                     });
                 });
 
                 document.addEventListener("keydown", function (event) {
-                    if (event.key === "Escape") {
-                        navigation.classList.remove("is-open");
-                        menuButton.setAttribute("aria-expanded", "false");
-                        menuButton.setAttribute("aria-label", "Open navigation menu");
+                    const menuIsOpen =
+                        menuButton.getAttribute("aria-expanded") === "true";
+
+                    if (event.key === "Escape" && menuIsOpen) {
+                        setMenuState(false, true);
                     }
                 });
+
+                document.addEventListener("click", function (event) {
+                    const menuIsOpen =
+                        menuButton.getAttribute("aria-expanded") === "true";
+
+                    if (
+                        menuIsOpen &&
+                        !navigation.contains(event.target) &&
+                        !menuButton.contains(event.target)
+                    ) {
+                        setMenuState(false, false);
+                    }
+                });
+
+                if (typeof mobileBreakpoint.addEventListener === "function") {
+                    mobileBreakpoint.addEventListener(
+                        "change",
+                        handleViewportChange
+                    );
+                } else if (typeof mobileBreakpoint.addListener === "function") {
+                    mobileBreakpoint.addListener(handleViewportChange);
+                }
             }
-        });
+        })();
     </script>
 
 </body>

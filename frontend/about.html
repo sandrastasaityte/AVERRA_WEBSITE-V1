@@ -7,33 +7,48 @@
     <meta name="theme-color" content="#0b1f33">
     <meta name="color-scheme" content="light">
 
-    <title>About AVERRA | UK–India Outsourcing & Global Staffing</title>
-
-    <meta
-        name="description"
-        content="Learn about AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals in India through remote staffing and outsourcing solutions."
-    >
-
+    <title>About AVERRA | UK–India Outsourcing &amp; Global Staffing</title>
+    <meta name="description" content="Discover AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals in India through remote staffing and outsourcing solutions.">
     <meta name="robots" content="index, follow">
+    <meta name="author" content="AVERRA Staffing Solutions Ltd">
+
     <link rel="canonical" href="https://averrastaffing.co.uk/about.html">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
 
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_GB">
     <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
     <meta property="og:title" content="About AVERRA | Connecting UK Businesses with Global Talent">
-    <meta
-        property="og:description"
-        content="We connect UK businesses with skilled professionals in India through flexible remote staffing and outsourcing solutions."
-    >
+    <meta property="og:description" content="We connect UK businesses with skilled professionals in India through flexible remote staffing and outsourcing solutions.">
     <meta property="og:url" content="https://averrastaffing.co.uk/about.html">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/about-global-network.jpg">
 
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="About AVERRA Staffing Solutions Ltd">
-    <meta
-        name="twitter:description"
-        content="Connecting UK businesses with skilled professionals in India."
-    >
+    <meta name="twitter:description" content="Connecting UK businesses with skilled professionals in India.">
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/about-global-network.jpg">
 
-    <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "AVERRA Staffing Solutions Ltd",
+        "url": "https://averrastaffing.co.uk/",
+        "email": "info@averrastaffing.co.uk",
+        "description": "A UK outsourcing business connecting UK companies with skilled professionals based in India.",
+        "areaServed": [
+            {
+                "@type": "Country",
+                "name": "United Kingdom"
+            },
+            {
+                "@type": "Country",
+                "name": "India"
+            }
+        ]
+    }
+    </script>
 
     <style>
         :root {
@@ -41,14 +56,25 @@
             --about-navy-dark: #071522;
             --about-blue: #1d5f91;
             --about-gold: #c89b3c;
-            --about-cream: #f7f8fa;
+            --about-background: #f6f8fb;
             --about-white: #ffffff;
             --about-text: #354457;
             --about-muted: #64748b;
-            --about-border: #e3e8ef;
+            --about-border: #e2e8f0;
             --about-radius: 18px;
             --about-shadow: 0 18px 45px rgba(11, 31, 51, 0.09);
             --about-container: 1180px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
         }
 
         body.about-page {
@@ -56,13 +82,9 @@
             color: var(--about-text);
             background: var(--about-white);
             font-family: Inter, "Segoe UI", Arial, sans-serif;
+            font-size: 16px;
             line-height: 1.7;
-        }
-
-        .about-page *,
-        .about-page *::before,
-        .about-page *::after {
-            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
         }
 
         .about-page img {
@@ -85,62 +107,90 @@
             margin-inline: auto;
         }
 
+        .about-skip-link {
+            position: absolute;
+            z-index: 2000;
+            top: -100px;
+            left: 12px;
+            padding: 12px 16px;
+            border: 2px solid var(--about-gold);
+            border-radius: 6px;
+            background: var(--about-white);
+            color: var(--about-navy);
+            font-weight: 700;
+        }
+
+        .about-skip-link:focus {
+            top: 12px;
+        }
+
         .about-section {
             padding: 88px 0;
         }
 
         .about-section--soft {
-            background: var(--about-cream);
+            background: var(--about-background);
         }
 
         .about-eyebrow {
-            display: inline-block;
-            margin: 0 0 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 17px;
             color: var(--about-blue);
-            font-size: 0.78rem;
+            font-size: 12px;
             font-weight: 800;
-            letter-spacing: 0.16em;
-            line-height: 1.5;
+            letter-spacing: 2px;
             text-transform: uppercase;
+        }
+
+        .about-eyebrow::before {
+            width: 28px;
+            height: 2px;
+            background: var(--about-gold);
+            content: "";
         }
 
         .about-heading {
             max-width: 760px;
-            margin: 0 0 20px;
+            margin: 0 0 21px;
             color: var(--about-navy);
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 750;
-            letter-spacing: -0.045em;
+            font-size: clamp(30px, 4vw, 45px);
+            font-weight: 800;
+            letter-spacing: -1.4px;
             line-height: 1.15;
         }
 
         .about-lead {
-            max-width: 760px;
+            max-width: 740px;
             margin: 0;
             color: var(--about-muted);
-            font-size: 1.08rem;
+            font-size: 18px;
+            line-height: 1.8;
         }
 
         .about-copy p {
-            margin: 0 0 17px;
+            margin: 0 0 18px;
         }
 
         .about-copy p:last-child {
             margin-bottom: 0;
         }
 
-        /* Header */
+        /* HEADER */
 
         .about-header {
-            position: relative;
-            z-index: 20;
-            background: var(--about-white);
-            border-bottom: 1px solid rgba(11, 31, 51, 0.09);
+            position: sticky;
+            z-index: 1000;
+            top: 0;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(12px);
         }
 
         .about-header-inner {
             display: flex;
-            min-height: 86px;
+            min-height: 84px;
             align-items: center;
             justify-content: space-between;
             gap: 28px;
@@ -149,34 +199,37 @@
         .about-name-link {
             display: inline-flex;
             min-width: 0;
+            min-height: 58px;
             align-items: center;
+            flex-shrink: 0;
             text-decoration: none;
         }
 
         .about-name-image {
             width: 180px;
-            max-height: 66px;
+            height: 66px;
             object-fit: contain;
             object-position: left center;
         }
 
         .about-name-fallback {
             color: var(--about-navy);
-            font-size: 1.65rem;
+            font-size: 25px;
             font-weight: 850;
-            letter-spacing: 0.08em;
+            letter-spacing: 2px;
         }
 
         .about-navigation {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 25px;
+            gap: 24px;
         }
 
         .about-navigation a {
+            padding: 8px 0;
             color: var(--about-navy);
-            font-size: 0.91rem;
+            font-size: 14px;
             font-weight: 650;
             text-decoration: none;
             transition: color 0.2s ease;
@@ -188,69 +241,87 @@
         }
 
         .about-navigation .about-nav-cta {
-            padding: 12px 19px;
-            color: var(--about-white);
-            background: var(--about-navy);
+            padding: 11px 19px;
             border: 1px solid var(--about-navy);
             border-radius: 7px;
-            transition: background 0.2s ease;
+            background: var(--about-navy);
+            color: var(--about-white);
         }
 
         .about-navigation .about-nav-cta:hover {
-            color: var(--about-white);
+            border-color: var(--about-blue);
             background: var(--about-blue);
+            color: var(--about-white);
         }
 
         .about-menu-toggle {
             display: none;
             width: 46px;
-            height: 42px;
-            padding: 9px;
-            color: var(--about-navy);
-            background: var(--about-white);
+            height: 44px;
+            align-items: center;
+            justify-content: center;
             border: 1px solid var(--about-border);
             border-radius: 8px;
+            background: var(--about-white);
+            color: var(--about-navy);
             cursor: pointer;
         }
 
-        .about-menu-toggle span {
+        .about-menu-icon,
+        .about-menu-icon::before,
+        .about-menu-icon::after {
             display: block;
-            width: 100%;
+            width: 21px;
             height: 2px;
-            margin: 5px 0;
+            border-radius: 2px;
             background: currentColor;
         }
 
-        /* Hero */
+        .about-menu-icon {
+            position: relative;
+        }
+
+        .about-menu-icon::before,
+        .about-menu-icon::after {
+            position: absolute;
+            left: 0;
+            content: "";
+        }
+
+        .about-menu-icon::before {
+            transform: translateY(-7px);
+        }
+
+        .about-menu-icon::after {
+            transform: translateY(7px);
+        }
+
+        /* HERO */
 
         .about-hero {
             position: relative;
             overflow: hidden;
-            padding: 100px 0 94px;
+            padding: 94px 0;
             background:
-                radial-gradient(
-                    circle at 85% 15%,
-                    rgba(200, 155, 60, 0.16),
-                    transparent 31%
-                ),
-                linear-gradient(135deg, #f7f9fc 0%, #ffffff 65%);
+                radial-gradient(circle at 88% 16%, rgba(200, 155, 60, 0.15), transparent 30%),
+                linear-gradient(135deg, #f5f8fc 0%, #ffffff 65%);
         }
 
         .about-hero-grid {
             display: grid;
             grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
             align-items: center;
-            gap: 65px;
+            gap: 62px;
         }
 
         .about-hero h1 {
-            max-width: 680px;
+            max-width: 670px;
             margin: 0 0 24px;
             color: var(--about-navy);
-            font-size: clamp(2.65rem, 5.2vw, 4.5rem);
-            font-weight: 800;
-            letter-spacing: -0.06em;
-            line-height: 1.04;
+            font-size: clamp(40px, 5vw, 62px);
+            font-weight: 850;
+            letter-spacing: -2.8px;
+            line-height: 1.08;
         }
 
         .about-hero h1 span {
@@ -258,17 +329,18 @@
         }
 
         .about-hero-description {
-            max-width: 600px;
-            margin: 0 0 30px;
+            max-width: 590px;
+            margin: 0 0 29px;
             color: var(--about-muted);
-            font-size: 1.12rem;
+            font-size: 17px;
+            line-height: 1.85;
         }
 
         .about-actions {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 13px;
+            gap: 12px;
         }
 
         .about-button {
@@ -276,10 +348,11 @@
             min-height: 49px;
             align-items: center;
             justify-content: center;
-            padding: 13px 21px;
+            gap: 10px;
+            padding: 12px 21px;
             border: 1px solid transparent;
-            border-radius: 7px;
-            font-size: 0.94rem;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 750;
             text-align: center;
             text-decoration: none;
@@ -291,19 +364,18 @@
         }
 
         .about-button--primary {
-            color: var(--about-white);
             background: var(--about-navy);
+            color: var(--about-white) !important;
         }
 
         .about-button--primary:hover {
-            color: var(--about-white);
             background: var(--about-blue);
         }
 
         .about-button--secondary {
-            color: var(--about-navy);
-            background: var(--about-white);
             border-color: #d5dce6;
+            background: var(--about-white);
+            color: var(--about-navy) !important;
         }
 
         .about-button--secondary:hover {
@@ -319,8 +391,8 @@
             position: relative;
             overflow: hidden;
             min-height: 390px;
-            background: #e7edf3;
             border-radius: 22px;
+            background: #e7edf3;
             box-shadow: var(--about-shadow);
         }
 
@@ -332,28 +404,28 @@
 
         .about-image-note {
             position: absolute;
-            right: 18px;
-            bottom: 18px;
-            left: 18px;
+            right: 17px;
+            bottom: 17px;
+            left: 17px;
             padding: 17px 20px;
-            color: var(--about-white);
-            background: rgba(7, 21, 34, 0.91);
             border: 1px solid rgba(255, 255, 255, 0.16);
             border-radius: 12px;
+            background: rgba(7, 21, 34, 0.92);
+            color: var(--about-white);
         }
 
         .about-image-note strong {
             display: block;
             margin-bottom: 3px;
-            font-size: 1rem;
+            font-size: 15px;
         }
 
         .about-image-note span {
             color: #e0e8f0;
-            font-size: 0.88rem;
+            font-size: 13px;
         }
 
-        /* Introduction */
+        /* INTRODUCTION */
 
         .about-intro-grid {
             display: grid;
@@ -363,17 +435,18 @@
         }
 
         .about-intro-aside {
-            padding: 30px;
-            background: var(--about-cream);
+            margin-top: 28px;
+            padding: 26px;
             border-left: 4px solid var(--about-gold);
             border-radius: 0 12px 12px 0;
+            background: var(--about-background);
         }
 
         .about-intro-aside strong {
             display: block;
-            margin-bottom: 9px;
+            margin-bottom: 8px;
             color: var(--about-navy);
-            font-size: 1.18rem;
+            font-size: 18px;
         }
 
         .about-intro-aside p {
@@ -381,61 +454,61 @@
             color: var(--about-muted);
         }
 
-        /* Values */
+        /* VALUES */
 
-        .about-values-header {
-            margin-bottom: 42px;
+        .about-section-header {
+            max-width: 760px;
+            margin-bottom: 40px;
         }
 
         .about-card-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 23px;
+            gap: 22px;
         }
 
         .about-card {
             height: 100%;
             padding: 29px;
-            background: var(--about-white);
             border: 1px solid var(--about-border);
             border-radius: var(--about-radius);
-            box-shadow: 0 8px 24px rgba(11, 31, 51, 0.035);
+            background: var(--about-white);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .about-card:hover {
-            box-shadow: var(--about-shadow);
             transform: translateY(-4px);
+            box-shadow: var(--about-shadow);
         }
 
         .about-card-icon {
-            display: flex;
+            display: grid;
             width: 48px;
             height: 48px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 21px;
-            color: var(--about-blue);
-            background: #edf4fa;
+            place-items: center;
+            margin-bottom: 20px;
             border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 800;
+            background: #edf4fa;
+            color: var(--about-blue);
+            font-size: 14px;
+            font-weight: 850;
         }
 
         .about-card h3 {
             margin: 0 0 11px;
             color: var(--about-navy);
-            font-size: 1.2rem;
+            font-size: 20px;
             line-height: 1.35;
         }
 
         .about-card p {
             margin: 0;
             color: var(--about-muted);
-            font-size: 0.96rem;
+            font-size: 14px;
+            line-height: 1.85;
         }
 
-        /* UK–India model */
+        /* UK–INDIA CONNECTION */
 
         .about-model-grid {
             display: grid;
@@ -446,19 +519,20 @@
 
         .about-model-visual {
             overflow: hidden;
-            background: #e7edf3;
+            min-height: 340px;
             border-radius: 18px;
+            background: #e7edf3;
         }
 
-        .about-model-visual img {
+        .about-model-image {
             width: 100%;
-            min-height: 350px;
+            height: 390px;
             object-fit: cover;
         }
 
         .about-model-points {
             display: grid;
-            gap: 18px;
+            gap: 17px;
             margin: 27px 0 0;
             padding: 0;
             list-style: none;
@@ -466,21 +540,20 @@
 
         .about-model-points li {
             display: grid;
-            grid-template-columns: 28px minmax(0, 1fr);
+            grid-template-columns: 27px minmax(0, 1fr);
             align-items: start;
             gap: 12px;
         }
 
         .about-check {
-            display: inline-flex;
+            display: grid;
             width: 26px;
             height: 26px;
-            align-items: center;
-            justify-content: center;
-            color: var(--about-blue);
-            background: #eaf3fa;
+            place-items: center;
             border-radius: 50%;
-            font-size: 0.9rem;
+            background: #eaf3fa;
+            color: var(--about-blue);
+            font-size: 13px;
             font-weight: 850;
         }
 
@@ -490,67 +563,61 @@
             color: var(--about-navy);
         }
 
-        .about-model-points .about-point-description {
+        .about-point-description {
+            display: block;
             color: var(--about-muted);
-            font-size: 0.94rem;
+            font-size: 14px;
         }
 
-        /* Process */
-
-        .about-process-header {
-            margin-bottom: 40px;
-        }
+        /* PROCESS */
 
         .about-process-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 22px;
+            gap: 20px;
         }
 
         .about-process-step {
-            padding: 26px 23px;
-            background: var(--about-white);
+            padding: 25px 22px;
             border: 1px solid var(--about-border);
             border-radius: 14px;
+            background: var(--about-white);
         }
 
         .about-step-number {
-            display: inline-flex;
+            display: grid;
             width: 42px;
             height: 42px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 19px;
-            color: var(--about-white);
-            background: var(--about-navy);
+            place-items: center;
+            margin-bottom: 17px;
             border-radius: 10px;
+            background: var(--about-navy);
+            color: var(--about-white);
+            font-size: 13px;
             font-weight: 800;
         }
 
         .about-process-step h3 {
-            margin: 0 0 10px;
+            margin: 0 0 9px;
             color: var(--about-navy);
-            font-size: 1.08rem;
+            font-size: 18px;
         }
 
         .about-process-step p {
             margin: 0;
             color: var(--about-muted);
-            font-size: 0.93rem;
+            font-size: 14px;
+            line-height: 1.8;
         }
 
-        /* Call to action */
+        /* CALL TO ACTION */
 
         .about-partnership {
-            padding: 64px 0;
-            color: var(--about-white);
+            padding: 65px 0;
             background:
-                radial-gradient(
-                    circle at 90% 0%,
-                    rgba(200, 155, 60, 0.2),
-                    transparent 34%
-                ),
+                radial-gradient(circle at 90% 5%, rgba(29, 95, 145, 0.55), transparent 35%),
                 var(--about-navy);
+            color: var(--about-white);
         }
 
         .about-partnership-inner {
@@ -560,44 +627,51 @@
             gap: 40px;
         }
 
+        .about-partnership-copy {
+            max-width: 760px;
+        }
+
+        .about-partnership .about-eyebrow {
+            color: #e8c77f;
+        }
+
         .about-partnership h2 {
-            max-width: 700px;
-            margin: 0 0 13px;
+            margin: 0 0 14px;
             color: var(--about-white);
-            font-size: clamp(1.9rem, 3.6vw, 2.7rem);
-            letter-spacing: -0.04em;
+            font-size: clamp(29px, 3.7vw, 43px);
+            letter-spacing: -1.4px;
             line-height: 1.2;
         }
 
-        .about-partnership p {
-            max-width: 720px;
+        .about-partnership p:not(.about-eyebrow) {
             margin: 0;
             color: #d5e0eb;
+            font-size: 15px;
         }
 
         .about-partnership .about-button {
             flex-shrink: 0;
-            color: var(--about-navy);
             background: var(--about-white);
+            color: var(--about-navy) !important;
         }
 
         .about-partnership .about-button:hover {
-            background: #f1f4f7;
+            background: #edf2f7;
         }
 
-        /* Footer */
+        /* FOOTER */
 
         .about-footer {
-            padding: 55px 0 22px;
-            color: #d1dce7;
+            padding: 52px 0 22px;
             background: var(--about-navy-dark);
+            color: #d1dce7;
         }
 
         .about-footer-grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr;
-            gap: 50px;
-            padding-bottom: 38px;
+            grid-template-columns: 1.5fr 0.9fr 1fr;
+            gap: 48px;
+            padding-bottom: 37px;
         }
 
         .about-footer-brand {
@@ -605,26 +679,26 @@
         }
 
         .about-footer-name {
-            display: block;
-            width: fit-content;
-            margin-bottom: 18px;
-            color: var(--about-white);
-            font-size: 1.5rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            color: var(--about-white) !important;
+            font-size: 24px;
             font-weight: 850;
-            letter-spacing: 0.08em;
+            letter-spacing: 2px;
             text-decoration: none;
         }
 
         .about-footer h2 {
-            margin: 0 0 15px;
+            margin: 0 0 16px;
             color: var(--about-white);
-            font-size: 1rem;
+            font-size: 15px;
         }
 
         .about-footer p {
             margin: 0 0 12px;
             color: #c0cedc;
-            font-size: 0.93rem;
+            font-size: 13px;
+            line-height: 1.85;
         }
 
         .about-footer-links {
@@ -633,11 +707,11 @@
             gap: 10px;
         }
 
-        .about-footer-links a,
         .about-footer a {
             color: #cbd7e3;
-            font-size: 0.92rem;
+            font-size: 13px;
             text-decoration: none;
+            overflow-wrap: anywhere;
         }
 
         .about-footer a:hover {
@@ -651,24 +725,24 @@
             align-items: center;
             justify-content: space-between;
             gap: 18px;
-            padding-top: 21px;
+            padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.13);
         }
 
         .about-footer-bottom p {
             margin: 0;
-            font-size: 0.85rem;
+            font-size: 12px;
         }
 
-        /* Responsive */
+        /* RESPONSIVE */
 
-        @media (max-width: 1000px) {
+        @media (max-width: 1050px) {
             .about-navigation {
-                gap: 16px;
+                gap: 15px;
             }
 
             .about-navigation a {
-                font-size: 0.85rem;
+                font-size: 13px;
             }
 
             .about-hero-grid,
@@ -683,20 +757,17 @@
         }
 
         @media (max-width: 780px) {
-            .about-section {
-                padding: 65px 0;
-            }
-
             .about-header-inner {
                 min-height: 76px;
             }
 
             .about-name-image {
                 width: 155px;
+                height: 58px;
             }
 
             .about-menu-toggle {
-                display: block;
+                display: inline-flex;
                 flex-shrink: 0;
             }
 
@@ -707,53 +778,50 @@
                 left: 0;
                 display: none;
                 align-items: stretch;
-                padding: 18px 20px 23px;
-                background: var(--about-white);
+                gap: 0;
+                padding: 15px 20px 22px;
                 border-bottom: 1px solid var(--about-border);
-                box-shadow: 0 15px 25px rgba(11, 31, 51, 0.08);
+                background: var(--about-white);
+                box-shadow: 0 16px 25px rgba(11, 31, 51, 0.08);
             }
 
             .about-navigation.is-open {
                 display: flex;
                 flex-direction: column;
-                gap: 0;
             }
 
             .about-navigation a {
                 padding: 12px 4px;
-                font-size: 0.96rem;
+                font-size: 14px;
             }
 
             .about-navigation .about-nav-cta {
-                margin-top: 8px;
+                margin-top: 9px;
                 padding: 12px 16px;
                 text-align: center;
             }
 
+            .about-section {
+                padding: 65px 0;
+            }
+
             .about-hero {
-                padding: 66px 0;
+                padding: 65px 0;
             }
 
             .about-hero-grid,
             .about-intro-grid,
             .about-model-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .about-hero-grid {
-                gap: 36px;
+                gap: 35px;
             }
 
             .about-hero h1 {
-                font-size: clamp(2.5rem, 9vw, 3.8rem);
+                font-size: clamp(39px, 8vw, 54px);
             }
 
             .about-hero-image {
-                height: 350px;
-            }
-
-            .about-hero-image-wrap {
-                min-height: 350px;
+                height: 360px;
             }
 
             .about-card-grid {
@@ -767,11 +835,12 @@
             .about-partnership-inner {
                 align-items: flex-start;
                 flex-direction: column;
+                gap: 26px;
             }
 
             .about-footer-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 32px;
+                gap: 30px;
             }
 
             .about-footer-brand {
@@ -781,19 +850,20 @@
 
         @media (max-width: 520px) {
             .about-container {
-                width: min(calc(100% - 30px), var(--about-container));
+                width: min(var(--about-container), calc(100% - 30px));
             }
 
             .about-hero {
-                padding: 52px 0;
+                padding: 50px 0;
             }
 
             .about-hero h1 {
-                font-size: 2.55rem;
+                font-size: 39px;
+                letter-spacing: -1.7px;
             }
 
             .about-hero-description {
-                font-size: 1rem;
+                font-size: 15px;
             }
 
             .about-actions {
@@ -801,29 +871,53 @@
                 flex-direction: column;
             }
 
-            .about-button {
+            .about-actions .about-button {
                 width: 100%;
+            }
+
+            .about-hero-image-wrap {
+                min-height: 280px;
             }
 
             .about-hero-image {
                 height: 300px;
             }
 
-            .about-hero-image-wrap {
-                min-height: 300px;
+            .about-image-note {
+                right: 10px;
+                bottom: 10px;
+                left: 10px;
+                padding: 13px 15px;
+            }
+
+            .about-heading {
+                font-size: 32px;
+                letter-spacing: -0.9px;
+            }
+
+            .about-lead {
+                font-size: 16px;
             }
 
             .about-process-grid {
                 grid-template-columns: 1fr;
             }
 
-            .about-intro-aside {
-                padding: 23px;
+            .about-model-visual {
+                min-height: 260px;
+            }
+
+            .about-model-image {
+                height: 290px;
+            }
+
+            .about-partnership .about-button {
+                width: 100%;
             }
 
             .about-footer-grid {
                 grid-template-columns: 1fr;
-                gap: 27px;
+                gap: 26px;
             }
 
             .about-footer-brand {
@@ -837,10 +931,13 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .about-page *,
-            .about-page *::before,
-            .about-page *::after {
-                scroll-behaviour: auto !important;
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
                 transition-duration: 0.01ms !important;
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
@@ -849,32 +946,11 @@
     </style>
 
     <script src="images/images.js" defer></script>
-    <script src="script.js" defer></script>
 </head>
 
 <body class="about-page">
 
-    <a class="about-skip-link" href="#main-content">
-        Skip to main content
-    </a>
-
-    <style>
-        .about-skip-link {
-            position: absolute;
-            top: -100px;
-            left: 12px;
-            z-index: 1000;
-            padding: 12px 16px;
-            color: #071522;
-            background: #ffffff;
-            border: 2px solid #c89b3c;
-            border-radius: 6px;
-        }
-
-        .about-skip-link:focus {
-            top: 12px;
-        }
-    </style>
+    <a class="about-skip-link" href="#main-content">Skip to main content</a>
 
     <!-- HEADER -->
     <header class="about-header">
@@ -903,9 +979,7 @@
                 aria-controls="aboutNavigation"
                 aria-expanded="false"
             >
-                <span></span>
-                <span></span>
-                <span></span>
+                <span class="about-menu-icon" aria-hidden="true"></span>
             </button>
 
             <nav
@@ -918,7 +992,7 @@
                 <a href="services.html">Services</a>
                 <a href="how-it-works.html">How It Works</a>
                 <a href="careers.html">Careers</a>
-                <a class="about-nav-cta" href="contact.html">Let's Talk</a>
+                <a class="about-nav-cta" href="contact.html">Let's Talk <span aria-hidden="true">→</span></a>
             </nav>
 
         </div>
@@ -939,23 +1013,18 @@
                     </h1>
 
                     <p class="about-hero-description">
-                        We help UK businesses connect with skilled professionals
-                        in India, creating opportunities for flexible remote
-                        staffing and international outsourcing.
+                        We help UK businesses access skilled professionals
+                        based in India through flexible remote staffing and
+                        outsourcing solutions. Our focus is on connecting
+                        business needs with relevant international skills.
                     </p>
 
                     <div class="about-actions">
-                        <a
-                            class="about-button about-button--primary"
-                            href="contact.html"
-                        >
-                            Discuss Your Requirements
+                        <a class="about-button about-button--primary" href="contact.html">
+                            Discuss Your Requirements <span aria-hidden="true">→</span>
                         </a>
 
-                        <a
-                            class="about-button about-button--secondary"
-                            href="services.html"
-                        >
+                        <a class="about-button about-button--secondary" href="services.html">
                             Explore Our Services
                         </a>
                     </div>
@@ -966,17 +1035,15 @@
                         <img
                             class="about-hero-image"
                             data-image-key="about-global-network"
-                            alt="International professionals collaborating across a global business network"
-                            width="700"
-                            height="700"
+                            alt="Professionals collaborating across an international business network"
+                            width="720"
+                            height="650"
                             fetchpriority="high"
                         >
 
                         <div class="about-image-note">
                             <strong>One connection. Global opportunities.</strong>
-                            <span>
-                                Bringing UK businesses and Indian talent closer together.
-                            </span>
+                            <span>Bringing UK businesses and Indian talent closer together.</span>
                         </div>
                     </div>
                 </div>
@@ -985,7 +1052,7 @@
         </section>
 
         <!-- WHO WE ARE -->
-        <section class="about-section">
+        <section class="about-section" id="who-we-are">
             <div class="about-container about-intro-grid">
 
                 <div>
@@ -998,61 +1065,60 @@
                     <div class="about-intro-aside">
                         <strong>Our purpose</strong>
                         <p>
-                            To help businesses access international skills and
-                            give professionals in India opportunities to
-                            contribute to organisations serving the UK market.
+                            To help UK businesses explore international skills
+                            while creating professional opportunities for
+                            talented people based in India.
                         </p>
                     </div>
                 </div>
 
                 <div class="about-copy">
                     <p>
-                        AVERRA Staffing Solutions Ltd is a UK-based outsourcing
-                        business focused on connecting companies in the United
-                        Kingdom with skilled professionals based in India.
+                        AVERRA Staffing Solutions Ltd is a UK outsourcing
+                        business that connects companies in the United Kingdom
+                        with skilled professionals based in India.
                     </p>
 
                     <p>
-                        We believe businesses should be able to find the skills
-                        they need without being limited to a single location.
-                        By building connections across the UK and India, we aim
-                        to help organisations explore flexible ways to access
-                        professional support.
+                        We believe businesses should be able to explore the
+                        talent they need without being limited to a single
+                        location. Our UK–India model aims to make international
+                        professional support more accessible to organisations
+                        looking for flexible ways to meet their needs.
                     </p>
 
                     <p>
-                        Depending on a client's requirements, this may include
-                        remote administrative support, finance-related services,
-                        technical expertise, development work and other
-                        professional functions suited to remote delivery.
+                        Depending on the client's requirements, services may
+                        include finance-related support, administrative work,
+                        technical expertise, development and other professional
+                        functions suited to remote delivery.
                     </p>
 
                     <p>
-                        Our approach centres on understanding business needs,
-                        identifying suitable talent and building working
-                        relationships around clear responsibilities,
-                        communication and agreed expectations.
+                        We aim to establish clear expectations from the start,
+                        understand the work involved and help create productive
+                        working relationships between clients and professionals.
                     </p>
                 </div>
 
             </div>
         </section>
 
-        <!-- OUR VALUES -->
-        <section class="about-section about-section--soft">
+        <!-- VALUES -->
+        <section class="about-section about-section--soft" id="our-values">
             <div class="about-container">
 
-                <div class="about-values-header">
+                <div class="about-section-header">
                     <p class="about-eyebrow">What Guides Us</p>
 
                     <h2 class="about-heading">
-                        Building better connections through people
+                        Better connections through people
                     </h2>
 
                     <p class="about-lead">
-                        Our approach is built around understanding our clients,
-                        valuing professional skills and supporting productive
-                        working relationships across borders.
+                        Our approach is built around professional skills,
+                        clear communication and an understanding of each
+                        business's needs.
                     </p>
                 </div>
 
@@ -1060,37 +1126,31 @@
 
                     <article class="about-card">
                         <div class="about-card-icon" aria-hidden="true">01</div>
-
                         <h3>Global Collaboration</h3>
-
                         <p>
-                            We connect UK businesses with professionals in India,
-                            helping organisations explore talent beyond their
-                            immediate location.
+                            Connecting UK organisations with professionals
+                            in India so businesses can explore talent beyond
+                            their immediate location.
                         </p>
                     </article>
 
                     <article class="about-card">
                         <div class="about-card-icon" aria-hidden="true">02</div>
-
                         <h3>Flexible Solutions</h3>
-
                         <p>
-                            We aim to understand each business's needs and help
-                            identify suitable remote staffing or outsourcing
-                            arrangements.
+                            Exploring staffing and outsourcing arrangements
+                            around the work required, the skills involved
+                            and the client's priorities.
                         </p>
                     </article>
 
                     <article class="about-card">
                         <div class="about-card-icon" aria-hidden="true">03</div>
-
                         <h3>Professional Relationships</h3>
-
                         <p>
-                            Clear communication, agreed responsibilities and
-                            dependable working practices are central to building
-                            long-term professional relationships.
+                            Supporting clear responsibilities, practical
+                            communication and agreed expectations between
+                            businesses and remote professionals.
                         </p>
                     </article>
 
@@ -1099,13 +1159,14 @@
         </section>
 
         <!-- UK–INDIA CONNECTION -->
-        <section class="about-section">
+        <section class="about-section" id="uk-india">
             <div class="about-container about-model-grid">
 
                 <div class="about-model-visual">
                     <img
+                        class="about-model-image"
                         data-image-key="about-uk-india"
-                        alt="Business collaboration connecting the United Kingdom and India"
+                        alt="International business collaboration between the United Kingdom and India"
                         width="700"
                         height="560"
                         loading="lazy"
@@ -1116,20 +1177,20 @@
                     <p class="about-eyebrow">Our UK–India Connection</p>
 
                     <h2 class="about-heading">
-                        International talent, connected to business needs
+                        International talent connected to business needs
                     </h2>
 
                     <div class="about-copy">
                         <p>
-                            AVERRA's business model is designed to help UK
-                            organisations access professional skills in India
-                            through remote working and outsourcing arrangements.
+                            AVERRA focuses on connecting UK companies with
+                            professionals in India through remote working and
+                            outsourcing arrangements.
                         </p>
 
                         <p>
-                            The right arrangement depends on the services
-                            required, the level of support needed and the
-                            expectations agreed with each client.
+                            Each engagement depends on the client's needs,
+                            the scope of work and the responsibilities agreed
+                            between the parties.
                         </p>
                     </div>
 
@@ -1139,8 +1200,8 @@
                             <span>
                                 <strong>Understand the requirement</strong>
                                 <span class="about-point-description">
-                                    Discuss the client's priorities,
-                                    responsibilities and desired outcomes.
+                                    Discuss the work, business priorities and
+                                    desired outcomes.
                                 </span>
                             </span>
                         </li>
@@ -1148,10 +1209,10 @@
                         <li>
                             <span class="about-check" aria-hidden="true">✓</span>
                             <span>
-                                <strong>Identify suitable skills</strong>
+                                <strong>Explore suitable skills</strong>
                                 <span class="about-point-description">
-                                    Explore professionals whose experience is
-                                    relevant to the work required.
+                                    Identify the experience and capabilities
+                                    relevant to the role or service.
                                 </span>
                             </span>
                         </li>
@@ -1159,10 +1220,10 @@
                         <li>
                             <span class="about-check" aria-hidden="true">✓</span>
                             <span>
-                                <strong>Agree the working arrangement</strong>
+                                <strong>Agree the arrangement</strong>
                                 <span class="about-point-description">
-                                    Establish responsibilities, communication,
-                                    commercial terms and delivery expectations.
+                                    Clarify scope, communication, responsibilities
+                                    and commercial terms.
                                 </span>
                             </span>
                         </li>
@@ -1170,10 +1231,10 @@
                         <li>
                             <span class="about-check" aria-hidden="true">✓</span>
                             <span>
-                                <strong>Support collaboration</strong>
+                                <strong>Build collaboration</strong>
                                 <span class="about-point-description">
-                                    Aim to build an effective working relationship
-                                    between the business and its remote professionals.
+                                    Work towards a productive relationship
+                                    focused on the agreed requirements.
                                 </span>
                             </span>
                         </li>
@@ -1183,21 +1244,21 @@
             </div>
         </section>
 
-        <!-- HOW WE WORK -->
-        <section class="about-section about-section--soft">
+        <!-- PROCESS -->
+        <section class="about-section about-section--soft" id="how-we-work">
             <div class="about-container">
 
-                <div class="about-process-header">
+                <div class="about-section-header">
                     <p class="about-eyebrow">How We Work</p>
 
                     <h2 class="about-heading">
-                        A clear approach from first conversation to collaboration
+                        A clear path from conversation to collaboration
                     </h2>
 
                     <p class="about-lead">
-                        Every business has different requirements. Our process
-                        provides a starting point for understanding those needs
-                        and exploring an appropriate solution.
+                        Every business is different. Our approach starts
+                        by understanding what you need and exploring an
+                        appropriate solution.
                     </p>
                 </div>
 
@@ -1207,8 +1268,8 @@
                         <span class="about-step-number">01</span>
                         <h3>Discover</h3>
                         <p>
-                            We discuss your business, the work involved and the
-                            skills or support you are looking for.
+                            Discuss your business, the work involved and
+                            the professional support you need.
                         </p>
                     </article>
 
@@ -1216,8 +1277,8 @@
                         <span class="about-step-number">02</span>
                         <h3>Explore</h3>
                         <p>
-                            We consider suitable staffing or outsourcing options
-                            based on your stated requirements.
+                            Consider suitable staffing or outsourcing options
+                            based on your requirements.
                         </p>
                     </article>
 
@@ -1225,8 +1286,8 @@
                         <span class="about-step-number">03</span>
                         <h3>Agree</h3>
                         <p>
-                            We clarify the proposed scope, responsibilities,
-                            communication arrangements and commercial terms.
+                            Clarify the scope, responsibilities, communication
+                            arrangements and commercial terms.
                         </p>
                     </article>
 
@@ -1234,8 +1295,8 @@
                         <span class="about-step-number">04</span>
                         <h3>Collaborate</h3>
                         <p>
-                            The agreed arrangement moves forward with a focus on
-                            communication, delivery and the client's needs.
+                            Move forward with the agreed arrangement and
+                            maintain clear communication.
                         </p>
                     </article>
 
@@ -1243,28 +1304,24 @@
             </div>
         </section>
 
-        <!-- CALL TO ACTION -->
+        <!-- CONTACT CTA -->
         <section class="about-partnership">
             <div class="about-container about-partnership-inner">
 
-                <div>
-                    <p class="about-eyebrow" style="color:#e6c77f;">
-                        Start a Conversation
-                    </p>
+                <div class="about-partnership-copy">
+                    <p class="about-eyebrow">Start a Conversation</p>
 
-                    <h2>
-                        Looking for a more flexible way to access talent?
-                    </h2>
+                    <h2>Looking for a flexible way to access professional talent?</h2>
 
                     <p>
                         Tell us about your business and the support you need.
-                        We would welcome the opportunity to discuss whether
-                        AVERRA could be a suitable partner.
+                        We welcome the opportunity to discuss whether AVERRA
+                        could be a suitable partner.
                     </p>
                 </div>
 
                 <a class="about-button" href="contact.html">
-                    Contact AVERRA
+                    Contact AVERRA <span aria-hidden="true">→</span>
                 </a>
 
             </div>
@@ -1279,9 +1336,7 @@
             <div class="about-footer-grid">
 
                 <div class="about-footer-brand">
-                    <a class="about-footer-name" href="index.html">
-                        AVERRA
-                    </a>
+                    <a class="about-footer-name" href="index.html">AVERRA</a>
 
                     <p>
                         AVERRA Staffing Solutions Ltd connects UK businesses
@@ -1299,7 +1354,6 @@
 
                 <div>
                     <h2>Explore AVERRA</h2>
-
                     <nav class="about-footer-links" aria-label="Footer navigation">
                         <a href="index.html">Home</a>
                         <a href="about.html">About Us</a>
@@ -1311,14 +1365,12 @@
 
                 <div>
                     <h2>Get in Touch</h2>
-
                     <nav class="about-footer-links" aria-label="Contact links">
                         <a href="contact.html">Contact Us</a>
                         <a href="FAQ.html">Frequently Asked Questions</a>
                         <a href="mailto:info@averrastaffing.co.uk">Email AVERRA</a>
                     </nav>
-
-                    <p style="margin-top:16px;">United Kingdom</p>
+                    <p style="margin-top: 16px;">United Kingdom</p>
                 </div>
 
             </div>
@@ -1328,7 +1380,6 @@
                     &copy; <span id="aboutCopyrightYear">2026</span>
                     AVERRA Staffing Solutions Ltd. All rights reserved.
                 </p>
-
                 <p>Connecting the UK with global talent.</p>
             </div>
 
@@ -1341,89 +1392,68 @@
 
             const menuButton = document.getElementById("aboutMenuToggle");
             const navigation = document.getElementById("aboutNavigation");
-
-            if (menuButton && navigation) {
-                menuButton.addEventListener("click", function () {
-                    const isExpanded =
-                        menuButton.getAttribute("aria-expanded") === "true";
-
-                    menuButton.setAttribute(
-                        "aria-expanded",
-                        String(!isExpanded)
-                    );
-
-                    menuButton.setAttribute(
-                        "aria-label",
-                        isExpanded
-                            ? "Open navigation menu"
-                            : "Close navigation menu"
-                    );
-
-                    navigation.classList.toggle("is-open", !isExpanded);
-                });
-
-                navigation.querySelectorAll("a").forEach(function (link) {
-                    link.addEventListener("click", function () {
-                        navigation.classList.remove("is-open");
-                        menuButton.setAttribute("aria-expanded", "false");
-                        menuButton.setAttribute(
-                            "aria-label",
-                            "Open navigation menu"
-                        );
-                    });
-                });
-
-                document.addEventListener("keydown", function (event) {
-                    if (event.key === "Escape") {
-                        navigation.classList.remove("is-open");
-                        menuButton.setAttribute("aria-expanded", "false");
-                        menuButton.setAttribute(
-                            "aria-label",
-                            "Open navigation menu"
-                        );
-                        menuButton.focus();
-                    }
-                });
-
-                window.addEventListener("resize", function () {
-                    if (window.innerWidth > 780) {
-                        navigation.classList.remove("is-open");
-                        menuButton.setAttribute("aria-expanded", "false");
-                        menuButton.setAttribute(
-                            "aria-label",
-                            "Open navigation menu"
-                        );
-                    }
-                });
-            }
-
-            const yearElement =
-                document.getElementById("aboutCopyrightYear");
+            const yearElement = document.getElementById("aboutCopyrightYear");
 
             if (yearElement) {
                 yearElement.textContent = new Date().getFullYear();
             }
 
-            /*
-             * Show AVERRA text if the image manager cannot load
-             * the company name artwork.
-             */
-            document.querySelectorAll(".about-name-image")
-                .forEach(function (nameImage) {
-                    nameImage.addEventListener("error", function () {
-                        nameImage.hidden = true;
+            if (menuButton && navigation) {
+                function closeMenu() {
+                    navigation.classList.remove("is-open");
+                    menuButton.setAttribute("aria-expanded", "false");
+                    menuButton.setAttribute("aria-label", "Open navigation menu");
+                }
 
-                        const fallback = nameImage.parentElement.querySelector(
-                            ".about-name-fallback"
-                        );
+                menuButton.addEventListener("click", function () {
+                    const expanded =
+                        menuButton.getAttribute("aria-expanded") === "true";
 
-                        if (fallback) {
-                            fallback.hidden = false;
-                        }
-                    });
+                    menuButton.setAttribute("aria-expanded", String(!expanded));
+                    menuButton.setAttribute(
+                        "aria-label",
+                        expanded ? "Open navigation menu" : "Close navigation menu"
+                    );
+
+                    navigation.classList.toggle("is-open", !expanded);
                 });
+
+                navigation.querySelectorAll("a").forEach(function (link) {
+                    link.addEventListener("click", closeMenu);
+                });
+
+                document.addEventListener("keydown", function (event) {
+                    if (event.key === "Escape") {
+                        closeMenu();
+                    }
+                });
+
+                window.addEventListener("resize", function () {
+                    if (window.innerWidth > 780) {
+                        closeMenu();
+                    }
+                });
+            }
+
+            /*
+             * Keep the "name" image key. Display a text fallback if the
+             * company name image fails to load.
+             */
+            document.querySelectorAll(".about-name-image").forEach(function (image) {
+                image.addEventListener("error", function () {
+                    image.hidden = true;
+
+                    const fallback =
+                        image.parentElement.querySelector(".about-name-fallback");
+
+                    if (fallback) {
+                        fallback.hidden = false;
+                    }
+                });
+            });
         })();
     </script>
 
+    <script src="script.js" defer></script>
 </body>
 </html>

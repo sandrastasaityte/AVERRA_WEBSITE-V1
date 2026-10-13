@@ -5,13 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0b1f33">
+    <meta name="color-scheme" content="light">
 
     <title>How It Works | AVERRA Staffing Solutions Ltd</title>
 
-    <meta name="description" content="Discover how AVERRA Staffing Solutions Ltd connects UK businesses with international professionals through remote staffing and outsourcing solutions.">
+    <meta
+        name="description"
+        content="Discover how AVERRA Staffing Solutions Ltd helps UK businesses explore remote staffing and outsourcing solutions with international professionals, including talent based in India."
+    >
 
+    <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://averrastaffing.co.uk/how-it-works.html">
 
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="How It Works | AVERRA Staffing Solutions Ltd">
+    <meta
+        property="og:description"
+        content="Explore AVERRA's approach to remote staffing, international talent and outsourcing for UK businesses."
+    >
+    <meta property="og:url" content="https://averrastaffing.co.uk/how-it-works.html">
+    <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/hero-global-talent.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How It Works | AVERRA Staffing Solutions Ltd">
+    <meta
+        name="twitter:description"
+        content="Understand the process behind AVERRA's remote staffing and outsourcing approach."
+    >
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/hero-global-talent.jpg">
+
+    <link rel="preload" as="image" href="images/hero-global-talent.jpg">
     <link rel="stylesheet" href="style.css">
 
     <style>
@@ -27,9 +51,13 @@
             --border: #e0e6ed;
             --white: #ffffff;
             --container: 1180px;
+            --radius: 12px;
+            --shadow: 0 12px 32px rgba(11, 31, 51, 0.07);
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
@@ -41,11 +69,20 @@
         body {
             margin: 0;
             color: var(--text);
+            background: var(--white);
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body,
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
         }
 
         img {
+            display: block;
             max-width: 100%;
         }
 
@@ -53,22 +90,51 @@
             text-underline-offset: 4px;
         }
 
-        .how-container {
-            width: min(var(--container), calc(100% - 40px));
-            margin: 0 auto;
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 4px;
         }
 
-        /* HEADER AND LOGO */
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        .how-container {
+            width: min(var(--container), calc(100% - 40px));
+            margin-inline: auto;
+        }
+
+        .how-skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            z-index: 1000;
+            padding: 12px 18px;
+            border-radius: 6px;
+            background: var(--white);
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .how-skip-link:focus {
+            top: 16px;
+        }
+
+        /* HEADER */
 
         .how-header {
             position: relative;
-            z-index: 10;
+            z-index: 100;
             background: var(--white);
             border-bottom: 1px solid var(--border);
         }
 
         .how-header-inner {
-            min-height: 88px;
+            min-height: 86px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -79,18 +145,13 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
             color: var(--navy);
             text-decoration: none;
-            flex-shrink: 0;
         }
 
-        .how-logo img {
-            width: 58px;
-            height: 58px;
-            object-fit: contain;
-        }
-
-        .how-logo-text {
+        .how-logo-text,
+        .how-footer-logo-text {
             display: flex;
             flex-direction: column;
             line-height: 1.2;
@@ -123,6 +184,7 @@
             font-size: 0.92rem;
             font-weight: 600;
             text-decoration: none;
+            transition: color 0.2s ease;
         }
 
         .how-navigation a:hover,
@@ -144,12 +206,16 @@
 
         .how-menu-button {
             display: none;
-            padding: 9px;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            padding: 8px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 7px;
             background: var(--white);
             color: var(--navy);
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             cursor: pointer;
         }
 
@@ -166,14 +232,13 @@
             grid-template-columns: 1.08fr 0.92fr;
             align-items: center;
             gap: 52px;
-            padding-top: 76px;
-            padding-bottom: 76px;
+            padding-block: 76px;
         }
 
         .how-eyebrow {
-            margin: 0 0 16px;
+            margin: 0 0 14px;
             color: var(--gold-light);
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.15em;
             text-transform: uppercase;
@@ -182,27 +247,26 @@
         .how-hero h1 {
             margin: 0 0 22px;
             color: var(--white);
-            font-size: clamp(2.5rem, 5vw, 4.2rem);
+            font-size: clamp(2.45rem, 5vw, 4.2rem);
             line-height: 1.1;
             letter-spacing: -0.035em;
         }
 
         .how-hero-copy > p:not(.how-eyebrow) {
             color: #e0e8f0;
-            font-size: 1.05rem;
+            font-size: 1.04rem;
             line-height: 1.85;
         }
 
         .how-hero-image-wrap {
-            overflow: hidden;
             min-height: 320px;
+            overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             background: #172d41;
         }
 
         .how-hero-image {
-            display: block;
             width: 100%;
             height: 390px;
             object-fit: cover;
@@ -224,8 +288,13 @@
             border: 1px solid transparent;
             border-radius: 6px;
             font-weight: 700;
+            text-align: center;
             text-decoration: none;
-            transition: background 0.2s ease, transform 0.2s ease;
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
         }
 
         .how-button:hover {
@@ -271,10 +340,10 @@
             font-weight: 800;
         }
 
-        /* SECTION STYLING */
+        /* GENERAL SECTIONS */
 
         .how-section {
-            padding: 76px 0;
+            padding-block: 76px;
         }
 
         .how-section-light {
@@ -287,7 +356,9 @@
             text-align: center;
         }
 
-        .how-section-heading .how-eyebrow {
+        .how-section-heading .how-eyebrow,
+        .how-intro > .how-eyebrow,
+        .how-global > .how-eyebrow {
             color: #987024;
         }
 
@@ -298,9 +369,11 @@
             color: var(--navy);
             font-size: clamp(1.9rem, 3vw, 2.7rem);
             line-height: 1.25;
+            letter-spacing: -0.025em;
         }
 
         .how-section-heading > p:last-child {
+            margin-bottom: 0;
             color: var(--muted);
         }
 
@@ -320,9 +393,9 @@
             padding: 30px;
             border: 1px solid var(--border);
             border-left: 4px solid var(--gold);
-            border-radius: 12px;
+            border-radius: var(--radius);
             background: var(--white);
-            box-shadow: 0 10px 30px rgba(11, 31, 51, 0.05);
+            box-shadow: var(--shadow);
         }
 
         .how-highlight h3 {
@@ -336,7 +409,7 @@
             padding-left: 22px;
         }
 
-        /* BENEFITS */
+        /* PRINCIPLES */
 
         .how-benefit-grid {
             display: grid;
@@ -347,8 +420,14 @@
         .how-benefit-card {
             padding: 27px;
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: var(--radius);
             background: var(--white);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .how-benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
         }
 
         .how-benefit-number {
@@ -379,14 +458,14 @@
 
         .how-steps {
             max-width: 940px;
-            margin: 0 auto;
+            margin-inline: auto;
         }
 
         .how-step {
             display: grid;
             grid-template-columns: 66px minmax(0, 1fr);
             gap: 25px;
-            padding: 32px 0;
+            padding-block: 32px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -415,6 +494,7 @@
             margin: 2px 0 12px;
             color: var(--navy);
             font-size: 1.4rem;
+            line-height: 1.35;
         }
 
         .how-step p {
@@ -438,7 +518,7 @@
             text-transform: uppercase;
         }
 
-        /* INTERNATIONAL MODEL */
+        /* UK–INDIA MODEL */
 
         .how-global-grid {
             display: grid;
@@ -489,6 +569,15 @@
             text-align: center;
         }
 
+        .how-text-link {
+            color: var(--blue);
+            font-weight: 700;
+        }
+
+        .how-text-link:hover {
+            color: var(--navy);
+        }
+
         /* GETTING STARTED */
 
         .how-checklist {
@@ -518,7 +607,7 @@
         /* CALL TO ACTION */
 
         .how-cta {
-            padding: 62px 0;
+            padding-block: 62px;
             background: var(--navy);
             color: var(--white);
         }
@@ -534,6 +623,7 @@
             margin: 0 0 12px;
             color: var(--white);
             font-size: clamp(1.8rem, 3vw, 2.5rem);
+            line-height: 1.25;
         }
 
         .how-cta p {
@@ -572,13 +662,8 @@
         .how-footer-logo img {
             width: 52px;
             height: 52px;
+            flex-shrink: 0;
             object-fit: contain;
-        }
-
-        .how-footer-logo-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
         }
 
         .how-footer-logo-text strong {
@@ -658,7 +743,7 @@
                 top: 100%;
                 right: 0;
                 left: 0;
-                padding: 20px;
+                padding: 16px 20px 22px;
                 border-bottom: 1px solid var(--border);
                 background: var(--white);
                 box-shadow: 0 12px 22px rgba(11, 31, 51, 0.08);
@@ -688,12 +773,11 @@
 
             .how-hero-inner {
                 gap: 35px;
-                padding-top: 55px;
-                padding-bottom: 55px;
+                padding-block: 55px;
             }
 
             .how-hero-image {
-                height: 330px;
+                height: 340px;
             }
 
             .how-footer-grid {
@@ -706,9 +790,9 @@
                 width: calc(100% - 32px);
             }
 
-            .how-logo img {
-                width: 46px;
-                height: 46px;
+            .how-header-inner {
+                min-height: 74px;
+                gap: 12px;
             }
 
             .how-logo-text strong {
@@ -720,7 +804,11 @@
             }
 
             .how-section {
-                padding: 52px 0;
+                padding-block: 52px;
+            }
+
+            .how-section-heading {
+                margin-bottom: 32px;
             }
 
             .how-benefit-grid,
@@ -729,10 +817,14 @@
                 grid-template-columns: 1fr;
             }
 
+            .how-benefit-card {
+                padding: 23px;
+            }
+
             .how-step {
                 grid-template-columns: 45px minmax(0, 1fr);
                 gap: 15px;
-                padding: 25px 0;
+                padding-block: 25px;
             }
 
             .how-step-number {
@@ -744,6 +836,10 @@
 
             .how-step h3 {
                 font-size: 1.2rem;
+            }
+
+            .how-hero h1 {
+                font-size: clamp(2.25rem, 10vw, 3.2rem);
             }
 
             .how-hero-actions {
@@ -758,9 +854,17 @@
                 height: 250px;
             }
 
+            .how-highlight {
+                padding: 23px;
+            }
+
             .how-cta-inner {
                 align-items: flex-start;
                 flex-direction: column;
+            }
+
+            .how-cta .how-button {
+                width: 100%;
             }
 
             .how-footer-bottom {
@@ -777,6 +881,9 @@
             *,
             *::before,
             *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
         }
@@ -784,6 +891,7 @@
 </head>
 
 <body>
+    <a class="how-skip-link" href="#main-content">Skip to main content</a>
 
     <!-- HEADER -->
 
@@ -791,7 +899,6 @@
         <div class="how-container how-header-inner">
 
             <a class="how-logo" href="index.html" aria-label="AVERRA home">
-
                 <span class="how-logo-text">
                     <strong>AVERRA</strong>
                     <small>STAFFING SOLUTIONS LTD</small>
@@ -806,7 +913,7 @@
                 aria-controls="how-navigation"
                 aria-expanded="false"
             >
-                ☰
+                <span aria-hidden="true">☰</span>
             </button>
 
             <nav class="how-navigation" id="how-navigation" aria-label="Main navigation">
@@ -821,17 +928,17 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content">
 
         <!-- HERO -->
 
-        <section class="how-hero">
+        <section class="how-hero" aria-labelledby="how-hero-title">
             <div class="how-container how-hero-inner">
 
                 <div class="how-hero-copy">
                     <p class="how-eyebrow">How It Works</p>
 
-                    <h1>Global talent. A clearer way forward.</h1>
+                    <h1 id="how-hero-title">Global talent. A clearer way forward.</h1>
 
                     <p>
                         Finding the right people for your business should be
@@ -850,6 +957,7 @@
                         <a href="contact.html" class="how-button how-button-primary">
                             Discuss Your Requirements
                         </a>
+
                         <a href="#our-process" class="how-button how-button-outline">
                             Explore Our Process
                         </a>
@@ -870,7 +978,7 @@
                         width="800"
                         height="600"
                         fetchpriority="high"
-                        onerror="this.closest('.how-hero-image-wrap').hidden=true;"
+                        decoding="async"
                     >
                 </div>
 
@@ -879,13 +987,13 @@
 
         <!-- INTRODUCTION -->
 
-        <section class="how-section">
+        <section class="how-section" aria-labelledby="how-intro-title">
             <div class="how-container how-intro-grid">
 
                 <div class="how-intro">
-                    <p class="how-eyebrow" style="color:#987024;">Our approach</p>
+                    <p class="how-eyebrow">Our approach</p>
 
-                    <h2>A staffing process built around your business</h2>
+                    <h2 id="how-intro-title">A staffing process built around your business</h2>
 
                     <p>
                         Every organisation has different priorities. You may
@@ -904,13 +1012,13 @@
                     <p>
                         Our aim is to make the process clear from the outset:
                         the scope of work, responsibilities, communication
-                        arrangements and the commercial terms to be agreed
-                        before the service begins.
+                        arrangements and commercial terms to be agreed before
+                        the service begins.
                     </p>
                 </div>
 
-                <aside class="how-highlight">
-                    <h3>The AVERRA approach</h3>
+                <aside class="how-highlight" aria-labelledby="how-approach-title">
+                    <h3 id="how-approach-title">The AVERRA approach</h3>
 
                     <p>
                         A practical framework for exploring remote staffing
@@ -930,14 +1038,16 @@
             </div>
         </section>
 
-        <!-- BENEFITS -->
+        <!-- PRINCIPLES -->
 
-        <section class="how-section how-section-light">
+        <section class="how-section how-section-light" aria-labelledby="how-principles-title">
             <div class="how-container">
 
                 <div class="how-section-heading">
                     <p class="how-eyebrow">Our principles</p>
-                    <h2>What matters throughout the process</h2>
+
+                    <h2 id="how-principles-title">What matters throughout the process</h2>
+
                     <p>
                         Successful remote staffing depends on clear
                         expectations, appropriate working arrangements,
@@ -948,7 +1058,7 @@
                 <div class="how-benefit-grid">
 
                     <article class="how-benefit-card">
-                        <span class="how-benefit-number">01</span>
+                        <span class="how-benefit-number" aria-hidden="true">01</span>
                         <h3>Clarity from the start</h3>
                         <p>
                             Establish the role, responsibilities, working
@@ -958,7 +1068,7 @@
                     </article>
 
                     <article class="how-benefit-card">
-                        <span class="how-benefit-number">02</span>
+                        <span class="how-benefit-number" aria-hidden="true">02</span>
                         <h3>Flexible options</h3>
                         <p>
                             Explore support for specific business functions,
@@ -968,7 +1078,7 @@
                     </article>
 
                     <article class="how-benefit-card">
-                        <span class="how-benefit-number">03</span>
+                        <span class="how-benefit-number" aria-hidden="true">03</span>
                         <h3>Defined responsibilities</h3>
                         <p>
                             Document the scope of work, responsibilities,
@@ -977,7 +1087,7 @@
                     </article>
 
                     <article class="how-benefit-card">
-                        <span class="how-benefit-number">04</span>
+                        <span class="how-benefit-number" aria-hidden="true">04</span>
                         <h3>International professionals</h3>
                         <p>
                             Explore suitable talent beyond the UK, including
@@ -987,7 +1097,7 @@
                     </article>
 
                     <article class="how-benefit-card">
-                        <span class="how-benefit-number">05</span>
+                        <span class="how-benefit-number" aria-hidden="true">05</span>
                         <h3>Planned onboarding</h3>
                         <p>
                             Prepare introductions, training, approved system
@@ -997,7 +1107,7 @@
                     </article>
 
                     <article class="how-benefit-card">
-                        <span class="how-benefit-number">06</span>
+                        <span class="how-benefit-number" aria-hidden="true">06</span>
                         <h3>Ongoing communication</h3>
                         <p>
                             Use agreed check-ins and progress reviews to
@@ -1009,14 +1119,16 @@
             </div>
         </section>
 
-        <!-- SIX STEPS -->
+        <!-- SIX-STEP PROCESS -->
 
-        <section class="how-section" id="our-process">
+        <section class="how-section" id="our-process" aria-labelledby="how-process-title">
             <div class="how-container">
 
                 <div class="how-section-heading">
                     <p class="how-eyebrow">The process</p>
-                    <h2>Six steps from discussion to delivery</h2>
+
+                    <h2 id="how-process-title">Six steps from discussion to delivery</h2>
+
                     <p>
                         The precise process depends on the role and service
                         required. These stages provide a clear starting point.
@@ -1026,15 +1138,18 @@
                 <div class="how-steps">
 
                     <article class="how-step">
-                        <div class="how-step-number">01</div>
+                        <div class="how-step-number" aria-hidden="true">01</div>
+
                         <div>
                             <span class="how-step-label">Discover</span>
                             <h3>Understand your business</h3>
+
                             <p>
                                 We begin with a conversation about your
                                 organisation, current workload, business
                                 objectives and the tasks you need support with.
                             </p>
+
                             <ul>
                                 <li>Your business activities and priorities.</li>
                                 <li>Existing workload and resource gaps.</li>
@@ -1045,15 +1160,18 @@
                     </article>
 
                     <article class="how-step">
-                        <div class="how-step-number">02</div>
+                        <div class="how-step-number" aria-hidden="true">02</div>
+
                         <div>
                             <span class="how-step-label">Define</span>
                             <h3>Clarify the role and requirements</h3>
+
                             <p>
                                 We establish the skills, responsibilities
                                 and practical requirements of the proposed
                                 position or service.
                             </p>
+
                             <ul>
                                 <li>Role description and relevant experience.</li>
                                 <li>Tasks, responsibilities and deliverables.</li>
@@ -1065,22 +1183,26 @@
                     </article>
 
                     <article class="how-step">
-                        <div class="how-step-number">03</div>
+                        <div class="how-step-number" aria-hidden="true">03</div>
+
                         <div>
                             <span class="how-step-label">Identify</span>
                             <h3>Explore suitable professionals</h3>
+
                             <p>
                                 Based on the agreed requirements, we explore
                                 potential staffing options and professionals
                                 with relevant experience. Depending on the
                                 role, this may include talent based in India.
                             </p>
+
                             <ul>
                                 <li>Qualifications and relevant experience.</li>
                                 <li>Role-specific and technical capabilities.</li>
                                 <li>Communication and collaboration skills.</li>
                                 <li>Availability and proposed working arrangements.</li>
                             </ul>
+
                             <p>
                                 Suitability and availability are confirmed
                                 for each specific requirement.
@@ -1089,10 +1211,12 @@
                     </article>
 
                     <article class="how-step">
-                        <div class="how-step-number">04</div>
+                        <div class="how-step-number" aria-hidden="true">04</div>
+
                         <div>
                             <span class="how-step-label">Select</span>
                             <h3>Review the proposed match</h3>
+
                             <p>
                                 The proposed staffing option is assessed
                                 against your requirements. Where appropriate,
@@ -1100,6 +1224,7 @@
                                 discussing experience and arranging an
                                 interview.
                             </p>
+
                             <ul>
                                 <li>Review relevant experience and skills.</li>
                                 <li>Discuss expectations and working style.</li>
@@ -1110,15 +1235,18 @@
                     </article>
 
                     <article class="how-step">
-                        <div class="how-step-number">05</div>
+                        <div class="how-step-number" aria-hidden="true">05</div>
+
                         <div>
                             <span class="how-step-label">Agree</span>
                             <h3>Confirm the service arrangements</h3>
+
                             <p>
                                 Before work begins, the parties agree the
                                 scope, fees, payment terms, responsibilities
                                 and relevant contractual requirements.
                             </p>
+
                             <ul>
                                 <li>Service scope and deliverables.</li>
                                 <li>Fees, invoices and payment schedule.</li>
@@ -1130,10 +1258,12 @@
                     </article>
 
                     <article class="how-step">
-                        <div class="how-step-number">06</div>
+                        <div class="how-step-number" aria-hidden="true">06</div>
+
                         <div>
                             <span class="how-step-label">Collaborate</span>
                             <h3>Onboard, communicate and review</h3>
+
                             <p>
                                 Once the arrangements are confirmed, the
                                 parties plan onboarding, introductions,
@@ -1141,6 +1271,7 @@
                                 Progress can then be reviewed against the
                                 agreed scope and expectations.
                             </p>
+
                             <ul>
                                 <li>Role introductions and task handovers.</li>
                                 <li>Appropriate training and system access.</li>
@@ -1155,17 +1286,15 @@
             </div>
         </section>
 
-        <!-- UK AND INDIA MODEL -->
+        <!-- UK AND INDIA -->
 
-        <section class="how-section how-section-light">
+        <section class="how-section how-section-light" aria-labelledby="how-global-title">
             <div class="how-container how-global-grid">
 
                 <div class="how-global">
-                    <p class="how-eyebrow" style="color:#987024;">
-                        International collaboration
-                    </p>
+                    <p class="how-eyebrow">International collaboration</p>
 
-                    <h2>Connecting UK businesses with global talent</h2>
+                    <h2 id="how-global-title">Connecting UK businesses with global talent</h2>
 
                     <p>
                         AVERRA is a UK-based business focused on staffing and
@@ -1193,7 +1322,7 @@
                     </p>
 
                     <p>
-                        <a href="contact.html">
+                        <a class="how-text-link" href="contact.html">
                             Discuss your staffing requirements →
                         </a>
                     </p>
@@ -1233,12 +1362,14 @@
 
         <!-- GETTING STARTED -->
 
-        <section class="how-section">
+        <section class="how-section" aria-labelledby="how-start-title">
             <div class="how-container">
 
                 <div class="how-section-heading">
                     <p class="how-eyebrow">Getting started</p>
-                    <h2>Prepare for your first conversation</h2>
+
+                    <h2 id="how-start-title">Prepare for your first conversation</h2>
+
                     <p>
                         You do not need a complete job description to make
                         an initial enquiry. A few details can help us
@@ -1302,11 +1433,12 @@
 
         <!-- FINAL CALL TO ACTION -->
 
-        <section class="how-cta">
+        <section class="how-cta" aria-labelledby="how-cta-title">
             <div class="how-container how-cta-inner">
 
                 <div>
-                    <h2>Let's discuss what your business needs</h2>
+                    <h2 id="how-cta-title">Let's discuss what your business needs</h2>
+
                     <p>
                         Whether you are exploring your first remote role
                         or considering additional international support,
@@ -1332,13 +1464,6 @@
 
                 <div>
                     <a class="how-footer-logo" href="index.html" aria-label="AVERRA home">
-                        <img
-                            src="images/Logo.jpeg"
-                            alt=""
-                            width="52"
-                            height="52"
-                            onerror="this.style.display='none';"
-                        >
                         <span class="how-footer-logo-text">
                             <strong>AVERRA</strong>
                             <small>STAFFING SOLUTIONS LTD</small>
@@ -1371,7 +1496,7 @@
                         <a href="about.html">About</a>
                         <a href="services.html">Services</a>
                         <a href="industries.html">Industries</a>
-                        <a href="how-it-works.html">How It Works</a>
+                        <a href="how-it-works.html" aria-current="page">How It Works</a>
                     </nav>
                 </div>
 
@@ -1390,6 +1515,7 @@
                         <a href="privacy.html">Privacy Policy</a>
                         <a href="terms.html">Terms &amp; Conditions</a>
                     </nav>
+
                     <p>AVERRA Staffing Solutions Ltd<br>United Kingdom</p>
                 </div>
 
@@ -1413,47 +1539,98 @@
 
     <script>
         (function () {
-            const year = document.getElementById("how-current-year");
+            "use strict";
 
-            if (year) {
-                year.textContent = new Date().getFullYear();
+            const yearElement = document.getElementById("how-current-year");
+
+            if (yearElement) {
+                yearElement.textContent = String(new Date().getFullYear());
             }
 
             const menuButton = document.getElementById("how-menu-button");
             const navigation = document.getElementById("how-navigation");
 
-            if (menuButton && navigation) {
-                menuButton.addEventListener("click", function () {
-                    const expanded =
-                        menuButton.getAttribute("aria-expanded") === "true";
+            if (!menuButton || !navigation) {
+                return;
+            }
 
-                    menuButton.setAttribute(
-                        "aria-expanded",
-                        String(!expanded)
-                    );
+            function isMobileNavigation() {
+                return window.matchMedia("(max-width: 1000px)").matches;
+            }
 
-                    menuButton.setAttribute(
-                        "aria-label",
-                        expanded
-                            ? "Open navigation menu"
-                            : "Close navigation menu"
-                    );
+            function setMenuOpen(open) {
+                menuButton.setAttribute("aria-expanded", String(open));
+                menuButton.setAttribute(
+                    "aria-label",
+                    open ? "Close navigation menu" : "Open navigation menu"
+                );
 
-                    menuButton.textContent = expanded ? "☰" : "✕";
-                    navigation.classList.toggle("is-open", !expanded);
+                menuButton.innerHTML = open
+                    ? '<span aria-hidden="true">✕</span>'
+                    : '<span aria-hidden="true">☰</span>';
+
+                navigation.classList.toggle("is-open", open);
+            }
+
+            menuButton.addEventListener("click", function () {
+                const isOpen =
+                    menuButton.getAttribute("aria-expanded") === "true";
+
+                setMenuOpen(!isOpen);
+            });
+
+            navigation.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function () {
+                    if (isMobileNavigation()) {
+                        setMenuOpen(false);
+                    }
+                });
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (
+                    event.key === "Escape" &&
+                    menuButton.getAttribute("aria-expanded") === "true"
+                ) {
+                    setMenuOpen(false);
+                    menuButton.focus();
+                }
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!isMobileNavigation()) {
+                    return;
+                }
+
+                const clickedInsideMenu = navigation.contains(event.target);
+                const clickedButton = menuButton.contains(event.target);
+
+                if (
+                    !clickedInsideMenu &&
+                    !clickedButton &&
+                    menuButton.getAttribute("aria-expanded") === "true"
+                ) {
+                    setMenuOpen(false);
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (!isMobileNavigation()) {
+                    setMenuOpen(false);
+                }
+            });
+
+            const heroImage = document.querySelector(".how-hero-image");
+            const heroImageWrap = document.getElementById("how-hero-image-wrap");
+
+            if (heroImage && heroImageWrap) {
+                heroImage.addEventListener("error", function () {
+                    heroImageWrap.hidden = true;
                 });
 
-                navigation.querySelectorAll("a").forEach(function (link) {
-                    link.addEventListener("click", function () {
-                        navigation.classList.remove("is-open");
-                        menuButton.setAttribute("aria-expanded", "false");
-                        menuButton.setAttribute(
-                            "aria-label",
-                            "Open navigation menu"
-                        );
-                        menuButton.textContent = "☰";
-                    });
-                });
+                if (heroImage.complete && heroImage.naturalWidth === 0) {
+                    heroImageWrap.hidden = true;
+                }
             }
         })();
     </script>

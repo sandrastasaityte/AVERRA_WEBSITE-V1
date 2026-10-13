@@ -9,12 +9,25 @@
 
     <title>Careers &amp; Global Opportunities | AVERRA Staffing Solutions Ltd</title>
 
-    <meta name="description" content="Register your interest in potential remote career opportunities with AVERRA Staffing Solutions Ltd across finance, accounting, administration, customer support, technology and professional services.">
-
+    <meta name="description" content="Explore potential remote career opportunities with AVERRA Staffing Solutions Ltd. Register your interest in finance, accounting, administration, technology and other professional fields.">
     <meta name="robots" content="index, follow">
+    <meta name="author" content="AVERRA Staffing Solutions Ltd">
+
     <link rel="canonical" href="https://averrastaffing.co.uk/careers.html">
     <link rel="icon" href="images/Logo.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="style.css">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Careers & Global Opportunities | AVERRA">
+    <meta property="og:description" content="Share your skills and register your interest in potential remote professional opportunities with AVERRA.">
+    <meta property="og:url" content="https://averrastaffing.co.uk/careers.html">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/career-global-opportunities.jpg">
+    <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Careers & Global Opportunities | AVERRA">
+    <meta name="twitter:description" content="Explore potential remote professional opportunities with AVERRA Staffing Solutions Ltd.">
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/career-global-opportunities.jpg">
 
     <style>
         :root {
@@ -61,6 +74,7 @@
 
         .careers-section {
             padding: 76px 0;
+            scroll-margin-top: 25px;
         }
 
         .careers-eyebrow {
@@ -152,7 +166,8 @@
         .careers-page button:focus-visible,
         .careers-page input:focus-visible,
         .careers-page select:focus-visible,
-        .careers-page textarea:focus-visible {
+        .careers-page textarea:focus-visible,
+        .careers-page summary:focus-visible {
             outline: 3px solid var(--career-gold);
             outline-offset: 3px;
         }
@@ -168,23 +183,34 @@
 
         .careers-header-inner {
             display: flex;
-            min-height: 88px;
+            min-height: 84px;
             align-items: center;
             justify-content: space-between;
             gap: 25px;
         }
 
-        .careers-logo {
+        .careers-brand {
             display: inline-flex;
             flex-shrink: 0;
-            align-items: center;
+            flex-direction: column;
+            color: var(--career-navy);
             text-decoration: none;
+            line-height: 1.2;
         }
 
-        .careers-logo img {
-            width: 175px;
-            max-height: 72px;
-            object-fit: contain;
+        .careers-brand-name {
+            font-size: 1.65rem;
+            font-weight: 900;
+            letter-spacing: .12em;
+        }
+
+        .careers-brand-subtitle {
+            margin-top: 4px;
+            color: var(--career-muted);
+            font-size: .64rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
         }
 
         .careers-navigation {
@@ -192,7 +218,7 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: flex-end;
-            gap: 22px;
+            gap: 21px;
         }
 
         .careers-navigation a {
@@ -217,6 +243,19 @@
         .careers-navigation .careers-nav-cta:hover {
             color: var(--career-white);
             background: var(--career-blue);
+        }
+
+        .careers-menu-toggle {
+            display: none;
+            min-height: 43px;
+            padding: 9px 13px;
+            border: 1px solid var(--career-border);
+            border-radius: 8px;
+            color: var(--career-navy);
+            background: var(--career-white);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
         }
 
         /* HERO */
@@ -434,6 +473,7 @@
             color: var(--career-blue);
             background: #eaf2f9;
             font-size: 1.35rem;
+            font-weight: 800;
         }
 
         .careers-area-card h3 {
@@ -655,6 +695,7 @@
         .careers-form-status {
             display: none;
             padding: 14px;
+            border: 1px solid #cbdfea;
             border-radius: 8px;
             color: var(--career-navy);
             background: #edf4fa;
@@ -780,7 +821,19 @@
 
         /* RESPONSIVE */
 
-        @media (max-width: 950px) {
+        @media (max-width: 1000px) {
+            .careers-header-inner {
+                gap: 18px;
+            }
+
+            .careers-navigation {
+                gap: 14px;
+            }
+
+            .careers-navigation a {
+                font-size: .85rem;
+            }
+
             .careers-hero-grid,
             .careers-intro-grid,
             .careers-registration-grid {
@@ -820,22 +873,50 @@
             }
 
             .careers-header-inner {
-                align-items: flex-start;
-                flex-direction: column;
-                padding: 15px 0;
+                min-height: 0;
+                align-items: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 14px 0;
             }
 
-            .careers-logo img {
-                width: 155px;
+            .careers-brand-name {
+                font-size: 1.45rem;
+            }
+
+            .careers-brand-subtitle {
+                font-size: .58rem;
+            }
+
+            .careers-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
             }
 
             .careers-navigation {
-                justify-content: flex-start;
-                gap: 12px 17px;
+                display: none;
+                width: 100%;
+                align-items: stretch;
+                flex-direction: column;
+                gap: 0;
+                padding-top: 8px;
+            }
+
+            .careers-navigation.is-open {
+                display: flex;
             }
 
             .careers-navigation a {
-                font-size: .84rem;
+                padding: 11px 8px;
+                border-top: 1px solid var(--career-border);
+                font-size: .92rem;
+            }
+
+            .careers-navigation .careers-nav-cta {
+                margin-top: 8px;
+                text-align: center;
             }
 
             .careers-hero {
@@ -899,22 +980,29 @@
     <header class="careers-header">
         <div class="careers-container careers-header-inner">
 
-            <a class="careers-logo" href="index.html" aria-label="AVERRA home">
-                <img
-                    src="images/Logo.jpeg"
-                    alt="AVERRA Staffing Solutions Ltd logo"
-                    width="175"
-                    height="72"
-                >
+            <a class="careers-brand" href="index.html" aria-label="AVERRA Staffing Solutions home">
+                <span class="careers-brand-name">AVERRA</span>
+                <span class="careers-brand-subtitle">Staffing Solutions Ltd</span>
             </a>
 
-            <nav class="careers-navigation" aria-label="Main navigation">
+            <button
+                class="careers-menu-toggle"
+                id="careers-menu-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="careers-main-navigation"
+            >
+                <span aria-hidden="true">☰</span>
+                <span>Menu</span>
+            </button>
+
+            <nav class="careers-navigation" id="careers-main-navigation" aria-label="Main navigation">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
                 <a href="services.html">Services</a>
                 <a href="how-it-works.html">How It Works</a>
                 <a href="careers.html" aria-current="page">Careers</a>
-                <a href="lets-contact.html" class="careers-nav-cta">Let's Talk</a>
+                <a href="lets-talk.html" class="careers-nav-cta">Let's Talk</a>
             </nav>
 
         </div>
@@ -934,11 +1022,11 @@
                     </h1>
 
                     <p class="careers-hero-copy">
-                        At AVERRA Staffing Solutions Ltd, we believe
-                        professional talent can connect businesses and people
-                        across borders. We aim to connect skilled professionals
-                        with potential remote opportunities that match their
-                        experience, interests and career ambitions.
+                        At AVERRA Staffing Solutions Ltd, we believe professional
+                        talent can connect businesses and people across borders.
+                        We aim to connect skilled professionals with potential
+                        remote opportunities that match their experience,
+                        interests and career ambitions.
                     </p>
 
                     <div class="careers-hero-actions">
@@ -952,13 +1040,13 @@
                     </div>
                 </div>
 
-                <aside class="careers-hero-card">
+                <aside class="careers-hero-card" aria-label="Career opportunities at AVERRA">
                     <h2>Build your professional future</h2>
 
                     <p>
-                        We are developing connections between UK businesses
-                        and international professionals, with a focus on
-                        flexible remote staffing and outsourcing solutions.
+                        We are developing connections between UK businesses and
+                        international professionals, with a focus on flexible
+                        remote staffing and outsourcing solutions.
                     </p>
 
                     <ul class="careers-check-list">
@@ -972,19 +1060,19 @@
             </div>
         </section>
 
-        <section class="careers-section">
+        <section class="careers-section" aria-labelledby="careers-intro-heading">
             <div class="careers-container careers-intro-grid">
 
                 <div class="careers-intro-copy">
                     <span class="careers-eyebrow">Our approach</span>
 
-                    <h2 class="careers-heading">
+                    <h2 class="careers-heading" id="careers-intro-heading">
                         Talent should not be limited by geography
                     </h2>
 
                     <p>
-                        AVERRA Staffing Solutions Ltd is a UK-based staffing
-                        and outsourcing business focused on connecting UK
+                        AVERRA Staffing Solutions Ltd is a UK-based staffing and
+                        outsourcing business focused on connecting UK
                         organisations with international professional talent.
                     </p>
 
@@ -995,9 +1083,9 @@
                     </p>
 
                     <p>
-                        Potential opportunities may include finance,
-                        accounting, administration, customer support,
-                        technology, engineering and other professional services.
+                        Potential opportunities may include finance, accounting,
+                        administration, customer support, technology, engineering
+                        and other professional services.
                     </p>
 
                     <div class="careers-highlight">
@@ -1013,12 +1101,13 @@
                 <div>
                     <img
                         class="careers-image"
+                        data-image-key="career-global-opportunities"
                         src="images/career-global-opportunities.jpg"
                         alt="Professionals exploring international career opportunities"
                         width="650"
                         height="430"
                         loading="lazy"
-                        onerror="this.onerror=null;this.src='images/global-team.jpg';"
+                        decoding="async"
                     >
 
                     <p class="careers-image-caption">
@@ -1030,13 +1119,15 @@
             </div>
         </section>
 
-        <section class="careers-section careers-areas" id="career-areas">
+        <section class="careers-section careers-areas" id="career-areas" aria-labelledby="careers-areas-heading">
             <div class="careers-container">
 
                 <div class="careers-section-heading">
                     <span class="careers-eyebrow">Explore your options</span>
 
-                    <h2 class="careers-heading">Career areas we are interested in</h2>
+                    <h2 class="careers-heading" id="careers-areas-heading">
+                        Career areas we are interested in
+                    </h2>
 
                     <p class="careers-lead">
                         We welcome expressions of interest from professionals
@@ -1141,12 +1232,14 @@
             </div>
         </section>
 
-        <section class="careers-section">
+        <section class="careers-section" aria-labelledby="careers-journey-heading">
             <div class="careers-container">
 
                 <div class="careers-section-heading">
                     <span class="careers-eyebrow">How it works</span>
-                    <h2 class="careers-heading">Your journey with AVERRA</h2>
+                    <h2 class="careers-heading" id="careers-journey-heading">
+                        Your journey with AVERRA
+                    </h2>
                     <p class="careers-lead">
                         We aim to understand your experience and preferences
                         before considering you for a suitable opportunity.
@@ -1157,37 +1250,51 @@
                     <article class="careers-journey-step">
                         <span class="careers-step-number">01</span>
                         <h3>Share your details</h3>
-                        <p>Tell us about your background, skills, preferred career area and contact information.</p>
+                        <p>
+                            Tell us about your background, skills, preferred
+                            career area and contact information.
+                        </p>
                     </article>
 
                     <article class="careers-journey-step">
                         <span class="careers-step-number">02</span>
                         <h3>Initial review</h3>
-                        <p>If a suitable opportunity arises, we may contact you for further information.</p>
+                        <p>
+                            If a suitable opportunity arises, we may contact
+                            you for further information.
+                        </p>
                     </article>
 
                     <article class="careers-journey-step">
                         <span class="careers-step-number">03</span>
                         <h3>Discuss suitability</h3>
-                        <p>We may discuss your experience, availability, location and expectations.</p>
+                        <p>
+                            We may discuss your experience, availability,
+                            location and expectations.
+                        </p>
                     </article>
 
                     <article class="careers-journey-step">
                         <span class="careers-step-number">04</span>
                         <h3>Potential matching</h3>
-                        <p>If a suitable client requirement exists, we may discuss the role and next steps.</p>
+                        <p>
+                            If a suitable client requirement exists, we may
+                            discuss the role and next steps.
+                        </p>
                     </article>
                 </div>
 
             </div>
         </section>
 
-        <section class="careers-section careers-registration" id="register-interest">
+        <section class="careers-section careers-registration" id="register-interest" aria-labelledby="careers-registration-heading">
             <div class="careers-container careers-registration-grid">
 
                 <div class="careers-registration-copy">
                     <span class="careers-eyebrow">Join our talent network</span>
-                    <h2 class="careers-heading">Tell us about yourself</h2>
+                    <h2 class="careers-heading" id="careers-registration-heading">
+                        Tell us about yourself
+                    </h2>
 
                     <p>
                         Interested in potential remote professional opportunities?
@@ -1208,7 +1315,7 @@
                     </ul>
 
                     <div class="careers-highlight">
-                        <strong>Important information</strong>
+                        <strong>Protect your personal information</strong>
                         <p>
                             This is an expression-of-interest form, not an
                             application for a confirmed vacancy. Do not include
@@ -1227,29 +1334,62 @@
 
                         <div class="careers-form-row">
                             <div class="careers-field">
-                                <label for="candidate-first-name">First name <span class="careers-required">*</span></label>
-                                <input type="text" id="candidate-first-name" name="First name"
-                                    autocomplete="given-name" maxlength="80" placeholder="Your first name" required>
+                                <label for="candidate-first-name">
+                                    First name <span class="careers-required">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="candidate-first-name"
+                                    name="First name"
+                                    autocomplete="given-name"
+                                    maxlength="80"
+                                    placeholder="Your first name"
+                                    required
+                                >
                             </div>
 
                             <div class="careers-field">
-                                <label for="candidate-last-name">Last name <span class="careers-required">*</span></label>
-                                <input type="text" id="candidate-last-name" name="Last name"
-                                    autocomplete="family-name" maxlength="80" placeholder="Your last name" required>
+                                <label for="candidate-last-name">
+                                    Last name <span class="careers-required">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="candidate-last-name"
+                                    name="Last name"
+                                    autocomplete="family-name"
+                                    maxlength="80"
+                                    placeholder="Your last name"
+                                    required
+                                >
                             </div>
                         </div>
 
                         <div class="careers-form-row">
                             <div class="careers-field">
-                                <label for="candidate-email">Email address <span class="careers-required">*</span></label>
-                                <input type="email" id="candidate-email" name="Email address"
-                                    autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+                                <label for="candidate-email">
+                                    Email address <span class="careers-required">*</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    id="candidate-email"
+                                    name="Email address"
+                                    autocomplete="email"
+                                    maxlength="254"
+                                    placeholder="you@example.com"
+                                    required
+                                >
                             </div>
 
                             <div class="careers-field">
-                                <label for="candidate-location">Country of residence <span class="careers-required">*</span></label>
-                                <select id="candidate-location" name="Country of residence"
-                                    autocomplete="country-name" required>
+                                <label for="candidate-location">
+                                    Country of residence <span class="careers-required">*</span>
+                                </label>
+                                <select
+                                    id="candidate-location"
+                                    name="Country of residence"
+                                    autocomplete="country-name"
+                                    required
+                                >
                                     <option value="">Select country</option>
                                     <option value="India">India</option>
                                     <option value="United Kingdom">United Kingdom</option>
@@ -1261,7 +1401,9 @@
 
                         <div class="careers-form-row">
                             <div class="careers-field">
-                                <label for="candidate-career-area">Career area <span class="careers-required">*</span></label>
+                                <label for="candidate-career-area">
+                                    Career area <span class="careers-required">*</span>
+                                </label>
                                 <select id="candidate-career-area" name="Career area" required>
                                     <option value="">Select career area</option>
                                     <option value="Finance and Accounting">Finance and Accounting</option>
@@ -1290,7 +1432,9 @@
                         </div>
 
                         <div class="careers-field">
-                            <label for="candidate-working-preference">Preferred working arrangement</label>
+                            <label for="candidate-working-preference">
+                                Preferred working arrangement
+                            </label>
                             <select id="candidate-working-preference" name="Preferred working arrangement">
                                 <option value="">Select preference</option>
                                 <option value="Fully remote">Fully remote</option>
@@ -1302,38 +1446,60 @@
 
                         <div class="careers-field">
                             <label for="candidate-skills">Skills and experience</label>
-                            <textarea id="candidate-skills" name="Skills and experience" maxlength="3000"
-                                placeholder="Describe your skills, qualifications, software knowledge or relevant experience."></textarea>
+                            <textarea
+                                id="candidate-skills"
+                                name="Skills and experience"
+                                maxlength="3000"
+                                placeholder="Describe your skills, qualifications, software knowledge or relevant experience."
+                            ></textarea>
                         </div>
 
                         <div class="careers-field">
-                            <label for="candidate-message">What kind of opportunity are you looking for?</label>
-                            <textarea id="candidate-message" name="Additional information" maxlength="2000"
-                                placeholder="Tell us about your interests, availability or preferred role."></textarea>
+                            <label for="candidate-message">
+                                What kind of opportunity are you looking for?
+                            </label>
+                            <textarea
+                                id="candidate-message"
+                                name="Additional information"
+                                maxlength="2000"
+                                placeholder="Tell us about your interests, availability or preferred role."
+                            ></textarea>
                         </div>
 
                         <label class="careers-consent" for="candidate-privacy-consent">
-                            <input type="checkbox" id="candidate-privacy-consent" name="Privacy acknowledgement"
-                                value="Acknowledged" required>
+                            <input
+                                type="checkbox"
+                                id="candidate-privacy-consent"
+                                name="Privacy acknowledgement"
+                                value="Acknowledged"
+                                required
+                            >
                             <span>
                                 I have read the
                                 <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-                                and understand that my details will be included in an email to AVERRA
-                                so the company can respond to my expression of interest.
-                                <span class="careers-required">*</span>
+                                and acknowledge that my information will be included in an email
+                                addressed to AVERRA so the company can respond to my expression
+                                of interest. <span class="careers-required">*</span>
                             </span>
                         </label>
 
-                        <div class="careers-form-status" id="candidate-form-status"
-                            role="status" aria-live="polite"></div>
+                        <div
+                            class="careers-form-status"
+                            id="candidate-form-status"
+                            role="status"
+                            aria-live="polite"
+                            tabindex="-1"
+                        ></div>
 
                         <button type="submit" class="careers-button careers-button-blue">
                             Prepare My Registration Email →
                         </button>
 
                         <p class="careers-form-note">
-                            This form opens your configured email application. It does not upload
-                            or store your details on the website. You must review and send the email.
+                            This form opens your configured email application. It does not
+                            send or store your details on the website. Review the email and
+                            press Send to submit your registration. If your device has no
+                            configured email application, contact info@averrastaffing.co.uk.
                         </p>
 
                     </form>
@@ -1342,19 +1508,90 @@
             </div>
         </section>
 
+        <section class="careers-section" aria-labelledby="careers-faq-heading">
+            <div class="careers-container careers-faq-wrap">
 
+                <div class="careers-section-heading">
+                    <span class="careers-eyebrow">Frequently asked questions</span>
+                    <h2 class="careers-heading" id="careers-faq-heading">
+                        Questions about careers at AVERRA
+                    </h2>
+                    <p class="careers-lead">
+                        Find out what registering your interest means and what
+                        you can expect from the process.
+                    </p>
+                </div>
+
+                <div class="careers-faq-list">
+                    <details>
+                        <summary>Are these confirmed job vacancies?</summary>
+                        <p>
+                            No. The career areas on this page describe the kinds
+                            of professional skills AVERRA is interested in.
+                            They are not a list of confirmed vacancies. Specific
+                            opportunities depend on client requirements and
+                            business demand.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>Can I register if I live in India?</summary>
+                        <p>
+                            Yes. AVERRA's business model focuses on connecting
+                            UK businesses with international professionals,
+                            including professionals based in India. Any specific
+                            opportunity will depend on the role and its requirements.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>Does registering guarantee an interview or job?</summary>
+                        <p>
+                            No. Registering your interest does not guarantee
+                            an interview, a job offer or a particular response
+                            time. We may contact you if a relevant opportunity
+                            becomes available.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>Is there a fee to register my interest?</summary>
+                        <p>
+                            This website form is intended to collect an expression
+                            of interest. AVERRA does not ask you to enter payment
+                            card or bank details into this form. Be cautious of
+                            anyone claiming to represent AVERRA who asks you for
+                            unexpected payments or sensitive financial information.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>How can I contact AVERRA about my registration?</summary>
+                        <p>
+                            You can email
+                            <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
+                            with your question. Avoid sending sensitive identity
+                            or financial documents unless a legitimate process
+                            requires them and an appropriate secure method has
+                            been agreed.
+                        </p>
+                    </details>
+                </div>
+
+            </div>
+        </section>
 
         <section class="careers-final-cta">
             <div class="careers-container careers-final-cta-inner">
                 <div>
                     <h2>Let's connect your talent with opportunity.</h2>
                     <p>
-                        Share your professional interests or contact AVERRA to learn more
-                        about remote staffing and international talent.
+                        Share your professional interests or contact AVERRA to
+                        learn more about remote staffing and international talent.
                     </p>
                 </div>
 
-                <a href="lets-contact.html" class="careers-button careers-button-gold">
+                <a href="lets-talk.html" class="careers-button careers-button-gold">
                     Contact AVERRA →
                 </a>
             </div>
@@ -1373,9 +1610,10 @@
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
                 <a href="services.html">Services</a>
+                <a href="how-it-works.html">How It Works</a>
                 <a href="careers.html" aria-current="page">Careers</a>
                 <a href="FAQ.html">FAQs</a>
-                <a href="lets-contact.html">Let's Talk</a>
+                <a href="lets-talk.html">Let's Talk</a>
                 <a href="privacy.html">Privacy Policy</a>
             </nav>
 
@@ -1391,6 +1629,7 @@
 </div>
 
 <script src="script.js" defer></script>
+<script src="images/images.js" defer></script>
 
 <script>
 "use strict";
@@ -1402,16 +1641,84 @@ document.addEventListener("DOMContentLoaded", function () {
         yearElement.textContent = String(new Date().getFullYear());
     }
 
+    /* MOBILE NAVIGATION */
+
+    const menuToggle = document.getElementById("careers-menu-toggle");
+    const navigation = document.getElementById("careers-main-navigation");
+
+    function closeNavigation() {
+        if (!menuToggle || !navigation) {
+            return;
+        }
+
+        navigation.classList.remove("is-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open navigation menu");
+    }
+
+    if (menuToggle && navigation) {
+        menuToggle.setAttribute("aria-label", "Open navigation menu");
+
+        menuToggle.addEventListener("click", function () {
+            const isOpen = navigation.classList.toggle("is-open");
+
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        navigation.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", closeNavigation);
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeNavigation();
+                menuToggle.focus();
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (
+                navigation.classList.contains("is-open") &&
+                !navigation.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                closeNavigation();
+            }
+        });
+
+        window.addEventListener("resize", function () {
+            if (window.innerWidth > 680) {
+                closeNavigation();
+            }
+        });
+    }
+
+    /* CAREER CATEGORY QUICK SELECTION */
+
     const careerSelect = document.getElementById("candidate-career-area");
     const careerLinks = document.querySelectorAll("[data-career]");
 
     careerLinks.forEach(function (link) {
         link.addEventListener("click", function () {
-            if (careerSelect) {
-                careerSelect.value = link.dataset.career || "";
+            if (!careerSelect) {
+                return;
+            }
+
+            const selectedCareer = link.dataset.career || "";
+
+            if (Array.from(careerSelect.options).some(function (option) {
+                return option.value === selectedCareer;
+            })) {
+                careerSelect.value = selectedCareer;
             }
         });
     });
+
+    /* CANDIDATE REGISTRATION EMAIL */
 
     const registrationForm = document.getElementById("candidate-registration-form");
     const statusElement = document.getElementById("candidate-form-status");
@@ -1431,29 +1738,53 @@ document.addEventListener("DOMContentLoaded", function () {
         const recipient = "info@averrastaffing.co.uk";
         const subject = "AVERRA Careers - Candidate Expression of Interest";
 
+        const fieldLabels = {
+            "First name": "First name",
+            "Last name": "Last name",
+            "Email address": "Email address",
+            "Country of residence": "Country of residence",
+            "Career area": "Career area",
+            "Professional experience": "Professional experience",
+            "Preferred working arrangement": "Preferred working arrangement",
+            "Skills and experience": "Skills and experience",
+            "Additional information": "Additional information",
+            "Privacy acknowledgement": "Privacy acknowledgement"
+        };
+
         const lines = [
             "AVERRA STAFFING SOLUTIONS LTD",
             "CANDIDATE EXPRESSION OF INTEREST",
             "",
-            "Please find my details below.",
+            "A candidate has prepared the following expression of interest.",
+            "",
+            "Please review the details below.",
             ""
         ];
 
         formData.forEach(function (value, key) {
-            lines.push(key + ": " + String(value));
+            const label = fieldLabels[key] || key;
+            const safeValue = String(value).trim();
+
+            lines.push(label + ": " + safeValue);
             lines.push("");
         });
+
+        lines.push(
+            "This email was prepared using the AVERRA careers webpage."
+        );
 
         const mailtoUrl =
             "mailto:" + recipient +
             "?subject=" + encodeURIComponent(subject) +
-            "&body=" + encodeURIComponent(lines.join("\n"));
+            "&body=" + encodeURIComponent(lines.join("\r\n"));
 
         statusElement.style.display = "block";
         statusElement.textContent =
-            "Your email application should open with your details. " +
-            "Review the information and press Send to submit your registration. " +
-            "If no email application opens, contact info@averrastaffing.co.uk directly.";
+            "Your email application should open with your registration details. " +
+            "Review the recipient and all information, then press Send. " +
+            "If no email application opens, email info@averrastaffing.co.uk directly.";
+
+        statusElement.focus();
 
         window.location.href = mailtoUrl;
     });
