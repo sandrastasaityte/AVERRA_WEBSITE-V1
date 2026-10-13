@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Manage Jobs | AVERRA Admin</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/auth.js" defer></script>
+  <script src="js/jobs.js" defer></script>
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="dashboard.html">AVERRA ADMIN</a>
+    <nav class="admin-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="jobs.html">Jobs</a>
+      <button type="button" id="logout-button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">VACANCY MANAGEMENT</p>
+        <h1>Manage jobs</h1>
+        <p class="muted">Create, edit, publish and close vacancies.</p>
+      </div>
+      <a class="btn btn-primary" href="job-form.html">+ Add vacancy</a>
+    </div>
+
+    <p id="jobs-message" class="message" role="status">Loading vacancies…</p>
+
+    <section class="panel">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Location</th>
+              <th>Employment</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="jobs-table">
+            <tr><td colspan="5">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

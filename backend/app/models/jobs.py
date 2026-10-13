@@ -1,13 +1,14 @@
-
 """
+============================================================
 AVERRA STAFFING SOLUTIONS LTD
-File: app/models/job.py
+File: backend/app/models/job.py
+Version: 1.0.0
 
 SQLAlchemy database model for job vacancies.
+============================================================
 """
 
 from datetime import datetime, timezone
-from typing import Optional
 
 from sqlalchemy import (
     DateTime,
@@ -22,7 +23,7 @@ from .base import Base
 
 
 class Job(Base):
-    """Represents a job vacancy managed by AVERRA."""
+    """Database model for AVERRA job vacancies."""
 
     __tablename__ = "jobs"
 
@@ -32,20 +33,18 @@ class Job(Base):
         Index("ix_jobs_location", "location"),
     )
 
-    # Unique job identifier
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         autoincrement=True,
     )
 
-    # Main vacancy information
     title: Mapped[str] = mapped_column(
         String(150),
         nullable=False,
     )
 
-    department: Mapped[Optional[str]] = mapped_column(
+    department: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
@@ -70,17 +69,16 @@ class Job(Base):
         nullable=False,
     )
 
-    salary_range: Mapped[Optional[str]] = mapped_column(
+    salary_range: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True,
     )
 
-    application_email: Mapped[Optional[str]] = mapped_column(
+    application_email: Mapped[str | None] = mapped_column(
         String(254),
         nullable=True,
     )
 
-    # draft = hidden, published = public, closed = no longer accepting
     status: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
@@ -88,13 +86,11 @@ class Job(Base):
         server_default="draft",
     )
 
-    # Optional closing date for applications
-    closing_date: Mapped[Optional[datetime]] = mapped_column(
+    closing_date: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
     )
 
-    # Record timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -109,12 +105,10 @@ class Job(Base):
     )
 
     def __repr__(self) -> str:
-        """Developer-friendly representation."""
         return (
             f"<Job("
             f"id={self.id}, "
             f"title={self.title!r}, "
-            f"location={self.location!r}, "
             f"status={self.status!r}"
             f")>"
         )

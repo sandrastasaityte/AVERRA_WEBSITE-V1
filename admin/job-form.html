@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Add Vacancy | AVERRA Admin</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/auth.js" defer></script>
+  <script src="js/job-form.js" defer></script>
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="dashboard.html">AVERRA ADMIN</a>
+    <nav class="admin-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="jobs.html">Jobs</a>
+      <button type="button" id="logout-button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">VACANCY MANAGEMENT</p>
+        <h1 id="form-title">Add vacancy</h1>
+        <p class="muted">Complete the job details below.</p>
+      </div>
+    </div>
+
+    <section class="panel form-panel">
+      <form id="job-form">
+        <div class="form-grid">
+          <div class="field-full">
+            <label for="title">Job title *</label>
+            <input id="title" name="title" maxlength="150" required
+                   placeholder="e.g. Senior Accountant">
+          </div>
+
+          <div>
+            <label for="department">Department</label>
+            <input id="department" name="department" maxlength="100"
+                   placeholder="e.g. Finance">
+          </div>
+
+          <div>
+            <label for="location">Location *</label>
+            <input id="location" name="location" maxlength="150" required
+                   placeholder="e.g. Remote, United Kingdom">
+          </div>
+
+          <div>
+            <label for="employment_type">Employment type *</label>
+            <select id="employment_type" name="employment_type" required>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="salary_range">Salary range</label>
+            <input id="salary_range" name="salary_range" maxlength="100"
+                   placeholder="e.g. £30,000–£35,000">
+          </div>
+
+          <div class="field-full">
+            <label for="summary">Short summary *</label>
+            <textarea id="summary" name="summary" maxlength="500"
+                      required placeholder="A short introduction to the role."></textarea>
+          </div>
+
+          <div class="field-full">
+            <label for="description">Full description *</label>
+            <textarea id="description" name="description" required
+                      placeholder="Responsibilities, requirements and benefits."></textarea>
+          </div>
+
+          <div class="field-full">
+            <label for="application_email">Application email</label>
+            <input id="application_email" name="application_email"
+                   type="email" maxlength="254"
+                   placeholder="info@averrastaffing.co.uk">
+          </div>
+
+          <div>
+            <label for="status">Status</label>
+            <select id="status" name="status">
+              <option value="draft">Draft — not public</option>
+              <option value="published">Published — public</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <p id="form-message" class="message" role="status"></p>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit" id="save-button">
+            Save vacancy
+          </button>
+          <a class="btn btn-secondary" href="jobs.html">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

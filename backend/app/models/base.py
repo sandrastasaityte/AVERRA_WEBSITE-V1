@@ -1,7 +1,6 @@
-
 """
 AVERRA STAFFING SOLUTIONS LTD
-File: app/models/base.py
+File: backend/app/models/base.py
 
 Shared SQLAlchemy declarative base.
 """

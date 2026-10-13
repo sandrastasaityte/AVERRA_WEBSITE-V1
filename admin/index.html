@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Login | AVERRA Staffing Solutions</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/auth.js" defer></script>
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <p class="eyebrow">AVERRA STAFFING SOLUTIONS LTD</p>
+    <h1>Admin login</h1>
+    <p class="muted">Sign in to manage your job vacancies.</p>
+
+    <form id="login-form">
+      <label for="admin-token">Administrator token</label>
+      <input id="admin-token" type="password"
+             autocomplete="current-password" required>
+      <button class="btn btn-primary full-width" type="submit">
+        Sign in
+      </button>
+      <p id="login-message" class="message" role="status"></p>
+    </form>
+
+    <p class="small muted">Authorised access only.</p>
+  </main>
+</body>
+</html>

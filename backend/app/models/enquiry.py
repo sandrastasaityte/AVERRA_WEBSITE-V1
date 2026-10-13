@@ -1,16 +1,11 @@
-
 """
 AVERRA STAFFING SOLUTIONS LTD
-File: app/models/enquiry.py
+File: backend/app/models/enquiry.py
 
 Database model for website enquiries.
-
-Requirements:
-    sqlalchemy>=2.0,<3.0
 """
 
 from datetime import datetime, timezone
-from typing import Optional
 
 from sqlalchemy import (
     DateTime,
@@ -35,14 +30,12 @@ class Enquiry(Base):
         Index("ix_enquiries_created_at", "created_at"),
     )
 
-    # Unique database identifier
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         autoincrement=True,
     )
 
-    # Contact details
     name: Mapped[str] = mapped_column(
         String(150),
         nullable=False,
@@ -53,17 +46,17 @@ class Enquiry(Base):
         nullable=False,
     )
 
-    phone: Mapped[Optional[str]] = mapped_column(
+    phone: Mapped[str | None] = mapped_column(
         String(40),
         nullable=True,
     )
 
-    company: Mapped[Optional[str]] = mapped_column(
+    company: Mapped[str | None] = mapped_column(
         String(200),
         nullable=True,
     )
 
-    subject: Mapped[Optional[str]] = mapped_column(
+    subject: Mapped[str | None] = mapped_column(
         String(200),
         nullable=True,
     )
@@ -73,7 +66,6 @@ class Enquiry(Base):
         nullable=False,
     )
 
-    # Workflow status for the admin dashboard
     status: Mapped[str] = mapped_column(
         String(30),
         nullable=False,
@@ -81,13 +73,11 @@ class Enquiry(Base):
         server_default="new",
     )
 
-    # Internal notes for authorised staff
-    internal_notes: Mapped[Optional[str]] = mapped_column(
+    internal_notes: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )
 
-    # Creation and modification timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -102,7 +92,6 @@ class Enquiry(Base):
     )
 
     def __repr__(self) -> str:
-        """Developer-friendly representation."""
         return (
             f"<Enquiry("
             f"id={self.id}, "

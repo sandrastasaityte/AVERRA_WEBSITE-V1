@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard | AVERRA Admin</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/auth.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="dashboard.html">AVERRA ADMIN</a>
+    <nav class="admin-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="jobs.html">Jobs</a>
+      <button type="button" id="logout-button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">STAFFING SOLUTIONS</p>
+        <h1>Dashboard</h1>
+        <p class="muted">Manage your AVERRA recruitment activity.</p>
+      </div>
+      <a class="btn btn-primary" href="job-form.html">+ Add vacancy</a>
+    </div>
+
+    <p id="dashboard-message" class="message" role="status">
+      Loading dashboard…
+    </p>
+
+    <section class="cards" aria-label="Job statistics">
+      <article class="card">
+        <h2>Total vacancies</h2>
+        <p class="metric" id="total-jobs">—</p>
+      </article>
+      <article class="card">
+        <h2>Published vacancies</h2>
+        <p class="metric" id="published-jobs">—</p>
+      </article>
+      <article class="card">
+        <h2>Draft vacancies</h2>
+        <p class="metric" id="draft-jobs">—</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="page-heading">
+        <div>
+          <h2>Recent vacancies</h2>
+          <p class="muted">Your latest job records.</p>
+        </div>
+        <a href="jobs.html">Manage all jobs →</a>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Job title</th>
+              <th>Location</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recent-jobs">
+            <tr><td colspan="3">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
