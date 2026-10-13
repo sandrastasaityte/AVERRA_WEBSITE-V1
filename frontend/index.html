@@ -8,49 +8,95 @@
     <meta name="color-scheme" content="light">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <title>AVERRA Staffing Solutions Ltd | Remote Staffing &amp; Outsourcing UK</title>
+    <title>AVERRA Staffing Solutions Ltd | Remote Staffing, Outsourcing &amp; Jobs UK</title>
 
-    <meta
-        name="description"
-        content="AVERRA Staffing Solutions Ltd helps UK businesses explore remote staffing and outsourcing solutions, connecting organisations with skilled international professionals, particularly in India."
-    >
+    <meta name="description" content="AVERRA Staffing Solutions Ltd helps UK businesses explore remote staffing and outsourcing solutions, connecting organisations with skilled international professionals, particularly in India.">
     <meta name="robots" content="index, follow">
     <meta name="author" content="AVERRA Staffing Solutions Ltd">
 
     <link rel="canonical" href="https://averrastaffing.co.uk/">
-    <link rel="icon" href="images/Logo.jpeg" type="image/jpeg">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_GB">
     <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
     <meta property="og:title" content="AVERRA Staffing Solutions Ltd | Global Talent for UK Businesses">
-    <meta
-        property="og:description"
-        content="Explore flexible remote staffing and outsourcing solutions connecting UK businesses with international talent."
-    >
+    <meta property="og:description" content="Explore flexible remote staffing and outsourcing solutions connecting UK businesses with international talent.">
     <meta property="og:url" content="https://averrastaffing.co.uk/">
-    <meta property="og:image" content="https://averrastaffing.co.uk/images/hero-global-talent.jpg">
-    <meta property="og:image:alt" content="International professionals collaborating across borders">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/image2.jpg">
 
     <!-- Social sharing -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="AVERRA Staffing Solutions Ltd">
-    <meta
-        name="twitter:description"
-        content="Flexible staffing and outsourcing solutions for UK businesses."
-    >
-    <meta
-        name="twitter:image"
-        content="https://averrastaffing.co.uk/images/hero-global-talent.jpg"
-    >
+    <meta name="twitter:description" content="Flexible staffing and outsourcing solutions for UK businesses.">
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/image2.jpg">
 
-    <!-- Performance -->
-    <link rel="preload" as="image" href="images/hero-global-talent.jpg">
-
-    <!-- Shared website stylesheet and scripts -->
+    <!-- Website stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <script src="images.js" defer></script>
+
+    <!-- Brand styling -->
+    <style>
+        .site-brand {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2px;
+            color: #0b1f33;
+            text-decoration: none;
+            line-height: 1.05;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            display: block;
+            color: #0b1f33;
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: .08em;
+        }
+
+        .brand-subtitle {
+            display: block;
+            color: #1d5f91;
+            font-size: .56rem;
+            font-weight: 700;
+            letter-spacing: .13em;
+        }
+
+        .footer-brand .brand-name {
+            color: #ffffff;
+        }
+
+        .footer-brand .brand-subtitle {
+            color: #c89b3c;
+        }
+
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 480px) {
+            .brand-name {
+                font-size: 1.3rem;
+            }
+
+            .brand-subtitle {
+                font-size: .49rem;
+            }
+        }
+    </style>
+
+    <!-- Images are stored in frontend/images/ -->
+    <script src="images/images.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 
@@ -62,13 +108,9 @@
     <header class="site-header">
         <div class="container header-inner">
 
-            <a
-                class="site-brand"
-                href="index.html"
-                aria-label="AVERRA Staffing Solutions Ltd home"
-            >
+            <a class="site-brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
                 <span class="brand-name">AVERRA</span>
-                <span class="brand-subtitle">STAFFING SOLUTIONS</span>
+                <span class="brand-subtitle">STAFFING SOLUTIONS LTD</span>
             </a>
 
             <button
@@ -84,16 +126,13 @@
                 <span></span>
             </button>
 
-            <nav
-                class="main-navigation"
-                id="main-navigation"
-                aria-label="Main navigation"
-            >
+            <nav class="main-navigation" id="main-navigation" aria-label="Main navigation">
                 <a class="nav-link active" href="index.html" aria-current="page">Home</a>
                 <a class="nav-link" href="about.html">About</a>
                 <a class="nav-link" href="services.html">Services</a>
                 <a class="nav-link" href="how-it-works.html">How It Works</a>
                 <a class="nav-link" href="careers.html">Careers</a>
+                <a class="nav-link" href="jobs.html">Find Jobs</a>
                 <a class="nav-link nav-contact" href="contact.html">
                     Talk to Us <span aria-hidden="true">→</span>
                 </a>
@@ -153,8 +192,7 @@
                 <div class="hero-visual">
                     <div class="hero-image-frame">
                         <img
-                            data-image-key="homepage.hero"
-                            src="images/hero-global-talent.jpg"
+                            data-image-key="hero-global-talent"
                             alt="International professionals collaborating across borders"
                             class="hero-image"
                             fetchpriority="high"
@@ -185,8 +223,7 @@
 
                 <div class="intro-image-wrap">
                     <img
-                        data-image-key="homepage.globalNetwork"
-                        src="images/about-global-network.jpg"
+                        data-image-key="about-global-network"
                         alt="Professionals working together in an international business environment"
                         class="intro-image"
                         loading="lazy"
@@ -238,11 +275,7 @@
         </section>
 
         <!-- SERVICES -->
-        <section
-            class="section section-what-we-do"
-            id="what-we-do"
-            aria-labelledby="services-title"
-        >
+        <section class="section section-what-we-do" id="what-we-do" aria-labelledby="services-title">
             <div class="container">
 
                 <div class="section-heading">
@@ -265,8 +298,7 @@
                     <article class="service-card">
                         <div class="service-image-wrap">
                             <img
-                                data-image-key="services.financeAccounting"
-                                src="images/services-finance-accounting.jpg"
+                                data-image-key="finance-services"
                                 alt="Finance and accounting professionals working with financial information"
                                 loading="lazy"
                                 decoding="async"
@@ -291,8 +323,7 @@
                     <article class="service-card">
                         <div class="service-image-wrap">
                             <img
-                                data-image-key="services.operationsAdmin"
-                                src="images/services-operations-admin.jpg"
+                                data-image-key="outsourcing-services"
                                 alt="Business operations and administrative support"
                                 loading="lazy"
                                 decoding="async"
@@ -317,8 +348,7 @@
                     <article class="service-card">
                         <div class="service-image-wrap">
                             <img
-                                data-image-key="services.customerSupport"
-                                src="images/services-customer-support.jpg"
+                                data-image-key="customer-support"
                                 alt="Customer support professional assisting customers"
                                 loading="lazy"
                                 decoding="async"
@@ -343,8 +373,7 @@
                     <article class="service-card">
                         <div class="service-image-wrap">
                             <img
-                                data-image-key="services.salesMarketing"
-                                src="images/services-sales-marketing.jpg"
+                                data-image-key="business-growth"
                                 alt="Sales and marketing professionals planning business activities"
                                 loading="lazy"
                                 decoding="async"
@@ -369,8 +398,7 @@
                     <article class="service-card">
                         <div class="service-image-wrap">
                             <img
-                                data-image-key="services.itTechnology"
-                                src="images/services-it-technology.jpg"
+                                data-image-key="technology-services"
                                 alt="Technology professional working on digital systems"
                                 loading="lazy"
                                 decoding="async"
@@ -395,8 +423,7 @@
                     <article class="service-card">
                         <div class="service-image-wrap">
                             <img
-                                data-image-key="services.dedicatedTeams"
-                                src="images/services-dedicated-teams.jpg"
+                                data-image-key="global-workforce"
                                 alt="Dedicated remote professionals working as a team"
                                 loading="lazy"
                                 decoding="async"
@@ -503,8 +530,7 @@
 
                 <div class="why-image-wrap">
                     <img
-                        data-image-key="about.businessProfessionals"
-                        src="images/business-professionals.jpg"
+                        data-image-key="business-professionals"
                         alt="Business professionals collaborating on operational priorities"
                         class="why-image"
                         loading="lazy"
@@ -621,8 +647,7 @@
 
                     <article class="industry-card">
                         <img
-                            data-image-key="industries.finance"
-                            src="images/industries-finance.jpg"
+                            data-image-key="finance-services"
                             alt="Finance and professional services"
                             loading="lazy"
                             decoding="async"
@@ -637,8 +662,7 @@
 
                     <article class="industry-card">
                         <img
-                            data-image-key="industries.technology"
-                            src="images/industries-technology.jpg"
+                            data-image-key="technology-services"
                             alt="Technology and digital services"
                             loading="lazy"
                             decoding="async"
@@ -653,8 +677,7 @@
 
                     <article class="industry-card">
                         <img
-                            data-image-key="industries.engineering"
-                            src="images/industries-engineering.jpg"
+                            data-image-key="remote-working"
                             alt="Engineering and technical project work"
                             loading="lazy"
                             decoding="async"
@@ -669,8 +692,7 @@
 
                     <article class="industry-card">
                         <img
-                            data-image-key="industries.professionalServices"
-                            src="images/industries-professional-services.jpg"
+                            data-image-key="business-professionals"
                             alt="Professional services and business operations"
                             loading="lazy"
                             decoding="async"
@@ -725,8 +747,7 @@
 
                 <div class="global-image-wrap">
                     <img
-                        data-image-key="about.ukIndia"
-                        src="images/about-uk-india.jpg"
+                        data-image-key="about-uk-india"
                         alt="Business connections between the United Kingdom and India"
                         loading="lazy"
                         decoding="async"
@@ -791,10 +812,7 @@
                             Talk to AVERRA <span aria-hidden="true">→</span>
                         </a>
 
-                        <a
-                            class="cta-email"
-                            href="mailto:info@averrastaffing.co.uk"
-                        >
+                        <a class="cta-email" href="mailto:info@averrastaffing.co.uk">
                             info@averrastaffing.co.uk
                         </a>
                     </div>
@@ -814,13 +832,9 @@
         <div class="container footer-main">
 
             <div class="footer-brand-column">
-                <a
-                    class="site-brand footer-brand"
-                    href="index.html"
-                    aria-label="AVERRA Staffing Solutions Ltd home"
-                >
+                <a class="site-brand footer-brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
                     <span class="brand-name">AVERRA</span>
-                    <span class="brand-subtitle">STAFFING SOLUTIONS</span>
+                    <span class="brand-subtitle">STAFFING SOLUTIONS LTD</span>
                 </a>
 
                 <p>
@@ -828,10 +842,7 @@
                     flexible remote staffing and outsourcing solutions.
                 </p>
 
-                <a
-                    class="footer-email"
-                    href="mailto:info@averrastaffing.co.uk"
-                >
+                <a class="footer-email" href="mailto:info@averrastaffing.co.uk">
                     info@averrastaffing.co.uk
                 </a>
             </div>
@@ -847,6 +858,7 @@
             <nav class="footer-column" aria-label="More information">
                 <h2>Information</h2>
                 <a href="careers.html">Careers</a>
+                <a href="jobs.html">Find Jobs</a>
                 <a href="FAQ.html">Frequently Asked Questions</a>
                 <a href="contact.html">Contact Us</a>
             </nav>
@@ -879,6 +891,7 @@
 
     </footer>
 
+    <!-- Automatically update the copyright year -->
     <script>
         (function () {
             var yearElement = document.getElementById("current-year");
