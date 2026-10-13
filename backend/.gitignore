@@ -1,0 +1,75 @@
+
+# ============================================================
+# AVERRA STAFFING SOLUTIONS LTD
+# Backend Git ignore rules
+# ============================================================
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Distribution and package build files
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Local databases
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+*.db-journal
+
+# Application logs
+logs/*.log
+logs/*.log.*
+*.log
+
+# Uploaded files and candidate documents
+uploads/*
+!uploads/.gitkeep
+
+# Test and coverage outputs
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# Type checking and linting caches
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# IDE and editor settings
+.idea/
+.vscode/
+*.iml
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Local configuration overrides
+config.local.py
+settings.local.py
