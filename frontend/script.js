@@ -1,54 +1,75 @@
+**File: `script.js` — Version 4.1**
 
-/* =========================================================
+```javascript
+/* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    MASTER WEBSITE JAVASCRIPT
-   Version: 3.0
-   =========================================================
+   Version: 4.1
+   ============================================================
 
    FEATURES
    - Responsive mobile navigation
-   - Accessible menu controls and keyboard support
+   - Supports .menu-toggle and .mobile-menu-button
+   - Accessible keyboard navigation
    - Automatic active navigation links
-   - Sticky header scroll state
-   - Accessible same-page anchor navigation
+   - Sticky header
+   - Accessible same-page scrolling
    - Back-to-top button
    - Automatic copyright year
-   - Safe external-link handling
-   - Accessible HTML form validation
-   - Radio-group and checkbox validation
-   - Form submission state management
-   - Optional imageData.js integration
-   - Image loading and error handling
-   - Keyboard-navigation accessibility
+   - Secure external links
+   - Accessible form validation
+   - Job application and contact form support
+   - Compatible with images.js and legacy image catalogues
+   - Broken-image detection
+   - Dynamic image handling
    - Reduced-motion support
-   - Page-load state
-   - Dynamic content support
    - Browser diagnostics
+   - Prevents duplicate initialization
+
+   FILE LOCATION
+   AVERRA_WEBSITE_V1/script.js
 
    SCRIPT ORDER
-   <script src="imageData.js" defer></script>
+   <script src="images.js" defer></script>
    <script src="script.js" defer></script>
 
-   ========================================================= */
+   NOTE
+   Form validation does not send emails. Forms require
+   a working backend or form-processing service.
+   ============================================================ */
 
 (function () {
     "use strict";
 
-    const AVERRA = window.AVERRA || {};
+    const VERSION = "4.1";
 
-    AVERRA.version = "3.0";
+    /* Prevent accidental duplicate initialization. */
+    if (
+        window.AVERRA &&
+        window.AVERRA.scriptVersion === VERSION
+    ) {
+        return;
+    }
+
+    const AVERRA = window.AVERRA || {};
+    AVERRA.version = VERSION;
+    AVERRA.scriptVersion = VERSION;
 
     const CONFIG = {
         mobileBreakpoint: 900,
         headerScrollThreshold: 20,
         backToTopThreshold: 500,
         imageErrorClass: "image-error",
-        errorClass: "field-error"
+        fieldErrorClass: "field-error"
     };
 
     const reducedMotion = window.matchMedia
         ? window.matchMedia("(prefers-reduced-motion: reduce)")
         : null;
+
+    /* ========================================================
+       1. SHARED HELPERS
+       ======================================================== */
 
     function ready(callback) {
         if (document.readyState === "loading") {
@@ -72,8 +93,20 @@
         );
     }
 
+    function isMobile() {
+        return window.innerWidth <= CONFIG.mobileBreakpoint;
+    }
+
     function prefersReducedMotion() {
         return Boolean(reducedMotion && reducedMotion.matches);
+    }
+
+    function requestFrame(callback) {
+        if (typeof window.requestAnimationFrame === "function") {
+            window.requestAnimationFrame(callback);
+        } else {
+            callback();
+        }
     }
 
     function safeFocus(element) {
@@ -88,26 +121,31 @@
         }
     }
 
-    function requestFrame(callback) {
-        if (typeof window.requestAnimationFrame === "function") {
-            window.requestAnimationFrame(callback);
-        } else {
-            callback();
-        }
+    function getHeader() {
+        return select(".site-header");
     }
 
-    /* =====================================================
-       1. MOBILE NAVIGATION
-       ===================================================== */
+    function getNavigation() {
+        return select(
+            "#main-navigation, .main-navigation, .main-nav"
+        );
+    }
+
+    function getMenuButton() {
+        return select(
+            ".mobile-menu-button, .menu-toggle, .mobile-nav-toggle"
+        );
+    }
+
+    /* ========================================================
+       2. MOBILE NAVIGATION
+       ======================================================== */
 
     function initializeMobileNavigation() {
-        const menuButton = select(".mobile-menu-button");
+        const button = getMenuButton();
+        const navigation = getNavigation();
 
-        const navigation = select(
-            ".main-nav, #main-navigation"
-        );
-
-        if (!menuButton || !navigation) {
+        if (!button || !navigation) {
             return;
         }
 
@@ -115,42 +153,41 @@
             navigation.id = "main-navigation";
         }
 
-        menuButton.setAttribute(
-            "aria-controls",
-            navigation.id
-        );
+        button.setAttribute("aria-controls", navigation.id);
 
-        if (!menuButton.hasAttribute("aria-expanded")) {
-            menuButton.setAttribute("aria-expanded", "false");
+        if (
+            button.tagName.toLowerCase() === "button" &&
+            !button.hasAttribute("type")
+        ) {
+            button.type = "button";
         }
 
-        const isMobile = function () {
-            return window.innerWidth <= CONFIG.mobileBreakpoint;
-        };
-
-        const isOpen = function () {
+        function isOpen() {
             return navigation.classList.contains("active");
-        };
+        }
 
         function updateButton(open) {
-            menuButton.setAttribute(
-                "aria-expanded",
-                String(open)
-            );
+            button.setAttribute("aria-expanded", String(open));
 
-            menuButton.setAttribute(
+            button.setAttribute(
                 "aria-label",
-                open
-                    ? "Close navigation menu"
-                    : "Open navigation menu"
+                open ? "Close navigation menu" : "Open navigation menu"
             );
 
-            menuButton.setAttribute(
+            button.setAttribute(
                 "title",
-                open
-                    ? "Close navigation menu"
-                    : "Open navigation menu"
+                open ? "Close navigation menu" : "Open navigation menu"
             );
+        }
+
+        function closeMenu(returnFocus) {
+            navigation.classList.remove("active");
+            document.body.classList.remove("menu-open");
+            updateButton(false);
+
+            if (returnFocus && isMobile()) {
+                safeFocus(button);
+            }
         }
 
         function openMenu() {
@@ -163,132 +200,126 @@
             updateButton(true);
         }
 
-        function closeMenu(returnFocus) {
-            navigation.classList.remove("active");
-            document.body.classList.remove("menu-open");
-            updateButton(false);
+        if (button.dataset.averraMenuInitialized !== "true") {
+            button.dataset.averraMenuInitialized = "true";
 
-            if (returnFocus && isMobile()) {
-                safeFocus(menuButton);
-            }
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                if (isOpen()) {
+                    closeMenu(false);
+                } else {
+                    openMenu();
+                }
+            });
         }
 
-        function toggleMenu() {
-            if (isOpen()) {
-                closeMenu(false);
-            } else {
-                openMenu();
-            }
-        }
+        if (navigation.dataset.averraMenuInitialized !== "true") {
+            navigation.dataset.averraMenuInitialized = "true";
 
-        menuButton.addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleMenu();
-        });
-
-        navigation.addEventListener("click", function (event) {
-            const link = event.target.closest("a");
-
-            if (!link) {
-                return;
-            }
-
-            if (isMobile()) {
-                closeMenu(false);
-            }
-        });
-
-        document.addEventListener("click", function (event) {
-            if (!isMobile() || !isOpen()) {
-                return;
-            }
-
-            if (
-                navigation.contains(event.target) ||
-                menuButton.contains(event.target)
-            ) {
-                return;
-            }
-
-            closeMenu(false);
-        });
-
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Escape" && isOpen()) {
-                closeMenu(true);
-            }
-        });
-
-        let resizeFrame = false;
-
-        window.addEventListener("resize", function () {
-            if (resizeFrame) {
-                return;
-            }
-
-            resizeFrame = true;
-
-            requestFrame(function () {
-                if (!isMobile()) {
+            navigation.addEventListener("click", function (event) {
+                if (
+                    event.target.closest("a") &&
+                    isMobile()
+                ) {
                     closeMenu(false);
                 }
-
-                resizeFrame = false;
             });
-        }, { passive: true });
+        }
+
+        if (document.body.dataset.averraMenuInitialized !== "true") {
+            document.body.dataset.averraMenuInitialized = "true";
+
+            document.addEventListener("click", function (event) {
+                if (!isMobile() || !isOpen()) {
+                    return;
+                }
+
+                if (
+                    button.contains(event.target) ||
+                    navigation.contains(event.target)
+                ) {
+                    return;
+                }
+
+                closeMenu(false);
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && isOpen()) {
+                    closeMenu(true);
+                }
+            });
+        }
+
+        if (!window.AVERRA_MENU_RESIZE_INITIALIZED) {
+            window.AVERRA_MENU_RESIZE_INITIALIZED = true;
+
+            let resizeScheduled = false;
+
+            window.addEventListener("resize", function () {
+                if (resizeScheduled) {
+                    return;
+                }
+
+                resizeScheduled = true;
+
+                requestFrame(function () {
+                    if (!isMobile()) {
+                        navigation.classList.remove("active");
+                        document.body.classList.remove("menu-open");
+                        updateButton(false);
+                    }
+
+                    resizeScheduled = false;
+                });
+            }, { passive: true });
+        }
 
         updateButton(isOpen());
     }
 
-    /* =====================================================
-       2. ACTIVE NAVIGATION
-       ===================================================== */
+    /* ========================================================
+       3. ACTIVE NAVIGATION LINKS
+       ======================================================== */
 
     function normalizePath(path) {
-        let normalized = path || "/";
+        let value = path || "/";
 
         try {
-            normalized = decodeURIComponent(normalized);
+            value = decodeURIComponent(value);
         } catch (error) {
-            // Keep the original path if decoding fails.
+            // Retain the original path.
         }
 
-        normalized = normalized.replace(/\/+$/, "");
+        value = value.replace(/\/+$/, "");
 
-        if (!normalized) {
-            return "/";
-        }
-
-        return normalized;
+        return value || "/";
     }
 
     function pageKey(path) {
         const normalized = normalizePath(path);
-        const lastPart = normalized.split("/").pop();
+        const last = normalized.split("/").pop().toLowerCase();
 
         if (
-            !lastPart ||
-            lastPart.toLowerCase() === "index" ||
-            lastPart.toLowerCase() === "index.html"
+            !last ||
+            last === "index" ||
+            last === "index.html"
         ) {
             return "index.html";
         }
 
-        return lastPart.toLowerCase();
+        return last;
     }
 
     function initializeActiveNavigation() {
         const links = selectAll(
-            ".main-nav a[href], #main-navigation a[href]"
+            ".main-nav a[href], " +
+            ".main-navigation a[href], " +
+            "#main-navigation a[href]"
         );
 
-        if (!links.length) {
-            return;
-        }
-
-        const currentPage = pageKey(
-            window.location.pathname
-        );
+        const currentPage = pageKey(location.pathname);
 
         links.forEach(function (link) {
             let url;
@@ -296,18 +327,17 @@
             try {
                 url = new URL(
                     link.getAttribute("href"),
-                    window.location.href
+                    location.href
                 );
             } catch (error) {
                 return;
             }
 
-            if (url.origin !== window.location.origin) {
+            if (url.origin !== location.origin) {
                 return;
             }
 
-            const matches =
-                pageKey(url.pathname) === currentPage;
+            const matches = pageKey(url.pathname) === currentPage;
 
             link.classList.toggle("active", matches);
 
@@ -319,12 +349,12 @@
         });
     }
 
-    /* =====================================================
-       3. HEADER SCROLL EFFECT
-       ===================================================== */
+    /* ========================================================
+       4. STICKY HEADER
+       ======================================================== */
 
     function initializeHeaderScroll() {
-        const header = select(".site-header");
+        const header = getHeader();
 
         if (!header) {
             return;
@@ -352,18 +382,28 @@
 
         update();
 
-        window.addEventListener(
-            "scroll",
-            scheduleUpdate,
-            { passive: true }
-        );
+        if (header.dataset.averraScrollInitialized !== "true") {
+            header.dataset.averraScrollInitialized = "true";
+
+            window.addEventListener(
+                "scroll",
+                scheduleUpdate,
+                { passive: true }
+            );
+        }
     }
 
-    /* =====================================================
-       4. SAME-PAGE ANCHOR NAVIGATION
-       ===================================================== */
+    /* ========================================================
+       5. SAME-PAGE ANCHOR SCROLLING
+       ======================================================== */
 
     function initializeSmoothScrolling() {
+        if (document.body.dataset.averraAnchorsInitialized === "true") {
+            return;
+        }
+
+        document.body.dataset.averraAnchorsInitialized = "true";
+
         document.addEventListener("click", function (event) {
             if (
                 event.defaultPrevented ||
@@ -378,11 +418,8 @@
 
             const link = event.target.closest("a[href]");
 
-            if (!link) {
-                return;
-            }
-
             if (
+                !link ||
                 link.hasAttribute("download") ||
                 link.target === "_blank"
             ) {
@@ -398,30 +435,28 @@
             let url;
 
             try {
-                url = new URL(href, window.location.href);
+                url = new URL(href, location.href);
             } catch (error) {
                 return;
             }
 
             if (
-                url.origin !== window.location.origin ||
-                url.pathname !== window.location.pathname ||
+                url.origin !== location.origin ||
+                url.pathname !== location.pathname ||
                 !url.hash
             ) {
                 return;
             }
 
-            let targetId;
+            let id;
 
             try {
-                targetId = decodeURIComponent(
-                    url.hash.slice(1)
-                );
+                id = decodeURIComponent(url.hash.slice(1));
             } catch (error) {
                 return;
             }
 
-            const target = document.getElementById(targetId);
+            const target = document.getElementById(id);
 
             if (!target) {
                 return;
@@ -429,45 +464,33 @@
 
             event.preventDefault();
 
-            const header = select(".site-header");
-
+            const header = getHeader();
             const headerHeight = header
                 ? header.getBoundingClientRect().height
                 : 0;
 
-            const targetPosition =
+            const top =
                 target.getBoundingClientRect().top +
                 window.scrollY -
                 headerHeight -
                 16;
 
             window.scrollTo({
-                top: Math.max(0, targetPosition),
-                behavior: prefersReducedMotion()
-                    ? "auto"
-                    : "smooth"
+                top: Math.max(0, top),
+                behavior: prefersReducedMotion() ? "auto" : "smooth"
             });
 
-            if (window.location.hash !== url.hash) {
-                window.history.pushState(
-                    null,
-                    "",
-                    url.hash
-                );
+            if (location.hash !== url.hash) {
+                history.pushState(null, "", url.hash);
             }
 
-            /*
-             * Add tabindex only when necessary and restore
-             * the original state after focus leaves the target.
-             */
-
-            const needsTemporaryTabindex =
+            const temporaryTabindex =
                 !target.hasAttribute("tabindex") &&
                 !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(
                     target.tagName
                 );
 
-            if (needsTemporaryTabindex) {
+            if (temporaryTabindex) {
                 target.setAttribute("tabindex", "-1");
 
                 target.addEventListener("blur", function restore() {
@@ -480,9 +503,9 @@
         });
     }
 
-    /* =====================================================
-       5. BACK-TO-TOP BUTTON
-       ===================================================== */
+    /* ========================================================
+       6. BACK-TO-TOP BUTTON
+       ======================================================== */
 
     function initializeBackToTop() {
         let button = select(".back-to-top");
@@ -497,18 +520,20 @@
             document.body.appendChild(button);
         }
 
-        if (!button.hasAttribute("aria-label")) {
-            button.setAttribute("aria-label", "Back to top");
+        if (button.dataset.averraBackToTopInitialized === "true") {
+            return;
         }
+
+        button.dataset.averraBackToTopInitialized = "true";
 
         let scheduled = false;
 
-        function updateVisibility() {
-            const visible =
-                window.scrollY > CONFIG.backToTopThreshold;
+        function update() {
+            const visible = window.scrollY > CONFIG.backToTopThreshold;
 
             button.classList.toggle("visible", visible);
             button.hidden = !visible;
+
             scheduled = false;
         }
 
@@ -518,15 +543,13 @@
             }
 
             scheduled = true;
-            requestFrame(updateVisibility);
+            requestFrame(update);
         }
 
         button.addEventListener("click", function () {
             window.scrollTo({
                 top: 0,
-                behavior: prefersReducedMotion()
-                    ? "auto"
-                    : "smooth"
+                behavior: prefersReducedMotion() ? "auto" : "smooth"
             });
         });
 
@@ -536,26 +559,25 @@
             { passive: true }
         );
 
-        updateVisibility();
+        update();
     }
 
-    /* =====================================================
-       6. COPYRIGHT YEAR
-       ===================================================== */
+    /* ========================================================
+       7. COPYRIGHT YEAR
+       ======================================================== */
 
     function initializeCurrentYear() {
         const year = String(new Date().getFullYear());
 
-        selectAll(
-            ".current-year, [data-current-year]"
-        ).forEach(function (element) {
-            element.textContent = year;
-        });
+        selectAll(".current-year, [data-current-year]")
+            .forEach(function (element) {
+                element.textContent = year;
+            });
     }
 
-    /* =====================================================
-       7. EXTERNAL LINKS
-       ===================================================== */
+    /* ========================================================
+       8. EXTERNAL LINK SECURITY
+       ======================================================== */
 
     function initializeExternalLinks() {
         selectAll("a[href]").forEach(function (link) {
@@ -572,52 +594,37 @@
             let url;
 
             try {
-                url = new URL(href, window.location.href);
+                url = new URL(href, location.href);
             } catch (error) {
                 return;
             }
 
             if (
-                url.protocol !== "https:" &&
-                url.protocol !== "http:"
+                !["http:", "https:"].includes(url.protocol) ||
+                url.origin === location.origin ||
+                link.target !== "_blank"
             ) {
                 return;
             }
 
-            if (url.origin === window.location.origin) {
-                return;
-            }
-
-            /*
-             * Respect the HTML author's target choice.
-             * Secure links that already open a new tab.
-             */
-
-            if (link.target !== "_blank") {
-                return;
-            }
-
-            const relTokens = new Set(
+            const rel = new Set(
                 (link.getAttribute("rel") || "")
                     .split(/\s+/)
                     .filter(Boolean)
             );
 
-            relTokens.add("noopener");
-            relTokens.add("noreferrer");
+            rel.add("noopener");
+            rel.add("noreferrer");
 
-            link.setAttribute(
-                "rel",
-                Array.from(relTokens).join(" ")
-            );
+            link.setAttribute("rel", Array.from(rel).join(" "));
         });
     }
 
-    /* =====================================================
-       8. FORM ERROR HELPERS
-       ===================================================== */
+    /* ========================================================
+       9. FORM VALIDATION HELPERS
+       ======================================================== */
 
-    function getFieldErrorId(field) {
+    function errorIdFor(field) {
         if (!field.id) {
             const name = (field.name || "field")
                 .replace(/[^a-zA-Z0-9_-]/g, "-");
@@ -630,7 +637,7 @@
     }
 
     function showFieldError(field, message) {
-        const errorId = getFieldErrorId(field);
+        const errorId = errorIdFor(field);
 
         field.setAttribute("aria-invalid", "true");
 
@@ -639,11 +646,11 @@
         if (!error) {
             error = document.createElement("div");
             error.id = errorId;
-            error.className = CONFIG.errorClass;
+            error.className = CONFIG.fieldErrorClass;
             error.setAttribute("role", "alert");
 
             const container =
-                field.closest(".form-group, .form-field") ||
+                field.closest(".form-field, .form-group") ||
                 field.parentElement;
 
             if (container) {
@@ -653,17 +660,17 @@
 
         error.textContent = message;
 
-        const describedBy = new Set(
+        const descriptions = new Set(
             (field.getAttribute("aria-describedby") || "")
                 .split(/\s+/)
                 .filter(Boolean)
         );
 
-        describedBy.add(errorId);
+        descriptions.add(errorId);
 
         field.setAttribute(
             "aria-describedby",
-            Array.from(describedBy).join(" ")
+            Array.from(descriptions).join(" ")
         );
     }
 
@@ -699,29 +706,6 @@
         }
     }
 
-    function getRequiredRadioGroups(form) {
-        const groups = new Map();
-
-        selectAll('input[type="radio"][required]', form)
-            .forEach(function (radio) {
-                if (!radio.name) {
-                    return;
-                }
-
-                if (!groups.has(radio.name)) {
-                    groups.set(radio.name, []);
-                }
-
-                groups.get(radio.name).push(radio);
-            });
-
-        return groups;
-    }
-
-    /* =====================================================
-       9. FORM VALIDATION
-       ===================================================== */
-
     function validateForm(form) {
         let valid = true;
         let firstInvalid = null;
@@ -731,77 +715,75 @@
             form
         );
 
-        fields.forEach(function (field) {
-            clearFieldError(field);
-        });
+        fields.forEach(clearFieldError);
 
-        const radioGroups = getRequiredRadioGroups(form);
+        function invalidate(field, message) {
+            showFieldError(field, message);
+            valid = false;
+
+            if (!firstInvalid) {
+                firstInvalid = field;
+            }
+        }
+
+        /* Required radio groups. */
+        const radioGroups = new Map();
+
+        fields.forEach(function (field) {
+            if (
+                field.type === "radio" &&
+                field.required &&
+                field.name
+            ) {
+                if (!radioGroups.has(field.name)) {
+                    radioGroups.set(field.name, []);
+                }
+
+                radioGroups.get(field.name).push(field);
+            }
+        });
 
         radioGroups.forEach(function (radios) {
-            const checked = radios.some(function (radio) {
+            if (!radios.some(function (radio) {
                 return radio.checked;
-            });
-
-            if (!checked) {
-                showFieldError(
-                    radios[0],
-                    "Please select an option."
-                );
-
-                valid = false;
-
-                if (!firstInvalid) {
-                    firstInvalid = radios[0];
-                }
+            })) {
+                invalidate(radios[0], "Please select an option.");
             }
         });
 
         fields.forEach(function (field) {
-            if (
-                field.disabled ||
-                field.type === "radio" ||
-                !field.required
-            ) {
+            if (field.disabled || field.type === "radio") {
                 return;
             }
 
-            let fieldValid = true;
-            let message = "This field is required.";
+            if (field.required) {
+                if (
+                    field.type === "checkbox" &&
+                    !field.checked
+                ) {
+                    invalidate(field, "Please tick this checkbox.");
+                    return;
+                }
 
-            if (field.type === "checkbox") {
-                fieldValid = field.checked;
-                message = "Please tick this checkbox.";
-            } else {
-                fieldValid =
-                    String(field.value || "").trim() !== "";
-            }
-
-            if (!fieldValid) {
-                showFieldError(field, message);
-                valid = false;
-
-                if (!firstInvalid) {
-                    firstInvalid = field;
+                if (
+                    field.type !== "checkbox" &&
+                    !String(field.value || "").trim()
+                ) {
+                    invalidate(field, "This field is required.");
+                    return;
                 }
             }
-        });
 
-        fields.forEach(function (field) {
             if (
-                field.disabled ||
-                field.type === "radio" ||
-                field.type === "checkbox" ||
-                field.value === ""
+                field.type !== "checkbox" &&
+                field.value !== "" &&
+                !field.validity.valid
             ) {
-                return;
-            }
-
-            if (!field.validity.valid) {
                 let message = "Please check this field.";
 
                 if (
-                    field.validity.typeMismatch &&
-                    field.type === "email"
+                    field.type === "email" &&
+                    field.validity.typeMismatch
                 ) {
                     message = "Please enter a valid email address.";
                 } else if (field.validity.tooShort) {
@@ -810,18 +792,9 @@
                     message = "Your entry is too long.";
                 } else if (field.validity.patternMismatch) {
                     message = "Please use the requested format.";
-                } else if (field.validity.rangeUnderflow) {
-                    message = "The value is below the permitted range.";
-                } else if (field.validity.rangeOverflow) {
-                    message = "The value is above the permitted range.";
                 }
 
-                showFieldError(field, message);
-                valid = false;
-
-                if (!firstInvalid) {
-                    firstInvalid = field;
-                }
+                invalidate(field, message);
             }
         });
 
@@ -832,36 +805,18 @@
         return valid;
     }
 
-    function restoreSubmitButtons(form) {
-        selectAll(
-            'button[type="submit"], input[type="submit"]',
-            form
-        ).forEach(function (button) {
-            if (button.dataset.averraSubmitting !== "true") {
+    /* ========================================================
+       10. FORM HANDLING
+       ======================================================== */
+
+    function initializeFormValidation() {
+        selectAll("form").forEach(function (form) {
+            if (form.dataset.averraFormInitialized === "true") {
                 return;
             }
 
-            button.disabled = false;
-            button.classList.remove("is-loading");
+            form.dataset.averraFormInitialized = "true";
 
-            delete button.dataset.averraSubmitting;
-
-            if (
-                button.tagName.toLowerCase() === "button" &&
-                button.dataset.averraOriginalText !== undefined
-            ) {
-                button.textContent =
-                    button.dataset.averraOriginalText;
-
-                delete button.dataset.averraOriginalText;
-            }
-        });
-    }
-
-    function initializeFormValidation() {
-        const forms = selectAll("form");
-
-        forms.forEach(function (form) {
             const fields = selectAll(
                 "input, textarea, select",
                 form
@@ -871,28 +826,19 @@
                 ["input", "change"].forEach(function (eventName) {
                     field.addEventListener(eventName, function () {
                         if (field.type === "radio") {
-                            const group = form.elements.namedItem(
-                                field.name
-                            );
+                            const radios = fields.filter(function (item) {
+                                return (
+                                    item.type === "radio" &&
+                                    item.name === field.name
+                                );
+                            });
 
-                            if (group && typeof group.length === "number") {
-                                Array.from(group).forEach(function (radio) {
-                                    if (radio.type === "radio") {
-                                        clearFieldError(radio);
-                                    }
-                                });
-                            } else {
-                                clearFieldError(field);
-                            }
-
+                            radios.forEach(clearFieldError);
                             return;
                         }
 
-                        if (
-                            field.type === "checkbox" &&
-                            field.required
-                        ) {
-                            if (field.checked) {
+                        if (field.type === "checkbox") {
+                            if (!field.required || field.checked) {
                                 clearFieldError(field);
                             }
 
@@ -912,22 +858,16 @@
                     return;
                 }
 
-                /*
-                 * Do not claim that a message was sent.
-                 * A working form needs a real server endpoint
-                 * or a connected form-processing service.
-                 */
-
                 const action = (
                     form.getAttribute("action") || ""
                 ).trim();
 
-                const isPlaceholder =
+                const placeholderAction =
                     !action ||
                     action === "#" ||
                     /^javascript:/i.test(action);
 
-                if (isPlaceholder) {
+                if (placeholderAction) {
                     event.preventDefault();
 
                     let notice = select(
@@ -950,117 +890,24 @@
                     }
 
                     notice.textContent =
-                        "This form needs to be connected to a submission service before it can send your message.";
+                        "This form is not connected yet. Please contact " +
+                        "info@averrastaffing.co.uk until online submissions " +
+                        "are configured.";
 
                     return;
                 }
 
-                const submitButton = select(
-                    'button[type="submit"], input[type="submit"]',
-                    form
-                );
-
-                if (!submitButton) {
-                    return;
-                }
-
-                if (
-                    submitButton.dataset.averraSubmitting === "true"
-                ) {
-                    event.preventDefault();
-                    return;
-                }
-
-                submitButton.dataset.averraSubmitting = "true";
-                submitButton.disabled = true;
-                submitButton.classList.add("is-loading");
-
-                if (
-                    submitButton.tagName.toLowerCase() === "button"
-                ) {
-                    submitButton.dataset.averraOriginalText =
-                        submitButton.textContent;
-
-                    submitButton.textContent = "Sending...";
-                }
-            });
-
-            /*
-             * Restore button state when the browser returns
-             * to a page from its back-forward cache.
-             */
-
-            window.addEventListener("pageshow", function () {
-                restoreSubmitButtons(form);
+                /*
+                 * For a real action URL, let the browser submit the form.
+                 * Do not simulate success or claim an email was sent.
+                 */
             });
         });
     }
 
-    /* =====================================================
-       10. IMAGE CONFIGURATION ADAPTER
-       ===================================================== */
-
-    function resolveConfiguredImage(section, key) {
-        /*
-         * Support common configuration interfaces without
-         * requiring any one particular imageData.js format.
-         *
-         * Existing static src attributes remain untouched
-         * when no supported configuration is available.
-         */
-
-        const root = window.AVERRA_IMAGES ||
-            window.imageData ||
-            window.IMAGE_DATA;
-
-        if (typeof window.getImageByKey === "function") {
-            try {
-                const result = window.getImageByKey(section, key);
-
-                if (result) {
-                    return normalizeImageRecord(result);
-                }
-            } catch (error) {
-                // Try the remaining supported interfaces.
-            }
-        }
-
-        if (typeof window.getImage === "function") {
-            try {
-                const result = window.getImage(key);
-
-                if (result) {
-                    return normalizeImageRecord(result);
-                }
-            } catch (error) {
-                // Try the configuration object.
-            }
-        }
-
-        if (!root || typeof root !== "object") {
-            return null;
-        }
-
-        let result = null;
-
-        if (section && root[section]) {
-            const sectionData = root[section];
-
-            if (sectionData && sectionData[key]) {
-                result = sectionData[key];
-            }
-        }
-
-        if (!result && root[key]) {
-            result = root[key];
-        }
-
-        if (!result) {
-            return null;
-        }
-
-        return normalizeImageRecord(result);
-    }
+    /* ========================================================
+       11. IMAGE CATALOGUE COMPATIBILITY
+       ======================================================== */
 
     function normalizeImageRecord(record) {
         if (typeof record === "string") {
@@ -1094,77 +941,115 @@
         };
     }
 
+    function resolveConfiguredImage(section, key) {
+        const root =
+            window.AVERRA_IMAGES ||
+            window.imageData ||
+            window.IMAGE_DATA;
+
+        if (typeof window.getImageUrl === "function") {
+            try {
+                const result = window.getImageUrl(key);
+
+                if (typeof result === "string" && result.trim()) {
+                    return normalizeImageRecord(result);
+                }
+            } catch (error) {
+                // Continue to other supported interfaces.
+            }
+        }
+
+        if (typeof window.getImageByKey === "function") {
+            try {
+                const result = window.getImageByKey(section, key);
+
+                if (result) {
+                    return normalizeImageRecord(result);
+                }
+            } catch (error) {
+                // Continue to other supported interfaces.
+            }
+        }
+
+        if (typeof window.getImage === "function") {
+            try {
+                const result = window.getImage(key);
+
+                if (result) {
+                    return normalizeImageRecord(result);
+                }
+            } catch (error) {
+                // Continue to the catalogue object.
+            }
+        }
+
+        if (!root || typeof root !== "object") {
+            return null;
+        }
+
+        let record = null;
+
+        if (
+            section &&
+            root[section] &&
+            typeof root[section] === "object"
+        ) {
+            record = root[section][key];
+        }
+
+        if (!record) {
+            record = root[key];
+        }
+
+        return normalizeImageRecord(record);
+    }
+
     function initializeConfiguredImages() {
         selectAll(
             "img[data-image-section][data-image-name], " +
             "img[data-image-key]"
         ).forEach(function (img) {
-            let section = img.getAttribute("data-image-section");
-            let key = img.getAttribute("data-image-name");
+            const section =
+                img.getAttribute("data-image-section") || "";
 
-            if (!key) {
-                key = img.getAttribute("data-image-key");
-            }
+            const key =
+                img.getAttribute("data-image-name") ||
+                img.getAttribute("data-image-key");
 
             if (!key) {
                 return;
             }
 
-            const configured = resolveConfiguredImage(
-                section,
-                key
-            );
+            const image = resolveConfiguredImage(section, key);
 
-            if (!configured) {
+            if (!image || !image.src) {
                 return;
             }
 
-            if (img.getAttribute("src") !== configured.src) {
-                img.setAttribute("src", configured.src);
+            if (img.getAttribute("src") !== image.src) {
+                img.setAttribute("src", image.src);
             }
 
             if (
-                configured.alt &&
+                image.alt &&
                 !img.hasAttribute("data-preserve-alt")
             ) {
-                img.alt = configured.alt;
-            }
-        });
-
-        selectAll("img[data-image-logo]").forEach(function (img) {
-            const configured = resolveConfiguredImage(
-                "logo",
-                "logo"
-            );
-
-            if (configured && configured.src) {
-                img.src = configured.src;
-
-                if (
-                    configured.alt &&
-                    !img.hasAttribute("data-preserve-alt")
-                ) {
-                    img.alt = configured.alt;
-                }
-            } else if (!img.hasAttribute("alt")) {
-                img.alt = "AVERRA Staffing Solutions Ltd logo";
+                img.alt = image.alt;
             }
         });
     }
 
-    /* =====================================================
-       11. IMAGE ERROR HANDLING
-       ===================================================== */
+    /* ========================================================
+       12. IMAGE ERROR HANDLING
+       ======================================================== */
 
     function initializeImageHandling() {
         function attachImageHandlers(img) {
-            if (
-                img.dataset.averraImageHandlers === "true"
-            ) {
+            if (img.dataset.averraImageInitialized === "true") {
                 return;
             }
 
-            img.dataset.averraImageHandlers = "true";
+            img.dataset.averraImageInitialized = "true";
 
             img.addEventListener("error", function () {
                 img.classList.add(CONFIG.imageErrorClass);
@@ -1176,7 +1061,11 @@
                 img.removeAttribute("data-image-error");
             });
 
-            if (img.complete && img.naturalWidth === 0 && img.src) {
+            if (
+                img.complete &&
+                img.naturalWidth === 0 &&
+                (img.currentSrc || img.src)
+            ) {
                 img.classList.add(CONFIG.imageErrorClass);
                 img.setAttribute("data-image-error", "true");
             }
@@ -1199,9 +1088,7 @@
                         attachImageHandlers(node);
                     }
 
-                    selectAll("img", node).forEach(
-                        attachImageHandlers
-                    );
+                    selectAll("img", node).forEach(attachImageHandlers);
                 });
             });
         });
@@ -1212,16 +1099,20 @@
         });
     }
 
-    /* =====================================================
-       12. KEYBOARD ACCESSIBILITY
-       ===================================================== */
+    /* ========================================================
+       13. ACCESSIBILITY
+       ======================================================== */
 
     function initializeAccessibility() {
+        if (document.body.dataset.averraAccessibilityInitialized === "true") {
+            return;
+        }
+
+        document.body.dataset.averraAccessibilityInitialized = "true";
+
         document.addEventListener("keydown", function (event) {
             if (event.key === "Tab") {
-                document.body.classList.add(
-                    "keyboard-navigation"
-                );
+                document.body.classList.add("keyboard-navigation");
             }
         });
 
@@ -1237,7 +1128,7 @@
             );
         });
 
-        function addAccessibleName(element) {
+        selectAll("button, a").forEach(function (element) {
             const hasName =
                 element.hasAttribute("aria-label") ||
                 element.hasAttribute("aria-labelledby") ||
@@ -1251,31 +1142,14 @@
             const image = select("img[alt]", element);
 
             if (image && image.alt.trim()) {
-                element.setAttribute(
-                    "aria-label",
-                    image.alt.trim()
-                );
+                element.setAttribute("aria-label", image.alt.trim());
             }
-        }
-
-        selectAll("button, a").forEach(addAccessibleName);
-    }
-
-    /* =====================================================
-       13. PAGE LOAD STATE
-       ===================================================== */
-
-    function initializePageLoad() {
-        requestFrame(function () {
-            document.documentElement.classList.add(
-                "page-loaded"
-            );
         });
     }
 
-    /* =====================================================
+    /* ========================================================
        14. REDUCED MOTION
-       ===================================================== */
+       ======================================================== */
 
     function initializeReducedMotion() {
         if (!reducedMotion) {
@@ -1298,24 +1172,31 @@
         }
     }
 
-    /* =====================================================
-       15. DIAGNOSTICS
-       ===================================================== */
+    /* ========================================================
+       15. PAGE LOAD STATE
+       ======================================================== */
+
+    function initializePageLoad() {
+        requestFrame(function () {
+            document.documentElement.classList.add("page-loaded");
+        });
+    }
+
+    /* ========================================================
+       16. BROWSER DIAGNOSTICS
+       ======================================================== */
 
     function diagnostics() {
         const images = selectAll("img");
+        const forms = selectAll("form");
 
         const report = {
-            version: AVERRA.version,
-            page: window.location.pathname,
+            version: VERSION,
+            page: location.pathname,
             title: document.title,
-            navigationFound: Boolean(
-                select(".main-nav, #main-navigation")
-            ),
-            mobileMenuFound: Boolean(
-                select(".mobile-menu-button")
-            ),
-            headerFound: Boolean(select(".site-header")),
+            navigationFound: Boolean(getNavigation()),
+            menuButtonFound: Boolean(getMenuButton()),
+            headerFound: Boolean(getHeader()),
             imageCount: images.length,
             brokenImages: images
                 .filter(function (img) {
@@ -1328,8 +1209,8 @@
                 .map(function (img) {
                     return img.currentSrc || img.src;
                 }),
-            formCount: selectAll("form").length,
-            formsWithoutAction: selectAll("form")
+            formCount: forms.length,
+            formsWithoutAction: forms
                 .filter(function (form) {
                     const action = (
                         form.getAttribute("action") || ""
@@ -1345,9 +1226,9 @@
         return report;
     }
 
-    /* =====================================================
-       16. INITIALIZE WEBSITE
-       ===================================================== */
+    /* ========================================================
+       17. INITIALIZE
+       ======================================================== */
 
     function initializeWebsite() {
         initializeMobileNavigation();
@@ -1361,14 +1242,14 @@
         initializeConfiguredImages();
         initializeImageHandling();
         initializeAccessibility();
-        initializePageLoad();
         initializeReducedMotion();
+        initializePageLoad();
 
         AVERRA.diagnostics = diagnostics;
 
         document.documentElement.setAttribute(
             "data-averra-script",
-            AVERRA.version
+            VERSION
         );
     }
 
@@ -1380,3 +1261,5 @@
     ready(initializeWebsite);
 
 })();
+```
+

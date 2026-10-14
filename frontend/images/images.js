@@ -1,692 +1,743 @@
+"use strict";
 
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    CENTRAL WEBSITE IMAGE MANAGEMENT SYSTEM
    File: images.js
-   Version: 8.0
+   Version: 10.0
    ============================================================
 
    FEATURES
-   - Supports image1 through image33
-   - Tries common image file extensions automatically
-   - Central image catalogue and aliases
-   - Supports existing data-image-key attributes
-   - Supports image elements and background images
-   - Provides backwards-compatible helper functions
-   - Handles missing images gracefully
-   - Provides image inventory and diagnostic functions
-   - Does not rename or delete files
+   - Exact catalogue for image1 through image33
+   - Correct JPG, PNG and JPEG extensions
+   - Backwards-compatible public image helpers
+   - Supports data-image-key attributes
+   - Supports image elements and CSS backgrounds
+   - Optional image aliases for website sections
+   - Accessible image alt-text defaults
+   - Missing-image detection and diagnostics
+   - Image inventory and validation helpers
+   - Optional automatic processing of added elements
+   - Safe DOM updates without external dependencies
+
+   EXPECTED STRUCTURE
+
+   AVERRA_WEBSITE_v1/
+   |-- index.html
+   |-- about.html
+   |-- services.html
+   |-- careers.html
+   |-- style.css
+   |-- script.js
+   |-- images.js
+   |-- images/
+       |-- image1.jpg
+       |-- image2.jpg
+       |-- ...
+       |-- image33.jpg
 
    IMPORTANT
-   Keep all numbered images in the images/ folder.
-   The image number mapping below assumes image1 is your
-   logo, image2 is your homepage hero, and so on.
-   Adjust the mapping if your original order differs.
+   This file manages images only. Job listings and applications
+   remain in jobs.js and are not stored in this catalogue.
    ============================================================ */
 
-(function () {
+(function (window, document) {
     "use strict";
 
-    /* ---------------------------------------------------------
-       1. CONFIGURATION
-       --------------------------------------------------------- */
+    /* --------------------------------------------------------
+       CONFIGURATION
+       -------------------------------------------------------- */
 
-    const CONFIG = {
-        version: "8.0",
-        imageFolder: "images/",
-        totalImages: 33,
+    const CONFIG = Object.freeze({
+        version: "10.0",
+        company: "AVERRA Staffing Solutions Ltd",
 
-        // Change to true to print diagnostic messages.
-        debug: false,
+        /*
+         * Relative to the webpage URL.
+         * Change this only if your images folder is elsewhere.
+         */
+        basePath: "images/",
 
-        // Common image extensions tried in this order.
-        extensions: [
-            ".jpg",
-            ".jpeg",
-            ".png",
-            ".webp",
-            ".avif",
-            ".gif"
-        ],
+        /*
+         * Automatically process elements marked with
+         * data-image-key when the page loads.
+         */
+        autoInitialise: true,
 
+        /*
+         * Process new data-image-key elements added to the page.
+         */
+        observeNewElements: true,
+
+        /*
+         * Add a CSS class when an image cannot be loaded.
+         */
         missingImageClass: "averra-image-missing",
-        backgroundAttribute: "data-image-background"
-    };
 
-    /* ---------------------------------------------------------
-       2. NUMBERED IMAGE CATALOGUE
+        /*
+         * Use this alt text only when an image has no alt attribute.
+         */
+        defaultAlt: "AVERRA Staffing Solutions Ltd"
+    });
 
-       Change the number assigned to a key if your original
-       image order uses a different arrangement.
-       --------------------------------------------------------- */
+    /* --------------------------------------------------------
+       EXACT IMAGE FILE CATALOGUE
 
-    const IMAGE_CATALOG = {
-        logo: 1,
+       Filenames and extensions match the supplied file list.
+       Do not rename these files unless you update this catalogue.
+       -------------------------------------------------------- */
 
-        "hero-global-talent": 2,
-        "home-hero": 2,
-        "hero-home": 2,
+    const IMAGE_FILES = Object.freeze({
+        image1: "image1.jpg",
+        image2: "image2.jpg",
+        image3: "image3.jpg",
+        image4: "image4.jpg",
+        image5: "image5.jpg",
+        image6: "image6.jpg",
+        image7: "image7.jpg",
+        image8: "image8.png",
+        image9: "image9.png",
+        image10: "image10.png",
+        image11: "image11.png",
+        image12: "image12.jpg",
+        image13: "image13.jpg",
+        image14: "image14.jpg",
+        image15: "image15.jpg",
+        image16: "image16.png",
+        image17: "image17.jpg",
+        image18: "image18.jpg",
+        image19: "image19.jpg",
+        image20: "image20.jpeg",
+        image21: "image21.jpg",
+        image22: "image22.png",
+        image23: "image23.png",
+        image24: "image24.png",
+        image25: "image25.jpg",
+        image26: "image26.jpg",
+        image27: "image27.png",
+        image28: "image28.jpg",
+        image29: "image29.jpg",
+        image30: "image30.jpg",
+        image31: "image31.png",
+        image32: "image32.jpg",
+        image33: "image33.jpg"
+    });
 
-        "about-global-network": 3,
-        "about-team": 3,
+    /* --------------------------------------------------------
+       OPTIONAL SECTION ALIASES
 
-        "about-uk-india": 4,
-        "uk-india": 4,
+       These aliases are convenience names, not claims about
+       the actual contents of your image files.
 
-        "business-professionals": 5,
-        "professional-team": 5,
+       Adjust the mappings after reviewing your images.
+       -------------------------------------------------------- */
 
-        "career-global-opportunities": 6,
-        "careers-hero": 6,
+    const IMAGE_ALIASES = Object.freeze({
+        hero: "image1",
+        homepageHero: "image1",
+        about: "image2",
+        aboutUs: "image2",
+        services: "image3",
+        globalTalent: "image4",
+        ukIndia: "image5",
+        businessProfessionals: "image6",
+        careers: "image7",
+        jobs: "image8",
+        finance: "image9",
+        technology: "image10",
+        administration: "image11",
+        recruitment: "image12",
+        customerSupport: "image13",
+        marketing: "image14",
+        remoteWorking: "image15",
+        team: "image16",
+        office: "image17",
+        virtualAssistant: "image18",
+        contact: "image19",
+        opportunities: "image20",
+        professionalServices: "image21",
+        development: "image22",
+        financeServices: "image23",
+        globalOpportunities: "image24",
+        businessSupport: "image25",
+        collaboration: "image26",
+        digitalServices: "image27",
+        remoteTeam: "image28",
+        workplace: "image29",
+        globalNetwork: "image30",
+        businessMeeting: "image31",
+        professionalTeam: "image32",
+        footer: "image33"
+    });
 
-        "frequent-questions": 7,
-        "faq-hero": 7,
+    /* --------------------------------------------------------
+       INTERNAL UTILITIES
+       -------------------------------------------------------- */
 
-        locations: 8,
-        "global-locations": 8,
+    const processedElements = new WeakSet();
+    const failedElements = new WeakSet();
 
-        "virtual-office": 9,
-        "virtual-office-team": 9,
-
-        office: 10,
-        "office-team": 10,
-
-        "meetings-professional": 11,
-        meetings: 11,
-
-        "virtual-calls": 12,
-        "virtual-meetings": 12,
-
-        "services-hero": 13,
-        "outsourcing-services": 14,
-        "finance-services": 15,
-        "technology-services": 16,
-        "customer-support": 17,
-        "virtual-assistant": 18,
-        recruitment: 19,
-        "how-it-works": 20,
-        "working-process": 21,
-        "global-workforce": 22,
-        "india-workforce": 23,
-        "business-growth": 24,
-        "remote-working": 25,
-        "careers-team": 26,
-        "jobs-hero": 27,
-        "jobs-finance": 28,
-        "jobs-development": 29,
-        "contact-hero": 30,
-        "contact-team": 31,
-        "business-partnership": 32,
-        "footer-background": 33
-    };
-
-    /* ---------------------------------------------------------
-       3. BACKWARDS-COMPATIBLE ALIASES
-
-       Existing HTML can continue using these older names.
-       --------------------------------------------------------- */
-
-    const ALIASES = {
-        homepage: "home-hero",
-        hero: "hero-global-talent",
-        "global-talent": "hero-global-talent",
-        "global-network": "about-global-network",
-        "uk-india-connection": "about-uk-india",
-        "business-professional": "business-professionals",
-        careers: "career-global-opportunities",
-        jobs: "jobs-hero",
-        faq: "frequent-questions",
-        "virtuals-calls": "virtual-calls",
-        "professional-meetings": "meetings-professional",
-        "office-image": "office",
-        "logo-image": "logo"
-    };
-
-    /* ---------------------------------------------------------
-       4. INTERNAL UTILITIES
-       --------------------------------------------------------- */
-
-    const extensionCache = Object.create(null);
-    const imageElementState = new WeakMap();
-    const backgroundElementState = new WeakMap();
-
-    function log(...args) {
-        if (CONFIG.debug && window.console) {
-            console.log("[AVERRA Images]", ...args);
-        }
-    }
-
-    function warn(...args) {
-        if (window.console) {
-            console.warn("[AVERRA Images]", ...args);
-        }
-    }
+    let observer = null;
+    let initialised = false;
 
     function normaliseKey(key) {
-        return String(key || "")
-            .trim()
-            .toLowerCase()
-            .replace(/\\/g, "/")
-            .replace(/\s+/g, "-")
-            .replace(/_/g, "-");
-    }
-
-    function normaliseFolder(folder) {
-        let value = String(folder || CONFIG.imageFolder).trim();
-
-        if (!value) {
-            value = "images/";
+        if (typeof key !== "string") {
+            return "";
         }
 
-        if (!value.endsWith("/")) {
-            value += "/";
-        }
-
-        return value;
+        return key.trim();
     }
 
-    function resolveAlias(key) {
-        let current = normaliseKey(key);
-        const visited = new Set();
+    function resolveKey(key) {
+        const normalised = normaliseKey(key);
 
-        while (ALIASES[current] && !visited.has(current)) {
-            visited.add(current);
-            current = normaliseKey(ALIASES[current]);
+        if (!normalised) {
+            return "";
         }
-
-        return current;
-    }
-
-    function getImageNumber(key) {
-        const resolved = resolveAlias(key);
 
         if (
             Object.prototype.hasOwnProperty.call(
-                IMAGE_CATALOG,
-                resolved
+                IMAGE_FILES,
+                normalised
             )
         ) {
-            return IMAGE_CATALOG[resolved];
+            return normalised;
         }
 
-        // Allow direct keys such as image1, image2, image33.
-        const directMatch = resolved.match(/^image(\d{1,2})$/);
-
-        if (directMatch) {
-            const number = Number(directMatch[1]);
-
-            if (number >= 1 && number <= CONFIG.totalImages) {
-                return number;
-            }
+        if (
+            Object.prototype.hasOwnProperty.call(
+                IMAGE_ALIASES,
+                normalised
+            )
+        ) {
+            return IMAGE_ALIASES[normalised];
         }
 
-        // Allow numeric keys such as "1", "2", "33".
-        if (/^\d{1,2}$/.test(resolved)) {
-            const number = Number(resolved);
-
-            if (number >= 1 && number <= CONFIG.totalImages) {
-                return number;
-            }
-        }
-
-        return null;
+        return "";
     }
 
-    function getExtensionFromPath(path) {
-        const match = String(path || "").match(
-            /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i
+    function cleanBasePath(path) {
+        const value =
+            typeof path === "string"
+                ? path.trim()
+                : CONFIG.basePath;
+
+        if (!value) {
+            return "";
+        }
+
+        return value.endsWith("/") ? value : value + "/";
+    }
+
+    function getCurrentBasePath() {
+        return cleanBasePath(CONFIG.basePath);
+    }
+
+    function makeImagePath(key, customBasePath) {
+        const resolvedKey = resolveKey(key);
+
+        if (!resolvedKey) {
+            return "";
+        }
+
+        const basePath =
+            customBasePath === undefined
+                ? getCurrentBasePath()
+                : cleanBasePath(customBasePath);
+
+        return basePath + IMAGE_FILES[resolvedKey];
+    }
+
+    function isImageElement(element) {
+        return Boolean(
+            element &&
+            element.nodeType === 1 &&
+            element.tagName.toLowerCase() === "img"
         );
-
-        return match ? "." + match[1].toLowerCase() : null;
     }
 
-    function makeNumberedPath(number, extension, folder) {
+    function markMissing(element, path) {
+        if (!element) {
+            return;
+        }
+
+        element.classList.add(CONFIG.missingImageClass);
+        element.setAttribute("data-image-status", "missing");
+
+        failedElements.add(element);
+
+        if (!element.hasAttribute("data-image-error-reported")) {
+            element.setAttribute("data-image-error-reported", "true");
+
+            console.warn(
+                "[AVERRA Images] Could not load image:",
+                path || "(unknown path)",
+                element
+            );
+        }
+    }
+
+    function markLoaded(element) {
+        if (!element) {
+            return;
+        }
+
+        element.classList.remove(CONFIG.missingImageClass);
+        element.setAttribute("data-image-status", "loaded");
+        element.removeAttribute("data-image-error-reported");
+
+        failedElements.delete(element);
+    }
+
+    function getElementKey(element) {
+        if (!element || !element.getAttribute) {
+            return "";
+        }
+
         return (
-            normaliseFolder(folder) +
-            "image" +
-            number +
-            extension
-        );
+            element.getAttribute("data-image-key") ||
+            element.getAttribute("data-image") ||
+            ""
+        ).trim();
     }
 
-    /* ---------------------------------------------------------
-       5. IMAGE PATH HELPERS
+    /* --------------------------------------------------------
+       PUBLIC IMAGE HELPERS
+       -------------------------------------------------------- */
 
-       getImagePath("logo") -> "images/image1.jpg"
-       getImagePath("image12") -> "images/image12.jpg"
-
-       The default extension is .jpg. If your file has another
-       extension, the loader will try the alternatives.
-       --------------------------------------------------------- */
-
-    function getImagePath(key, options) {
-        const settings = options || {};
-        const number = getImageNumber(key);
-
-        if (number === null) {
-            warn("Unknown image key:", key);
-            return null;
-        }
-
-        const extension = settings.extension || ".jpg";
-        const folder = settings.folder || CONFIG.imageFolder;
-
-        return makeNumberedPath(number, extension, folder);
+    function getImagePath(key, customBasePath) {
+        return makeImagePath(key, customBasePath);
     }
 
-    function getImageUrl(key, options) {
-        return getImagePath(key, options);
+    /*
+     * Compatibility alias for older website code that calls
+     * getImageUrl() instead of getImagePath().
+     */
+    function getImageUrl(key, customBasePath) {
+        return makeImagePath(key, customBasePath);
     }
 
-    /* ---------------------------------------------------------
-       6. IMAGE EXTENSION FALLBACK
+    function getImageFilename(key) {
+        const resolvedKey = resolveKey(key);
 
-       Browsers cannot list files in your folder automatically.
-       This loader tries common extensions one by one until
-       the image loads successfully.
-       --------------------------------------------------------- */
-
-    function createImageCandidates(number, folder, preferredExtension) {
-        const extensions = [];
-
-        if (preferredExtension) {
-            const preferred = preferredExtension.startsWith(".")
-                ? preferredExtension
-                : "." + preferredExtension;
-
-            extensions.push(preferred.toLowerCase());
-        }
-
-        CONFIG.extensions.forEach(function (extension) {
-            if (!extensions.includes(extension)) {
-                extensions.push(extension);
-            }
-        });
-
-        return extensions.map(function (extension) {
-            return makeNumberedPath(number, extension, folder);
-        });
+        return resolvedKey
+            ? IMAGE_FILES[resolvedKey]
+            : "";
     }
 
-    function loadNumberedImage(element, number, options) {
-        const settings = options || {};
-        const folder = settings.folder || CONFIG.imageFolder;
-        const preferredExtension = settings.extension || null;
-        const candidates = createImageCandidates(
-            number,
-            folder,
-            preferredExtension
-        );
-
-        let candidateIndex = 0;
-
-        const previousState = imageElementState.get(element);
-
-        if (previousState && previousState.cleanup) {
-            previousState.cleanup();
-        }
-
-        const state = {
-            number: number,
-            candidates: candidates,
-            index: 0,
-            cleanup: null
-        };
-
-        imageElementState.set(element, state);
-
-        function tryNextCandidate() {
-            if (candidateIndex >= candidates.length) {
-                element.classList.add(CONFIG.missingImageClass);
-                element.dataset.imageStatus = "missing";
-
-                element.removeEventListener("error", handleError);
-                element.removeEventListener("load", handleLoad);
-
-                warn(
-                    "Could not load image" + number +
-                    ". Check the filename and extension.",
-                    candidates
-                );
-
-                return;
-            }
-
-            const path = candidates[candidateIndex];
-            candidateIndex += 1;
-            state.index = candidateIndex;
-
-            element.src = path;
-            log("Trying image:", path);
-        }
-
-        function handleError() {
-            tryNextCandidate();
-        }
-
-        function handleLoad() {
-            element.classList.remove(CONFIG.missingImageClass);
-            element.dataset.imageStatus = "loaded";
-            element.dataset.imageResolved = element.currentSrc ||
-                element.src;
-
-            log("Loaded image:", element.dataset.imageResolved);
-        }
-
-        element.addEventListener("error", handleError);
-        element.addEventListener("load", handleLoad);
-
-        state.cleanup = function () {
-            element.removeEventListener("error", handleError);
-            element.removeEventListener("load", handleLoad);
-        };
-
-        tryNextCandidate();
+    function getImageKey(key) {
+        return resolveKey(key);
     }
 
-    /* ---------------------------------------------------------
-       7. APPLY IMAGES TO HTML ELEMENTS
-       --------------------------------------------------------- */
-
-    function applyImage(element, key, options) {
-        if (!element || !key) {
-            return false;
-        }
-
-        const number = getImageNumber(key);
-
-        if (number === null) {
-            warn("No image mapping found for key:", key);
-            element.dataset.imageStatus = "unmapped";
-            return false;
-        }
-
-        // Preserve accessibility: do not overwrite an existing alt.
-        if (element.tagName === "IMG") {
-            if (!element.hasAttribute("alt")) {
-                element.alt = "";
-            }
-
-            element.dataset.imageNumber = String(number);
-
-            loadNumberedImage(element, number, options);
-            return true;
-        }
-
-        return applyBackground(element, key, options);
-    }
-
-    /* ---------------------------------------------------------
-       8. BACKGROUND IMAGE SUPPORT
-       --------------------------------------------------------- */
-
-    function applyBackground(element, key, options) {
-        if (!element || !key) {
-            return false;
-        }
-
-        const number = getImageNumber(key);
-
-        if (number === null) {
-            warn("No background image mapping found:", key);
-            return false;
-        }
-
-        const settings = options || {};
-        const candidates = createImageCandidates(
-            number,
-            settings.folder || CONFIG.imageFolder,
-            settings.extension || null
-        );
-
-        const previousState = backgroundElementState.get(element);
-
-        if (previousState && previousState.cancelled) {
-            previousState.cancelled = true;
-        }
-
-        const state = {
-            cancelled: false,
-            index: 0
-        };
-
-        backgroundElementState.set(element, state);
-
-        function tryNext() {
-            if (state.cancelled || state.index >= candidates.length) {
-                if (!state.cancelled) {
-                    element.classList.add(CONFIG.missingImageClass);
-                    element.dataset.imageStatus = "missing";
-
-                    warn("Could not load background image:", number);
-                }
-
-                return;
-            }
-
-            const path = candidates[state.index];
-            state.index += 1;
-
-            const testImage = new Image();
-
-            testImage.onload = function () {
-                if (state.cancelled) {
-                    return;
-                }
-
-                element.style.backgroundImage =
-                    'url("' + path.replace(/"/g, '\\"') + '")';
-
-                element.classList.remove(CONFIG.missingImageClass);
-                element.dataset.imageStatus = "loaded";
-                element.dataset.imageResolved = path;
-
-                log("Loaded background:", path);
+    function getImageInventory() {
+        return Object.keys(IMAGE_FILES).map(function (key) {
+            return {
+                key: key,
+                filename: IMAGE_FILES[key],
+                path: makeImagePath(key),
+                url: makeImagePath(key)
             };
+        });
+    }
 
-            testImage.onerror = tryNext;
-            testImage.src = path;
+    function getImageAliases() {
+        return Object.assign({}, IMAGE_ALIASES);
+    }
+
+    function getImageCount() {
+        return Object.keys(IMAGE_FILES).length;
+    }
+
+    function hasImage(key) {
+        return Boolean(resolveKey(key));
+    }
+
+    /* --------------------------------------------------------
+       PROCESS AN IMAGE ELEMENT
+       -------------------------------------------------------- */
+
+    function processImageElement(element) {
+        if (!isImageElement(element)) {
+            return false;
         }
 
-        tryNext();
+        const key = getElementKey(element);
+
+        if (!key) {
+            return false;
+        }
+
+        const path = makeImagePath(key);
+
+        if (!path) {
+            markMissing(element, key);
+
+            console.warn(
+                "[AVERRA Images] Unknown image key:",
+                key
+            );
+
+            return false;
+        }
+
+        if (!element.hasAttribute("alt")) {
+            element.setAttribute("alt", CONFIG.defaultAlt);
+        }
+
+        /*
+         * Do not repeatedly assign the same source. This helps
+         * avoid unnecessary reloads when initialising repeatedly.
+         */
+        if (
+            element.getAttribute("src") !== path &&
+            element.getAttribute("data-image-managed-src") !== path
+        ) {
+            element.setAttribute("data-image-managed-src", path);
+            element.setAttribute("src", path);
+        }
+
+        if (!processedElements.has(element)) {
+            element.addEventListener("load", function () {
+                markLoaded(element);
+            });
+
+            element.addEventListener("error", function () {
+                markMissing(
+                    element,
+                    element.currentSrc || element.src || path
+                );
+            });
+
+            processedElements.add(element);
+        }
+
+        /*
+         * Handle images that completed loading before the
+         * event listeners were attached.
+         */
+        if (element.complete && element.naturalWidth > 0) {
+            markLoaded(element);
+        } else if (element.complete && element.naturalWidth === 0) {
+            markMissing(element, path);
+        }
+
         return true;
     }
 
-    /* ---------------------------------------------------------
-       9. AUTOMATIC PAGE SCAN
+    /* --------------------------------------------------------
+       PROCESS A CSS BACKGROUND ELEMENT
+       -------------------------------------------------------- */
 
-       Supported examples:
-
-       <img data-image-key="hero-global-talent" alt="...">
-
-       <div data-image-background="about-global-network"></div>
-
-       <div data-image-key="about-uk-india"></div>
-       --------------------------------------------------------- */
-
-    function scanImages(root) {
-        const scope = root || document;
-
-        const imageElements = scope.querySelectorAll(
-            "img[data-image-key], img[data-image-number]"
-        );
-
-        imageElements.forEach(function (element) {
-            if (element.dataset.averraImageProcessed === "true") {
-                return;
-            }
-
-            const key = element.dataset.imageKey ||
-                element.dataset.imageNumber;
-
-            if (!key) {
-                return;
-            }
-
-            element.dataset.averraImageProcessed = "true";
-            applyImage(element, key);
-        });
-
-        const backgroundElements = scope.querySelectorAll(
-            "[data-image-background], [data-image-key].averra-background"
-        );
-
-        backgroundElements.forEach(function (element) {
-            if (element.dataset.averraBackgroundProcessed === "true") {
-                return;
-            }
-
-            const key = element.dataset.imageBackground ||
-                element.dataset.imageKey;
-
-            if (!key) {
-                return;
-            }
-
-            element.dataset.averraBackgroundProcessed = "true";
-            applyBackground(element, key);
-        });
-    }
-
-    /* ---------------------------------------------------------
-       10. IMAGE INVENTORY AND DIAGNOSTICS
-       --------------------------------------------------------- */
-
-    function getImageInventory() {
-        const inventory = [];
-
-        for (let number = 1; number <= CONFIG.totalImages; number += 1) {
-            inventory.push({
-                number: number,
-                key: "image" + number,
-                path: makeNumberedPath(
-                    number,
-                    ".jpg",
-                    CONFIG.imageFolder
-                ),
-                alternatives: CONFIG.extensions.slice()
-            });
+    function processBackgroundElement(element) {
+        if (!element || element.nodeType !== 1) {
+            return false;
         }
 
-        return inventory;
+        const key =
+            element.getAttribute("data-background-image") ||
+            element.getAttribute("data-bg-image") ||
+            "";
+
+        if (!key) {
+            return false;
+        }
+
+        const path = makeImagePath(key);
+
+        if (!path) {
+            element.classList.add(CONFIG.missingImageClass);
+
+            console.warn(
+                "[AVERRA Images] Unknown background image key:",
+                key
+            );
+
+            return false;
+        }
+
+        element.style.backgroundImage =
+            'url("' + path.replace(/"/g, '\\"') + '")';
+
+        element.setAttribute("data-image-status", "assigned");
+
+        return true;
     }
 
-    function getCatalogue() {
-        return Object.assign({}, IMAGE_CATALOG);
+    /* --------------------------------------------------------
+       INITIALISE A ROOT ELEMENT OR THE WHOLE PAGE
+       -------------------------------------------------------- */
+
+    function initialiseImages(root) {
+        const container = root || document;
+
+        if (
+            container.nodeType !== 1 &&
+            container.nodeType !== 9 &&
+            container.nodeType !== 11
+        ) {
+            console.warn(
+                "[AVERRA Images] initialiseImages() received an invalid root."
+            );
+
+            return 0;
+        }
+
+        let processedCount = 0;
+
+        if (
+            container.nodeType === 1 &&
+            container.matches &&
+            (
+                container.matches("[data-image-key]") ||
+                container.matches("[data-image]")
+            )
+        ) {
+            if (processImageElement(container)) {
+                processedCount++;
+            }
+        }
+
+        if (
+            container.nodeType === 1 &&
+            container.matches &&
+            (
+                container.matches("[data-background-image]") ||
+                container.matches("[data-bg-image]")
+            )
+        ) {
+            if (processBackgroundElement(container)) {
+                processedCount++;
+            }
+        }
+
+        container.querySelectorAll(
+            "img[data-image-key], img[data-image]"
+        ).forEach(function (element) {
+            if (processImageElement(element)) {
+                processedCount++;
+            }
+        });
+
+        container.querySelectorAll(
+            "[data-background-image], [data-bg-image]"
+        ).forEach(function (element) {
+            if (processBackgroundElement(element)) {
+                processedCount++;
+            }
+        });
+
+        return processedCount;
+    }
+
+    /* --------------------------------------------------------
+       OPTIONAL AUTOMATIC OBSERVER
+       -------------------------------------------------------- */
+
+    function observeNewElements() {
+        if (
+            !CONFIG.observeNewElements ||
+            typeof MutationObserver === "undefined" ||
+            !document.body
+        ) {
+            return;
+        }
+
+        if (observer) {
+            observer.disconnect();
+        }
+
+        observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType === 1) {
+                        initialiseImages(node);
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    function stopObserving() {
+        if (observer) {
+            observer.disconnect();
+            observer = null;
+        }
+    }
+
+    /* --------------------------------------------------------
+       VALIDATION AND DIAGNOSTICS
+       -------------------------------------------------------- */
+
+    function validateImageCatalogue() {
+        const inventory = getImageInventory();
+        const keys = new Set();
+        const filenames = new Set();
+        const problems = [];
+
+        inventory.forEach(function (item) {
+            if (keys.has(item.key)) {
+                problems.push("Duplicate image key: " + item.key);
+            }
+
+            if (filenames.has(item.filename)) {
+                problems.push(
+                    "Duplicate image filename: " + item.filename
+                );
+            }
+
+            keys.add(item.key);
+            filenames.add(item.filename);
+
+            if (!item.filename) {
+                problems.push("Missing filename for " + item.key);
+            }
+        });
+
+        return {
+            valid: problems.length === 0,
+            count: inventory.length,
+            problems: problems,
+            inventory: inventory
+        };
+    }
+
+    function getFailedImages() {
+        return Array.from(
+            document.querySelectorAll(
+                "." + CONFIG.missingImageClass
+            )
+        ).map(function (element) {
+            return {
+                key: getElementKey(element),
+                source: element.currentSrc || element.src || "",
+                element: element
+            };
+        });
     }
 
     function auditImages() {
         const report = {
+            company: CONFIG.company,
             version: CONFIG.version,
-            folder: CONFIG.imageFolder,
-            expectedImages: CONFIG.totalImages,
-            mappings: [],
-            unmappedElements: [],
-            missingImages: []
+            catalogueCount: getImageCount(),
+            catalogueValid: validateImageCatalogue().valid,
+            imagesOnPage: document.querySelectorAll("img").length,
+            managedImages: document.querySelectorAll(
+                "img[data-image-key], img[data-image]"
+            ).length,
+            missingImages: getFailedImages()
         };
 
-        document.querySelectorAll(
-            "[data-image-key], [data-image-background]"
-        ).forEach(function (element) {
-            const key = element.dataset.imageKey ||
-                element.dataset.imageBackground;
-
-            const number = getImageNumber(key);
-
-            report.mappings.push({
-                key: key,
-                number: number,
-                tag: element.tagName,
-                status: element.dataset.imageStatus || "not-tested"
-            });
-
-            if (number === null) {
-                report.unmappedElements.push(key);
-            }
-
-            if (element.dataset.imageStatus === "missing") {
-                report.missingImages.push(key);
-            }
+        console.group("[AVERRA Images] Image audit");
+        console.table({
+            "Catalogue entries": report.catalogueCount,
+            "Catalogue valid": report.catalogueValid,
+            "Images on page": report.imagesOnPage,
+            "Managed images": report.managedImages,
+            "Missing images": report.missingImages.length
         });
 
-        log("Image audit:", report);
+        if (report.missingImages.length > 0) {
+            console.warn(
+                "[AVERRA Images] Check the missing images below:",
+                report.missingImages
+            );
+        }
+
+        console.groupEnd();
+
         return report;
     }
 
-    function refreshImages(root) {
-        const scope = root || document;
+    /* --------------------------------------------------------
+       STARTUP
+       -------------------------------------------------------- */
 
-        scope.querySelectorAll(
-            "[data-image-key], [data-image-background]"
-        ).forEach(function (element) {
-            delete element.dataset.averraImageProcessed;
-            delete element.dataset.averraBackgroundProcessed;
-            delete element.dataset.imageStatus;
-            delete element.dataset.imageResolved;
-        });
+    function init() {
+        if (initialised) {
+            return;
+        }
 
-        scanImages(scope);
+        initialised = true;
+
+        if (CONFIG.autoInitialise) {
+            initialiseImages(document);
+        }
+
+        observeNewElements();
     }
 
-    /* ---------------------------------------------------------
-       11. PUBLIC API
-       --------------------------------------------------------- */
+    /* --------------------------------------------------------
+       PUBLIC API
 
-    const AVERRAImages = {
+       Available as:
+       window.AVERRAImages
+       window.AVERRAImageManager
+
+       Older helper names are also exposed where possible.
+       -------------------------------------------------------- */
+
+    const publicAPI = Object.freeze({
         version: CONFIG.version,
-        config: CONFIG,
-        catalogue: IMAGE_CATALOG,
-        aliases: ALIASES,
+        company: CONFIG.company,
+        basePath: CONFIG.basePath,
+
+        files: IMAGE_FILES,
+        aliases: IMAGE_ALIASES,
 
         getImagePath: getImagePath,
         getImageUrl: getImageUrl,
-        getImageNumber: getImageNumber,
-        applyImage: applyImage,
-        applyBackground: applyBackground,
-        scanImages: scanImages,
-        refreshImages: refreshImages,
+        getImageFilename: getImageFilename,
+        getImageKey: getImageKey,
         getImageInventory: getImageInventory,
-        getCatalogue: getCatalogue,
-        auditImages: auditImages
-    };
+        getImageAliases: getImageAliases,
+        getImageCount: getImageCount,
+        hasImage: hasImage,
 
-    // Main public API.
-    window.AVERRAImages = AVERRAImages;
+        initialiseImages: initialiseImages,
+        initializeImages: initialiseImages,
+        init: init,
 
-    // Compatibility aliases for older website scripts.
-    window.AVERRA_IMAGE_CATALOG = IMAGE_CATALOG;
-    window.AVERRA_IMAGE_CONFIG = CONFIG;
-    window.getImagePath = getImagePath;
-    window.getImageUrl = getImageUrl;
-    window.getAVERRAImage = getImageUrl;
-    window.getImageInventory = getImageInventory;
-    window.auditAVERRAImages = auditImages;
-    window.refreshAVERRAImages = refreshImages;
+        validateImageCatalogue: validateImageCatalogue,
+        getFailedImages: getFailedImages,
+        auditImages: auditImages,
 
-    /* ---------------------------------------------------------
-       12. STARTUP
-       --------------------------------------------------------- */
+        stopObserving: stopObserving
+    });
 
-    function initialise() {
-        scanImages(document);
+    window.AVERRAImages = publicAPI;
 
-        log(
-            "Image management system ready.",
-            "Version:",
-            CONFIG.version,
-            "Images:",
-            CONFIG.totalImages
-        );
+    /*
+     * Compatibility alias for scripts using the alternative name.
+     */
+    window.AVERRAImageManager = publicAPI;
+
+    /*
+     * Compatibility helpers for older pages or scripts.
+     * Existing functions are preserved rather than overwritten.
+     */
+    if (typeof window.getImagePath !== "function") {
+        window.getImagePath = getImagePath;
+    }
+
+    if (typeof window.getImageUrl !== "function") {
+        window.getImageUrl = getImageUrl;
+    }
+
+    if (typeof window.getImageInventory !== "function") {
+        window.getImageInventory = getImageInventory;
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener(
-            "DOMContentLoaded",
-            initialise,
-            { once: true }
-        );
+        document.addEventListener("DOMContentLoaded", init, {
+            once: true
+        });
     } else {
-        initialise();
+        init();
     }
-
-})();
+})(window, document);
