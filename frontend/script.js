@@ -1263,3 +1263,14 @@
 })();
 ```
 
+function initializeCurrentYear() {
+    const year = String(new Date().getFullYear());
+
+    selectAll(
+        "#current-year, .current-year, [data-current-year]"
+    ).forEach(function (element) {
+        element.textContent = year;
+    });
+}
+
+

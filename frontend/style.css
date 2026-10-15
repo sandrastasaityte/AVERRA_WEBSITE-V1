@@ -624,3 +624,114 @@ img {
         text-align: center;
     }
 }
+
+/* ==========================================================
+   AVERRA — FIX HOME PAGE LET'S TALK BUTTON TEXT VISIBILITY
+   ========================================================== */
+
+.hero-actions .button-primary,
+.hero-actions .button-primary:link,
+.hero-actions .button-primary:visited,
+.hero-actions .button-primary:hover,
+.hero-actions .button-primary:focus,
+.cta-actions .button-primary,
+.cta-panel .button-primary,
+.nav-contact,
+.nav-contact:link,
+.nav-contact:visited {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Keep the button label and arrow visible */
+.hero-actions .button-primary span,
+.cta-actions .button-primary span,
+.cta-panel .button-primary span,
+.nav-contact span {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Preserve the blue button background */
+.hero-actions .button-primary,
+.cta-actions .button-primary,
+.cta-panel .button-primary,
+.nav-contact {
+    background-color: #1d5f91 !important;
+    border-color: #1d5f91 !important;
+}
+
+/* Improve keyboard accessibility */
+.hero-actions .button-primary:focus-visible,
+.cta-actions .button-primary:focus-visible,
+.nav-contact:focus-visible {
+    outline: 3px solid #c89b3c;
+    outline-offset: 3px;
+}
+.button,
+.btn {
+    color: var(--navy-dark);
+}
+
+/* AVERRA: Ensure Let's Talk navigation button is readable */
+.site-header .main-navigation .nav-contact,
+.site-header .main-navigation .nav-contact:link,
+.site-header .main-navigation .nav-contact:visited,
+.site-header .main-navigation .nav-contact:hover,
+.site-header .main-navigation .nav-contact:focus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1d5f91 !important;
+    border: 1px solid #1d5f91 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-decoration: none !important;
+    font-weight: 700;
+}
+
+.site-header .main-navigation .nav-contact:hover {
+    background-color: #16476c !important;
+    border-color: #16476c !important;
+}
+
+.site-header .main-navigation .nav-contact * {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+@media (max-width: 900px) {
+    .main-navigation,
+    .main-nav {
+        display: none;
+    }
+
+    .main-navigation.active,
+    .main-nav.active {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    .main-navigation.active a,
+    .main-nav.active a {
+        display: block;
+        padding: 12px 16px;
+    }
+
+    .menu-toggle,
+    .mobile-menu-button,
+    .mobile-nav-toggle {
+        cursor: pointer;
+    }
+}

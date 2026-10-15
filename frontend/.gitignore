@@ -1,0 +1,63 @@
+# ============================================================
+# AVERRA STAFFING SOLUTIONS LTD
+# Git ignore rules
+# ============================================================
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local databases and backups
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.bak
+*.backup
+
+# Logs
+*.log
+logs/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# IDE and editor settings
+.idea/
+.vscode/
+*.iml
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Build and test output
+dist/
+build/
+coverage/
+.pytest_cache/
+.mypy_cache/
+
+# Node.js dependencies, if used
+node_modules/
+
+# Local exports and private uploads
+private/
+uploads/
