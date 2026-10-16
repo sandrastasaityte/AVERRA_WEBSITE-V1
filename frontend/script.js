@@ -567,13 +567,14 @@
        ======================================================== */
 
     function initializeCurrentYear() {
-        const year = String(new Date().getFullYear());
+    const year = String(new Date().getFullYear());
 
-        selectAll(".current-year, [data-current-year]")
-            .forEach(function (element) {
-                element.textContent = year;
-            });
-    }
+    selectAll(
+        "#current-year, .current-year, [data-current-year]"
+    ).forEach(function (element) {
+        element.textContent = year;
+    });
+}
 
     /* ========================================================
        8. EXTERNAL LINK SECURITY
