@@ -6,8 +6,9 @@ File: backend/app/schemas/enquiry.py
 Pydantic v2 schemas for customer enquiries.
 """
 
+import re
 from datetime import datetime
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import (
     BaseModel,
@@ -46,17 +47,17 @@ class EnquiryBase(BaseModel):
         description="Valid contact email address.",
     )
 
-    phone: Optional[str] = Field(
+    phone: str | None = Field(
         default=None,
         max_length=40,
     )
 
-    company: Optional[str] = Field(
+    company: str | None = Field(
         default=None,
         max_length=200,
     )
 
-    subject: Optional[str] = Field(
+    subject: str | None = Field(
         default=None,
         max_length=200,
     )
@@ -72,6 +73,7 @@ class EnquiryBase(BaseModel):
     @classmethod
     def validate_required_text(cls, value: str) -> str:
         """Reject empty or whitespace-only required fields."""
+
         value = value.strip()
 
         if not value:
@@ -81,11 +83,9 @@ class EnquiryBase(BaseModel):
 
     @field_validator("phone", "company", "subject")
     @classmethod
-    def clean_optional_text(
-        cls,
-        value: Optional[str],
-    ) -> Optional[str]:
+    def clean_optional_text(cls, value: str | None) -> str | None:
         """Normalise empty optional fields."""
+
         if value is None:
             return None
 
@@ -94,20 +94,14 @@ class EnquiryBase(BaseModel):
 
     @field_validator("phone")
     @classmethod
-    def validate_phone(
-        cls,
-        value: Optional[str],
-    ) -> Optional[str]:
+    def validate_phone(cls, value: str | None) -> str | None:
         """Allow common international phone number characters."""
+
         if value is None:
             return None
 
-        import re
-
         if not re.fullmatch(r"[0-9+() .\-]{5,40}", value):
-            raise ValueError(
-                "Please enter a valid phone number."
-            )
+            raise ValueError("Please enter a valid phone number.")
 
         return value
 
@@ -119,14 +113,14 @@ class EnquiryCreate(EnquiryBase):
 
 
 class EnquiryResponse(BaseModel):
-    """Safe enquiry response for the API."""
+    """Safe enquiry response for public API use."""
 
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     name: str
     email: EmailStr
-    company: Optional[str] = None
+    company: str | None = None
     status: EnquiryStatus = "new"
     created_at: datetime
 
@@ -134,10 +128,10 @@ class EnquiryResponse(BaseModel):
 class EnquiryDetail(EnquiryResponse):
     """Extended enquiry details for authorised staff."""
 
-    phone: Optional[str] = None
-    subject: Optional[str] = None
+    phone: str | None = None
+    subject: str | None = None
     message: str
-    internal_notes: Optional[str] = None
+    internal_notes: str | None = None
     updated_at: datetime
 
 
@@ -151,17 +145,16 @@ class EnquiryStatusUpdate(BaseModel):
 
     status: EnquiryStatus
 
-    internal_notes: Optional[str] = Field(
+    internal_notes: str | None = Field(
         default=None,
         max_length=5000,
     )
 
     @field_validator("internal_notes")
     @classmethod
-    def clean_internal_notes(
-        cls,
-        value: Optional[str],
-    ) -> Optional[str]:
+    def clean_internal_notes(cls, value: str | None) -> str | None:
+        """Normalise empty internal notes."""
+
         if value is None:
             return None
 

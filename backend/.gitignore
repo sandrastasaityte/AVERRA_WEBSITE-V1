@@ -26,11 +26,12 @@ dist/
 wheels/
 *.egg-info/
 
-# Local databases
-database/*.db
-database/*.sqlite
-database/*.sqlite3
+# Local databases and SQLite files
+*.db
+*.sqlite
+*.sqlite3
 *.db-journal
+*.sqlite-journal
 
 # Application logs
 logs/*.log

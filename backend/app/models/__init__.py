@@ -1,3 +1,4 @@
+
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/models/__init__.py

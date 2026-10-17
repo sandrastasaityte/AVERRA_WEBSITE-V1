@@ -13,7 +13,7 @@ from .jobs import router as jobs_router
 from .enquiries import router as enquiries_router
 
 
-# Central API router
+# Central API router.
 # The /api prefix is added here, so individual route modules
 # should define their own resource prefixes only.
 api_router = APIRouter(prefix="/api")

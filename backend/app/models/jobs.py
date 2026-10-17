@@ -1,8 +1,9 @@
+
 """
 ============================================================
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/models/job.py
-Version: 1.0.0
+Version: 1.1.0
 
 SQLAlchemy database model for job vacancies.
 ============================================================
@@ -20,6 +21,11 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
+
+
+def utc_now() -> datetime:
+    """Return the current UTC time as a timezone-aware datetime."""
+    return datetime.now(timezone.utc)
 
 
 class Job(Base):
@@ -94,14 +100,14 @@ class Job(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=utc_now,
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=utc_now,
+        onupdate=utc_now,
     )
 
     def __repr__(self) -> str:

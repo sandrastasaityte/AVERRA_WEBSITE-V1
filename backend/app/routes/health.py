@@ -7,19 +7,22 @@ API health-check endpoint.
 """
 
 from datetime import datetime, timezone
+from typing import Any
 
 from fastapi import APIRouter
+
 
 router = APIRouter(
     tags=["Health"],
 )
 
 
-@router.get("/health")
-def health_check():
-    """
-    Check whether the AVERRA API is responding.
-    """
+@router.get(
+    "/health",
+    response_model=dict[str, Any],
+)
+def health_check() -> dict[str, Any]:
+    """Check whether the AVERRA API is responding."""
 
     return {
         "status": "healthy",

@@ -1,7 +1,7 @@
 
 """
 AVERRA STAFFING SOLUTIONS LTD
-File: app/__init__.py
+File: backend/app/__init__.py
 
 Initialises the AVERRA backend application package.
 """

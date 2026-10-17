@@ -1,10 +1,9 @@
+
 """
-============================================================
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/database/connection.py
 
 SQLAlchemy database configuration and session management.
-============================================================
 """
 
 import os
@@ -16,14 +15,19 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
 
-# ------------------------------------------------------------
+# ============================================================
 # DATABASE CONFIGURATION
-# ------------------------------------------------------------
+# ============================================================
 
+# Project backend directory:
+# AVERRA_WEBSITE_v1/backend/
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 
+DATA_DIR = BACKEND_DIR / "data"
+DEFAULT_DATABASE_PATH = DATA_DIR / "averra.db"
+
 DEFAULT_DATABASE_URL = (
-    f"sqlite:///{(BACKEND_DIR / 'data' / 'averra.db').as_posix()}"
+    f"sqlite:///{DEFAULT_DATABASE_PATH.as_posix()}"
 )
 
 DATABASE_URL = os.getenv(
@@ -31,25 +35,19 @@ DATABASE_URL = os.getenv(
     DEFAULT_DATABASE_URL,
 )
 
-# Create the default database directory when using the
-# default SQLite database.
-if DATABASE_URL == DEFAULT_DATABASE_URL:
-    (BACKEND_DIR / "data").mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+if DATABASE_URL.startswith("sqlite:///"):
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# SQLite requires check_same_thread=False for this application.
+
+# ============================================================
+# SQLALCHEMY ENGINE
+# ============================================================
+
 connect_args = (
     {"check_same_thread": False}
     if DATABASE_URL.startswith("sqlite")
     else {}
 )
-
-
-# ------------------------------------------------------------
-# SQLALCHEMY ENGINE
-# ------------------------------------------------------------
 
 engine: Engine = create_engine(
     DATABASE_URL,
@@ -59,26 +57,26 @@ engine: Engine = create_engine(
 )
 
 
-# ------------------------------------------------------------
+# ============================================================
 # DATABASE SESSION
-# ------------------------------------------------------------
+# ============================================================
 
 SessionLocal = sessionmaker(
     bind=engine,
     class_=Session,
     autoflush=False,
-    autocommit=False,
     expire_on_commit=False,
 )
 
 
 def get_db() -> Generator[Session, None, None]:
     """
-    Provide a database session for a FastAPI request.
+    Provide a SQLAlchemy session to a FastAPI request.
 
     The session is closed after the request finishes.
+    Routes are responsible for committing or rolling back
+    transactions when appropriate.
     """
-
     db = SessionLocal()
 
     try:
@@ -87,18 +85,18 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
-# ------------------------------------------------------------
+# ============================================================
 # DATABASE TABLE INITIALISATION
-# ------------------------------------------------------------
+# ============================================================
 
 def create_tables() -> None:
     """
-    Register all models and create any missing tables.
+    Create missing tables using the registered SQLAlchemy models.
 
-    Existing tables and records are not deliberately deleted.
+    This does not execute SQL migration files or alter existing
+    tables. Use migrations to manage schema changes.
     """
-
-    # Importing these models registers their tables with Base.
+    # Import models so SQLAlchemy registers their tables.
     from app.models import Base, Enquiry, Job  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

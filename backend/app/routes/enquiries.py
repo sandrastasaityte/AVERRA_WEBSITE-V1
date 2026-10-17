@@ -6,13 +6,18 @@ File: backend/app/routes/enquiries.py
 Customer enquiry API routes.
 """
 
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
 from app.models.enquiry import Enquiry
 from app.schemas.enquiry import EnquiryCreate, EnquiryResponse
+
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/enquiries",
@@ -28,10 +33,8 @@ router = APIRouter(
 def create_enquiry(
     enquiry_data: EnquiryCreate,
     db: Session = Depends(get_db),
-):
-    """
-    Save an enquiry submitted through the public contact form.
-    """
+) -> Enquiry:
+    """Save an enquiry submitted through the public contact form."""
 
     enquiry = Enquiry(
         name=enquiry_data.name,
@@ -43,55 +46,20 @@ def create_enquiry(
         status="new",
     )
 
-    db.add(enquiry)
-
     try:
+        db.add(enquiry)
         db.commit()
         db.refresh(enquiry)
-    except Exception:
+    except SQLAlchemyError:
         db.rollback()
+
+        # Record the technical error privately; do not expose database
+        # details to website visitors.
+        logger.exception("Failed to save a customer enquiry.")
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to save your enquiry. Please try again.",
-        )
+        ) from None
 
     return enquiry
-
-
-@router.get(
-    "",
-    response_model=list[EnquiryResponse],
-)
-def list_enquiries(
-    skip: int = 0,
-    limit: int = 50,
-    db: Session = Depends(get_db),
-):
-    """
-    List enquiries for the administration dashboard.
-
-    IMPORTANT:
-    Add authentication and administrator authorisation before
-    including this endpoint in a production application.
-    """
-
-    if skip < 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Skip must be zero or greater.",
-        )
-
-    if limit < 1 or limit > 100:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Limit must be between 1 and 100.",
-        )
-
-    statement = (
-        select(Enquiry)
-        .order_by(Enquiry.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-    )
-
-    return db.scalars(statement).all()

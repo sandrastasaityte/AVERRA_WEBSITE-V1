@@ -1,28 +1,29 @@
+
 """
-============================================================
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 3.0.0
+Version: 4.0.0
 
-Main FastAPI application.
+FastAPI application for the AVERRA website.
 
 Features:
 - Environment configuration
 - Shared SQLAlchemy database connection
-- SQLite compatibility migrations
-- Health checks
-- Website contact enquiries
+- Safe database initialisation and compatibility migrations
+- API health checks
+- Public website contact enquiries
 - Public published job vacancies
 - Protected job administration
 - Create, edit, publish and close vacancies
 - CORS configuration
 - Application logging
-- API documentation
+- Interactive API documentation
 
 Run from the backend directory:
     python -m uvicorn main:app --reload
-============================================================
 """
+
+from __future__ import annotations
 
 import logging
 import os
@@ -30,7 +31,9 @@ import secrets
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
+from dotenv import load_dotenv
 from fastapi import (
     Depends,
     FastAPI,
@@ -50,35 +53,50 @@ from sqlalchemy.orm import Session
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
+
 DATABASE_DIR = BASE_DIR / "database"
 LOG_DIR = BASE_DIR / "logs"
 UPLOAD_DIR = BASE_DIR / "uploads"
 
+# Load the backend's .env file before importing the database engine.
+load_dotenv(BASE_DIR / ".env")
+
 for directory in (DATABASE_DIR, LOG_DIR, UPLOAD_DIR):
     directory.mkdir(parents=True, exist_ok=True)
-
-try:
-    from dotenv import load_dotenv
-
-    load_dotenv(BASE_DIR / ".env")
-except ImportError:
-    pass
 
 
 APP_NAME = os.getenv(
     "APP_NAME",
     "AVERRA Staffing Solutions API",
+).strip()
+
+APP_VERSION = os.getenv("APP_VERSION", "4.0.0").strip()
+
+APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
+
+DEBUG = (
+    os.getenv("DEBUG", "false").strip().lower()
+    in {"true", "1", "yes"}
 )
-APP_VERSION = os.getenv("APP_VERSION", "3.0.0")
-APP_ENV = os.getenv("APP_ENV", "development").lower()
-DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
 if APP_ENV == "production":
     DEBUG = False
 
+COMPANY_NAME = "AVERRA Staffing Solutions Ltd"
+
+COMPANY_EMAIL = os.getenv(
+    "COMPANY_EMAIL",
+    "info@averrastaffing.co.uk",
+).strip()
+
+COMPANY_WEBSITE = os.getenv(
+    "COMPANY_WEBSITE",
+    "https://averrastaffing.co.uk",
+).strip()
+
 
 # ============================================================
-# DATABASE CONFIGURATION
+# DATABASE URL CONFIGURATION
 # ============================================================
 
 DEFAULT_DATABASE_URL = (
@@ -87,21 +105,38 @@ DEFAULT_DATABASE_URL = (
 
 database_url = os.getenv("DATABASE_URL", "").strip()
 
+# Support DATABASE_PATH for local development and existing tests.
 if not database_url:
-    database_url = DEFAULT_DATABASE_URL
+    configured_path = os.getenv("DATABASE_PATH", "").strip()
 
-elif database_url.startswith("sqlite:///") and not database_url.startswith(
-    "sqlite:////"
+    if configured_path:
+        path = Path(configured_path)
+
+        if not path.is_absolute():
+            path = (BASE_DIR / path).resolve()
+
+        database_url = f"sqlite:///{path.as_posix()}"
+    else:
+        database_url = DEFAULT_DATABASE_URL
+
+# Resolve relative SQLite URLs against the backend directory,
+# not whichever directory happens to launch the application.
+if (
+    database_url.startswith("sqlite:///")
+    and not database_url.startswith("sqlite:////")
 ):
     sqlite_path = database_url[len("sqlite:///"):]
-    path_object = Path(sqlite_path)
 
-    if not path_object.is_absolute():
-        path_object = (BASE_DIR / path_object).resolve()
+    path = Path(sqlite_path)
 
-    database_url = f"sqlite:///{path_object.as_posix()}"
+    if not path.is_absolute():
+        path = (BASE_DIR / path).resolve()
 
-# Ensure the shared database connection uses the same URL.
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    database_url = f"sqlite:///{path.as_posix()}"
+
+# Make the selected URL available to the shared database module.
 os.environ["DATABASE_URL"] = database_url
 
 
@@ -109,9 +144,9 @@ os.environ["DATABASE_URL"] = database_url
 # APPLICATION IMPORTS
 # ============================================================
 
+# These imports match the structure where database/ and app/
+# are both located directly inside the backend directory.
 from database.connection import (  # noqa: E402
-    DATABASE_URL,
-    SessionLocal,
     create_tables,
     engine,
     get_db,
@@ -136,12 +171,11 @@ from app.schemas.jobs import (  # noqa: E402
 # LOGGING
 # ============================================================
 
+LOG_LEVEL_NAME = os.getenv("LOG_LEVEL", "INFO").strip().upper()
+LOG_LEVEL = getattr(logging, LOG_LEVEL_NAME, logging.INFO)
+
 logging.basicConfig(
-    level=getattr(
-        logging,
-        os.getenv("LOG_LEVEL", "INFO").upper(),
-        logging.INFO,
-    ),
+    level=LOG_LEVEL,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     handlers=[
         logging.StreamHandler(),
@@ -156,31 +190,33 @@ logger = logging.getLogger("averra")
 
 
 # ============================================================
-# DATABASE COMPATIBILITY
+# DATABASE INITIALISATION AND COMPATIBILITY
 # ============================================================
 
 def migrate_existing_database() -> None:
     """
     Add supported columns to existing SQLite tables.
 
-    These compatibility changes do not delete existing records.
-    Use versioned migrations for future schema changes.
+    This is a compatibility migration for existing local databases.
+    It does not delete existing records or rebuild tables.
+    Future schema changes should use versioned migrations.
     """
-    if not DATABASE_URL.startswith("sqlite"):
+    if engine.dialect.name != "sqlite":
         return
 
     inspector = inspect(engine)
-    tables = inspector.get_table_names()
+    tables = set(inspector.get_table_names())
 
     with engine.begin() as connection:
-
         if "enquiries" in tables:
-            enquiry_columns = {
+            columns = {
                 column["name"]
-                for column in inspect(engine).get_columns("enquiries")
+                for column in inspect(connection).get_columns(
+                    "enquiries"
+                )
             }
 
-            if "internal_notes" not in enquiry_columns:
+            if "internal_notes" not in columns:
                 connection.execute(
                     text(
                         "ALTER TABLE enquiries "
@@ -192,39 +228,40 @@ def migrate_existing_database() -> None:
                 )
 
         if "jobs" in tables:
-            job_columns = {
+            columns = {
                 column["name"]
-                for column in inspect(engine).get_columns("jobs")
+                for column in inspect(connection).get_columns(
+                    "jobs"
+                )
             }
 
-            if "closing_date" not in job_columns:
+            if "closing_date" not in columns:
                 connection.execute(
                     text(
                         "ALTER TABLE jobs "
                         "ADD COLUMN closing_date DATETIME"
                     )
                 )
-                logger.info(
-                    "Added jobs.closing_date"
-                )
+                logger.info("Added jobs.closing_date")
 
 
 def initialise_database() -> None:
-    """Create missing tables and apply compatibility changes."""
-    # The models must be imported before create_tables().
-    Base.metadata
+    """Create missing tables and apply compatible schema changes."""
+    # Ensure all models have been imported and registered.
+    _ = Base.metadata
 
     create_tables()
     migrate_existing_database()
 
-    logger.info(
-        "Database initialised using %s",
-        DATABASE_URL,
-    )
+    # Confirm the database can execute a simple query.
+    with engine.connect() as connection:
+        connection.execute(text("SELECT 1"))
+
+    logger.info("Database initialised successfully")
 
 
 def utc_now() -> datetime:
-    """Return the current UTC datetime."""
+    """Return the current UTC time."""
     return datetime.now(timezone.utc)
 
 
@@ -234,7 +271,7 @@ def utc_now() -> datetime:
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    """Initialise application resources at startup."""
+    """Initialise the database at startup and dispose of the engine."""
     logger.info(
         "%s starting in %s mode",
         APP_NAME,
@@ -243,14 +280,13 @@ async def lifespan(application: FastAPI):
 
     try:
         initialise_database()
-        yield
-
     except Exception:
-        logger.exception(
-            "Application startup or runtime failure"
-        )
+        logger.exception("Application startup failed")
+        engine.dispose()
         raise
 
+    try:
+        yield
     finally:
         logger.info("%s shutting down", APP_NAME)
         engine.dispose()
@@ -263,8 +299,8 @@ async def lifespan(application: FastAPI):
 app = FastAPI(
     title=APP_NAME,
     description=(
-        "The API for AVERRA Staffing Solutions Ltd, "
-        "connecting UK businesses with skilled professionals."
+        "The API for AVERRA Staffing Solutions Ltd, connecting "
+        "UK businesses with skilled professionals based in India."
     ),
     version=APP_VERSION,
     debug=DEBUG,
@@ -288,14 +324,18 @@ DEFAULT_ORIGINS = [
     "https://www.averrastaffing.co.uk",
 ]
 
-allowed_origins = [
-    origin.strip().rstrip("/")
-    for origin in os.getenv(
-        "CORS_ORIGINS",
-        ",".join(DEFAULT_ORIGINS),
-    ).split(",")
-    if origin.strip()
-]
+configured_origins = os.getenv(
+    "CORS_ORIGINS",
+    ",".join(DEFAULT_ORIGINS),
+)
+
+allowed_origins = list(
+    dict.fromkeys(
+        origin.strip().rstrip("/")
+        for origin in configured_origins.split(",")
+        if origin.strip()
+    )
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -319,13 +359,12 @@ app.add_middleware(
 # ============================================================
 
 @app.get("/", tags=["General"])
-def home():
+def home() -> dict[str, Any]:
     """Return basic API information."""
     return {
         "name": APP_NAME,
-        "company": "AVERRA Staffing Solutions Ltd",
+        "company": COMPANY_NAME,
         "version": APP_VERSION,
-        "environment": APP_ENV,
         "status": "running",
         "documentation": "/docs",
         "health_check": "/api/health",
@@ -336,8 +375,8 @@ def home():
 
 
 @app.get("/api/health", tags=["General"])
-def health_check():
-    """Check that the API can reach its configured database."""
+def health_check() -> dict[str, str]:
+    """Check whether the API can reach its database."""
     try:
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
@@ -355,7 +394,7 @@ def health_check():
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Database is unavailable.",
-        )
+        ) from None
 
 
 # ============================================================
@@ -372,10 +411,10 @@ def create_enquiry(
     enquiry_data: EnquiryCreate,
     db: Session = Depends(get_db),
 ):
-    """Save a public website contact enquiry."""
+    """Save a contact enquiry submitted through the website."""
     enquiry = Enquiry(
         name=enquiry_data.name,
-        email=str(enquiry_data.email).lower(),
+        email=str(enquiry_data.email).strip().lower(),
         phone=enquiry_data.phone,
         company=enquiry_data.company,
         subject=enquiry_data.subject,
@@ -405,7 +444,7 @@ def create_enquiry(
                 "Unable to save your enquiry. "
                 "Please try again later."
             ),
-        )
+        ) from None
 
 
 # ============================================================
@@ -425,7 +464,8 @@ def list_jobs(
     """
     Return published vacancies only.
 
-    Draft and closed vacancies are not publicly listed.
+    Pagination:
+        /api/jobs?limit=20&offset=0
     """
     try:
         statement = (
@@ -447,7 +487,7 @@ def list_jobs(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve vacancies.",
-        )
+        ) from None
 
 
 @app.get(
@@ -459,7 +499,7 @@ def get_job(
     job_id: int,
     db: Session = Depends(get_db),
 ):
-    """Return one published vacancy by its ID."""
+    """Return a single published vacancy."""
     try:
         statement = select(Job).where(
             Job.id == job_id,
@@ -477,7 +517,7 @@ def get_job(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve this vacancy.",
-        )
+        ) from None
 
     if job is None:
         raise HTTPException(
@@ -499,21 +539,23 @@ def require_admin(
     ),
 ) -> None:
     """
-    Require a private token for administrative job operations.
+    Require the configured private token for job administration.
 
-    The token must be configured in the backend .env file.
+    Do not expose this token in frontend JavaScript or public pages.
     """
     expected_token = os.getenv(
         "AVERRA_ADMIN_TOKEN",
         "",
     ).strip()
 
-    if not expected_token:
+    if (
+        not expected_token
+        or expected_token.startswith("REPLACE_WITH_")
+        or expected_token == "replace_with_your_own_long_random_secret"
+    ):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=(
-                "Administrator authentication is not configured."
-            ),
+            detail="Administrator authentication is not configured.",
         )
 
     if not x_admin_token or not secrets.compare_digest(
@@ -541,12 +583,7 @@ def create_job(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """
-    Create a job vacancy.
-
-    Set status to draft to save it without publishing.
-    Set status to published to make it publicly visible.
-    """
+    """Create a vacancy, optionally as a draft or published job."""
     job = Job(**job_data.model_dump())
 
     try:
@@ -554,10 +591,7 @@ def create_job(
         db.commit()
         db.refresh(job)
 
-        logger.info(
-            "Administrator created job id=%s",
-            job.id,
-        )
+        logger.info("Administrator created job id=%s", job.id)
 
         return job
 
@@ -568,7 +602,7 @@ def create_job(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to create the job vacancy.",
-        )
+        ) from None
 
 
 # ============================================================
@@ -582,30 +616,31 @@ def create_job(
 )
 def list_admin_jobs(
     _: None = Depends(require_admin),
+    limit: int = Query(default=100, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """
-    List every vacancy, including drafts and closed jobs.
-
-    Requires administrator authentication.
-    """
+    """List vacancies of all statuses; administrator access required."""
     try:
-        statement = select(Job).order_by(
-            Job.created_at.desc(),
-            Job.id.desc(),
+        statement = (
+            select(Job)
+            .order_by(
+                Job.created_at.desc(),
+                Job.id.desc(),
+            )
+            .offset(offset)
+            .limit(limit)
         )
 
         return db.scalars(statement).all()
 
     except SQLAlchemyError:
-        logger.exception(
-            "Could not retrieve administrator job list"
-        )
+        logger.exception("Could not retrieve administrator job list")
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve job vacancies.",
-        )
+        ) from None
 
 
 # ============================================================
@@ -640,9 +675,7 @@ def update_job(
                 detail="Job vacancy not found.",
             )
 
-        updates = job_data.model_dump(
-            exclude_unset=True,
-        )
+        updates = job_data.model_dump(exclude_unset=True)
 
         if not updates:
             raise HTTPException(
@@ -653,16 +686,13 @@ def update_job(
         for field, value in updates.items():
             setattr(job, field, value)
 
-        # Refresh the modification timestamp.
-        job.updated_at = utc_now()
+        if hasattr(job, "updated_at"):
+            job.updated_at = utc_now()
 
         db.commit()
         db.refresh(job)
 
-        logger.info(
-            "Administrator updated job id=%s",
-            job.id,
-        )
+        logger.info("Administrator updated job id=%s", job.id)
 
         return job
 
@@ -679,7 +709,7 @@ def update_job(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to update the job vacancy.",
-        )
+        ) from None
 
 
 # ============================================================
@@ -689,7 +719,7 @@ def update_job(
 if __name__ == "__main__":
     import uvicorn
 
-    host = os.getenv("HOST", "127.0.0.1")
+    host = os.getenv("HOST", "127.0.0.1").strip()
     port = int(os.getenv("PORT", "8000"))
 
     uvicorn.run(

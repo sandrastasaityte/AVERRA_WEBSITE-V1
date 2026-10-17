@@ -21,7 +21,6 @@ from .jobs import (
     JobAdminResponse,
 )
 
-
 __all__ = [
     # Enquiry schemas
     "EnquiryCreate",
