@@ -1,54 +1,192 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Manage Jobs | AVERRA Admin</title>
-  <link rel="stylesheet" href="css/admin.css">
-  <script src="js/auth.js" defer></script>
-  <script src="js/jobs.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0b1f33">
+
+    <title>Manage Jobs | AVERRA Staffing Solutions Ltd</title>
+
+    <meta
+        name="description"
+        content="Manage recruitment vacancies for AVERRA Staffing Solutions Ltd."
+    >
+
+    <link rel="stylesheet" href="css/admin.css">
+
+    <script src="js/auth.js" defer></script>
+    <script src="js/jobs.js" defer></script>
 </head>
+
 <body>
-  <header class="admin-header">
-    <a class="brand" href="dashboard.html">AVERRA ADMIN</a>
-    <nav class="admin-nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="jobs.html">Jobs</a>
-      <button type="button" id="logout-button">Log out</button>
-    </nav>
-  </header>
 
-  <main class="admin-main">
-    <div class="page-heading">
-      <div>
-        <p class="eyebrow">VACANCY MANAGEMENT</p>
-        <h1>Manage jobs</h1>
-        <p class="muted">Create, edit, publish and close vacancies.</p>
-      </div>
-      <a class="btn btn-primary" href="job-form.html">+ Add vacancy</a>
-    </div>
+    <header class="admin-header">
+        <a class="brand" href="dashboard.html" aria-label="AVERRA Admin home">
+            AVERRA ADMIN
+        </a>
 
-    <p id="jobs-message" class="message" role="status">Loading vacancies…</p>
+        <nav class="admin-nav" aria-label="Admin navigation">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="jobs.html" aria-current="page">Jobs</a>
+            <a href="enquiries.html">Enquiries</a>
 
-    <section class="panel">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Location</th>
-              <th>Employment</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="jobs-table">
-            <tr><td colspan="5">Loading…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+            <button type="button" id="logout-button">
+                Log out
+            </button>
+        </nav>
+    </header>
+
+    <main class="admin-main">
+
+        <!-- PAGE HEADING -->
+        <section class="page-heading">
+            <div>
+                <p class="eyebrow">VACANCY MANAGEMENT</p>
+
+                <h1>Manage jobs</h1>
+
+                <p class="muted">
+                    Create, review, edit and manage AVERRA recruitment vacancies.
+                </p>
+            </div>
+
+            <a class="btn btn-primary" href="job-form.html">
+                <span aria-hidden="true">+</span>
+                Add vacancy
+            </a>
+        </section>
+
+        <!-- PAGE FEEDBACK -->
+        <p
+            id="jobs-message"
+            class="message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+        >
+            Loading vacancies…
+        </p>
+
+        <!-- VACANCY MANAGEMENT -->
+        <section class="panel jobs-panel" aria-labelledby="jobs-heading">
+
+            <div class="jobs-toolbar">
+                <div>
+                    <h2 id="jobs-heading">All vacancies</h2>
+
+                    <p class="muted small">
+                        Search vacancies and filter by publication status.
+                    </p>
+                </div>
+
+                <button
+                    class="btn btn-secondary"
+                    id="refresh-jobs"
+                    type="button"
+                >
+                    Refresh list
+                </button>
+            </div>
+
+            <!-- SEARCH AND FILTERS -->
+            <div class="jobs-filters">
+
+                <div class="jobs-search">
+                    <label for="jobs-search">Search vacancies</label>
+
+                    <input
+                        id="jobs-search"
+                        type="search"
+                        placeholder="Search title or location…"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="jobs-status-filter">
+                    <label for="jobs-status-filter">Publication status</label>
+
+                    <select id="jobs-status-filter">
+                        <option value="all">All statuses</option>
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+
+                <button
+                    class="btn btn-secondary jobs-clear-filter"
+                    id="clear-job-filters"
+                    type="button"
+                >
+                    Clear filters
+                </button>
+
+            </div>
+
+            <!-- RESULTS SUMMARY -->
+            <div class="jobs-results">
+                <p class="small muted" id="jobs-results-count">
+                    Loading vacancy records…
+                </p>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-wrap">
+                <table>
+                    <caption class="visually-hidden">
+                        AVERRA recruitment vacancies, their locations,
+                        employment types, publication statuses and available actions.
+                    </caption>
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Job title</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Employment</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="jobs-table">
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                Loading vacancies…
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EMPTY / ERROR STATE CONTAINER -->
+            <div
+                id="jobs-empty-state"
+                class="empty-state jobs-empty-state"
+                hidden
+            >
+                <h3>No vacancies found</h3>
+
+                <p class="muted">
+                    Try changing your search or status filter,
+                    or create a new vacancy.
+                </p>
+
+                <a class="btn btn-primary" href="job-form.html">
+                    Add your first vacancy
+                </a>
+            </div>
+
+        </section>
+
+        <footer class="admin-footer">
+            <p class="small muted">
+                AVERRA Staffing Solutions Ltd
+            </p>
+        </footer>
+
+    </main>
+
 </body>
 </html>

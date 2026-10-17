@@ -1,0 +1,3 @@
+python -m uvicorn main:app --reload
+
+python -c "import secrets; print('SECRET_KEY=' + secrets.token_urlsafe(48)); print('AVERRA_ADMIN_TOKEN=' + secrets.token_urlsafe(48))"

@@ -1,59 +1,154 @@
+
 (() => {
   "use strict";
 
   document.addEventListener("DOMContentLoaded", async () => {
     const admin = window.AVERRA_ADMIN;
-    if (!admin || !admin.requireLogin()) return;
 
-    document.getElementById("logout-button")
-      ?.addEventListener("click", () => admin.logout());
+    if (!admin || !admin.requireLogin()) {
+      return;
+    }
 
-    const message = document.getElementById("dashboard-message");
-    const recentJobs = document.getElementById("recent-jobs");
+    const getElement = (id) => document.getElementById(id);
 
-    try {
-      const jobs = await admin.api("/api/admin/jobs");
+    const message = getElement("dashboard-message");
+    const recentJobs = getElement("recent-jobs");
+    const totalJobs = getElement("total-jobs");
+    const publishedJobs = getElement("published-jobs");
+    const draftJobs = getElement("draft-jobs");
 
-      const published = jobs.filter(job => job.status === "published").length;
-      const drafts = jobs.filter(job => job.status === "draft").length;
+    getElement("logout-button")?.addEventListener("click", () => {
+      admin.logout();
+    });
 
-      document.getElementById("total-jobs").textContent = jobs.length;
-      document.getElementById("published-jobs").textContent = published;
-      document.getElementById("draft-jobs").textContent = drafts;
+    function showMessage(text, type) {
+      if (!message) return;
+
+      message.textContent = text;
+      message.className = "message";
+
+      if (type) {
+        message.classList.add(type);
+      }
+    }
+
+    function addCell(row, value) {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+      return cell;
+    }
+
+    function showEmptyState(text) {
+      if (!recentJobs) return;
+
+      recentJobs.replaceChildren();
+
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+
+      cell.colSpan = 3;
+      cell.textContent = text;
+
+      row.appendChild(cell);
+      recentJobs.appendChild(row);
+    }
+
+    function normaliseJobs(response) {
+      // Support a plain array.
+      if (Array.isArray(response)) {
+        return response;
+      }
+
+      // Support common paginated API response formats.
+      if (response && Array.isArray(response.items)) {
+        return response.items;
+      }
+
+      if (response && Array.isArray(response.jobs)) {
+        return response.jobs;
+      }
+
+      if (response && Array.isArray(response.results)) {
+        return response.results;
+      }
+
+      throw new Error(
+        "The jobs API returned an unexpected response format."
+      );
+    }
+
+    function renderJobs(jobs) {
+      if (!recentJobs) return;
 
       recentJobs.replaceChildren();
 
       if (jobs.length === 0) {
-        recentJobs.innerHTML =
-          '<tr><td colspan="3">No vacancies yet. Add your first job.</td></tr>';
-      } else {
-        jobs.slice(0, 5).forEach(job => {
-          const row = document.createElement("tr");
-
-          const titleCell = document.createElement("td");
-          titleCell.textContent = job.title || "Untitled";
-
-          const locationCell = document.createElement("td");
-          locationCell.textContent = job.location || "Not specified";
-
-          const statusCell = document.createElement("td");
-          const badge = document.createElement("span");
-          badge.className = `status ${job.status || "draft"}`;
-          badge.textContent = job.status || "draft";
-          statusCell.appendChild(badge);
-
-          row.append(titleCell, locationCell, statusCell);
-          recentJobs.appendChild(row);
-        });
+        showEmptyState("No vacancies yet. Add your first job.");
+        return;
       }
 
-      message.textContent = "Dashboard loaded successfully.";
-      message.classList.add("success");
+      jobs.slice(0, 5).forEach((job) => {
+        const row = document.createElement("tr");
+
+        addCell(row, job.title || "Untitled");
+        addCell(row, job.location || "Not specified");
+
+        const statusCell = document.createElement("td");
+        const badge = document.createElement("span");
+
+        const status = String(job.status || "draft").toLowerCase();
+        const allowedStatuses = ["draft", "published", "closed"];
+
+        badge.className = "status " +
+          (allowedStatuses.includes(status) ? status : "draft");
+
+        badge.textContent = status;
+
+        statusCell.appendChild(badge);
+        row.appendChild(statusCell);
+        recentJobs.appendChild(row);
+      });
+    }
+
+    try {
+      showMessage("Loading dashboard…", "");
+
+      const response = await admin.api("/api/admin/jobs");
+      const jobs = normaliseJobs(response);
+
+      const published = jobs.filter(
+        (job) => job.status === "published"
+      ).length;
+
+      const drafts = jobs.filter(
+        (job) => job.status === "draft"
+      ).length;
+
+      if (totalJobs) {
+        totalJobs.textContent = String(jobs.length);
+      }
+
+      if (publishedJobs) {
+        publishedJobs.textContent = String(published);
+      }
+
+      if (draftJobs) {
+        draftJobs.textContent = String(drafts);
+      }
+
+      renderJobs(jobs);
+
+      showMessage("Dashboard loaded successfully.", "success");
     } catch (error) {
-      message.textContent = `Unable to load dashboard: ${error.message}`;
-      message.classList.add("error");
-      recentJobs.innerHTML =
-        '<tr><td colspan="3">Could not load vacancies.</td></tr>';
+      console.error("AVERRA dashboard error:", error);
+
+      showMessage(
+        `Unable to load dashboard: ${error.message}`,
+        "error"
+      );
+
+      showEmptyState("Could not load vacancies. Please try again.");
     }
   });
 })();

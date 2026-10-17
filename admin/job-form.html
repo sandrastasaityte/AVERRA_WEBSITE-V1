@@ -1,111 +1,282 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Add Vacancy | AVERRA Admin</title>
-  <link rel="stylesheet" href="css/admin.css">
-  <script src="js/auth.js" defer></script>
-  <script src="js/job-form.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0b1f33">
+
+    <title>Add Vacancy | AVERRA Admin</title>
+
+    <meta
+        name="description"
+        content="Create and manage recruitment vacancies for AVERRA Staffing Solutions Ltd."
+    >
+
+    <link rel="stylesheet" href="css/admin.css">
+
+    <script src="js/auth.js" defer></script>
+    <script src="js/job-form.js" defer></script>
 </head>
+
 <body>
-  <header class="admin-header">
-    <a class="brand" href="dashboard.html">AVERRA ADMIN</a>
-    <nav class="admin-nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="jobs.html">Jobs</a>
-      <button type="button" id="logout-button">Log out</button>
-    </nav>
-  </header>
 
-  <main class="admin-main">
-    <div class="page-heading">
-      <div>
-        <p class="eyebrow">VACANCY MANAGEMENT</p>
-        <h1 id="form-title">Add vacancy</h1>
-        <p class="muted">Complete the job details below.</p>
-      </div>
-    </div>
+    <header class="admin-header">
+        <a class="brand" href="dashboard.html" aria-label="AVERRA Admin home">
+            AVERRA ADMIN
+        </a>
 
-    <section class="panel form-panel">
-      <form id="job-form">
-        <div class="form-grid">
-          <div class="field-full">
-            <label for="title">Job title *</label>
-            <input id="title" name="title" maxlength="150" required
-                   placeholder="e.g. Senior Accountant">
-          </div>
+        <nav class="admin-nav" aria-label="Admin navigation">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="jobs.html" aria-current="page">Jobs</a>
+            <a href="enquiries.html">Enquiries</a>
 
-          <div>
-            <label for="department">Department</label>
-            <input id="department" name="department" maxlength="100"
-                   placeholder="e.g. Finance">
-          </div>
+            <button type="button" id="logout-button">
+                Log out
+            </button>
+        </nav>
+    </header>
 
-          <div>
-            <label for="location">Location *</label>
-            <input id="location" name="location" maxlength="150" required
-                   placeholder="e.g. Remote, United Kingdom">
-          </div>
+    <main class="admin-main">
 
-          <div>
-            <label for="employment_type">Employment type *</label>
-            <select id="employment_type" name="employment_type" required>
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Contract">Contract</option>
-              <option value="Temporary">Temporary</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Internship">Internship</option>
-            </select>
-          </div>
+        <div class="page-heading">
+            <div>
+                <p class="eyebrow">VACANCY MANAGEMENT</p>
 
-          <div>
-            <label for="salary_range">Salary range</label>
-            <input id="salary_range" name="salary_range" maxlength="100"
-                   placeholder="e.g. £30,000–£35,000">
-          </div>
+                <h1 id="form-title">Add vacancy</h1>
 
-          <div class="field-full">
-            <label for="summary">Short summary *</label>
-            <textarea id="summary" name="summary" maxlength="500"
-                      required placeholder="A short introduction to the role."></textarea>
-          </div>
+                <p class="muted">
+                    Create a recruitment advertisement for the AVERRA website.
+                    Complete all required fields before saving.
+                </p>
+            </div>
 
-          <div class="field-full">
-            <label for="description">Full description *</label>
-            <textarea id="description" name="description" required
-                      placeholder="Responsibilities, requirements and benefits."></textarea>
-          </div>
-
-          <div class="field-full">
-            <label for="application_email">Application email</label>
-            <input id="application_email" name="application_email"
-                   type="email" maxlength="254"
-                   placeholder="info@averrastaffing.co.uk">
-          </div>
-
-          <div>
-            <label for="status">Status</label>
-            <select id="status" name="status">
-              <option value="draft">Draft — not public</option>
-              <option value="published">Published — public</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
+            <a class="btn btn-secondary" href="jobs.html">
+                &larr; Back to jobs
+            </a>
         </div>
 
-        <p id="form-message" class="message" role="status"></p>
+        <section class="panel form-panel" aria-labelledby="form-title">
 
-        <div class="form-actions">
-          <button class="btn btn-primary" type="submit" id="save-button">
-            Save vacancy
-          </button>
-          <a class="btn btn-secondary" href="jobs.html">Cancel</a>
-        </div>
-      </form>
-    </section>
-  </main>
+            <div class="form-intro">
+                <h2>Job details</h2>
+
+                <p class="muted small">
+                    Fields marked with an asterisk (*) are required.
+                </p>
+            </div>
+
+            <form id="job-form">
+
+                <div class="form-grid">
+
+                    <!-- JOB TITLE -->
+                    <div class="field-full">
+                        <label for="title">Job title *</label>
+
+                        <input
+                            id="title"
+                            name="title"
+                            type="text"
+                            maxlength="150"
+                            placeholder="e.g. Senior Accountant"
+                            autocomplete="organization-title"
+                            required
+                        >
+                    </div>
+
+                    <!-- DEPARTMENT -->
+                    <div>
+                        <label for="department">Department</label>
+
+                        <input
+                            id="department"
+                            name="department"
+                            type="text"
+                            maxlength="100"
+                            placeholder="e.g. Finance"
+                        >
+                    </div>
+
+                    <!-- LOCATION -->
+                    <div>
+                        <label for="location">Location *</label>
+
+                        <input
+                            id="location"
+                            name="location"
+                            type="text"
+                            maxlength="150"
+                            placeholder="e.g. Remote, United Kingdom"
+                            required
+                        >
+                    </div>
+
+                    <!-- EMPLOYMENT TYPE -->
+                    <div>
+                        <label for="employment_type">
+                            Employment type *
+                        </label>
+
+                        <select
+                            id="employment_type"
+                            name="employment_type"
+                            required
+                        >
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Temporary">Temporary</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+
+                    <!-- SALARY -->
+                    <div>
+                        <label for="salary_range">Salary range</label>
+
+                        <input
+                            id="salary_range"
+                            name="salary_range"
+                            type="text"
+                            maxlength="100"
+                            placeholder="e.g. £30,000–£35,000 per year"
+                        >
+                    </div>
+
+                    <!-- SHORT SUMMARY -->
+                    <div class="field-full">
+                        <label for="summary">Short summary *</label>
+
+                        <textarea
+                            id="summary"
+                            name="summary"
+                            rows="3"
+                            maxlength="500"
+                            required
+                            placeholder="Introduce the role and explain why a candidate might be interested."
+                        ></textarea>
+
+                        <p class="small muted">
+                            Keep this concise. It can be used as the introduction
+                            on the public vacancy listing.
+                        </p>
+                    </div>
+
+                    <!-- FULL DESCRIPTION -->
+                    <div class="field-full">
+                        <label for="description">Full job description *</label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="9"
+                            required
+                            placeholder="Describe the role, responsibilities, required experience, qualifications and benefits."
+                        ></textarea>
+
+                        <p class="small muted">
+                            Use clear, accurate information and avoid including
+                            confidential client details.
+                        </p>
+                    </div>
+
+                    <!-- APPLICATION EMAIL -->
+                    <div class="field-full">
+                        <label for="application_email">
+                            Application email
+                        </label>
+
+                        <input
+                            id="application_email"
+                            name="application_email"
+                            type="email"
+                            maxlength="254"
+                            autocomplete="email"
+                            placeholder="info@averrastaffing.co.uk"
+                        >
+
+                        <p class="small muted">
+                            Leave blank if applications are handled through
+                            another approved process.
+                        </p>
+                    </div>
+
+                    <!-- CLOSING DATE -->
+                    <div>
+                        <label for="closing_date">Closing date</label>
+
+                        <input
+                            id="closing_date"
+                            name="closing_date"
+                            type="date"
+                        >
+                    </div>
+
+                    <!-- PUBLICATION STATUS -->
+                    <div>
+                        <label for="status">Publication status *</label>
+
+                        <select id="status" name="status" required>
+                            <option value="draft">
+                                Draft — not public
+                            </option>
+
+                            <option value="published">
+                                Published — public
+                            </option>
+
+                            <option value="closed">
+                                Closed — no longer accepting applications
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- FORM FEEDBACK -->
+                <div
+                    id="form-message"
+                    class="message"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                ></div>
+
+                <!-- ACTIONS -->
+                <div class="form-actions">
+
+                    <button
+                        class="btn btn-primary"
+                        type="submit"
+                        id="save-button"
+                    >
+                        Save vacancy
+                    </button>
+
+                    <a class="btn btn-secondary" href="jobs.html">
+                        Cancel
+                    </a>
+
+                </div>
+
+                <p class="small muted">
+                    Review the job details and publication status before saving.
+                    Published vacancies may become visible on the public website.
+                </p>
+
+            </form>
+        </section>
+
+        <footer class="admin-footer">
+            <p class="small muted">
+                AVERRA Staffing Solutions Ltd
+            </p>
+        </footer>
+
+    </main>
+
 </body>
 </html>

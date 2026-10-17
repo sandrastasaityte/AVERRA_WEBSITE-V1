@@ -1,30 +1,90 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Admin Login | AVERRA Staffing Solutions</title>
-  <link rel="stylesheet" href="css/admin.css">
-  <script src="js/auth.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0b1f33">
+
+    <title>Admin Login | AVERRA Staffing Solutions Ltd</title>
+
+    <meta
+        name="description"
+        content="Secure administrator sign-in for AVERRA Staffing Solutions Ltd."
+    >
+
+    <link rel="stylesheet" href="css/admin.css">
+
+    <script src="js/auth.js" defer></script>
 </head>
+
 <body class="login-page">
-  <main class="login-card">
-    <p class="eyebrow">AVERRA STAFFING SOLUTIONS LTD</p>
-    <h1>Admin login</h1>
-    <p class="muted">Sign in to manage your job vacancies.</p>
 
-    <form id="login-form">
-      <label for="admin-token">Administrator token</label>
-      <input id="admin-token" type="password"
-             autocomplete="current-password" required>
-      <button class="btn btn-primary full-width" type="submit">
-        Sign in
-      </button>
-      <p id="login-message" class="message" role="status"></p>
-    </form>
+    <main class="login-card">
 
-    <p class="small muted">Authorised access only.</p>
-  </main>
+        <header class="login-brand">
+            <p class="eyebrow">AVERRA STAFFING SOLUTIONS LTD</p>
+
+            <h1>Administrator sign in</h1>
+
+            <p class="muted">
+                Sign in to manage recruitment vacancies and
+                authorised administration tasks.
+            </p>
+        </header>
+
+        <div class="login-divider" aria-hidden="true"></div>
+
+        <form id="login-form" autocomplete="on">
+
+            <label for="admin-token">
+                Administrator token
+            </label>
+
+            <input
+                id="admin-token"
+                name="admin-token"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Enter your administrator token"
+                required
+                minlength="1"
+                aria-describedby="login-help login-message"
+            >
+
+            <p id="login-help" class="small muted">
+                This area is restricted to authorised administrators.
+            </p>
+
+            <button
+                class="btn btn-primary full-width"
+                id="login-button"
+                type="submit"
+            >
+                Sign in securely
+            </button>
+
+            <p
+                id="login-message"
+                class="message"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+        </form>
+
+        <footer class="login-footer">
+            <p class="small muted">
+                AVERRA Staffing Solutions Ltd
+            </p>
+
+            <p class="small muted">
+                Authorised access only.
+            </p>
+        </footer>
+
+    </main>
+
 </body>
 </html>
