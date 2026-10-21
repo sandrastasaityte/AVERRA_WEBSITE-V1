@@ -36,7 +36,10 @@
 
 <link rel="stylesheet" href="style.css">
 
-<script src="images.js" defer></script>
+<link rel="stylesheet" href="style.css">
+
+<script src="images/images.js" defer></script>
+<script src="images/jobs.js" defer></script>
 <script src="script.js" defer></script>
 
     <style>
@@ -1264,6 +1267,92 @@ a {
     }
 }
 
+/* =========================================
+   AVERRA — LET'S TALK BUTTON
+   ========================================= */
+
+.main-navigation a[href="lets-talk.html"],
+.main-navigation a[href="./lets-talk.html"],
+.main-nav a[href="lets-talk.html"],
+.main-nav a[href="./lets-talk.html"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    background-color: #1d5f91;
+    color: #ffffff !important;
+    border: 1px solid #1d5f91;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.4;
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+.main-navigation a[href="lets-talk.html"]:hover,
+.main-navigation a[href="./lets-talk.html"]:hover,
+.main-nav a[href="lets-talk.html"]:hover,
+.main-nav a[href="./lets-talk.html"]:hover {
+    background-color: #0b1f33;
+    border-color: #0b1f33;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   AVERRA — NAVY FOOTER, NO GOLD
+   ========================================= */
+
+.site-footer,
+footer.site-footer {
+    background-color: #071522;
+    color: #f3f6f9;
+}
+
+.site-footer h2,
+.site-footer h3,
+.site-footer h4,
+.site-footer .footer-heading,
+.site-footer .footer-brand,
+.site-footer .footer-logo {
+    color: #ffffff;
+}
+
+.site-footer p,
+.site-footer li,
+.site-footer .footer-description,
+.site-footer .footer-tagline {
+    color: #d1dbe5;
+}
+
+.site-footer a {
+    color: #d1dbe5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: #ffffff;
+}
+
+.site-footer .footer-bottom {
+    border-top: 1px solid #263849;
+    color: #b9c6d2;
+}
+
+/* Keep the footer consistent on smaller screens */
+@media (max-width: 768px) {
+    .main-navigation a[href="lets-talk.html"],
+    .main-navigation a[href="./lets-talk.html"],
+    .main-nav a[href="lets-talk.html"],
+    .main-nav a[href="./lets-talk.html"] {
+        padding: 11px 18px;
+    }
+}
+
+
     </style>
 </head>
 
@@ -2191,7 +2280,7 @@ a {
                         Email Our Team
                     </a>
 
-                    <a class="privacy-cta-link" href="contact.html">
+                    <a class="privacy-cta-link" href="lets-talk.html">
                         Contact page
                     </a>
                 </div>

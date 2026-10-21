@@ -547,6 +547,91 @@ def require_admin(
 
 
 # ============================================================
+# ADMIN: LIST CONTACT ENQUIRIES
+# ============================================================
+
+@app.get(
+    "/api/admin/enquiries",
+    tags=["Admin - Enquiries"],
+)
+def list_admin_enquiries(
+    _: None = Depends(require_admin),
+    limit: int = Query(default=100, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    enquiry_status: str | None = Query(
+        default=None,
+        alias="status",
+    ),
+    db: Session = Depends(get_db),
+):
+    """List saved website enquiries for authenticated administrators."""
+
+    try:
+        statement = select(Enquiry)
+
+        if enquiry_status:
+            allowed_statuses = {
+                "new",
+                "in_progress",
+                "responded",
+                "closed",
+            }
+
+            if enquiry_status not in allowed_statuses:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Invalid enquiry status.",
+                )
+
+            statement = statement.where(
+                Enquiry.status == enquiry_status
+            )
+
+        statement = (
+            statement
+            .order_by(
+                Enquiry.created_at.desc(),
+                Enquiry.id.desc(),
+            )
+            .offset(offset)
+            .limit(limit)
+        )
+
+        enquiries = db.scalars(statement).all()
+
+        return [
+            {
+                "id": enquiry.id,
+                "name": enquiry.name,
+                "email": enquiry.email,
+                "phone": enquiry.phone,
+                "company": enquiry.company,
+                "subject": enquiry.subject,
+                "message": enquiry.message,
+                "status": enquiry.status,
+                "created_at": (
+                    enquiry.created_at.isoformat()
+                    if enquiry.created_at
+                    else None
+                ),
+            }
+            for enquiry in enquiries
+        ]
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        logger.exception(
+            "Could not retrieve administrator enquiries"
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to retrieve contact enquiries.",
+        ) from None
+
+# ============================================================
 # ADMIN: CREATE VACANCY
 # ============================================================
 

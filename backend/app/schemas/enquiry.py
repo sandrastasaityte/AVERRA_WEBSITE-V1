@@ -2,8 +2,11 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/schemas/enquiry.py
+Version: 2.0.0
 
 Pydantic v2 schemas for customer enquiries.
+Validates public submissions and separates public responses
+from information intended for authorised staff.
 """
 
 import re
@@ -24,6 +27,7 @@ EnquiryStatus = Literal[
     "in_progress",
     "responded",
     "closed",
+    "spam",
 ]
 
 
@@ -73,7 +77,6 @@ class EnquiryBase(BaseModel):
     @classmethod
     def validate_required_text(cls, value: str) -> str:
         """Reject empty or whitespace-only required fields."""
-
         value = value.strip()
 
         if not value:
@@ -84,8 +87,7 @@ class EnquiryBase(BaseModel):
     @field_validator("phone", "company", "subject")
     @classmethod
     def clean_optional_text(cls, value: str | None) -> str | None:
-        """Normalise empty optional fields."""
-
+        """Convert blank optional fields to None."""
         if value is None:
             return None
 
@@ -96,11 +98,13 @@ class EnquiryBase(BaseModel):
     @classmethod
     def validate_phone(cls, value: str | None) -> str | None:
         """Allow common international phone number characters."""
-
         if value is None:
             return None
 
         if not re.fullmatch(r"[0-9+() .\-]{5,40}", value):
+            raise ValueError("Please enter a valid phone number.")
+
+        if not any(character.isdigit() for character in value):
             raise ValueError("Please enter a valid phone number.")
 
         return value
@@ -108,8 +112,6 @@ class EnquiryBase(BaseModel):
 
 class EnquiryCreate(EnquiryBase):
     """Request schema for submitting a new enquiry."""
-
-    pass
 
 
 class EnquiryResponse(BaseModel):
@@ -154,7 +156,6 @@ class EnquiryStatusUpdate(BaseModel):
     @classmethod
     def clean_internal_notes(cls, value: str | None) -> str | None:
         """Normalise empty internal notes."""
-
         if value is None:
             return None
 

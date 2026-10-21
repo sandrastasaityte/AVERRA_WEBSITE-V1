@@ -735,3 +735,34 @@ img {
         cursor: pointer;
     }
 }
+.brand {
+    display: block;
+    max-width: 360px;
+    color: var(--navy);
+    font-size: 1.05rem;
+    font-weight: 900;
+    line-height: 1.3;
+    text-decoration: none;
+}
+
+.brand span {
+    display: block;
+    margin-top: 4px;
+    color: var(--blue);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.hero {
+    background-color: var(--navy);
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(7, 21, 34, 0.94),
+            rgba(7, 21, 34, 0.68) 60%,
+            rgba(7, 21, 34, 0.3)
+        ),
+        url("images/image15.jpg");
+    background-position: center;
+    background-size: cover;
+}

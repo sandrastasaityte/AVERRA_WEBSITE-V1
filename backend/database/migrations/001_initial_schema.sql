@@ -14,23 +14,48 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS enquiries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    phone TEXT,
-    company TEXT,
-    subject TEXT,
-    message TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'new'
-        CHECK (status IN ('new', 'in_progress', 'resolved', 'spam')),
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+    name VARCHAR(150) NOT NULL
+        CHECK (length(trim(name)) > 0),
+
+    email VARCHAR(254) NOT NULL
+        CHECK (length(trim(email)) > 0),
+
+    phone VARCHAR(40),
+    company VARCHAR(200),
+    subject VARCHAR(200),
+
+    message TEXT NOT NULL
+        CHECK (length(trim(message)) > 0),
+
+    status VARCHAR(30) NOT NULL DEFAULT 'new'
+        CHECK (
+            status IN (
+                'new',
+                'in_progress',
+                'responded',
+                'closed',
+                'spam'
+            )
+        ),
+
+    internal_notes TEXT,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_enquiries_status
+-- Indexes aligned with the SQLAlchemy Enquiry model.
+
+CREATE INDEX IF NOT EXISTS ix_enquiries_email
+    ON enquiries(email);
+
+CREATE INDEX IF NOT EXISTS ix_enquiries_status
     ON enquiries(status);
 
-CREATE INDEX IF NOT EXISTS idx_enquiries_created_at
+CREATE INDEX IF NOT EXISTS ix_enquiries_created_at
     ON enquiries(created_at);
+
 
 -- ------------------------------------------------------------
 -- Job vacancies
@@ -38,25 +63,54 @@ CREATE INDEX IF NOT EXISTS idx_enquiries_created_at
 
 CREATE TABLE IF NOT EXISTS jobs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    department TEXT,
-    location TEXT NOT NULL,
-    employment_type TEXT NOT NULL,
-    summary TEXT NOT NULL,
-    description TEXT NOT NULL,
-    salary_range TEXT,
-    application_email TEXT,
-    status TEXT NOT NULL DEFAULT 'draft'
-        CHECK (status IN ('draft', 'published', 'closed')),
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+    title VARCHAR(200) NOT NULL
+        CHECK (length(trim(title)) > 0),
+
+    department VARCHAR(150),
+
+    location VARCHAR(200) NOT NULL
+        CHECK (length(trim(location)) > 0),
+
+    employment_type VARCHAR(100) NOT NULL
+        CHECK (length(trim(employment_type)) > 0),
+
+    summary TEXT NOT NULL
+        CHECK (length(trim(summary)) > 0),
+
+    description TEXT NOT NULL
+        CHECK (length(trim(description)) > 0),
+
+    salary_range VARCHAR(150),
+    application_email VARCHAR(254),
+
+    status VARCHAR(30) NOT NULL DEFAULT 'draft'
+        CHECK (
+            status IN (
+                'draft',
+                'published',
+                'closed',
+                'archived'
+            )
+        ),
+
+    closing_date DATE,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_jobs_status
+-- Indexes for public vacancy listings and filtering.
+
+CREATE INDEX IF NOT EXISTS ix_jobs_status
     ON jobs(status);
 
-CREATE INDEX IF NOT EXISTS idx_jobs_created_at
+CREATE INDEX IF NOT EXISTS ix_jobs_created_at
     ON jobs(created_at);
+
+CREATE INDEX IF NOT EXISTS ix_jobs_location
+    ON jobs(location);
+
 
 -- ------------------------------------------------------------
 -- Migration tracking
@@ -64,7 +118,7 @@ CREATE INDEX IF NOT EXISTS idx_jobs_created_at
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
     version TEXT PRIMARY KEY,
-    applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT OR IGNORE INTO schema_migrations (version)

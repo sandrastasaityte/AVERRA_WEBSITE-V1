@@ -10,7 +10,7 @@ Administrative schemas are intended for authenticated management routes.
 """
 
 import re
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal
 
 from pydantic import (
@@ -145,6 +145,11 @@ class JobBase(BaseModel):
         description="Optional application contact email.",
     )
 
+    closing_date: date | None = Field(
+        default=None,
+        description="Optional last date for submitting applications.",
+    )
+
     @field_validator(
         "title",
         "location",
@@ -244,6 +249,11 @@ class JobUpdate(BaseModel):
         max_length=254,
     )
 
+    closing_date: date | None = Field(
+        default=None,
+        description="Optional last date for submitting applications.",
+    )
+
     status: JobStatus | None = None
 
     @field_validator(
@@ -314,6 +324,7 @@ class JobResponse(BaseModel):
     salary_range: str | None = None
     created_at: datetime
     updated_at: datetime
+    closing_date: date | None = None
 
 
 # ============================================================

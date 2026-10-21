@@ -1,3 +1,15 @@
+to reload main.py
 python -m uvicorn main:app --reload
 
+
+
+cd "C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1\backend"
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+
+python -m pip show fastapi starlette httpx httpx2
+
+to run main.py:
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+
+secret code:
 python -c "import secrets; print('SECRET_KEY=' + secrets.token_urlsafe(48)); print('AVERRA_ADMIN_TOKEN=' + secrets.token_urlsafe(48))"

@@ -32,9 +32,7 @@
 
     function showMessage(text, type = "") {
       message.textContent = text;
-      message.className = "message";
-
-      if (type) message.classList.add(type);
+      message.className = type ? `message ${type}` : "message";
     }
 
     function normaliseJobs(response) {
@@ -50,38 +48,21 @@
 
     function createCell(text) {
       const cell = document.createElement("td");
-      cell.textContent = text;
+      cell.textContent = String(text ?? "");
       return cell;
     }
 
     function makeButton(label, className, action) {
       const button = document.createElement("button");
-
       button.type = "button";
       button.className = `btn ${className}`;
       button.textContent = label;
       button.addEventListener("click", action);
-
       return button;
     }
 
-    function renderEmptyRow(text) {
-      const row = document.createElement("tr");
-      const cell = document.createElement("td");
-
-      cell.colSpan = 5;
-      cell.className = "empty-state";
-      cell.textContent = text;
-
-      row.appendChild(cell);
-      table.appendChild(row);
-    }
-
     function getFilteredJobs() {
-      const query = (searchInput?.value || "")
-        .trim()
-        .toLowerCase();
-
+      const query = (searchInput?.value || "").trim().toLowerCase();
       const selectedStatus = statusFilter?.value || "all";
 
       return allJobs.filter((job) => {
@@ -101,7 +82,7 @@
 
         const matchesStatus =
           selectedStatus === "all" ||
-          job.status === selectedStatus;
+          String(job.status || "draft").toLowerCase() === selectedStatus;
 
         return matchesSearch && matchesStatus;
       });
@@ -118,41 +99,43 @@
       }
 
       if (emptyState) {
-        emptyState.hidden = filteredJobs.length > 0;
+        emptyState.hidden = filteredJobs.length !== 0;
       }
 
       if (filteredJobs.length === 0) {
-        renderEmptyRow(
-          allJobs.length === 0
-            ? "No vacancies yet. Add your first job."
-            : "No vacancies match your current filters."
-        );
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 5;
+        cell.className = "empty-state";
+        cell.textContent = allJobs.length === 0
+          ? "No vacancies yet. Use Add vacancy to create your first job."
+          : "No vacancies match your current filters.";
+
+        row.appendChild(cell);
+        table.appendChild(row);
         return;
       }
 
       filteredJobs.forEach((job) => {
         const row = document.createElement("tr");
+        const status = String(job.status || "draft").toLowerCase();
+        const validStatuses = ["draft", "published", "closed"];
 
-        row.appendChild(
-          createCell(job.title || "Untitled")
-        );
-
-        row.appendChild(
-          createCell(job.location || "Not specified")
-        );
-
+        row.appendChild(createCell(job.title || "Untitled"));
+        row.appendChild(createCell(job.location || "Not specified"));
         row.appendChild(
           createCell(job.employment_type || "Not specified")
         );
 
         const statusCell = document.createElement("td");
         const badge = document.createElement("span");
-        const status = String(job.status || "draft").toLowerCase();
-        const validStatuses = ["draft", "published", "closed"];
 
         badge.className =
           `status ${validStatuses.includes(status) ? status : "draft"}`;
-        badge.textContent = status;
+        badge.textContent = validStatuses.includes(status)
+          ? status
+          : "draft";
 
         statusCell.appendChild(badge);
         row.appendChild(statusCell);
@@ -169,7 +152,7 @@
           })
         );
 
-        if (status !== "published") {
+        if (status !== "published" && status !== "closed") {
           actionGroup.appendChild(
             makeButton("Publish", "btn-primary", () => {
               changeStatus(job, "published");
@@ -193,25 +176,35 @@
 
     async function changeStatus(job, newStatus) {
       const verb = newStatus === "published" ? "publish" : "close";
+      const title = job.title || "this vacancy";
 
-      const confirmed = window.confirm(
-        `Are you sure you want to ${verb} "${job.title || "this vacancy"}"?`
-      );
-
-      if (!confirmed) return;
+      if (!window.confirm(
+        `Are you sure you want to ${verb} "${title}"?`
+      )) {
+        return;
+      }
 
       try {
-        showMessage(`${verb === "publish" ? "Publishing" : "Closing"} vacancy…`);
+        showMessage(
+          `${verb === "publish" ? "Publishing" : "Closing"} vacancy…`
+        );
 
-        await admin.api(`/api/admin/jobs/${encodeURIComponent(job.id)}`, {
-          method: "PATCH",
-          body: JSON.stringify({ status: newStatus })
-        });
-
-        showMessage(`Vacancy ${verb}ed successfully.`, "success");
+        await admin.api(
+          `/api/admin/jobs/${encodeURIComponent(job.id)}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({ status: newStatus })
+          }
+        );
 
         await loadJobs(false);
+
+        showMessage(
+          `Vacancy ${newStatus === "published" ? "published" : "closed"} successfully.`,
+          "success"
+        );
       } catch (error) {
+        console.error("AVERRA status update error:", error);
         showMessage(
           `Could not update vacancy: ${error.message}`,
           "error"
@@ -232,14 +225,16 @@
 
       try {
         const response = await admin.api("/api/admin/jobs");
-
         allJobs = normaliseJobs(response);
+
         renderJobs();
 
-        showMessage(
-          `${allJobs.length} vacancy/vacancies loaded.`,
-          "success"
-        );
+        if (showLoadingMessage) {
+          showMessage(
+            `${allJobs.length} vacancy/vacancies loaded.`,
+            "success"
+          );
+        }
       } catch (error) {
         console.error("AVERRA jobs loading error:", error);
 
@@ -249,12 +244,21 @@
         );
 
         table.replaceChildren();
-        renderEmptyRow("Could not load vacancies. Please try again.");
 
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 5;
+        cell.className = "empty-state";
+        cell.textContent = "Could not load vacancies. Please try again.";
+
+        row.appendChild(cell);
+        table.appendChild(row);
+
+        if (emptyState) emptyState.hidden = true;
         if (resultsCount) resultsCount.textContent = "";
       } finally {
         loading = false;
-
         if (refreshButton) refreshButton.disabled = false;
       }
     }

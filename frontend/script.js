@@ -1,118 +1,71 @@
-**File: `script.js` — Version 4.1**
 
-```javascript
-/* ============================================================
-   AVERRA STAFFING SOLUTIONS LTD
-   MASTER WEBSITE JAVASCRIPT
-   Version: 4.1
-   ============================================================
-
-   FEATURES
-   - Responsive mobile navigation
-   - Supports .menu-toggle and .mobile-menu-button
-   - Accessible keyboard navigation
-   - Automatic active navigation links
-   - Sticky header
-   - Accessible same-page scrolling
-   - Back-to-top button
-   - Automatic copyright year
-   - Secure external links
-   - Accessible form validation
-   - Job application and contact form support
-   - Compatible with images.js and legacy image catalogues
-   - Broken-image detection
-   - Dynamic image handling
-   - Reduced-motion support
-   - Browser diagnostics
-   - Prevents duplicate initialization
-
-   FILE LOCATION
-   AVERRA_WEBSITE_V1/script.js
-
-   SCRIPT ORDER
-   <script src="images.js" defer></script>
-   <script src="script.js" defer></script>
-
-   NOTE
-   Form validation does not send emails. Forms require
-   a working backend or form-processing service.
-   ============================================================ */
+/*
+ * AVERRA STAFFING SOLUTIONS LTD
+ * Main Website JavaScript
+ * Version 5.0
+ *
+ * Responsibilities:
+ * - Mobile navigation
+ * - Active navigation links
+ * - Sticky header support
+ * - Smooth anchor scrolling
+ * - Back-to-top button
+ * - Automatic copyright year
+ * - External-link security
+ * - Accessible form validation
+ * - Image error handling
+ * - Compatibility with images.js
+ * - Accessibility and reduced-motion support
+ * - Safe, duplicate-resistant initialization
+ */
 
 (function () {
     "use strict";
 
-    const VERSION = "4.1";
+    const VERSION = "5.0";
+    const GLOBAL_KEY = "AVERRA";
 
-    /* Prevent accidental duplicate initialization. */
     if (
-        window.AVERRA &&
-        window.AVERRA.scriptVersion === VERSION
+        window[GLOBAL_KEY] &&
+        window[GLOBAL_KEY].scriptVersion === VERSION
     ) {
         return;
     }
 
-    const AVERRA = window.AVERRA || {};
-    AVERRA.version = VERSION;
-    AVERRA.scriptVersion = VERSION;
+    window[GLOBAL_KEY] = window[GLOBAL_KEY] || {};
+    window[GLOBAL_KEY].scriptVersion = VERSION;
 
-    const CONFIG = {
-        mobileBreakpoint: 900,
-        headerScrollThreshold: 20,
-        backToTopThreshold: 500,
-        imageErrorClass: "image-error",
-        fieldErrorClass: "field-error"
+    const SELECTORS = {
+        navigation: "#main-navigation, #main-nav, .main-navigation, .main-nav",
+        menuButton:
+            ".mobile-menu-button, .menu-toggle, .mobile-nav-toggle",
+        header: "header, .site-header, .main-header",
+        backToTop: "#back-to-top, .back-to-top",
+        year: "#current-year, #copyright-year, [data-current-year]",
+        forms: "form",
+        images: "img"
     };
 
-    const reducedMotion = window.matchMedia
+    const REDUCED_MOTION = window.matchMedia
         ? window.matchMedia("(prefers-reduced-motion: reduce)")
         : null;
 
-    /* ========================================================
-       1. SHARED HELPERS
-       ======================================================== */
-
-    function ready(callback) {
-        if (document.readyState === "loading") {
-            document.addEventListener(
-                "DOMContentLoaded",
-                callback,
-                { once: true }
-            );
-        } else {
-            callback();
-        }
-    }
-
-    function select(selector, parent) {
-        return (parent || document).querySelector(selector);
-    }
-
-    function selectAll(selector, parent) {
+    function selectAll(selector, root) {
         return Array.from(
-            (parent || document).querySelectorAll(selector)
+            (root || document).querySelectorAll(selector)
         );
     }
 
-    function isMobile() {
-        return window.innerWidth <= CONFIG.mobileBreakpoint;
+    function selectOne(selector, root) {
+        return (root || document).querySelector(selector);
     }
 
-    function prefersReducedMotion() {
-        return Boolean(reducedMotion && reducedMotion.matches);
-    }
-
-    function requestFrame(callback) {
-        if (typeof window.requestAnimationFrame === "function") {
-            window.requestAnimationFrame(callback);
-        } else {
-            callback();
-        }
+    function isReducedMotion() {
+        return Boolean(REDUCED_MOTION && REDUCED_MOTION.matches);
     }
 
     function safeFocus(element) {
-        if (!element || typeof element.focus !== "function") {
-            return;
-        }
+        if (!element) return;
 
         try {
             element.focus({ preventScroll: true });
@@ -121,1157 +74,715 @@
         }
     }
 
-    function getHeader() {
-        return select(".site-header");
-    }
-
-    function getNavigation() {
-        return select(
-            "#main-navigation, .main-navigation, .main-nav"
-        );
-    }
-
-    function getMenuButton() {
-        return select(
-            ".mobile-menu-button, .menu-toggle, .mobile-nav-toggle"
-        );
-    }
-
-    /* ========================================================
-       2. MOBILE NAVIGATION
-       ======================================================== */
+    /*
+     * MOBILE NAVIGATION
+     *
+     * Uses .active on the navigation and .menu-open on the body.
+     * Keep these class names consistent with style.css.
+     */
 
     function initializeMobileNavigation() {
-        const button = getMenuButton();
-        const navigation = getNavigation();
+        const buttons = selectAll(SELECTORS.menuButton);
+        const navigations = selectAll(SELECTORS.navigation);
 
-        if (!button || !navigation) {
-            return;
-        }
+        if (!buttons.length || !navigations.length) return;
 
-        if (!navigation.id) {
-            navigation.id = "main-navigation";
-        }
+        buttons.forEach(function (button, index) {
+            const navigation =
+                document.getElementById(
+                    button.getAttribute("aria-controls") || ""
+                ) ||
+                navigations[index] ||
+                navigations[0];
 
-        button.setAttribute("aria-controls", navigation.id);
+            if (!navigation) return;
 
-        if (
-            button.tagName.toLowerCase() === "button" &&
-            !button.hasAttribute("type")
-        ) {
-            button.type = "button";
-        }
-
-        function isOpen() {
-            return navigation.classList.contains("active");
-        }
-
-        function updateButton(open) {
-            button.setAttribute("aria-expanded", String(open));
-
-            button.setAttribute(
-                "aria-label",
-                open ? "Close navigation menu" : "Open navigation menu"
-            );
-
-            button.setAttribute(
-                "title",
-                open ? "Close navigation menu" : "Open navigation menu"
-            );
-        }
-
-        function closeMenu(returnFocus) {
-            navigation.classList.remove("active");
-            document.body.classList.remove("menu-open");
-            updateButton(false);
-
-            if (returnFocus && isMobile()) {
-                safeFocus(button);
+            if (!navigation.id) {
+                navigation.id = "main-navigation";
             }
-        }
 
-        function openMenu() {
-            if (!isMobile()) {
+            button.setAttribute("aria-controls", navigation.id);
+            button.setAttribute("aria-expanded", "false");
+            button.setAttribute("aria-label", "Open navigation menu");
+            button.setAttribute("type", "button");
+
+            if (!button.hasAttribute("aria-haspopup")) {
+                button.setAttribute("aria-haspopup", "true");
+            }
+
+            function isOpen() {
+                return (
+                    navigation.classList.contains("active") ||
+                    button.getAttribute("aria-expanded") === "true"
+                );
+            }
+
+            function setOpen(open, returnFocus) {
+                navigation.classList.toggle("active", open);
+                button.classList.toggle("active", open);
+                document.body.classList.toggle("menu-open", open);
+
+                button.setAttribute("aria-expanded", String(open));
+                button.setAttribute(
+                    "aria-label",
+                    open
+                        ? "Close navigation menu"
+                        : "Open navigation menu"
+                );
+
+                if (returnFocus) {
+                    safeFocus(button);
+                }
+            }
+
+            if (button.dataset.averraNavInitialized === "true") {
                 return;
             }
 
-            navigation.classList.add("active");
-            document.body.classList.add("menu-open");
-            updateButton(true);
-        }
+            button.dataset.averraNavInitialized = "true";
 
-        if (button.dataset.averraMenuInitialized !== "true") {
-            button.dataset.averraMenuInitialized = "true";
-
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-
-                if (isOpen()) {
-                    closeMenu(false);
-                } else {
-                    openMenu();
-                }
+            button.addEventListener("click", function () {
+                setOpen(!isOpen(), false);
             });
-        }
-
-        if (navigation.dataset.averraMenuInitialized !== "true") {
-            navigation.dataset.averraMenuInitialized = "true";
 
             navigation.addEventListener("click", function (event) {
-                if (
-                    event.target.closest("a") &&
-                    isMobile()
-                ) {
-                    closeMenu(false);
-                }
-            });
-        }
+                const link = event.target.closest("a");
 
-        if (document.body.dataset.averraMenuInitialized !== "true") {
-            document.body.dataset.averraMenuInitialized = "true";
+                if (!link) return;
 
-            document.addEventListener("click", function (event) {
-                if (!isMobile() || !isOpen()) {
-                    return;
-                }
+                const href = link.getAttribute("href") || "";
 
                 if (
-                    button.contains(event.target) ||
-                    navigation.contains(event.target)
+                    href.startsWith("#") ||
+                    link.hostname === window.location.hostname
                 ) {
-                    return;
+                    setOpen(false, false);
                 }
-
-                closeMenu(false);
             });
 
             document.addEventListener("keydown", function (event) {
                 if (event.key === "Escape" && isOpen()) {
-                    closeMenu(true);
+                    setOpen(false, true);
                 }
             });
-        }
 
-        if (!window.AVERRA_MENU_RESIZE_INITIALIZED) {
-            window.AVERRA_MENU_RESIZE_INITIALIZED = true;
+            document.addEventListener("click", function (event) {
+                if (!isOpen()) return;
 
-            let resizeScheduled = false;
-
-            window.addEventListener("resize", function () {
-                if (resizeScheduled) {
-                    return;
+                if (
+                    !navigation.contains(event.target) &&
+                    !button.contains(event.target)
+                ) {
+                    setOpen(false, false);
                 }
+            });
 
-                resizeScheduled = true;
+            if (!window.AVERRA_MENU_RESIZE_INITIALIZED) {
+                window.AVERRA_MENU_RESIZE_INITIALIZED = true;
 
-                requestFrame(function () {
-                    if (!isMobile()) {
-                        navigation.classList.remove("active");
+                window.addEventListener("resize", function () {
+                    if (window.innerWidth > 820) {
+                        navigations.forEach(function (nav) {
+                            nav.classList.remove("active");
+                        });
+
+                        buttons.forEach(function (menuButton) {
+                            menuButton.classList.remove("active");
+                            menuButton.setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
+                            menuButton.setAttribute(
+                                "aria-label",
+                                "Open navigation menu"
+                            );
+                        });
+
                         document.body.classList.remove("menu-open");
-                        updateButton(false);
                     }
-
-                    resizeScheduled = false;
                 });
-            }, { passive: true });
-        }
-
-        updateButton(isOpen());
+            }
+        });
     }
 
-    /* ========================================================
-       3. ACTIVE NAVIGATION LINKS
-       ======================================================== */
+    /*
+     * ACTIVE NAVIGATION LINKS
+     */
 
     function normalizePath(path) {
-        let value = path || "/";
+        if (!path) return "/";
 
-        try {
-            value = decodeURIComponent(value);
-        } catch (error) {
-            // Retain the original path.
+        let result = path.split("?")[0].split("#")[0];
+
+        if (result.endsWith("/index.html")) {
+            result = result.slice(0, -"index.html".length);
         }
 
-        value = value.replace(/\/+$/, "");
-
-        return value || "/";
-    }
-
-    function pageKey(path) {
-        const normalized = normalizePath(path);
-        const last = normalized.split("/").pop().toLowerCase();
-
-        if (
-            !last ||
-            last === "index" ||
-            last === "index.html"
-        ) {
-            return "index.html";
+        if (!result.endsWith("/") && !result.includes(".")) {
+            result += "/";
         }
 
-        return last;
+        return result;
     }
 
     function initializeActiveNavigation() {
-        const links = selectAll(
-            ".main-nav a[href], " +
-            ".main-navigation a[href], " +
-            "#main-navigation a[href]"
-        );
+        const currentPath = normalizePath(window.location.pathname);
 
-        const currentPage = pageKey(location.pathname);
+        selectAll(
+            SELECTORS.navigation + " a[href]"
+        ).forEach(function (link) {
+            const href = link.getAttribute("href");
 
-        links.forEach(function (link) {
-            let url;
+            if (
+                !href ||
+                href.startsWith("#") ||
+                href.startsWith("mailto:") ||
+                href.startsWith("tel:") ||
+                href.startsWith("javascript:")
+            ) {
+                return;
+            }
+
+            let linkUrl;
 
             try {
-                url = new URL(
-                    link.getAttribute("href"),
-                    location.href
-                );
+                linkUrl = new URL(href, window.location.href);
             } catch (error) {
                 return;
             }
 
-            if (url.origin !== location.origin) {
-                return;
-            }
+            if (linkUrl.origin !== window.location.origin) return;
 
-            const matches = pageKey(url.pathname) === currentPage;
+            const linkPath = normalizePath(linkUrl.pathname);
+            const isCurrent = linkPath === currentPath;
 
-            link.classList.toggle("active", matches);
-
-            if (matches) {
+            if (isCurrent) {
+                link.classList.add("active");
                 link.setAttribute("aria-current", "page");
             } else {
+                link.classList.remove("active");
                 link.removeAttribute("aria-current");
             }
         });
     }
 
-    /* ========================================================
-       4. STICKY HEADER
-       ======================================================== */
+    /*
+     * STICKY HEADER SUPPORT
+     *
+     * Adds .scrolled to the header after scrolling.
+     * Style this class in style.css if you want a visual change.
+     */
 
-    function initializeHeaderScroll() {
-        const header = getHeader();
+    function initializeStickyHeader() {
+        const headers = selectAll(SELECTORS.header);
 
-        if (!header) {
-            return;
+        if (!headers.length) return;
+
+        let ticking = false;
+
+        function updateHeader() {
+            const shouldBeScrolled = window.scrollY > 20;
+
+            headers.forEach(function (header) {
+                header.classList.toggle(
+                    "scrolled",
+                    shouldBeScrolled
+                );
+            });
+
+            ticking = false;
         }
 
-        let scheduled = false;
+        function requestHeaderUpdate() {
+            if (ticking) return;
 
-        function update() {
-            header.classList.toggle(
-                "scrolled",
-                window.scrollY > CONFIG.headerScrollThreshold
-            );
+            ticking = true;
 
-            scheduled = false;
-        }
-
-        function scheduleUpdate() {
-            if (scheduled) {
-                return;
+            if ("requestAnimationFrame" in window) {
+                window.requestAnimationFrame(updateHeader);
+            } else {
+                updateHeader();
             }
-
-            scheduled = true;
-            requestFrame(update);
         }
 
-        update();
-
-        if (header.dataset.averraScrollInitialized !== "true") {
-            header.dataset.averraScrollInitialized = "true";
+        if (!window.AVERRA_HEADER_SCROLL_INITIALIZED) {
+            window.AVERRA_HEADER_SCROLL_INITIALIZED = true;
 
             window.addEventListener(
                 "scroll",
-                scheduleUpdate,
+                requestHeaderUpdate,
                 { passive: true }
             );
         }
+
+        updateHeader();
     }
 
-    /* ========================================================
-       5. SAME-PAGE ANCHOR SCROLLING
-       ======================================================== */
+    /*
+     * SMOOTH SCROLLING
+     *
+     * Handles same-page anchor links and respects reduced-motion
+     * preferences. Links to other pages continue to work normally.
+     */
 
     function initializeSmoothScrolling() {
-        if (document.body.dataset.averraAnchorsInitialized === "true") {
-            return;
-        }
+        if (window.AVERRA_SMOOTH_SCROLL_INITIALIZED) return;
 
-        document.body.dataset.averraAnchorsInitialized = "true";
+        window.AVERRA_SMOOTH_SCROLL_INITIALIZED = true;
 
         document.addEventListener("click", function (event) {
-            if (
-                event.defaultPrevented ||
-                event.button !== 0 ||
-                event.metaKey ||
-                event.ctrlKey ||
-                event.shiftKey ||
-                event.altKey
-            ) {
-                return;
-            }
-
             const link = event.target.closest("a[href]");
 
+            if (!link) return;
+
+            const href = link.getAttribute("href");
+
             if (
-                !link ||
+                !href ||
+                !href.startsWith("#") ||
+                href === "#" ||
                 link.hasAttribute("download") ||
                 link.target === "_blank"
             ) {
                 return;
             }
 
-            const href = link.getAttribute("href");
-
-            if (!href || href === "#") {
-                return;
-            }
-
-            let url;
+            let target;
 
             try {
-                url = new URL(href, location.href);
+                target = document.querySelector(
+                    CSS.escape
+                        ? href
+                        : href.replace(
+                            /([^\w-])/g,
+                            "\\$1"
+                        )
+                );
             } catch (error) {
                 return;
             }
 
-            if (
-                url.origin !== location.origin ||
-                url.pathname !== location.pathname ||
-                !url.hash
-            ) {
-                return;
-            }
-
-            let id;
-
-            try {
-                id = decodeURIComponent(url.hash.slice(1));
-            } catch (error) {
-                return;
-            }
-
-            const target = document.getElementById(id);
-
-            if (!target) {
-                return;
-            }
+            if (!target) return;
 
             event.preventDefault();
 
-            const header = getHeader();
-            const headerHeight = header
-                ? header.getBoundingClientRect().height
-                : 0;
-
-            const top =
-                target.getBoundingClientRect().top +
-                window.scrollY -
-                headerHeight -
-                16;
-
-            window.scrollTo({
-                top: Math.max(0, top),
-                behavior: prefersReducedMotion() ? "auto" : "smooth"
+            target.scrollIntoView({
+                behavior: isReducedMotion() ? "auto" : "smooth",
+                block: "start"
             });
 
-            if (location.hash !== url.hash) {
-                history.pushState(null, "", url.hash);
-            }
-
-            const temporaryTabindex =
-                !target.hasAttribute("tabindex") &&
-                !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(
-                    target.tagName
-                );
-
-            if (temporaryTabindex) {
+            if (!target.hasAttribute("tabindex")) {
                 target.setAttribute("tabindex", "-1");
-
-                target.addEventListener("blur", function restore() {
-                    target.removeAttribute("tabindex");
-                    target.removeEventListener("blur", restore);
-                });
             }
 
             safeFocus(target);
+
+            if (window.history && window.history.pushState) {
+                window.history.pushState(null, "", href);
+            }
         });
     }
 
-    /* ========================================================
-       6. BACK-TO-TOP BUTTON
-       ======================================================== */
+    /*
+     * BACK-TO-TOP BUTTON
+     *
+     * Reuses an existing button if present; otherwise creates one.
+     */
 
     function initializeBackToTop() {
-        let button = select(".back-to-top");
+        let button = selectOne(SELECTORS.backToTop);
 
         if (!button) {
             button = document.createElement("button");
             button.type = "button";
+            button.id = "back-to-top";
             button.className = "back-to-top";
             button.textContent = "↑";
             button.setAttribute("aria-label", "Back to top");
-            button.setAttribute("title", "Back to top");
+            button.title = "Back to top";
+
             document.body.appendChild(button);
         }
 
-        if (button.dataset.averraBackToTopInitialized === "true") {
+        if (button.dataset.averraTopInitialized === "true") {
             return;
         }
 
-        button.dataset.averraBackToTopInitialized = "true";
-
-        let scheduled = false;
-
-        function update() {
-            const visible = window.scrollY > CONFIG.backToTopThreshold;
-
-            button.classList.toggle("visible", visible);
-            button.hidden = !visible;
-
-            scheduled = false;
-        }
-
-        function scheduleUpdate() {
-            if (scheduled) {
-                return;
-            }
-
-            scheduled = true;
-            requestFrame(update);
-        }
+        button.dataset.averraTopInitialized = "true";
+        button.hidden = true;
 
         button.addEventListener("click", function () {
             window.scrollTo({
                 top: 0,
-                behavior: prefersReducedMotion() ? "auto" : "smooth"
+                behavior: isReducedMotion() ? "auto" : "smooth"
             });
         });
 
+        let ticking = false;
+
+        function updateVisibility() {
+            button.hidden = window.scrollY < 350;
+            ticking = false;
+        }
+
+        function requestVisibilityUpdate() {
+            if (ticking) return;
+
+            ticking = true;
+
+            if ("requestAnimationFrame" in window) {
+                window.requestAnimationFrame(updateVisibility);
+            } else {
+                updateVisibility();
+            }
+        }
+
         window.addEventListener(
             "scroll",
-            scheduleUpdate,
+            requestVisibilityUpdate,
             { passive: true }
         );
 
-        update();
+        updateVisibility();
     }
 
-    /* ========================================================
-       7. COPYRIGHT YEAR
-       ======================================================== */
+    /*
+     * COPYRIGHT YEAR
+     *
+     * Supports #current-year, #copyright-year and
+     * [data-current-year].
+     */
 
     function initializeCurrentYear() {
-    const year = String(new Date().getFullYear());
+        const currentYear = new Date().getFullYear();
 
-    selectAll(
-        "#current-year, .current-year, [data-current-year]"
-    ).forEach(function (element) {
-        element.textContent = year;
-    });
-}
+        selectAll(SELECTORS.year).forEach(function (element) {
+            element.textContent = String(currentYear);
+        });
+    }
 
-    /* ========================================================
-       8. EXTERNAL LINK SECURITY
-       ======================================================== */
+    /*
+     * EXTERNAL LINK SECURITY
+     *
+     * Adds rel="noopener noreferrer" to external links that open
+     * a new tab. It does not change internal navigation links.
+     */
 
     function initializeExternalLinks() {
-        selectAll("a[href]").forEach(function (link) {
-            const href = link.getAttribute("href");
-
-            if (
-                !href ||
-                href.startsWith("#") ||
-                /^(mailto:|tel:|javascript:|data:)/i.test(href)
-            ) {
-                return;
-            }
-
-            let url;
+        selectAll('a[target="_blank"]').forEach(function (link) {
+            let linkUrl;
 
             try {
-                url = new URL(href, location.href);
+                linkUrl = new URL(link.href, window.location.href);
             } catch (error) {
                 return;
             }
 
             if (
-                !["http:", "https:"].includes(url.protocol) ||
-                url.origin === location.origin ||
-                link.target !== "_blank"
+                linkUrl.protocol !== "http:" &&
+                linkUrl.protocol !== "https:"
             ) {
                 return;
             }
 
-            const rel = new Set(
-                (link.getAttribute("rel") || "")
-                    .split(/\s+/)
-                    .filter(Boolean)
-            );
+            if (linkUrl.origin !== window.location.origin) {
+                const relValues = new Set(
+                    (link.getAttribute("rel") || "")
+                        .split(/\s+/)
+                        .filter(Boolean)
+                );
 
-            rel.add("noopener");
-            rel.add("noreferrer");
+                relValues.add("noopener");
+                relValues.add("noreferrer");
 
-            link.setAttribute("rel", Array.from(rel).join(" "));
+                link.setAttribute(
+                    "rel",
+                    Array.from(relValues).join(" ")
+                );
+            }
         });
     }
 
-    /* ========================================================
-       9. FORM VALIDATION HELPERS
-       ======================================================== */
-
-    function errorIdFor(field) {
-        if (!field.id) {
-            const name = (field.name || "field")
-                .replace(/[^a-zA-Z0-9_-]/g, "-");
-
-            field.id = "averra-" + name + "-" +
-                Math.random().toString(36).slice(2, 8);
-        }
-
-        return field.id + "-error";
-    }
-
-    function showFieldError(field, message) {
-        const errorId = errorIdFor(field);
-
-        field.setAttribute("aria-invalid", "true");
-
-        let error = document.getElementById(errorId);
-
-        if (!error) {
-            error = document.createElement("div");
-            error.id = errorId;
-            error.className = CONFIG.fieldErrorClass;
-            error.setAttribute("role", "alert");
-
-            const container =
-                field.closest(".form-field, .form-group") ||
-                field.parentElement;
-
-            if (container) {
-                container.appendChild(error);
-            }
-        }
-
-        error.textContent = message;
-
-        const descriptions = new Set(
-            (field.getAttribute("aria-describedby") || "")
-                .split(/\s+/)
-                .filter(Boolean)
-        );
-
-        descriptions.add(errorId);
-
-        field.setAttribute(
-            "aria-describedby",
-            Array.from(descriptions).join(" ")
-        );
-    }
-
-    function clearFieldError(field) {
-        field.removeAttribute("aria-invalid");
-
-        if (!field.id) {
-            return;
-        }
-
-        const errorId = field.id + "-error";
-        const error = document.getElementById(errorId);
-
-        if (error) {
-            error.remove();
-        }
-
-        const descriptions = (
-            field.getAttribute("aria-describedby") || ""
-        ).split(/\s+/).filter(Boolean);
-
-        const remaining = descriptions.filter(function (id) {
-            return id !== errorId;
-        });
-
-        if (remaining.length) {
-            field.setAttribute(
-                "aria-describedby",
-                remaining.join(" ")
-            );
-        } else {
-            field.removeAttribute("aria-describedby");
-        }
-    }
-
-    function validateForm(form) {
-        let valid = true;
-        let firstInvalid = null;
-
-        const fields = selectAll(
-            "input, textarea, select",
-            form
-        );
-
-        fields.forEach(clearFieldError);
-
-        function invalidate(field, message) {
-            showFieldError(field, message);
-            valid = false;
-
-            if (!firstInvalid) {
-                firstInvalid = field;
-            }
-        }
-
-        /* Required radio groups. */
-        const radioGroups = new Map();
-
-        fields.forEach(function (field) {
-            if (
-                field.type === "radio" &&
-                field.required &&
-                field.name
-            ) {
-                if (!radioGroups.has(field.name)) {
-                    radioGroups.set(field.name, []);
-                }
-
-                radioGroups.get(field.name).push(field);
-            }
-        });
-
-        radioGroups.forEach(function (radios) {
-            if (!radios.some(function (radio) {
-                return radio.checked;
-            })) {
-                invalidate(radios[0], "Please select an option.");
-            }
-        });
-
-        fields.forEach(function (field) {
-            if (field.disabled || field.type === "radio") {
-                return;
-            }
-
-            if (field.required) {
-                if (
-                    field.type === "checkbox" &&
-                    !field.checked
-                ) {
-                    invalidate(field, "Please tick this checkbox.");
-                    return;
-                }
-
-                if (
-                    field.type !== "checkbox" &&
-                    !String(field.value || "").trim()
-                ) {
-                    invalidate(field, "This field is required.");
-                    return;
-                }
-            }
-
-            if (
-                field.type !== "checkbox" &&
-                field.value !== "" &&
-                !field.validity.valid
-            ) {
-                let message = "Please check this field.";
-
-                if (
-                    field.type === "email" &&
-                    field.validity.typeMismatch
-                ) {
-                    message = "Please enter a valid email address.";
-                } else if (field.validity.tooShort) {
-                    message = "Please enter more information.";
-                } else if (field.validity.tooLong) {
-                    message = "Your entry is too long.";
-                } else if (field.validity.patternMismatch) {
-                    message = "Please use the requested format.";
-                }
-
-                invalidate(field, message);
-            }
-        });
-
-        if (!valid && firstInvalid) {
-            safeFocus(firstInvalid);
-        }
-
-        return valid;
-    }
-
-    /* ========================================================
-       10. FORM HANDLING
-       ======================================================== */
+    /*
+     * FORM VALIDATION
+     *
+     * Uses browser-native validation and adds accessible inline
+     * messages. Forms that use novalidate are left alone.
+     * Existing submission behavior is preserved.
+     */
 
     function initializeFormValidation() {
-        selectAll("form").forEach(function (form) {
-            if (form.dataset.averraFormInitialized === "true") {
+        selectAll(SELECTORS.forms).forEach(function (form) {
+            if (
+                form.dataset.averraFormInitialized === "true" ||
+                form.hasAttribute("novalidate")
+            ) {
                 return;
             }
 
             form.dataset.averraFormInitialized = "true";
 
             const fields = selectAll(
-                "input, textarea, select",
+                "input, select, textarea",
                 form
-            );
+            ).filter(function (field) {
+                return ![
+                    "submit",
+                    "button",
+                    "reset",
+                    "hidden"
+                ].includes((field.type || "").toLowerCase());
+            });
+
+            function clearFieldError(field) {
+                field.removeAttribute("aria-invalid");
+
+                const errorId = field.dataset.averraErrorId;
+
+                if (errorId) {
+                    const errorElement =
+                        document.getElementById(errorId);
+
+                    if (errorElement) {
+                        errorElement.remove();
+                    }
+
+                    delete field.dataset.averraErrorId;
+                }
+            }
+
+            function showFieldError(field, message) {
+                clearFieldError(field);
+
+                field.setAttribute("aria-invalid", "true");
+
+                const error = document.createElement("span");
+                const errorId =
+                    "averra-error-" +
+                    Math.random().toString(36).slice(2, 10);
+
+                error.id = errorId;
+                error.className = "form-field-error";
+                error.setAttribute("role", "alert");
+                error.textContent = message;
+
+                field.dataset.averraErrorId = errorId;
+                field.insertAdjacentElement("afterend", error);
+
+                const existingDescribedBy =
+                    field.getAttribute("aria-describedby") || "";
+
+                const describedBy = new Set(
+                    existingDescribedBy
+                        .split(/\s+/)
+                        .filter(Boolean)
+                );
+
+                describedBy.add(errorId);
+
+                field.setAttribute(
+                    "aria-describedby",
+                    Array.from(describedBy).join(" ")
+                );
+            }
+
+            function validateField(field) {
+                clearFieldError(field);
+
+                if (field.disabled) return true;
+
+                if (field.validity.valid) return true;
+
+                let message = "Please check this field.";
+
+                if (field.validity.valueMissing) {
+                    message = "Please complete this required field.";
+                } else if (field.validity.typeMismatch) {
+                    message =
+                        field.type === "email"
+                            ? "Please enter a valid email address."
+                            : "Please enter a valid value.";
+                } else if (field.validity.patternMismatch) {
+                    message = "Please use the requested format.";
+                } else if (field.validity.tooShort) {
+                    message =
+                        "Please enter at least " +
+                        field.minLength +
+                        " characters.";
+                } else if (field.validity.tooLong) {
+                    message =
+                        "Please enter no more than " +
+                        field.maxLength +
+                        " characters.";
+                } else if (field.validity.rangeUnderflow) {
+                    message = "The value is below the permitted minimum.";
+                } else if (field.validity.rangeOverflow) {
+                    message = "The value exceeds the permitted maximum.";
+                } else if (field.validity.stepMismatch) {
+                    message = "Please enter an allowed value.";
+                }
+
+                showFieldError(field, message);
+                return false;
+            }
 
             fields.forEach(function (field) {
-                ["input", "change"].forEach(function (eventName) {
-                    field.addEventListener(eventName, function () {
-                        if (field.type === "radio") {
-                            const radios = fields.filter(function (item) {
-                                return (
-                                    item.type === "radio" &&
-                                    item.name === field.name
-                                );
-                            });
+                field.addEventListener("input", function () {
+                    if (field.getAttribute("aria-invalid") === "true") {
+                        validateField(field);
+                    }
+                });
 
-                            radios.forEach(clearFieldError);
-                            return;
-                        }
-
-                        if (field.type === "checkbox") {
-                            if (!field.required || field.checked) {
-                                clearFieldError(field);
-                            }
-
-                            return;
-                        }
-
-                        if (field.validity.valid) {
-                            clearFieldError(field);
-                        }
-                    });
+                field.addEventListener("change", function () {
+                    if (field.getAttribute("aria-invalid") === "true") {
+                        validateField(field);
+                    }
                 });
             });
 
             form.addEventListener("submit", function (event) {
-                if (!validateForm(form)) {
-                    event.preventDefault();
-                    return;
-                }
+                let firstInvalidField = null;
 
-                const action = (
-                    form.getAttribute("action") || ""
-                ).trim();
-
-                const placeholderAction =
-                    !action ||
-                    action === "#" ||
-                    /^javascript:/i.test(action);
-
-                if (placeholderAction) {
-                    event.preventDefault();
-
-                    let notice = select(
-                        "[data-form-configuration-notice]",
-                        form
-                    );
-
-                    if (!notice) {
-                        notice = document.createElement("p");
-
-                        notice.setAttribute(
-                            "data-form-configuration-notice",
-                            ""
-                        );
-
-                        notice.className = "form-notice";
-                        notice.setAttribute("role", "status");
-
-                        form.appendChild(notice);
+                fields.forEach(function (field) {
+                    if (!validateField(field) && !firstInvalidField) {
+                        firstInvalidField = field;
                     }
+                });
 
-                    notice.textContent =
-                        "This form is not connected yet. Please contact " +
-                        "info@averrastaffing.co.uk until online submissions " +
-                        "are configured.";
-
-                    return;
+                if (firstInvalidField) {
+                    event.preventDefault();
+                    safeFocus(firstInvalidField);
                 }
-
-                /*
-                 * For a real action URL, let the browser submit the form.
-                 * Do not simulate success or claim an email was sent.
-                 */
             });
         });
     }
 
-    /* ========================================================
-       11. IMAGE CATALOGUE COMPATIBILITY
-       ======================================================== */
-
-    function normalizeImageRecord(record) {
-        if (typeof record === "string") {
-            return {
-                src: record,
-                alt: ""
-            };
-        }
-
-        if (!record || typeof record !== "object") {
-            return null;
-        }
-
-        const src =
-            record.src ||
-            record.path ||
-            record.file ||
-            record.url ||
-            record.filename ||
-            "";
-
-        if (typeof src !== "string" || !src.trim()) {
-            return null;
-        }
-
-        return {
-            src: src.trim(),
-            alt: typeof record.alt === "string"
-                ? record.alt
-                : ""
-        };
-    }
-
-    function resolveConfiguredImage(section, key) {
-        const root =
-            window.AVERRA_IMAGES ||
-            window.imageData ||
-            window.IMAGE_DATA;
-
-        if (typeof window.getImageUrl === "function") {
-            try {
-                const result = window.getImageUrl(key);
-
-                if (typeof result === "string" && result.trim()) {
-                    return normalizeImageRecord(result);
-                }
-            } catch (error) {
-                // Continue to other supported interfaces.
-            }
-        }
-
-        if (typeof window.getImageByKey === "function") {
-            try {
-                const result = window.getImageByKey(section, key);
-
-                if (result) {
-                    return normalizeImageRecord(result);
-                }
-            } catch (error) {
-                // Continue to other supported interfaces.
-            }
-        }
-
-        if (typeof window.getImage === "function") {
-            try {
-                const result = window.getImage(key);
-
-                if (result) {
-                    return normalizeImageRecord(result);
-                }
-            } catch (error) {
-                // Continue to the catalogue object.
-            }
-        }
-
-        if (!root || typeof root !== "object") {
-            return null;
-        }
-
-        let record = null;
-
-        if (
-            section &&
-            root[section] &&
-            typeof root[section] === "object"
-        ) {
-            record = root[section][key];
-        }
-
-        if (!record) {
-            record = root[key];
-        }
-
-        return normalizeImageRecord(record);
-    }
-
-    function initializeConfiguredImages() {
-        selectAll(
-            "img[data-image-section][data-image-name], " +
-            "img[data-image-key]"
-        ).forEach(function (img) {
-            const section =
-                img.getAttribute("data-image-section") || "";
-
-            const key =
-                img.getAttribute("data-image-name") ||
-                img.getAttribute("data-image-key");
-
-            if (!key) {
-                return;
-            }
-
-            const image = resolveConfiguredImage(section, key);
-
-            if (!image || !image.src) {
-                return;
-            }
-
-            if (img.getAttribute("src") !== image.src) {
-                img.setAttribute("src", image.src);
-            }
-
-            if (
-                image.alt &&
-                !img.hasAttribute("data-preserve-alt")
-            ) {
-                img.alt = image.alt;
-            }
-        });
-    }
-
-    /* ========================================================
-       12. IMAGE ERROR HANDLING
-       ======================================================== */
+    /*
+     * IMAGE ERROR HANDLING
+     *
+     * Leaves images.js in control of image selection.
+     * This only marks genuinely failed images and avoids endless
+     * error loops. It does not invent replacement image filenames.
+     */
 
     function initializeImageHandling() {
-        function attachImageHandlers(img) {
-            if (img.dataset.averraImageInitialized === "true") {
+        function handleImage(image) {
+            if (
+                image.dataset.averraImageInitialized === "true"
+            ) {
                 return;
             }
 
-            img.dataset.averraImageInitialized = "true";
+            image.dataset.averraImageInitialized = "true";
 
-            img.addEventListener("error", function () {
-                img.classList.add(CONFIG.imageErrorClass);
-                img.setAttribute("data-image-error", "true");
+            image.addEventListener("error", function () {
+                image.classList.add("image-load-error");
+                image.setAttribute("data-image-error", "true");
+
+                if (!image.hasAttribute("alt")) {
+                    image.setAttribute("alt", "");
+                }
             });
 
-            img.addEventListener("load", function () {
-                img.classList.remove(CONFIG.imageErrorClass);
-                img.removeAttribute("data-image-error");
+            image.addEventListener("load", function () {
+                image.classList.remove("image-load-error");
+                image.removeAttribute("data-image-error");
             });
 
-            if (
-                img.complete &&
-                img.naturalWidth === 0 &&
-                (img.currentSrc || img.src)
-            ) {
-                img.classList.add(CONFIG.imageErrorClass);
-                img.setAttribute("data-image-error", "true");
+            if (image.complete && image.naturalWidth === 0 && image.src) {
+                image.classList.add("image-load-error");
+                image.setAttribute("data-image-error", "true");
             }
         }
 
-        selectAll("img").forEach(attachImageHandlers);
+        selectAll(SELECTORS.images).forEach(handleImage);
 
-        if (typeof MutationObserver !== "function") {
+        if (
+            !window.MutationObserver ||
+            window.AVERRA_IMAGE_OBSERVER_INITIALIZED
+        ) {
             return;
         }
+
+        window.AVERRA_IMAGE_OBSERVER_INITIALIZED = true;
 
         const observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 mutation.addedNodes.forEach(function (node) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) {
-                        return;
+                    if (node.nodeType !== 1) return;
+
+                    if (node.matches && node.matches("img")) {
+                        handleImage(node);
                     }
 
-                    if (node.matches("img")) {
-                        attachImageHandlers(node);
+                    if (node.querySelectorAll) {
+                        selectAll("img", node).forEach(handleImage);
                     }
-
-                    selectAll("img", node).forEach(attachImageHandlers);
                 });
             });
         });
 
-        observer.observe(document.body, {
+        observer.observe(document.documentElement, {
             childList: true,
             subtree: true
         });
     }
 
-    /* ========================================================
-       13. ACCESSIBILITY
-       ======================================================== */
+    /*
+     * ACCESSIBILITY IMPROVEMENTS
+     */
 
     function initializeAccessibility() {
-        if (document.body.dataset.averraAccessibilityInitialized === "true") {
-            return;
-        }
-
-        document.body.dataset.averraAccessibilityInitialized = "true";
-
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Tab") {
-                document.body.classList.add("keyboard-navigation");
-            }
+        // Ensure buttons inside forms do not submit by accident
+        // unless they are explicitly submit buttons.
+        selectAll("form button:not([type])").forEach(function (button) {
+            button.setAttribute("type", "button");
         });
 
-        ["mousedown", "touchstart"].forEach(function (eventName) {
-            document.addEventListener(
-                eventName,
-                function () {
-                    document.body.classList.remove(
-                        "keyboard-navigation"
-                    );
-                },
-                { passive: true }
-            );
-        });
+        // Add accessible names to icon-only links where a title
+        // already exists, without guessing what the link does.
+        selectAll("a[title]:not([aria-label])").forEach(function (link) {
+            const visibleText = (link.textContent || "").trim();
 
-        selectAll("button, a").forEach(function (element) {
-            const hasName =
-                element.hasAttribute("aria-label") ||
-                element.hasAttribute("aria-labelledby") ||
-                element.hasAttribute("title") ||
-                element.textContent.trim() !== "";
-
-            if (hasName) {
-                return;
-            }
-
-            const image = select("img[alt]", element);
-
-            if (image && image.alt.trim()) {
-                element.setAttribute("aria-label", image.alt.trim());
+            if (!visibleText) {
+                link.setAttribute("aria-label", link.title);
             }
         });
     }
 
-    /* ========================================================
-       14. REDUCED MOTION
-       ======================================================== */
+    /*
+     * PAGE INITIALIZATION
+     */
 
-    function initializeReducedMotion() {
-        if (!reducedMotion) {
-            return;
-        }
-
-        function update() {
-            document.documentElement.classList.toggle(
-                "reduced-motion",
-                reducedMotion.matches
-            );
-        }
-
-        update();
-
-        if (typeof reducedMotion.addEventListener === "function") {
-            reducedMotion.addEventListener("change", update);
-        } else if (typeof reducedMotion.addListener === "function") {
-            reducedMotion.addListener(update);
-        }
-    }
-
-    /* ========================================================
-       15. PAGE LOAD STATE
-       ======================================================== */
-
-    function initializePageLoad() {
-        requestFrame(function () {
-            document.documentElement.classList.add("page-loaded");
-        });
-    }
-
-    /* ========================================================
-       16. BROWSER DIAGNOSTICS
-       ======================================================== */
-
-    function diagnostics() {
-        const images = selectAll("img");
-        const forms = selectAll("form");
-
-        const report = {
-            version: VERSION,
-            page: location.pathname,
-            title: document.title,
-            navigationFound: Boolean(getNavigation()),
-            menuButtonFound: Boolean(getMenuButton()),
-            headerFound: Boolean(getHeader()),
-            imageCount: images.length,
-            brokenImages: images
-                .filter(function (img) {
-                    return (
-                        img.complete &&
-                        img.naturalWidth === 0 &&
-                        Boolean(img.currentSrc || img.src)
-                    );
-                })
-                .map(function (img) {
-                    return img.currentSrc || img.src;
-                }),
-            formCount: forms.length,
-            formsWithoutAction: forms
-                .filter(function (form) {
-                    const action = (
-                        form.getAttribute("action") || ""
-                    ).trim();
-
-                    return !action || action === "#";
-                })
-                .length
-        };
-
-        console.table(report);
-
-        return report;
-    }
-
-    /* ========================================================
-       17. INITIALIZE
-       ======================================================== */
-
-    function initializeWebsite() {
+    function initializePage() {
         initializeMobileNavigation();
         initializeActiveNavigation();
-        initializeHeaderScroll();
+        initializeStickyHeader();
         initializeSmoothScrolling();
         initializeBackToTop();
         initializeCurrentYear();
         initializeExternalLinks();
         initializeFormValidation();
-        initializeConfiguredImages();
         initializeImageHandling();
         initializeAccessibility();
-        initializeReducedMotion();
-        initializePageLoad();
 
-        AVERRA.diagnostics = diagnostics;
-
-        document.documentElement.setAttribute(
-            "data-averra-script",
-            VERSION
-        );
+        document.documentElement.classList.add("averra-js-enabled");
+        document.documentElement.dataset.averraScriptVersion = VERSION;
     }
 
-    AVERRA.initialize = initializeWebsite;
-    AVERRA.diagnostics = diagnostics;
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializePage,
+            { once: true }
+        );
+    } else {
+        initializePage();
+    }
 
-    window.AVERRA = AVERRA;
-
-    ready(initializeWebsite);
+    // Public methods for optional use by other site scripts.
+    window.AVERRA.initialize = initializePage;
+    window.AVERRA.updateCurrentYear = initializeCurrentYear;
+    window.AVERRA.updateActiveNavigation = initializeActiveNavigation;
 
 })();
-```
-
-function initializeCurrentYear() {
-    const year = String(new Date().getFullYear());
-
-    selectAll(
-        "#current-year, .current-year, [data-current-year]"
-    ).forEach(function (element) {
-        element.textContent = year;
-    });
-}
-
-

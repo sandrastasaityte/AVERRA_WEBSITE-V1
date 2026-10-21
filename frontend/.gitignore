@@ -1,3 +1,4 @@
+
 # ============================================================
 # AVERRA STAFFING SOLUTIONS LTD
 # Git ignore rules
@@ -54,8 +55,11 @@ build/
 coverage/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+htmlcov/
+*.egg-info/
 
-# Node.js dependencies, if used
+# Node.js dependencies
 node_modules/
 
 # Local exports and private uploads

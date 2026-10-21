@@ -2,24 +2,30 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/routes/jobs.py
+Version: 2.0.0
 
 Public job vacancy API routes.
 
-Only published vacancies that have not passed their
-closing date are available through the public API.
-Job-management routes require a separate authenticated router.
+Only published vacancies that have not passed their closing date
+are available through the public API.
+
+Job-management routes must use a separate authenticated router.
 """
 
+import logging
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from sqlalchemy import or_, select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
-from app.models.job import Job
+from app.models.jobs import Job
 from app.schemas.jobs import JobResponse
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/jobs",
@@ -28,8 +34,7 @@ router = APIRouter(
 
 
 def _get_public_job_statement():
-    """Build a query for currently available public vacancies."""
-
+    """Build a query for published vacancies that have not expired."""
     now = datetime.now(timezone.utc)
 
     return select(Job).where(
@@ -44,6 +49,7 @@ def _get_public_job_statement():
 @router.get(
     "",
     response_model=list[JobResponse],
+    status_code=status.HTTP_200_OK,
 )
 def list_published_jobs(
     skip: int = Query(default=0, ge=0),
@@ -54,17 +60,27 @@ def list_published_jobs(
 
     statement = (
         _get_public_job_statement()
-        .order_by(Job.created_at.desc())
+        .order_by(Job.created_at.desc(), Job.id.desc())
         .offset(skip)
         .limit(limit)
     )
 
-    return list(db.scalars(statement).all())
+    try:
+        return list(db.scalars(statement).all())
+
+    except SQLAlchemyError:
+        logger.exception("Failed to retrieve public job vacancies.")
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to retrieve job vacancies. Please try again later.",
+        ) from None
 
 
 @router.get(
     "/{job_id}",
     response_model=JobResponse,
+    status_code=status.HTTP_200_OK,
 )
 def get_published_job(
     job_id: int = Path(..., ge=1),
@@ -72,11 +88,21 @@ def get_published_job(
 ) -> Job:
     """Return one published vacancy that has not expired."""
 
-    statement = _get_public_job_statement().where(
-        Job.id == job_id
-    )
+    statement = _get_public_job_statement().where(Job.id == job_id)
 
-    job = db.scalars(statement).first()
+    try:
+        job = db.scalars(statement).first()
+
+    except SQLAlchemyError:
+        logger.exception(
+            "Failed to retrieve public job vacancy with ID %s.",
+            job_id,
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to retrieve this job vacancy. Please try again later.",
+        ) from None
 
     if job is None:
         raise HTTPException(
@@ -87,7 +113,7 @@ def get_published_job(
     return job
 
 
-# IMPORTANT:
-# Do not expose public create, update or delete endpoints.
-# Implement those operations in a separate authenticated
-# administrator router before deploying job management.
+# Security:
+# Do not add public create, update, or delete endpoints here.
+# Job-management operations belong in a separately authenticated
+# administrator router with appropriate authorization checks.

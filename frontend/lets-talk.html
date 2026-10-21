@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -10,6 +11,7 @@
     <meta name="description" content="Contact AVERRA Staffing Solutions Ltd to discuss remote staffing, outsourcing and skilled professionals based in India for UK businesses.">
     <meta name="robots" content="index, follow">
     <meta name="author" content="AVERRA Staffing Solutions Ltd">
+
     <link rel="canonical" href="https://averrastaffing.co.uk/lets-talk.html">
 
     <meta property="og:type" content="website">
@@ -18,30 +20,32 @@
     <meta property="og:title" content="Let's Talk | AVERRA Staffing Solutions Ltd">
     <meta property="og:description" content="Discuss your business requirements and explore remote staffing and outsourcing solutions with AVERRA.">
     <meta property="og:url" content="https://averrastaffing.co.uk/lets-talk.html">
-    <meta property="og:image" content="https://averrastaffing.co.uk/images/about-global-network.jpg">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/image14.jpg">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Let's Talk | AVERRA Staffing Solutions Ltd">
     <meta name="twitter:description" content="Connect with AVERRA to explore remote staffing and outsourcing solutions for your business.">
-    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/about-global-network.jpg">
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/image14.jpg">
 
     <link rel="stylesheet" href="style.css">
-    <script src="images.js" defer></script>
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+
+<script src="images/images.js" defer></script>
+<script src="images/jobs.js" defer></script>
+<script src="script.js" defer></script>
 
     <style>
         :root {
-            --navy: #0b1f33;
-            --navy-dark: #071522;
-            --blue: #1d5f91;
-            --gold: #c89b3c;
-            --gold-light: #e0b95f;
-            --text: #172b40;
-            --muted: #5b6878;
-            --border: #e1e7ef;
-            --background: #f6f8fb;
-            --white: #ffffff;
-            --container: 1180px;
+            --contact-navy: #0b1f33;
+            --contact-navy-dark: #071522;
+            --contact-blue: #1d5f91;
+            --contact-blue-hover: #164b73;
+            --contact-text: #172b40;
+            --contact-muted: #5b6878;
+            --contact-border: #e1e7ef;
+            --contact-background: #f6f8fb;
+            --contact-white: #ffffff;
+            --contact-container: 1180px;
         }
 
         .contact-page,
@@ -52,8 +56,8 @@
         .contact-page {
             margin: 0;
             overflow-x: clip;
-            background: var(--white);
-            color: var(--text);
+            background: var(--contact-white);
+            color: var(--contact-text);
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             line-height: 1.65;
@@ -76,7 +80,10 @@
         }
 
         .contact-container {
-            width: min(var(--container), calc(100% - 40px));
+            width: min(
+                var(--contact-container),
+                calc(100% - 40px)
+            );
             margin-inline: auto;
         }
 
@@ -87,21 +94,24 @@
             z-index: 1000;
             padding: 12px 16px;
             border-radius: 6px;
-            background: var(--white);
-            color: var(--navy);
+            background: var(--contact-white);
+            color: var(--contact-navy);
         }
 
         .skip-link:focus {
             top: 15px;
         }
 
-        /* Header and branding */
+        /* =========================================
+           HEADER AND BRAND
+           Brand wording intentionally unchanged.
+           ========================================= */
 
         .contact-header {
             position: relative;
             z-index: 100;
-            border-bottom: 1px solid var(--border);
-            background: var(--white);
+            border-bottom: 1px solid var(--contact-border);
+            background: var(--contact-white);
         }
 
         .contact-header-inner {
@@ -112,28 +122,39 @@
             gap: 25px;
         }
 
-        .contact-brand {
+        .contact-header .brand {
             display: inline-flex;
             flex-shrink: 0;
             flex-direction: column;
             justify-content: center;
-            gap: 2px;
-            color: var(--navy);
+            max-width: 360px;
+            color: var(--contact-navy);
+            font-size: 1.05rem;
+            font-weight: 900;
+            line-height: 1.3;
+            letter-spacing: 0.015em;
             text-decoration: none;
-            line-height: 1.2;
         }
 
-        .contact-brand-name {
-            font-size: 1.7rem;
-            font-weight: 800;
-            letter-spacing: .13em;
+        .contact-header .brand span {
+            display: block;
+            margin-top: 5px;
+            color: var(--contact-muted);
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            line-height: 1.5;
+            text-transform: uppercase;
         }
 
-        .contact-brand-description {
-            color: #a87c23;
-            font-size: .59rem;
-            font-weight: 700;
-            letter-spacing: .105em;
+        .contact-header .brand:hover {
+            color: var(--contact-blue);
+        }
+
+        .contact-header .brand:focus-visible {
+            outline: 2px solid var(--contact-blue);
+            outline-offset: 5px;
+            border-radius: 3px;
         }
 
         .contact-navigation {
@@ -146,28 +167,48 @@
 
         .contact-navigation a {
             padding: 9px 0;
-            color: var(--navy);
-            font-size: .91rem;
+            color: var(--contact-navy);
+            font-size: 0.91rem;
             font-weight: 600;
             text-decoration: none;
-            transition: color .2s ease;
+            transition: color 0.2s ease;
         }
 
-        .contact-navigation a:hover,
-        .contact-navigation a[aria-current="page"] {
-            color: var(--blue);
+        .contact-navigation a:not(.nav-contact):hover,
+        .contact-navigation a[aria-current="page"]:not(.nav-contact) {
+            color: var(--contact-blue);
         }
+
+        /* Blue Let’s Talk navigation button */
 
         .contact-navigation .nav-contact {
-            padding: 10px 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 19px;
+            border: 1px solid var(--contact-blue);
             border-radius: 6px;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--contact-blue);
+            color: #ffffff;
+            font-weight: 700;
+            line-height: 1.4;
+            text-decoration: none;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
         }
 
         .contact-navigation .nav-contact:hover {
-            background: var(--blue);
-            color: var(--white);
+            transform: translateY(-1px);
+            border-color: var(--contact-blue-hover);
+            background: var(--contact-blue-hover);
+            color: #ffffff;
+        }
+
+        .contact-navigation .nav-contact[aria-current="page"] {
+            background: var(--contact-blue);
+            color: #ffffff;
         }
 
         .contact-menu-toggle {
@@ -178,9 +219,9 @@
             justify-content: center;
             flex-direction: column;
             gap: 5px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--contact-border);
             border-radius: 7px;
-            background: var(--white);
+            background: var(--contact-white);
             cursor: pointer;
         }
 
@@ -188,58 +229,14 @@
             width: 20px;
             height: 2px;
             border-radius: 2px;
-            background: var(--navy);
+            background: var(--contact-navy);
         }
 
-/* AVERRA BRAND NAME AND TAGLINE */
+        /* =========================================
+           BUTTONS
+           ========================================= */
 
-.brand {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    color: var(--navy, #0b1f33);
-    text-decoration: none;
-    font-size: 1.05rem;
-    font-weight: 800;
-    line-height: 1.3;
-    letter-spacing: 0.015em;
-}
-
-.brand span {
-    display: block;
-    margin-top: 5px;
-    color: var(--muted, #647386);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    line-height: 1.5;
-    text-transform: uppercase;
-}
-
-.brand:hover {
-    color: var(--blue, #1d5f91);
-}
-
-.brand:focus-visible {
-    outline: 2px solid var(--gold, #c89b3c);
-    outline-offset: 5px;
-    border-radius: 3px;
-}
-
-@media (max-width: 520px) {
-    .brand {
-        font-size: 0.9rem;
-    }
-
-    .brand span {
-        font-size: 0.58rem;
-        letter-spacing: 0.04em;
-    }
-}
-
-        /* Buttons */
-
-        .contact-button {
+        .contact-page .contact-button {
             display: inline-flex;
             min-height: 49px;
             align-items: center;
@@ -249,46 +246,55 @@
             border: 1px solid transparent;
             border-radius: 7px;
             font: inherit;
-            font-size: .94rem;
+            font-size: 0.94rem;
             font-weight: 700;
             line-height: 1.35;
             text-align: center;
             text-decoration: none;
             cursor: pointer;
-            transition: background .2s ease, transform .2s ease;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
         }
 
-        .contact-button:hover {
+        .contact-page .contact-button:hover {
             transform: translateY(-2px);
         }
 
-        .button-gold {
-            background: var(--gold);
-            color: var(--navy-dark);
+        .contact-page .button-primary {
+            border-color: var(--contact-blue);
+            background: var(--contact-blue);
+            color: #ffffff;
         }
 
-        .button-gold:hover {
-            background: var(--gold-light);
+        .contact-page .button-primary:hover {
+            border-color: var(--contact-blue-hover);
+            background: var(--contact-blue-hover);
+            color: #ffffff;
         }
 
-        .button-outline {
-            border-color: rgba(255, 255, 255, .6);
+        .contact-page .button-outline {
+            border-color: rgba(255, 255, 255, 0.65);
             background: transparent;
-            color: var(--white);
+            color: #ffffff;
         }
 
-        .button-outline:hover {
-            background: rgba(255, 255, 255, .1);
+        .contact-page .button-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
 
-        .contact-button:focus-visible,
-        .contact-navigation a:focus-visible,
+        .contact-page .contact-button:focus-visible,
+        .contact-page .contact-navigation a:focus-visible,
         .contact-page a:focus-visible {
-            outline: 3px solid var(--gold-light);
+            outline: 3px solid #75b9e7;
             outline-offset: 4px;
         }
 
-        /* Hero */
+        /* =========================================
+           HERO
+           ========================================= */
 
         .contact-hero {
             padding: 82px 0;
@@ -296,21 +302,23 @@
             background:
                 radial-gradient(
                     circle at 85% 15%,
-                    rgba(200, 155, 60, .2),
+                    rgba(29, 95, 145, 0.28),
                     transparent 32%
                 ),
                 linear-gradient(
                     135deg,
-                    var(--navy-dark),
-                    var(--navy) 65%,
+                    var(--contact-navy-dark),
+                    var(--contact-navy) 65%,
                     #123b59
                 );
-            color: var(--white);
+            color: #ffffff;
         }
 
         .contact-hero-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+            grid-template-columns:
+                minmax(0, 1.1fr)
+                minmax(280px, 0.9fr);
             align-items: center;
             gap: 55px;
         }
@@ -318,25 +326,25 @@
         .contact-eyebrow {
             display: inline-block;
             margin-bottom: 15px;
-            color: var(--gold-light);
-            font-size: .77rem;
+            color: #9bc9eb;
+            font-size: 0.77rem;
             font-weight: 800;
-            letter-spacing: .15em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
         .contact-hero h1 {
             max-width: 700px;
             margin: 0 0 23px;
-            color: var(--white);
+            color: #ffffff;
             font-size: clamp(2.6rem, 5vw, 4.35rem);
             line-height: 1.09;
-            letter-spacing: -.04em;
+            letter-spacing: -0.04em;
         }
 
         .contact-hero h1 span {
             display: block;
-            color: var(--gold-light);
+            color: #a8d5f5;
         }
 
         .contact-hero-description {
@@ -362,9 +370,9 @@
             min-height: 300px;
             max-height: 420px;
             object-fit: cover;
-            border: 1px solid rgba(255, 255, 255, .15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, .25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
         }
 
         .contact-image-fallback {
@@ -373,16 +381,14 @@
             align-items: center;
             justify-content: center;
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, .15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            background:
-                radial-gradient(
-                    circle at 80% 20%,
-                    rgba(200, 155, 60, .25),
-                    transparent 35%
-                ),
-                linear-gradient(135deg, #123b59, var(--navy-dark));
-            color: var(--white);
+            background: linear-gradient(
+                135deg,
+                #123b59,
+                var(--contact-navy-dark)
+            );
+            color: #ffffff;
             text-align: center;
         }
 
@@ -403,9 +409,9 @@
             margin: -30px auto 0;
             padding: 22px;
             border-radius: 13px;
-            background: var(--white);
-            color: var(--navy);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, .16);
+            background: #ffffff;
+            color: var(--contact-navy);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16);
         }
 
         .contact-hero-card strong {
@@ -416,12 +422,14 @@
 
         .contact-hero-card p {
             margin: 0;
-            color: var(--muted);
-            font-size: .93rem;
+            color: var(--contact-muted);
+            font-size: 0.93rem;
             line-height: 1.7;
         }
 
-        /* Section headings */
+        /* =========================================
+           SECTION HEADINGS
+           ========================================= */
 
         .contact-section-heading {
             max-width: 760px;
@@ -430,37 +438,41 @@
         }
 
         .contact-section-heading .contact-eyebrow {
-            color: var(--blue);
+            color: var(--contact-blue);
         }
 
         .contact-section-heading h2 {
             margin: 0 0 15px;
-            color: var(--navy);
+            color: var(--contact-navy);
             font-size: clamp(2rem, 4vw, 3rem);
             line-height: 1.2;
-            letter-spacing: -.025em;
+            letter-spacing: -0.025em;
         }
 
         .contact-section-heading h2 span {
-            color: #a87c23;
+            color: var(--contact-blue);
         }
 
         .contact-section-heading > p {
             margin: 0;
-            color: var(--muted);
+            color: var(--contact-muted);
             line-height: 1.85;
         }
 
-        /* Main contact section */
+        /* =========================================
+           CONTACT INFORMATION AND FORM
+           ========================================= */
 
         .contact-main {
             padding: 80px 0;
-            background: var(--background);
+            background: var(--contact-background);
         }
 
         .contact-grid {
             display: grid;
-            grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+            grid-template-columns:
+                minmax(0, 0.82fr)
+                minmax(0, 1.18fr);
             align-items: start;
             gap: 32px;
         }
@@ -468,20 +480,20 @@
         .contact-information {
             padding: 32px;
             border-radius: 15px;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--contact-navy);
+            color: #ffffff;
         }
 
         .contact-information h2 {
             margin: 0 0 15px;
-            color: var(--white);
+            color: #ffffff;
             font-size: 1.7rem;
         }
 
         .contact-information-intro {
             margin: 0 0 28px;
             color: #d3dce6;
-            font-size: .95rem;
+            font-size: 0.95rem;
             line-height: 1.8;
         }
 
@@ -500,14 +512,14 @@
             align-items: center;
             justify-content: center;
             border-radius: 10px;
-            background: rgba(200, 155, 60, .16);
-            color: #e2bd6e;
+            background: rgba(255, 255, 255, 0.1);
+            color: #b8dcf6;
             font-size: 1.15rem;
         }
 
         .contact-detail h3 {
             margin: 0 0 6px;
-            color: var(--white);
+            color: #ffffff;
             font-size: 1rem;
         }
 
@@ -515,7 +527,7 @@
         .contact-detail a {
             margin: 0;
             color: #d3dce6;
-            font-size: .91rem;
+            font-size: 0.91rem;
             line-height: 1.7;
             overflow-wrap: anywhere;
         }
@@ -525,29 +537,27 @@
         }
 
         .contact-detail a:hover {
-            color: var(--gold-light);
+            color: #ffffff;
             text-decoration: underline;
         }
 
         .contact-information-note {
             margin-top: 30px;
             padding: 17px;
-            border: 1px solid rgba(255, 255, 255, .15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: 9px;
             color: #d3dce6;
-            font-size: .88rem;
+            font-size: 0.88rem;
             line-height: 1.75;
         }
-
-        /* Enquiry form */
 
         .contact-form-card {
             min-width: 0;
             padding: 34px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--contact-border);
             border-radius: 15px;
-            background: var(--white);
-            box-shadow: 0 14px 40px rgba(11, 31, 51, .06);
+            background: #ffffff;
+            box-shadow: 0 14px 40px rgba(11, 31, 51, 0.06);
         }
 
         .contact-form-heading {
@@ -556,14 +566,14 @@
 
         .contact-form-heading h2 {
             margin: 0 0 10px;
-            color: var(--navy);
+            color: var(--contact-navy);
             font-size: 1.75rem;
         }
 
         .contact-form-heading p {
             margin: 0;
             color: #657285;
-            font-size: .93rem;
+            font-size: 0.93rem;
             line-height: 1.7;
         }
 
@@ -589,8 +599,8 @@
         }
 
         .contact-field label {
-            color: var(--text);
-            font-size: .91rem;
+            color: var(--contact-text);
+            font-size: 0.91rem;
             font-weight: 700;
         }
 
@@ -602,10 +612,10 @@
             padding: 13px 14px;
             border: 1px solid #d7dee8;
             border-radius: 8px;
-            background: var(--white);
-            color: var(--text);
+            background: #ffffff;
+            color: var(--contact-text);
             font-family: inherit;
-            font-size: .94rem;
+            font-size: 0.94rem;
         }
 
         .contact-field input,
@@ -622,22 +632,22 @@
         .contact-field input:focus,
         .contact-field select:focus,
         .contact-field textarea:focus {
-            border-color: var(--blue);
-            outline: 3px solid rgba(29, 95, 145, .13);
+            border-color: var(--contact-blue);
+            outline: 3px solid rgba(29, 95, 145, 0.13);
         }
 
         .contact-privacy-note {
             margin-top: 21px;
             padding: 13px 15px;
-            border-left: 3px solid var(--gold);
+            border-left: 3px solid var(--contact-blue);
             border-radius: 4px;
-            background: #fbf8f0;
+            background: #f0f6fb;
         }
 
         .contact-privacy-note p {
             margin: 0;
-            color: #665c47;
-            font-size: .82rem;
+            color: #43576b;
+            font-size: 0.82rem;
             line-height: 1.65;
         }
 
@@ -653,18 +663,18 @@
             width: 17px;
             height: 17px;
             margin: 3px 0 0;
-            accent-color: var(--blue);
+            accent-color: var(--contact-blue);
         }
 
         .contact-consent label {
             color: #536173;
-            font-size: .83rem;
+            font-size: 0.83rem;
             line-height: 1.7;
         }
 
         .contact-consent a,
         .contact-form-footnote a {
-            color: var(--blue);
+            color: var(--contact-blue);
             font-weight: 700;
         }
 
@@ -680,7 +690,7 @@
             border-radius: 7px;
             background: #edf5fb;
             color: #163c5a;
-            font-size: .9rem;
+            font-size: 0.9rem;
             line-height: 1.6;
             overflow-wrap: anywhere;
         }
@@ -692,16 +702,18 @@
         .contact-form-footnote {
             margin: 17px 0 0;
             color: #697586;
-            font-size: .84rem;
+            font-size: 0.84rem;
             line-height: 1.7;
             text-align: center;
         }
 
-        /* What happens next */
+        /* =========================================
+           WHAT HAPPENS NEXT
+           ========================================= */
 
         .contact-next {
             padding: 75px 0;
-            background: var(--white);
+            background: #ffffff;
         }
 
         .contact-next-grid {
@@ -712,15 +724,17 @@
 
         .contact-next-card {
             padding: 25px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--contact-border);
             border-radius: 12px;
-            background: var(--white);
-            transition: transform .2s ease, box-shadow .2s ease;
+            background: #ffffff;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
         }
 
         .contact-next-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(11, 31, 51, .07);
+            box-shadow: 0 12px 30px rgba(11, 31, 51, 0.07);
         }
 
         .contact-next-number {
@@ -731,30 +745,32 @@
             justify-content: center;
             margin-bottom: 16px;
             border-radius: 10px;
-            background: #f7f0df;
-            color: #8a641b;
+            background: #eaf3fa;
+            color: var(--contact-blue);
             font-weight: 800;
         }
 
         .contact-next-card h3 {
             margin: 0 0 10px;
-            color: var(--navy);
+            color: var(--contact-navy);
             font-size: 1.08rem;
             line-height: 1.45;
         }
 
         .contact-next-card p {
             margin: 0;
-            color: var(--muted);
-            font-size: .92rem;
+            color: var(--contact-muted);
+            font-size: 0.92rem;
             line-height: 1.8;
         }
 
-        /* Bottom call to action */
+        /* =========================================
+           BOTTOM CALL TO ACTION
+           ========================================= */
 
         .contact-bottom {
             padding: 0 0 80px;
-            background: var(--white);
+            background: #ffffff;
         }
 
         .contact-bottom-inner {
@@ -764,13 +780,13 @@
             gap: 25px;
             padding: 35px;
             border-radius: 15px;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--contact-navy);
+            color: #ffffff;
         }
 
         .contact-bottom-inner h2 {
             margin: 0 0 9px;
-            color: var(--white);
+            color: #ffffff;
             font-size: clamp(1.5rem, 3vw, 2rem);
         }
 
@@ -784,98 +800,112 @@
             flex-shrink: 0;
         }
 
-        /* Footer */
+        /* =========================================
+           FOOTER
+           Existing footer wording, links and structure
+           are preserved. Background is white.
+           ========================================= */
 
-        .contact-footer {
-            padding-top: 50px;
-            background: var(--navy-dark);
-            color: #d3dce6;
+        .site-footer {
+            padding: 55px 0 22px;
+            background: #ffffff !important;
+            color: #4b5563 !important;
+            border-top: 1px solid #e5e7eb;
         }
 
-        .contact-footer-grid {
+        .site-footer .footer-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-            gap: 32px;
-            padding-bottom: 40px;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 36px;
+            padding-bottom: 35px;
         }
 
-        .contact-footer .contact-brand-name {
-            color: var(--white);
+        .site-footer .footer-brand {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: #0b1f33 !important;
+            font-size: 1.15rem;
+            font-weight: 800;
+            line-height: 1.5;
+            text-decoration: none;
         }
 
-        .contact-footer .contact-brand-description {
-            color: var(--gold-light);
+        .site-footer .footer-brand:hover {
+            color: #1d5f91 !important;
         }
 
-        .contact-footer-brand-copy {
-            max-width: 320px;
-            margin: 18px 0 12px;
-            color: #c6d0dc;
-            font-size: .91rem;
+        .site-footer .footer-description {
+            margin: 0 0 20px;
+            color: #4b5563 !important;
             line-height: 1.8;
         }
 
-        .contact-footer-email {
-            color: var(--gold-light);
+        .site-footer .footer-contact p {
+            margin: 0 0 11px;
+            color: #4b5563 !important;
+            font-size: 0.92rem;
+            overflow-wrap: anywhere;
+        }
+
+        .site-footer .footer-contact strong {
+            color: #0b1f33 !important;
+        }
+
+        .site-footer .footer-contact a,
+        .site-footer .footer-links a {
+            color: #1d5f91 !important;
             text-decoration: none;
+            transition: color 0.2s ease;
         }
 
-        .contact-footer-column {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .contact-footer-column h2 {
-            margin: 0 0 8px;
-            color: var(--white);
-            font-size: 1rem;
-        }
-
-        .contact-footer-column p {
-            margin: 0;
-            color: #d3dce6;
-            font-size: .9rem;
-        }
-
-        .contact-footer-column a {
-            color: #d3dce6;
-            font-size: .9rem;
-            text-decoration: none;
-        }
-
-        .contact-footer-column a:hover,
-        .contact-footer-email:hover {
-            color: var(--gold-light);
+        .site-footer .footer-contact a:hover,
+        .site-footer .footer-links a:hover {
+            color: #0b1f33 !important;
             text-decoration: underline;
         }
 
-        .contact-footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, .15);
+        .site-footer .footer-heading {
+            margin: 0 0 17px;
+            color: #0b1f33 !important;
+            font-size: 1rem;
+            font-weight: 700;
         }
 
-        .contact-footer-bottom-inner {
-            display: flex;
-            min-height: 66px;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .contact-footer-bottom p {
+        .site-footer .footer-links {
+            display: grid;
+            gap: 11px;
             margin: 0;
-            color: #c6d0dc;
-            font-size: .84rem;
+            padding: 0;
+            list-style: none;
         }
 
-        .contact-footer-bottom a {
-            color: var(--gold-light);
-            font-size: .9rem;
-            text-decoration: none;
+        .site-footer .footer-links li {
+            margin: 0;
+            padding: 0;
+            color: #4b5563;
+            font-size: 0.93rem;
         }
 
-        /* Tablet */
+        .site-footer .footer-bottom {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .site-footer .footer-bottom p {
+            margin: 0;
+            color: #6b7280 !important;
+            font-size: 0.85rem;
+            line-height: 1.7;
+        }
+
+        /* =========================================
+           TABLET
+           ========================================= */
 
         @media (max-width: 950px) {
             .contact-hero-grid {
@@ -895,12 +925,15 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .contact-footer-grid {
+            .site-footer .footer-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 30px;
             }
         }
 
-        /* Mobile navigation */
+        /* =========================================
+           MOBILE NAVIGATION
+           ========================================= */
 
         @media (max-width: 760px) {
             .contact-header-inner {
@@ -931,19 +964,35 @@
 
             .contact-navigation a {
                 padding: 12px 5px;
-                border-top: 1px solid var(--border);
+                border-top: 1px solid var(--contact-border);
             }
 
             .contact-navigation .nav-contact {
+                justify-content: center;
                 margin-top: 8px;
                 padding: 12px;
+                border-top: 1px solid var(--contact-blue);
                 text-align: center;
             }
         }
 
+        /* =========================================
+           SMALL MOBILE
+           ========================================= */
+
         @media (max-width: 600px) {
             .contact-container {
                 width: calc(100% - 30px);
+            }
+
+            .contact-header .brand {
+                max-width: calc(100% - 65px);
+                font-size: 0.9rem;
+            }
+
+            .contact-header .brand span {
+                font-size: 0.58rem;
+                letter-spacing: 0.04em;
             }
 
             .contact-hero {
@@ -979,7 +1028,7 @@
 
             .contact-form-grid,
             .contact-next-grid,
-            .contact-footer-grid {
+            .site-footer .footer-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -1001,12 +1050,12 @@
                 width: 100%;
             }
 
-            .contact-footer-bottom-inner {
-                align-items: flex-start;
+            .site-footer {
+                padding-top: 40px;
+            }
+
+            .site-footer .footer-bottom {
                 flex-direction: column;
-                justify-content: center;
-                padding-top: 15px;
-                padding-bottom: 15px;
             }
         }
 
@@ -1019,127 +1068,11 @@
                 animation: none !important;
             }
 
-            .contact-button:hover,
-            .contact-next-card:hover {
+            .contact-page .contact-button:hover,
+            .contact-page .contact-next-card:hover {
                 transform: none;
             }
         }
-
-.site-footer {
-    padding: 55px 0 22px;
-    color: #d8e1ea;
-    background: #071522;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 36px;
-    padding-bottom: 35px;
-}
-
-.footer-brand {
-    display: inline-block;
-    margin-bottom: 16px;
-    color: #ffffff;
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.5;
-    text-decoration: none;
-}
-
-.footer-brand:hover {
-    color: #c89b3c;
-}
-
-.footer-description {
-    margin: 0 0 20px;
-    color: #c3cfda;
-    line-height: 1.8;
-}
-
-.footer-contact p {
-    margin: 0 0 11px;
-    color: #c3cfda;
-    font-size: 0.92rem;
-    overflow-wrap: anywhere;
-}
-
-.footer-contact strong {
-    color: #ffffff;
-}
-
-.footer-contact a,
-.footer-links a {
-    color: #c3cfda;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer-contact a:hover,
-.footer-links a:hover {
-    color: #c89b3c;
-}
-
-.footer-heading {
-    margin: 0 0 17px;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.footer-links {
-    display: grid;
-    gap: 11px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.footer-links li {
-    margin: 0;
-    padding: 0;
-    font-size: 0.93rem;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px 24px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.footer-bottom p {
-    margin: 0;
-    color: #aebdca;
-    font-size: 0.85rem;
-    line-height: 1.7;
-}
-
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 30px;
-    }
-}
-
-@media (max-width: 520px) {
-    .site-footer {
-        padding-top: 40px;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 28px;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-    }
-}
     </style>
 </head>
 
@@ -1150,10 +1083,11 @@
 <header class="contact-header">
     <div class="contact-container contact-header-inner">
 
-       <a class="brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
-                AVERRA STAFFING SOLUTIONS LTD
-                <span>Connecting UK Businesses with Global Talent</span>
-            </a>
+        <a class="brand" href="index.html"
+           aria-label="AVERRA Staffing Solutions Ltd home">
+            AVERRA STAFFING SOLUTIONS LTD
+            <span>Connecting UK Businesses with Global Talent</span>
+        </a>
 
         <button
             class="contact-menu-toggle"
@@ -1172,21 +1106,23 @@
              id="contact-navigation"
              aria-label="Main navigation">
 
-           <a href="index.html" aria-current="page">Home</a>
+            <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="services.html">Services</a>
             <a href="how-it-works.html">How It Works</a>
             <a href="careers.html">Careers</a>
             <a href="jobs.html">Jobs</a>
-            <a class="nav-contact" href="lets-talk.html">Let's Talk</a>
-        </nav>
+            <a class="nav-contact"
+               href="lets-talk.html"
+               aria-current="page">Let's Talk</a>
 
+        </nav>
     </div>
 </header>
 
 <main id="main-content">
 
-    <!-- Hero -->
+    <!-- HERO -->
     <section class="contact-hero">
         <div class="contact-container contact-hero-grid">
 
@@ -1205,8 +1141,10 @@
                 </p>
 
                 <div class="contact-hero-actions">
-                    <a class="contact-button button-gold" href="#enquiry-form">
-                        Send an Enquiry <span aria-hidden="true">→</span>
+                    <a class="contact-button button-primary"
+                       href="#enquiry-form">
+                        Send an Enquiry
+                        <span aria-hidden="true">→</span>
                     </a>
 
                     <a class="contact-button button-outline"
@@ -1240,7 +1178,7 @@
         </div>
     </section>
 
-    <!-- Contact details and enquiry form -->
+    <!-- CONTACT DETAILS AND ENQUIRY FORM -->
     <section class="contact-main" id="enquiry-form">
         <div class="contact-container">
 
@@ -1319,7 +1257,8 @@
                         <h2>Send Us an Enquiry</h2>
                         <p>
                             Fields marked with
-                            <span class="required-mark" aria-hidden="true">*</span>
+                            <span class="required-mark"
+                                  aria-hidden="true">*</span>
                             are required.
                         </p>
                     </div>
@@ -1330,7 +1269,8 @@
 
                             <div class="contact-field">
                                 <label for="contact-name">
-                                    Full Name <span class="required-mark">*</span>
+                                    Full Name
+                                    <span class="required-mark">*</span>
                                 </label>
                                 <input
                                     id="contact-name"
@@ -1344,7 +1284,9 @@
                             </div>
 
                             <div class="contact-field">
-                                <label for="contact-company">Company Name</label>
+                                <label for="contact-company">
+                                    Company Name
+                                </label>
                                 <input
                                     id="contact-company"
                                     type="text"
@@ -1357,7 +1299,8 @@
 
                             <div class="contact-field">
                                 <label for="contact-email">
-                                    Business Email <span class="required-mark">*</span>
+                                    Business Email
+                                    <span class="required-mark">*</span>
                                 </label>
                                 <input
                                     id="contact-email"
@@ -1371,7 +1314,9 @@
                             </div>
 
                             <div class="contact-field">
-                                <label for="contact-phone">Phone Number</label>
+                                <label for="contact-phone">
+                                    Phone Number
+                                </label>
                                 <input
                                     id="contact-phone"
                                     type="tel"
@@ -1387,9 +1332,11 @@
                                     Which Service Are You Interested In?
                                     <span class="required-mark">*</span>
                                 </label>
-                                <select id="contact-service"
-                                        name="Service Required"
-                                        required>
+                                <select
+                                    id="contact-service"
+                                    name="Service Required"
+                                    required
+                                >
                                     <option value="">Select a service</option>
                                     <option>Finance &amp; Accounting</option>
                                     <option>Administration &amp; Business Support</option>
@@ -1407,8 +1354,10 @@
                                 <label for="contact-team-size">
                                     Number of Employees
                                 </label>
-                                <select id="contact-team-size"
-                                        name="Number of Employees">
+                                <select
+                                    id="contact-team-size"
+                                    name="Number of Employees"
+                                >
                                     <option value="">Select if known</option>
                                     <option>1 employee</option>
                                     <option>2–5 employees</option>
@@ -1423,8 +1372,10 @@
                                 <label for="contact-start-date">
                                     Preferred Start Date
                                 </label>
-                                <select id="contact-start-date"
-                                        name="Preferred Start Date">
+                                <select
+                                    id="contact-start-date"
+                                    name="Preferred Start Date"
+                                >
                                     <option value="">Select if known</option>
                                     <option>As soon as possible</option>
                                     <option>Within one month</option>
@@ -1435,8 +1386,13 @@
                             </div>
 
                             <div class="contact-field contact-field-full">
-                                <label for="contact-budget">Indicative Budget</label>
-                                <select id="contact-budget" name="Indicative Budget">
+                                <label for="contact-budget">
+                                    Indicative Budget
+                                </label>
+                                <select
+                                    id="contact-budget"
+                                    name="Indicative Budget"
+                                >
                                     <option value="">Prefer not to say</option>
                                     <option>To be discussed</option>
                                     <option>I would like guidance on pricing</option>
@@ -1480,7 +1436,7 @@
                             >
                             <label for="contact-privacy">
                                 I have read the
-                                <a href="../privacy.html">Privacy Notice</a>
+                                <a href="privacy.html">Privacy Notice</a>
                                 and understand that AVERRA will use the
                                 information I provide to respond to my enquiry.
                                 <span class="required-mark">*</span>
@@ -1488,7 +1444,7 @@
                         </div>
 
                         <button
-                            class="contact-button button-gold contact-submit"
+                            class="contact-button button-primary contact-submit"
                             type="submit"
                         >
                             Prepare Enquiry Email
@@ -1519,7 +1475,7 @@
         </div>
     </section>
 
-    <!-- What happens next -->
+    <!-- WHAT HAPPENS NEXT -->
     <section class="contact-next">
         <div class="contact-container">
 
@@ -1535,7 +1491,8 @@
             <div class="contact-next-grid">
 
                 <article class="contact-next-card">
-                    <span class="contact-next-number" aria-hidden="true">01</span>
+                    <span class="contact-next-number"
+                          aria-hidden="true">01</span>
                     <h3>We Review Your Enquiry</h3>
                     <p>
                         Your requirements help us understand your business
@@ -1544,7 +1501,8 @@
                 </article>
 
                 <article class="contact-next-card">
-                    <span class="contact-next-number" aria-hidden="true">02</span>
+                    <span class="contact-next-number"
+                          aria-hidden="true">02</span>
                     <h3>We Discuss Your Needs</h3>
                     <p>
                         Discuss the required skills, responsibilities, team
@@ -1553,7 +1511,8 @@
                 </article>
 
                 <article class="contact-next-card">
-                    <span class="contact-next-number" aria-hidden="true">03</span>
+                    <span class="contact-next-number"
+                          aria-hidden="true">03</span>
                     <h3>We Explore the Options</h3>
                     <p>
                         Where suitable, discuss potential staffing
@@ -1565,7 +1524,7 @@
         </div>
     </section>
 
-    <!-- Final call to action -->
+    <!-- FINAL CALL TO ACTION -->
     <section class="contact-bottom">
         <div class="contact-container">
             <div class="contact-bottom-inner">
@@ -1577,9 +1536,10 @@
                     </p>
                 </div>
 
-                <a class="contact-button button-gold"
+                <a class="contact-button button-primary"
                    href="mailto:info@averrastaffing.co.uk">
-                    Email AVERRA <span aria-hidden="true">→</span>
+                    Email AVERRA
+                    <span aria-hidden="true">→</span>
                 </a>
             </div>
         </div>
@@ -1587,7 +1547,7 @@
 
 </main>
 
-<!-- FOOTER -->
+<!-- FOOTER: EXISTING CONTENT AND STRUCTURE PRESERVED -->
 <footer class="site-footer">
     <div class="container">
         <div class="footer-grid">
@@ -1650,7 +1610,6 @@
                 <h3 class="footer-heading">Legal</h3>
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
-
                 </ul>
             </div>
         </div>
@@ -1676,7 +1635,7 @@ document.addEventListener("DOMContentLoaded", function () {
         yearElement.textContent = String(new Date().getFullYear());
     }
 
-    /* Mobile navigation. */
+    /* Accessible mobile navigation. */
     const menuToggle = document.getElementById("contact-menu-toggle");
     const navigation = document.getElementById("contact-navigation");
 
@@ -1704,6 +1663,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.addEventListener("keydown", function (event) {
             if (event.key === "Escape") {
                 closeMenu();
+                menuToggle.focus();
             }
         });
 
@@ -1714,7 +1674,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /* Show a branded fallback if the hero image fails to load. */
+    /* Branded fallback if the hero image cannot load. */
     const heroImage = document.querySelector(".contact-hero-image");
 
     if (heroImage) {
@@ -1728,11 +1688,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             heading.textContent =
                 "Connecting UK Businesses with Global Talent";
+
             description.textContent =
                 "Remote staffing and outsourcing solutions";
 
             content.append(heading, description);
             fallback.appendChild(content);
+
             fallback.setAttribute("role", "img");
             fallback.setAttribute(
                 "aria-label",
@@ -1745,7 +1707,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /*
      * Email fallback form.
-     * This does not send data to a server or save enquiries to the AVERRA CRM.
+     * No data is sent to a server or stored in the AVERRA CRM.
      */
     const form = document.getElementById("averra-contact-form");
     const status = document.getElementById("contact-form-status");

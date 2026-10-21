@@ -3,21 +3,19 @@
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/services/upload_service.py
 
-Secure foundation for handling uploaded staffing documents.
+Foundation for handling uploaded staffing documents.
 
-Security features:
-- Maximum file-size enforcement while streaming
+Security measures:
 - PDF and DOCX extension allowlist
+- Streaming file-size enforcement
 - Server-generated storage filenames
 - Basic PDF signature validation
-- DOCX ZIP structure validation
-- Temporary-file handling and cleanup on failure
+- DOCX ZIP structure and size validation
+- Temporary-file cleanup on failure
 - Safe deletion using generated filenames
 
-Important:
-This service does not provide an upload endpoint or authentication.
-Before accepting real candidate documents, implement authentication,
-authorization, malware scanning, private storage, and retention controls.
+Before public use, implement authentication, authorization,
+malware scanning, private storage, and retention controls.
 """
 
 import logging
@@ -40,11 +38,11 @@ UPLOAD_DIR = BACKEND_DIR / "uploads"
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 CHUNK_SIZE = 64 * 1024  # 64 KB
 
-ALLOWED_EXTENSIONS = {
-    ".pdf",
-    ".docx",
-}
+# Limits applied when inspecting DOCX ZIP archives.
+MAX_DOCX_MEMBERS = 2_000
+MAX_DOCX_UNCOMPRESSED_SIZE = 50 * 1024 * 1024  # 50 MB
 
+ALLOWED_EXTENSIONS = {".pdf", ".docx"}
 PDF_SIGNATURE = b"%PDF-"
 
 DOCX_REQUIRED_MEMBERS = {
@@ -53,7 +51,7 @@ DOCX_REQUIRED_MEMBERS = {
 }
 
 GENERATED_FILENAME_PATTERN = re.compile(
-    r"[0-9a-f]{32}\.(pdf|docx)"
+    r"[0-9a-f]{32}\.(?:pdf|docx)"
 )
 
 
@@ -70,13 +68,9 @@ class UploadValidationError(ValueError):
 # ============================================================
 
 def ensure_upload_directory() -> Path:
-    """Create and return the private upload directory."""
+    """Create and return the upload storage directory."""
 
-    UPLOAD_DIR.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     return UPLOAD_DIR
 
 
@@ -93,19 +87,13 @@ def validate_original_filename(filename: str) -> str:
     """
 
     if not isinstance(filename, str) or not filename.strip():
-        raise UploadValidationError(
-            "A filename is required."
-        )
+        raise UploadValidationError("A filename is required.")
 
     if len(filename) > 255:
-        raise UploadValidationError(
-            "The filename is too long."
-        )
+        raise UploadValidationError("The filename is too long.")
 
     if "\x00" in filename:
-        raise UploadValidationError(
-            "The filename is invalid."
-        )
+        raise UploadValidationError("The filename is invalid.")
 
     extension = Path(filename).suffix.lower()
 
@@ -121,6 +109,76 @@ def validate_original_filename(filename: str) -> str:
 # FILE CONTENT VALIDATION
 # ============================================================
 
+def _validate_docx_archive(file_obj: BinaryIO) -> None:
+    """
+    Inspect a DOCX ZIP archive without extracting its contents.
+
+    This provides basic structural checks, not malware detection.
+    """
+
+    try:
+        with zipfile.ZipFile(file_obj, "r") as archive:
+            members = archive.infolist()
+
+            if len(members) > MAX_DOCX_MEMBERS:
+                raise UploadValidationError(
+                    "The DOCX archive contains too many files."
+                )
+
+            member_names = {member.filename for member in members}
+
+            if not DOCX_REQUIRED_MEMBERS.issubset(member_names):
+                raise UploadValidationError(
+                    "The archive does not contain the required "
+                    "Word document files."
+                )
+
+            total_uncompressed_size = 0
+
+            for member in members:
+                if member.flag_bits & 0x1:
+                    raise UploadValidationError(
+                        "Encrypted DOCX files are not supported."
+                    )
+
+                if member.file_size < 0 or member.compress_size < 0:
+                    raise UploadValidationError(
+                        "The DOCX archive contains invalid file sizes."
+                    )
+
+                total_uncompressed_size += member.file_size
+
+                if (
+                    total_uncompressed_size
+                    > MAX_DOCX_UNCOMPRESSED_SIZE
+                ):
+                    raise UploadValidationError(
+                        "The DOCX archive expands beyond the "
+                        "permitted size."
+                    )
+
+            # Check archive integrity without extracting files.
+            bad_member = archive.testzip()
+
+            if bad_member is not None:
+                raise UploadValidationError(
+                    "The DOCX archive contains a damaged file."
+                )
+
+    except UploadValidationError:
+        raise
+
+    except zipfile.BadZipFile as exc:
+        raise UploadValidationError(
+            "The file is not a readable DOCX archive."
+        ) from exc
+
+    except (OSError, RuntimeError, EOFError, zipfile.LargeZipFile) as exc:
+        raise UploadValidationError(
+            "The DOCX archive could not be inspected."
+        ) from exc
+
+
 def validate_file_content(
     file_obj: BinaryIO,
     extension: str,
@@ -129,29 +187,28 @@ def validate_file_content(
     Perform basic content checks for supported file types.
 
     PDF:
-        Checks for the PDF header at the beginning of the file.
+        Checks for a PDF signature at the beginning of the file.
 
     DOCX:
-        Checks for a readable ZIP archive containing essential
-        Word document members.
+        Checks ZIP structure, required Word document members,
+        archive integrity, and uncompressed size.
 
-    These checks do not establish that a file is malware-free.
+    These checks do not establish that a file is trustworthy
+    or free from malware.
     """
 
     if extension not in ALLOWED_EXTENSIONS:
-        raise UploadValidationError(
-            "Unsupported file type."
-        )
+        raise UploadValidationError("Unsupported file type.")
 
     try:
         original_position = file_obj.tell()
-    except (AttributeError, OSError) as exc:
+        file_obj.seek(0)
+    except (AttributeError, OSError, ValueError) as exc:
         raise UploadValidationError(
             "The uploaded file must support reading and seeking."
         ) from exc
 
     try:
-        file_obj.seek(0)
         signature = file_obj.read(8)
 
         if not isinstance(signature, bytes):
@@ -172,40 +229,15 @@ def validate_file_content(
                 )
 
             file_obj.seek(0)
+            _validate_docx_archive(file_obj)
 
-            try:
-                with zipfile.ZipFile(file_obj, "r") as archive:
-                    members = set(archive.namelist())
+    except UploadValidationError:
+        raise
 
-                    if not DOCX_REQUIRED_MEMBERS.issubset(members):
-                        raise UploadValidationError(
-                            "The archive does not contain the "
-                            "required Word document files."
-                        )
-
-                    # Reject encrypted required document members.
-                    for member in DOCX_REQUIRED_MEMBERS:
-                        info = archive.getinfo(member)
-
-                        if info.flag_bits & 0x1:
-                            raise UploadValidationError(
-                                "Encrypted DOCX files are not supported."
-                            )
-
-            except zipfile.BadZipFile as exc:
-                raise UploadValidationError(
-                    "The file is not a readable DOCX archive."
-                ) from exc
-
-            except KeyError as exc:
-                raise UploadValidationError(
-                    "The DOCX archive is missing required files."
-                ) from exc
-
-            except (OSError, RuntimeError) as exc:
-                raise UploadValidationError(
-                    "The DOCX archive could not be inspected."
-                ) from exc
+    except (OSError, ValueError) as exc:
+        raise UploadValidationError(
+            "The uploaded file could not be inspected."
+        ) from exc
 
     finally:
         file_obj.seek(original_position)
@@ -222,40 +254,37 @@ def save_uploaded_file(
     """
     Validate and save an uploaded document.
 
-    Args:
-        file_obj:
-            A binary file-like object supporting read() and seek().
-
-        original_filename:
-            The filename supplied by the uploader.
-
-    Returns:
-        A dictionary containing:
-        - file_id
-        - stored_filename
-        - extension
-        - size_bytes
+    Returns a dictionary containing:
+        file_id
+        stored_filename
+        extension
+        size_bytes
 
     The caller remains responsible for authentication,
     authorization, malware scanning, and access control.
     """
 
     extension = validate_original_filename(original_filename)
+
+    try:
+        original_position = file_obj.tell()
+        file_obj.seek(0)
+    except (AttributeError, OSError, ValueError) as exc:
+        raise UploadValidationError(
+            "The uploaded file must support reading and seeking."
+        ) from exc
+
     upload_directory = ensure_upload_directory()
 
     file_id = uuid.uuid4().hex
     stored_filename = f"{file_id}{extension}"
 
-    # Write to a temporary file first. Only publish the final
-    # filename after copying and validating the uploaded content.
     temporary_path = upload_directory / f".{file_id}.upload"
     destination = upload_directory / stored_filename
 
     total_size = 0
 
     try:
-        file_obj.seek(0)
-
         with temporary_path.open("xb") as output:
             while True:
                 chunk = file_obj.read(CHUNK_SIZE)
@@ -282,11 +311,11 @@ def save_uploaded_file(
                 "Empty files cannot be uploaded."
             )
 
-        # Validate the actual bytes saved to disk.
+        # Validate the actual bytes written to disk.
         with temporary_path.open("rb") as saved_file:
             validate_file_content(saved_file, extension)
 
-        # Atomic rename within the same directory.
+        # Publish the file only after validation succeeds.
         temporary_path.replace(destination)
 
         logger.info(
@@ -304,7 +333,7 @@ def save_uploaded_file(
         }
 
     except Exception:
-        # Remove temporary or final files if an operation fails.
+        # Remove partial files if any operation fails.
         for path in (temporary_path, destination):
             try:
                 path.unlink(missing_ok=True)
@@ -315,6 +344,14 @@ def save_uploaded_file(
 
         raise
 
+    finally:
+        try:
+            file_obj.seek(original_position)
+        except (AttributeError, OSError, ValueError):
+            logger.warning(
+                "Could not restore the uploaded file position."
+            )
+
 
 # ============================================================
 # DELETE UPLOADED FILE
@@ -324,40 +361,44 @@ def delete_uploaded_file(stored_filename: str) -> bool:
     """
     Delete a stored file using its generated filename.
 
-    Returns:
-        True if the file was deleted, otherwise False.
+    Returns True if the file was deleted, or False if it
+    does not exist.
 
     Invalid filenames raise UploadValidationError.
     """
 
-    if not isinstance(stored_filename, str):
-        raise UploadValidationError(
-            "Invalid stored filename."
-        )
-
-    if not GENERATED_FILENAME_PATTERN.fullmatch(stored_filename):
-        raise UploadValidationError(
-            "Invalid stored filename."
-        )
+    if (
+        not isinstance(stored_filename, str)
+        or not GENERATED_FILENAME_PATTERN.fullmatch(stored_filename)
+    ):
+        raise UploadValidationError("Invalid stored filename.")
 
     upload_directory = ensure_upload_directory()
     destination = upload_directory / stored_filename
 
+    # Confirm the storage directory itself resolves as expected.
     try:
-        resolved_destination = destination.resolve()
-        resolved_destination.relative_to(
-            upload_directory.resolve()
-        )
+        resolved_directory = upload_directory.resolve()
+        resolved_destination = destination.resolve(strict=False)
+
+        resolved_destination.relative_to(resolved_directory)
+
     except (ValueError, OSError, RuntimeError) as exc:
         raise UploadValidationError(
             "Invalid storage path."
         ) from exc
 
-    if not resolved_destination.is_file():
+    # Do not follow symlinks when deleting files.
+    if destination.is_symlink():
+        raise UploadValidationError(
+            "Symbolic links are not valid uploaded files."
+        )
+
+    if not destination.is_file():
         return False
 
     try:
-        resolved_destination.unlink()
+        destination.unlink()
     except OSError:
         logger.exception(
             "Could not delete uploaded file: file_id=%s",

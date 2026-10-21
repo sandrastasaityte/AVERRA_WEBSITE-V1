@@ -4,6 +4,9 @@ AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/schemas/__init__.py
 
 Central exports for API request and response schemas.
+
+Keeps enquiry and job schemas accessible from one package
+without changing their underlying validation behavior.
 """
 
 from .enquiry import (
@@ -21,13 +24,13 @@ from .jobs import (
     JobAdminResponse,
 )
 
+
 __all__ = [
     # Enquiry schemas
     "EnquiryCreate",
     "EnquiryResponse",
     "EnquiryDetail",
     "EnquiryStatusUpdate",
-
     # Job schemas
     "JobBase",
     "JobCreate",

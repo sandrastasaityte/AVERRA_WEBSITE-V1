@@ -2,8 +2,8 @@
 """
 ============================================================
 AVERRA STAFFING SOLUTIONS LTD
-File: backend/app/models/job.py
-Version: 1.1.0
+File: backend/app/models/jobs.py
+Version: 2.0.0
 
 SQLAlchemy database model for job vacancies.
 ============================================================
@@ -12,11 +12,13 @@ SQLAlchemy database model for job vacancies.
 from datetime import datetime, timezone
 
 from sqlalchemy import (
+    CheckConstraint,
     DateTime,
     Index,
     Integer,
     String,
     Text,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -37,6 +39,30 @@ class Job(Base):
         Index("ix_jobs_status", "status"),
         Index("ix_jobs_created_at", "created_at"),
         Index("ix_jobs_location", "location"),
+        CheckConstraint(
+            "length(trim(title)) > 0",
+            name="title_not_empty",
+        ),
+        CheckConstraint(
+            "length(trim(location)) > 0",
+            name="location_not_empty",
+        ),
+        CheckConstraint(
+            "length(trim(employment_type)) > 0",
+            name="employment_type_not_empty",
+        ),
+        CheckConstraint(
+            "length(trim(summary)) > 0",
+            name="summary_not_empty",
+        ),
+        CheckConstraint(
+            "length(trim(description)) > 0",
+            name="description_not_empty",
+        ),
+        CheckConstraint(
+            "status IN ('draft', 'published', 'closed', 'archived')",
+            name="valid_status",
+        ),
     )
 
     id: Mapped[int] = mapped_column(
@@ -89,7 +115,7 @@ class Job(Base):
         String(30),
         nullable=False,
         default="draft",
-        server_default="draft",
+        server_default=text("'draft'"),
     )
 
     closing_date: Mapped[datetime | None] = mapped_column(
@@ -101,6 +127,7 @@ class Job(Base):
         DateTime(timezone=True),
         nullable=False,
         default=utc_now,
+        server_default=text("CURRENT_TIMESTAMP"),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
@@ -108,9 +135,11 @@ class Job(Base):
         nullable=False,
         default=utc_now,
         onupdate=utc_now,
+        server_default=text("CURRENT_TIMESTAMP"),
     )
 
     def __repr__(self) -> str:
+        """Return a concise representation of this vacancy."""
         return (
             f"<Job("
             f"id={self.id}, "

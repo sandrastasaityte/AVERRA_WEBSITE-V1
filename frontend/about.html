@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b1f33">
-    <meta name="color-scheme" content="light">
-
-    <title>AVERRA Staffing Solutions Ltd | UK–India Outsourcing</title>
-    <meta name="description" content="AVERRA Staffing Solutions Ltd connects UK businesses with skilled professionals based in India through remote staffing and outsourcing solutions.">
+    <meta name="description" content="Learn about AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals based in India through remote staffing and outsourcing.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://averrastaffing.co.uk/">
+    <link rel="canonical" href="https://averrastaffing.co.uk/about.html">
+    <title>About AVERRA Staffing Solutions Ltd | UK–India Outsourcing</title>
+
     <link rel="stylesheet" href="style.css">
+
+<script src="images/images.js" defer></script>
+<script src="images/jobs.js" defer></script>
+<script src="script.js" defer></script>
 
     <style>
         :root {
@@ -20,7 +23,7 @@
             --blue: #1d5f91;
             --gold: #c89b3c;
             --light: #f4f7fa;
-            --white: #ffffff;
+            --white: #fff;
             --text: #263545;
             --muted: #647386;
             --border: #e0e7ee;
@@ -28,55 +31,60 @@
             --container: 1180px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 90px;
+            scroll-padding-top: 100px;
         }
 
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
             color: var(--text);
             background: var(--white);
+            font-family: Arial, Helvetica, sans-serif;
             line-height: 1.7;
         }
 
-        img {
-            max-width: 100%;
-        }
+        img { display: block; max-width: 100%; }
+        a { color: var(--blue); }
 
-        a {
-            color: var(--blue);
-        }
-
-        a:focus-visible,
-        button:focus-visible {
+        a:focus-visible, button:focus-visible {
             outline: 3px solid var(--gold);
             outline-offset: 4px;
         }
+
+        .skip-link {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 2000;
+            padding: 10px 14px;
+            color: #fff;
+            background: var(--navy);
+            border-radius: 6px;
+            transform: translateY(-160%);
+        }
+
+        .skip-link:focus { transform: translateY(0); }
 
         .container {
             width: min(var(--container), calc(100% - 40px));
             margin-inline: auto;
         }
 
-        /* HEADER */
-
+        /* Header and navigation */
         .site-header {
             position: sticky;
             top: 0;
             z-index: 1000;
             background: var(--white);
             border-bottom: 1px solid var(--border);
-            transition: box-shadow 0.2s ease;
+            transition: box-shadow .2s ease;
         }
 
         .site-header.scrolled {
-            box-shadow: 0 5px 20px rgba(11, 31, 51, 0.09);
+            box-shadow: 0 5px 20px rgb(11 31 51 / 9%);
         }
 
         .header-inner {
@@ -88,21 +96,23 @@
         }
 
         .brand {
+            display: block;
+            max-width: 360px;
             color: var(--navy);
+            font-size: 1.05rem;
+            font-weight: 900;
+            line-height: 1.3;
+            letter-spacing: .02em;
             text-decoration: none;
-            font-size: 1.12rem;
-            font-weight: 800;
-            line-height: 1.25;
-            letter-spacing: 0.02em;
         }
 
         .brand span {
             display: block;
             margin-top: 4px;
-            color: var(--muted);
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.11em;
+            color: var(--blue);
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .08em;
             text-transform: uppercase;
         }
 
@@ -110,15 +120,15 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 21px;
+            gap: 20px;
         }
 
         .main-navigation a {
             color: var(--navy);
-            text-decoration: none;
-            font-size: 0.92rem;
+            font-size: .92rem;
             font-weight: 600;
-            transition: color 0.2s ease;
+            text-decoration: none;
+            transition: color .2s ease, background .2s ease;
         }
 
         .main-navigation a:hover,
@@ -140,163 +150,69 @@
 
         .menu-toggle {
             display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 9px 12px;
-            background: var(--white);
             color: var(--navy);
+            background: var(--white);
             font: inherit;
             font-weight: 700;
             cursor: pointer;
         }
 
-        /* HERO: NATURAL IMAGE RATIO, NO CROPPING */
-
-
-/* =========================================
-   AVERRA ABOUT PAGE — SPLIT HERO
-   Text on the left, image on the right
-   ========================================= */
-
-.page-hero {
-    padding: 60px 0;
-    background: var(--light, #f4f7fa);
-}
-
-.page-hero .container {
-    width: min(1180px, calc(100% - 40px));
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    align-items: center;
-    gap: 56px;
-}
-
-/* Text on the left */
-
-.page-hero-inner {
-    grid-column: 1;
-    grid-row: 1;
-    max-width: 520px;
-    margin: 0;
-    text-align: left;
-}
-
-.page-hero .eyebrow {
-    margin: 0 0 14px;
-    color: #9b7021;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-}
-
-.page-hero h1 {
-    margin: 0 0 20px;
-    color: var(--navy, #0b1f33);
-    font-size: clamp(2.2rem, 4vw, 3.6rem);
-    line-height: 1.15;
-    letter-spacing: -0.035em;
-}
-
-.page-hero-inner > p:not(.eyebrow) {
-    margin: 0;
-    color: var(--muted, #647386);
-    font-size: 1.08rem;
-    line-height: 1.8;
-}
-
-/* Image on the right */
-
-.page-hero-image {
-    grid-column: 2;
-    grid-row: 1;
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-    object-position: center;
-    border-radius: 16px;
-    background: #e8edf2;
-}
-
-/* Tablet and mobile */
-
-@media (max-width: 760px) {
-    .page-hero {
-        padding: 38px 0;
-    }
-
-    .page-hero .container {
-        width: calc(100% - 32px);
-        grid-template-columns: 1fr;
-        gap: 26px;
-    }
-
-    .page-hero-inner {
-        grid-column: 1;
-        grid-row: 1;
-        max-width: 100%;
-        text-align: left;
-    }
-
-    .page-hero-image {
-        grid-column: 1;
-        grid-row: 2;
-        width: 100%;
-        height: auto;
-        border-radius: 12px;
-    }
-
-    .page-hero h1 {
-        font-size: clamp(2rem, 7vw, 2.8rem);
-    }
-
-    .page-hero-inner > p:not(.eyebrow) {
-        font-size: 1rem;
-    }
-}
-
-
-/* Mobile adjustments */
-
-@media (max-width: 680px) {
-    .page-hero {
-        padding: 24px 0 40px;
-    }
-
-    .page-hero .container {
-        width: calc(100% - 28px);
-    }
-
-    .page-hero-image {
-        border-radius: 10px;
-    }
-
-    .page-hero-inner {
-        margin-top: 24px;
-    }
-
-    .page-hero h1 {
-        font-size: clamp(1.9rem, 7vw, 2.6rem);
-    }
-
-    .page-hero-inner > p:not(.eyebrow) {
-        font-size: 1rem;
-    }
-}
-
-
-        /* GENERAL SECTIONS */
-
-        .section {
-            padding: 76px 0;
-        }
-
-        .section-light {
+        /* Hero */
+        .page-hero {
+            padding: 62px 0;
             background: var(--light);
         }
+
+        .hero-layout {
+            display: grid;
+            grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+            align-items: center;
+            gap: clamp(28px, 5vw, 58px);
+        }
+
+        .page-hero-inner { max-width: 530px; }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: #91691f;
+            font-size: .8rem;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        h1, h2, h3 { color: var(--navy); }
+
+        .page-hero h1 {
+            margin: 0 0 20px;
+            font-size: clamp(2.2rem, 4vw, 3.6rem);
+            line-height: 1.13;
+            letter-spacing: -.035em;
+        }
+
+        .page-hero-inner > p:not(.eyebrow) {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.08rem;
+            line-height: 1.8;
+        }
+
+        .page-hero-image,
+        .content-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            background: #e8edf2;
+        }
+
+        /* Content sections */
+        .section { padding: 76px 0; }
+        .section-light { background: var(--light); }
 
         .section-heading {
             max-width: 780px;
@@ -305,13 +221,12 @@
         }
 
         .section-heading h2 {
-            margin: 0 0 16px;
-            color: var(--navy);
+            margin: 0 0 15px;
             font-size: clamp(1.8rem, 3vw, 2.6rem);
             line-height: 1.25;
         }
 
-        .section-heading p {
+        .section-heading > p:last-child {
             margin: 0;
             color: var(--muted);
         }
@@ -323,17 +238,8 @@
             gap: 48px;
         }
 
-        .content-image {
-            display: block;
-            width: 100%;
-            height: auto;
-            border-radius: var(--radius);
-            background: #e8edf2;
-        }
-
         .content-copy h2 {
             margin: 0 0 18px;
-            color: var(--navy);
             font-size: clamp(1.7rem, 3vw, 2.35rem);
             line-height: 1.25;
         }
@@ -343,9 +249,7 @@
             color: var(--muted);
         }
 
-        .content-copy p:last-child {
-            margin-bottom: 0;
-        }
+        .content-copy p:last-child { margin-bottom: 0; }
 
         .feature-grid {
             display: grid;
@@ -367,7 +271,7 @@
             height: 43px;
             align-items: center;
             justify-content: center;
-            margin-bottom: 18px;
+            margin-bottom: 17px;
             border-radius: 50%;
             color: var(--navy);
             background: #f5e9ce;
@@ -376,15 +280,11 @@
 
         .feature-card h3 {
             margin: 0 0 12px;
-            color: var(--navy);
             font-size: 1.2rem;
             line-height: 1.4;
         }
 
-        .feature-card p {
-            margin: 0;
-            color: var(--muted);
-        }
+        .feature-card p { margin: 0; color: var(--muted); }
 
         .service-list {
             margin: 20px 0 0;
@@ -396,12 +296,9 @@
             padding-left: 4px;
         }
 
-        .service-list li::marker {
-            color: var(--gold);
-        }
+        .service-list li::marker { color: var(--gold); }
 
-        /* CALL TO ACTION */
-
+        /* Call to action */
         .cta-section {
             padding: 70px 0;
             color: var(--white);
@@ -409,35 +306,33 @@
             text-align: center;
         }
 
-        .cta-inner {
-            max-width: 780px;
-            margin: 0 auto;
-        }
+        .cta-inner { max-width: 780px; margin: 0 auto; }
 
         .cta-section h2 {
             margin: 0 0 16px;
+            color: var(--white);
             font-size: clamp(1.9rem, 3vw, 2.7rem);
             line-height: 1.25;
         }
 
-        .cta-section p {
+        .cta-section > .container > p:not(.eyebrow) {
             margin: 0 auto 26px;
             color: #d8e1ea;
         }
 
         .button {
             display: inline-flex;
+            min-height: 48px;
             align-items: center;
             justify-content: center;
-            min-height: 48px;
             padding: 12px 22px;
             border: 2px solid transparent;
             border-radius: 8px;
-            background: var(--gold);
             color: var(--navy-dark);
-            text-decoration: none;
+            background: var(--gold);
             font-weight: 800;
-            transition: transform 0.2s ease, background 0.2s ease;
+            text-decoration: none;
+            transition: transform .2s ease, background .2s ease;
         }
 
         .button:hover {
@@ -445,8 +340,7 @@
             transform: translateY(-2px);
         }
 
-        /* FOOTER */
-
+        /* Footer */
         .site-footer {
             padding: 54px 0 20px;
             color: #d8e1ea;
@@ -461,19 +355,21 @@
         }
 
         .footer-brand {
-            margin: 0 0 15px;
+            display: inline-block;
+            margin-bottom: 15px;
             color: var(--white);
             font-size: 1.15rem;
             font-weight: 800;
+            text-decoration: none;
         }
 
         .footer-column p {
             margin: 0 0 12px;
             color: #c3cfda;
-            font-size: 0.93rem;
+            font-size: .93rem;
         }
 
-        .footer-column h3 {
+        .footer-column h2 {
             margin: 0 0 16px;
             color: var(--white);
             font-size: 1rem;
@@ -482,6 +378,9 @@
         .footer-links {
             display: grid;
             gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
         }
 
         .footer-links a,
@@ -492,9 +391,7 @@
         }
 
         .footer-links a:hover,
-        .footer-column a:hover {
-            color: var(--gold);
-        }
+        .footer-column a:hover { color: var(--gold); }
 
         .footer-bottom {
             display: flex;
@@ -502,17 +399,19 @@
             flex-wrap: wrap;
             gap: 12px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgb(255 255 255 / 15%);
             color: #aebdca;
-            font-size: 0.85rem;
+            font-size: .85rem;
         }
+
+        .footer-bottom p { margin: 0; }
 
         .back-to-top {
             position: fixed;
             right: 22px;
             bottom: 22px;
             z-index: 900;
-            display: none;
+            display: flex;
             width: 44px;
             height: 44px;
             align-items: center;
@@ -523,39 +422,20 @@
             background: var(--blue);
             font-size: 1.2rem;
             cursor: pointer;
-            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 18px rgb(0 0 0 / 15%);
         }
 
-        .back-to-top.visible {
-            display: flex;
-        }
+        .back-to-top[hidden] { display: none; }
 
-        /* RESPONSIVE LAYOUT */
-
-        @media (max-width: 1000px) {
-            .main-navigation {
-                gap: 13px;
-            }
-
-            .main-navigation a {
-                font-size: 0.85rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+        @media (max-width: 1050px) {
+            .main-navigation { gap: 12px; }
+            .main-navigation a { font-size: .85rem; }
+            .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 760px) {
-            .header-inner {
-                min-height: 72px;
-            }
-
-            .menu-toggle {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-            }
+            .header-inner { min-height: 72px; }
+            .menu-toggle { display: inline-flex; }
 
             .main-navigation {
                 position: absolute;
@@ -569,17 +449,11 @@
                 padding: 10px 20px 20px;
                 background: var(--white);
                 border-bottom: 1px solid var(--border);
-                box-shadow: 0 12px 18px rgba(11, 31, 51, 0.08);
+                box-shadow: 0 12px 18px rgb(11 31 51 / 8%);
             }
 
-            .main-navigation.active {
-                display: flex;
-            }
-
-            .main-navigation a {
-                padding: 12px 4px;
-                font-size: 0.95rem;
-            }
+            .main-navigation.is-open { display: flex; }
+            .main-navigation a { padding: 12px 4px; font-size: .95rem; }
 
             .main-navigation .nav-contact {
                 margin-top: 8px;
@@ -587,76 +461,127 @@
                 text-align: center;
             }
 
-            .two-column {
+            .hero-layout, .two-column {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 28px;
             }
 
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: 54px 0;
-            }
-
-            .page-hero {
-                padding: 24px 0 42px;
-            }
-
-            .page-hero-image {
-                border-radius: 10px;
-            }
-
-            .page-hero-inner {
-                margin-top: 24px;
-            }
-
-            .page-hero-inner > p:not(.eyebrow) {
-                font-size: 1rem;
-            }
+            .page-hero { padding: 38px 0; }
+            .page-hero-inner { max-width: none; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .section { padding: 54px 0; }
         }
 
         @media (max-width: 520px) {
-            .container {
-                width: min(var(--container), calc(100% - 28px));
-            }
-
-            .brand {
-                max-width: 220px;
-                font-size: 1rem;
-            }
-
-            .brand span {
-                font-size: 0.62rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 26px;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-            }
+            .container { width: min(var(--container), calc(100% - 28px)); }
+            .brand { max-width: 220px; font-size: .94rem; }
+            .brand span { font-size: .58rem; letter-spacing: .05em; }
+            .footer-grid { grid-template-columns: 1fr; gap: 26px; }
+            .footer-bottom { flex-direction: column; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
+            html { scroll-behavior: auto; }
 
-            *,
-            *::before,
-            *::after {
-                transition-duration: 0.01ms !important;
-                animation-duration: 0.01ms !important;
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
             }
         }
+
+/* =========================================
+   AVERRA — LET'S TALK BUTTON
+   ========================================= */
+
+.main-navigation a[href="lets-talk.html"],
+.main-navigation a[href="./lets-talk.html"],
+.main-nav a[href="lets-talk.html"],
+.main-nav a[href="./lets-talk.html"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    background-color: #1d5f91;
+    color: #ffffff !important;
+    border: 1px solid #1d5f91;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.4;
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+.main-navigation a[href="lets-talk.html"]:hover,
+.main-navigation a[href="./lets-talk.html"]:hover,
+.main-nav a[href="lets-talk.html"]:hover,
+.main-nav a[href="./lets-talk.html"]:hover {
+    background-color: #0b1f33;
+    border-color: #0b1f33;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   AVERRA — NAVY FOOTER, NO GOLD
+   ========================================= */
+
+.site-footer,
+footer.site-footer {
+    background-color: #071522;
+    color: #f3f6f9;
+}
+
+.site-footer h2,
+.site-footer h3,
+.site-footer h4,
+.site-footer .footer-heading,
+.site-footer .footer-brand,
+.site-footer .footer-logo {
+    color: #ffffff;
+}
+
+.site-footer p,
+.site-footer li,
+.site-footer .footer-description,
+.site-footer .footer-tagline {
+    color: #d1dbe5;
+}
+
+.site-footer a {
+    color: #d1dbe5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.site-footer a:hover {
+    color: #ffffff;
+}
+
+.site-footer .footer-bottom {
+    border-top: 1px solid #263849;
+    color: #b9c6d2;
+}
+
+/* Keep the footer consistent on smaller screens */
+@media (max-width: 768px) {
+    .main-navigation a[href="lets-talk.html"],
+    .main-navigation a[href="./lets-talk.html"],
+    .main-nav a[href="lets-talk.html"],
+    .main-nav a[href="./lets-talk.html"] {
+        padding: 11px 18px;
+    }
+}
+
     </style>
 </head>
 
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <header class="site-header" id="site-header">
         <div class="container header-inner">
             <a class="brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
@@ -672,7 +597,7 @@
                 aria-expanded="false"
                 aria-label="Open navigation menu">
                 <span aria-hidden="true">☰</span>
-                Menu
+                <span>Menu</span>
             </button>
 
             <nav class="main-navigation" id="main-navigation" aria-label="Main navigation">
@@ -687,45 +612,43 @@
         </div>
     </header>
 
-    <main>
-        <!-- HERO IMAGE: NATURAL HEIGHT, NOT A CROPPED COVER -->
+    <main id="main-content">
+        <section class="page-hero" aria-labelledby="about-heading">
+            <div class="container hero-layout">
+                <div class="page-hero-inner">
+                    <p class="eyebrow">About AVERRA</p>
+                    <h1 id="about-heading">Connecting UK Businesses with Skilled Global Talent</h1>
+                    <p>
+                        AVERRA Staffing Solutions Ltd connects UK businesses with skilled
+                        professionals based in India through remote staffing and outsourcing.
+                    </p>
+                </div>
 
-<section class="page-hero">
-    <div class="container">
-        <img
-            class="page-hero-image"
-            src="images/image1.jpg"
-            alt="AVERRA Staffing Solutions Ltd connecting UK businesses with global talent"
-        >
+                <img
+                    class="page-hero-image"
+                    src="images/image26.jpg"
+                    alt="Professionals representing international collaboration"
+                    width="1200"
+                    height="800"
+                    fetchpriority="high">
+            </div>
+        </section>
 
-        <div class="page-hero-inner">
-            <p class="eyebrow">About AVERRA</p>
-            <h1>Connecting UK Businesses with Skilled Global Talent</h1>
-            <p>
-                AVERRA Staffing Solutions Ltd connects UK businesses
-                with skilled professionals based in India through remote
-                staffing and outsourcing.
-            </p>
-        </div>
-    </div>
-</section>
-
-        <!-- COMPANY INTRODUCTION -->
-        <section class="section">
+        <section class="section" aria-labelledby="who-we-are-heading">
             <div class="container two-column">
                 <div class="content-copy">
                     <p class="eyebrow">Who We Are</p>
-                    <h2>A Bridge Between the UK and India</h2>
+                    <h2 id="who-we-are-heading">A Bridge Between the UK and India</h2>
                     <p>
                         AVERRA Staffing Solutions Ltd is a UK-based outsourcing business
                         that connects UK companies with skilled professionals based in India.
-                        We help businesses explore international talent while giving
-                        professionals in India opportunities to contribute to global teams.
+                        We help businesses explore international talent while providing
+                        professionals in India with opportunities to contribute to global teams.
                     </p>
                     <p>
-                        Our approach is built around understanding each client's needs,
-                        identifying suitable skills and supporting a clear working relationship
-                        between the business and its remote professionals.
+                        Our approach starts with understanding each client's needs, identifying
+                        suitable skills and supporting a clear working relationship between
+                        the business and its remote professionals.
                     </p>
                     <p>
                         We aim to help organisations build flexible teams, access specialist
@@ -737,23 +660,21 @@
                     <img
                         class="content-image"
                         src="images/image2.jpg"
-                        alt="Professionals working together across international locations"
+                        alt="Professionals collaborating on business tasks"
                         width="900"
                         height="650"
-                        loading="lazy"
-                        onerror="this.onerror=null;this.src='images/image3.jpg';">
+                        loading="lazy">
                 </div>
             </div>
         </section>
 
-        <!-- OUR MODEL -->
-        <section class="section section-light">
+        <section class="section section-light" aria-labelledby="model-heading">
             <div class="container">
                 <div class="section-heading">
                     <p class="eyebrow">Our Business Model</p>
-                    <h2>Outsourcing to India, Connecting the UK with India</h2>
+                    <h2 id="model-heading">Outsourcing to India, Connecting the UK with India</h2>
                     <p>
-                        We help UK businesses consider remote staffing solutions that connect
+                        We help UK businesses explore remote staffing solutions that connect
                         business requirements with suitable international skills.
                     </p>
                 </div>
@@ -789,30 +710,26 @@
             </div>
         </section>
 
-        <!-- SERVICES AND VALUES -->
-        <section class="section">
+        <section class="section" aria-labelledby="services-heading">
             <div class="container two-column">
                 <div>
                     <img
                         class="content-image"
                         src="images/image3.jpg"
-                        alt="Remote professionals collaborating on business tasks"
+                        alt="Remote professionals working on business and technical tasks"
                         width="900"
                         height="650"
-                        loading="lazy"
-                        onerror="this.onerror=null;this.src='images/image4.jpg';">
+                        loading="lazy">
                 </div>
 
                 <div class="content-copy">
                     <p class="eyebrow">What We Do</p>
-                    <h2>Flexible Support for Growing Businesses</h2>
+                    <h2 id="services-heading">Flexible Support for Growing Businesses</h2>
                     <p>
-                        Our focus is on helping UK businesses explore access to remote
-                        professional capabilities through outsourcing arrangements.
-                        The scope of support depends on the client's needs and the agreed
-                        services.
+                        We help UK businesses explore access to remote professional
+                        capabilities through outsourcing arrangements. The scope of support
+                        depends on each client's needs and the services agreed.
                     </p>
-
                     <ul class="service-list">
                         <li>Remote staffing and virtual team support</li>
                         <li>Finance and administrative support</li>
@@ -824,12 +741,11 @@
             </div>
         </section>
 
-        <!-- OUR PRINCIPLES -->
-        <section class="section section-light">
+        <section class="section section-light" aria-labelledby="approach-heading">
             <div class="container">
                 <div class="section-heading">
                     <p class="eyebrow">Our Approach</p>
-                    <h2>Building Professional Relationships</h2>
+                    <h2 id="approach-heading">Building Professional Relationships</h2>
                     <p>
                         International outsourcing works best when expectations are clear
                         and the people involved are treated as valued professional partners.
@@ -867,11 +783,10 @@
             </div>
         </section>
 
-        <!-- CTA -->
-        <section class="cta-section">
+        <section class="cta-section" aria-labelledby="cta-heading">
             <div class="container cta-inner">
                 <p class="eyebrow">Work With AVERRA</p>
-                <h2>Let's Discuss Your Staffing Needs</h2>
+                <h2 id="cta-heading">Let's Discuss Your Staffing Needs</h2>
                 <p>
                     If your UK business is exploring remote staffing or outsourcing to India,
                     contact AVERRA Staffing Solutions Ltd to discuss your requirements.
@@ -880,7 +795,6 @@
             </div>
         </section>
     </main>
-
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -937,7 +851,6 @@
                     <li><a href="pricing.html">Pricing</a></li>
                     <li><a href="FAQ.html">Frequently Asked Questions</a></li>
                     <li><a href="lets-talk.html">Contact Us</a></li>
-
                     <li><a href="industries.html">Industries</a></li>
                 </ul>
             </div>
@@ -946,7 +859,6 @@
                 <h3 class="footer-heading">Legal</h3>
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
-
 
                 </ul>
             </div>
@@ -962,16 +874,12 @@
     </div>
 </footer>
 
-    <button
-        class="back-to-top"
-        id="back-to-top"
-        type="button"
-        aria-label="Back to top">
-        ↑
+    <button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top" hidden>
+        <span aria-hidden="true">↑</span>
     </button>
 
     <script>
-        (function () {
+        (() => {
             "use strict";
 
             const header = document.getElementById("site-header");
@@ -981,13 +889,20 @@
             const currentYear = document.getElementById("current-year");
 
             if (currentYear) {
-                currentYear.textContent = new Date().getFullYear();
+                currentYear.textContent = String(new Date().getFullYear());
             }
 
             if (menuToggle && navigation) {
-                menuToggle.addEventListener("click", function () {
-                    const isOpen = navigation.classList.toggle("active");
+                const closeMenu = (returnFocus = false) => {
+                    navigation.classList.remove("is-open");
+                    menuToggle.setAttribute("aria-expanded", "false");
+                    menuToggle.setAttribute("aria-label", "Open navigation menu");
 
+                    if (returnFocus) menuToggle.focus();
+                };
+
+                menuToggle.addEventListener("click", () => {
+                    const isOpen = navigation.classList.toggle("is-open");
                     menuToggle.setAttribute("aria-expanded", String(isOpen));
                     menuToggle.setAttribute(
                         "aria-label",
@@ -995,31 +910,29 @@
                     );
                 });
 
-                navigation.querySelectorAll("a").forEach(function (link) {
-                    link.addEventListener("click", function () {
-                        navigation.classList.remove("active");
-                        menuToggle.setAttribute("aria-expanded", "false");
-                        menuToggle.setAttribute(
-                            "aria-label",
-                            "Open navigation menu"
-                        );
-                    });
+                navigation.querySelectorAll("a").forEach((link) => {
+                    link.addEventListener("click", () => closeMenu());
                 });
 
-                document.addEventListener("keydown", function (event) {
-                    if (event.key === "Escape") {
-                        navigation.classList.remove("active");
-                        menuToggle.setAttribute("aria-expanded", "false");
-                        menuToggle.setAttribute(
-                            "aria-label",
-                            "Open navigation menu"
-                        );
-                        menuToggle.focus();
+                document.addEventListener("keydown", (event) => {
+                    if (event.key === "Escape" && navigation.classList.contains("is-open")) {
+                        closeMenu(true);
+                    }
+                });
+
+                document.addEventListener("click", (event) => {
+                    if (
+                        navigation.classList.contains("is-open") &&
+                        event.target instanceof Node &&
+                        !navigation.contains(event.target) &&
+                        !menuToggle.contains(event.target)
+                    ) {
+                        closeMenu();
                     }
                 });
             }
 
-            function updateScrollElements() {
+            const updateScrollElements = () => {
                 const scrolled = window.scrollY > 20;
 
                 if (header) {
@@ -1027,26 +940,21 @@
                 }
 
                 if (backToTop) {
-                    backToTop.classList.toggle(
-                        "visible",
-                        window.scrollY > 350
-                    );
+                    const shouldShow = window.scrollY > 350;
+                    backToTop.hidden = !shouldShow;
                 }
-            }
+            };
 
-            window.addEventListener("scroll", updateScrollElements, {
-                passive: true
-            });
-
+            window.addEventListener("scroll", updateScrollElements, { passive: true });
             updateScrollElements();
 
             if (backToTop) {
-                backToTop.addEventListener("click", function () {
+                backToTop.addEventListener("click", () => {
                     window.scrollTo({
                         top: 0,
-                        behavior: window.matchMedia(
-                            "(prefers-reduced-motion: reduce)"
-                        ).matches ? "auto" : "smooth"
+                        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                            ? "auto"
+                            : "smooth"
                     });
                 });
             }

@@ -1,9 +1,13 @@
 
 """
 AVERRA STAFFING SOLUTIONS LTD
-File: backend/app/models/__init__.py
+Module: app.models
 
 Central exports for SQLAlchemy database models.
+
+Importing this package exposes the shared declarative Base and the
+models registered here. Import every model that must be discovered
+by SQLAlchemy before initializing database metadata.
 """
 
 from .base import Base

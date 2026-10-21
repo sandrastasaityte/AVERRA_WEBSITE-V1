@@ -2,6 +2,17 @@
 (() => {
   "use strict";
 
+  /*
+   * AVERRA STAFFING SOLUTIONS LTD
+   * Admin vacancy form
+   * Version 3.0.0
+   *
+   * Requires:
+   * - admin/js/auth.js
+   * - admin/css/admin.css
+   * - FastAPI admin job endpoints
+   */
+
   document.addEventListener("DOMContentLoaded", async () => {
     const admin = window.AVERRA_ADMIN;
 
@@ -25,9 +36,11 @@
     const originalButtonText =
       saveButton.textContent.trim() || "Save vacancy";
 
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(window.location.search);
     const jobId = params.get("id");
+
     let submitting = false;
+    let loading = false;
 
     if (jobId && !/^[1-9]\d*$/.test(jobId)) {
       showMessage("Invalid vacancy ID.", "error");
@@ -50,15 +63,23 @@
 
     function getValue(name) {
       const field = getField(name);
-      return field ? String(field.value ?? "").trim() : "";
+
+      return field
+        ? String(field.value ?? "").trim()
+        : "";
     }
 
     function setValue(name, value) {
       const field = getField(name);
 
-      if (field) {
-        field.value = value == null ? "" : String(value);
+      if (!field) return;
+
+      if (name === "closing_date" && value) {
+        field.value = String(value).slice(0, 10);
+        return;
       }
+
+      field.value = value == null ? "" : String(value);
     }
 
     function normaliseJobs(response) {
@@ -83,21 +104,67 @@
       );
     }
 
+    function todayLocalDate() {
+      const now = new Date();
+
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
     function validateForm() {
       if (!form.reportValidity()) {
         return false;
       }
 
-      const title = getValue("title");
-      const locationValue = getValue("location");
-      const summary = getValue("summary");
-      const description = getValue("description");
+      const requiredFields = [
+        ["title", "Enter a job title."],
+        ["location", "Enter the job location."],
+        ["summary", "Enter a short job summary."],
+        ["description", "Enter the full job description."]
+      ];
 
-      if (!title || !locationValue || !summary || !description) {
+      for (const [name, errorMessage] of requiredFields) {
+        if (!getValue(name)) {
+          showMessage(errorMessage, "error");
+          getField(name)?.focus();
+          return false;
+        }
+      }
+
+      const employmentType = getValue("employment_type");
+
+      const allowedEmploymentTypes = [
+        "Full-time",
+        "Part-time",
+        "Contract",
+        "Temporary",
+        "Freelance",
+        "Internship"
+      ];
+
+      if (
+        employmentType &&
+        !allowedEmploymentTypes.includes(employmentType)
+      ) {
         showMessage(
-          "Please complete the required vacancy fields.",
+          "Select a valid employment type.",
           "error"
         );
+        getField("employment_type")?.focus();
+        return false;
+      }
+
+      const status = getValue("status");
+
+      if (
+        status &&
+        !["draft", "published", "closed"].includes(status)
+      ) {
+        showMessage("Select a valid vacancy status.", "error");
+        getField("status")?.focus();
         return false;
       }
 
@@ -110,7 +177,7 @@
         !emailField.validity.valid
       ) {
         showMessage(
-          "Please enter a valid application email address.",
+          "Enter a valid application email address.",
           "error"
         );
         emailField.focus();
@@ -118,26 +185,28 @@
       }
 
       const closingDate = getValue("closing_date");
+      const closingDateField = getField("closing_date");
 
       if (closingDate) {
-        const dateField = getField("closing_date");
+        if (
+          !/^\d{4}-\d{2}-\d{2}$/.test(closingDate) ||
+          Number.isNaN(Date.parse(`${closingDate}T00:00:00`))
+        ) {
+          showMessage(
+            "Enter a valid vacancy closing date.",
+            "error"
+          );
+          closingDateField?.focus();
+          return false;
+        }
 
-        if (dateField && dateField.type === "date") {
-          const today = new Date();
-          const todayString = [
-            today.getFullYear(),
-            String(today.getMonth() + 1).padStart(2, "0"),
-            String(today.getDate()).padStart(2, "0")
-          ].join("-");
-
-          if (closingDate < todayString) {
-            showMessage(
-              "The closing date cannot be in the past.",
-              "error"
-            );
-            dateField.focus();
-            return false;
-          }
+        if (closingDate < todayLocalDate()) {
+          showMessage(
+            "The closing date cannot be in the past.",
+            "error"
+          );
+          closingDateField?.focus();
+          return false;
         }
       }
 
@@ -154,13 +223,9 @@
         summary: getValue("summary"),
         description: getValue("description"),
         application_email: getValue("application_email") || null,
-        status: getValue("status")
+        status: getValue("status") || "draft"
       };
 
-      /*
-       * Only include closing_date if the HTML form has that field.
-       * The backend schema must also support closing_date.
-       */
       if (getField("closing_date")) {
         payload.closing_date = getValue("closing_date") || null;
       }
@@ -168,78 +233,121 @@
       return payload;
     }
 
+    function setFormDisabled(disabled) {
+      const controls = form.querySelectorAll(
+        "input, select, textarea, button"
+      );
+
+      controls.forEach((control) => {
+        if (control === saveButton) return;
+
+        control.disabled = disabled;
+      });
+    }
+
     async function loadVacancy(id) {
+      loading = true;
+      saveButton.disabled = true;
+      setFormDisabled(true);
+
       if (formTitle) {
         formTitle.textContent = "Edit vacancy";
       }
 
       showMessage("Loading vacancy…");
 
-      const response = await admin.api("/api/admin/jobs");
-      const jobs = normaliseJobs(response);
+      try {
+        /*
+         * Uses the existing admin jobs-list endpoint to remain
+         * compatible with the current backend integration.
+         *
+         * If the endpoint is paginated, a vacancy outside the
+         * returned page may not be found.
+         */
+        const response = await admin.api("/api/admin/jobs");
+        const jobs = normaliseJobs(response);
 
-      const job = jobs.find(
-        (item) => String(item.id) === String(id)
-      );
-
-      if (!job) {
-        throw new Error(
-          "Vacancy not found in the jobs returned by the API."
+        const job = jobs.find(
+          (item) => String(item.id) === String(id)
         );
+
+        if (!job) {
+          throw new Error(
+            "Vacancy not found in the jobs returned by the API. It may be outside the current page or may have been deleted."
+          );
+        }
+
+        const fieldNames = [
+          "title",
+          "department",
+          "location",
+          "employment_type",
+          "salary_range",
+          "summary",
+          "description",
+          "application_email",
+          "status",
+          "closing_date"
+        ];
+
+        fieldNames.forEach((name) => {
+          setValue(name, job[name]);
+        });
+
+        showMessage(
+          `Vacancy #${job.id} loaded. You can now edit it.`,
+          "success"
+        );
+      } finally {
+        loading = false;
+        setFormDisabled(false);
+        saveButton.disabled = false;
       }
-
-      [
-        "title",
-        "department",
-        "location",
-        "employment_type",
-        "salary_range",
-        "summary",
-        "description",
-        "application_email",
-        "status",
-        "closing_date"
-      ].forEach((key) => setValue(key, job[key]));
-
-      showMessage(`Editing vacancy #${job.id}.`, "success");
     }
 
     if (jobId) {
-      saveButton.disabled = true;
-
       try {
         await loadVacancy(jobId);
       } catch (error) {
         console.error("AVERRA vacancy loading error:", error);
 
         showMessage(
-          `Unable to load vacancy: ${error.message}`,
+          `Unable to load vacancy: ${
+            error.message || "An unexpected error occurred."
+          }`,
           "error"
         );
 
         saveButton.disabled = true;
+        setFormDisabled(true);
         return;
       }
-
-      saveButton.disabled = false;
     } else {
       if (formTitle) {
         formTitle.textContent = "Create vacancy";
       }
 
-      showMessage("Complete the details below to create a vacancy.");
+      if (getField("status") && !getValue("status")) {
+        setValue("status", "draft");
+      }
+
+      showMessage(
+        "Complete the details below to create a vacancy."
+      );
     }
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      if (submitting || !validateForm()) {
+      if (submitting || loading || !validateForm()) {
         return;
       }
 
       submitting = true;
       saveButton.disabled = true;
       saveButton.textContent = "Saving…";
+      setFormDisabled(true);
+
       showMessage("Saving vacancy…");
 
       try {
@@ -257,21 +365,30 @@
           });
         }
 
-        showMessage("Vacancy saved successfully.", "success");
+        showMessage(
+          jobId
+            ? "Vacancy updated successfully."
+            : "Vacancy created successfully.",
+          "success"
+        );
+
         saveButton.textContent = "Saved";
 
-        location.href = "jobs.html";
+        window.location.assign("jobs.html");
       } catch (error) {
         console.error("AVERRA vacancy saving error:", error);
 
         showMessage(
-          `Could not save vacancy: ${error.message}`,
+          `Could not save vacancy: ${
+            error.message || "An unexpected error occurred."
+          }`,
           "error"
         );
 
+        submitting = false;
         saveButton.disabled = false;
         saveButton.textContent = originalButtonText;
-        submitting = false;
+        setFormDisabled(false);
       }
     });
   });

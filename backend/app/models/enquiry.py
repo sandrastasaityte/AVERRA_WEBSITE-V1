@@ -3,17 +3,21 @@
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/models/enquiry.py
 
-Database model for website enquiries.
+SQLAlchemy database model for website enquiries.
+Stores contact details, enquiry messages, processing status,
+internal notes, and creation/update timestamps.
 """
 
 from datetime import datetime, timezone
 
 from sqlalchemy import (
+    CheckConstraint,
     DateTime,
     Index,
     Integer,
     String,
     Text,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -34,6 +38,22 @@ class Enquiry(Base):
         Index("ix_enquiries_email", "email"),
         Index("ix_enquiries_status", "status"),
         Index("ix_enquiries_created_at", "created_at"),
+        CheckConstraint(
+            "length(trim(name)) > 0",
+            name="name_not_empty",
+        ),
+        CheckConstraint(
+            "length(trim(email)) > 0",
+            name="email_not_empty",
+        ),
+        CheckConstraint(
+            "length(trim(message)) > 0",
+            name="message_not_empty",
+        ),
+        CheckConstraint(
+            "status IN ('new', 'in_progress', 'responded', 'closed', 'spam')",
+            name="valid_status",
+        ),
     )
 
     id: Mapped[int] = mapped_column(
@@ -50,6 +70,7 @@ class Enquiry(Base):
     email: Mapped[str] = mapped_column(
         String(254),
         nullable=False,
+        index=False,
     )
 
     phone: Mapped[str | None] = mapped_column(
@@ -76,7 +97,7 @@ class Enquiry(Base):
         String(30),
         nullable=False,
         default="new",
-        server_default="new",
+        server_default=text("'new'"),
     )
 
     internal_notes: Mapped[str | None] = mapped_column(
@@ -88,7 +109,7 @@ class Enquiry(Base):
         DateTime(timezone=True),
         nullable=False,
         default=utc_now,
-        server_default=None,
+        server_default=text("CURRENT_TIMESTAMP"),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
@@ -96,9 +117,11 @@ class Enquiry(Base):
         nullable=False,
         default=utc_now,
         onupdate=utc_now,
+        server_default=text("CURRENT_TIMESTAMP"),
     )
 
     def __repr__(self) -> str:
+        """Return a concise representation without exposing message contents."""
         return (
             f"<Enquiry("
             f"id={self.id}, "

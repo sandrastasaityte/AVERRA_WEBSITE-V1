@@ -4,18 +4,18 @@ AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/routes/__init__.py
 
 Central registration for API route modules.
+All application API routes are mounted under /api.
 """
 
 from fastapi import APIRouter
 
+from .enquiries import router as enquiries_router
 from .health import router as health_router
 from .jobs import router as jobs_router
-from .enquiries import router as enquiries_router
 
 
 # Central API router.
-# The /api prefix is added here, so individual route modules
-# should define their own resource prefixes only.
+# Resource-specific prefixes belong in the individual route modules.
 api_router = APIRouter(prefix="/api")
 
 api_router.include_router(health_router)

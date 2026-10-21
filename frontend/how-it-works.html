@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -8,50 +9,46 @@
 
     <title>How It Works | AVERRA Staffing Solutions Ltd</title>
 
-    <meta
-        name="description"
-        content="Discover how AVERRA Staffing Solutions Ltd helps UK businesses explore remote staffing and outsourcing solutions with international professionals, including talent based in India."
-    >
-
+    <meta name="description" content="Discover how AVERRA Staffing Solutions Ltd connects UK businesses with international professionals, including talent based in India, through remote staffing and outsourcing.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://averrastaffing.co.uk/how-it-works.html">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="How It Works | AVERRA Staffing Solutions Ltd">
-    <meta
-        property="og:description"
-        content="Explore AVERRA's approach to remote staffing, international talent and outsourcing for UK businesses."
-    >
+    <meta property="og:description" content="Explore AVERRA's approach to remote staffing, international talent and outsourcing for UK businesses.">
     <meta property="og:url" content="https://averrastaffing.co.uk/how-it-works.html">
     <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
-    <meta property="og:image" content="https://averrastaffing.co.uk/images/hero-global-talent.jpg">
+    <meta property="og:image" content="https://averrastaffing.co.uk/images/image21.jpg">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="How It Works | AVERRA Staffing Solutions Ltd">
-    <meta
-        name="twitter:description"
-        content="Understand the process behind AVERRA's remote staffing and outsourcing approach."
-    >
-    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/hero-global-talent.jpg">
+    <meta name="twitter:description" content="Understand the process behind AVERRA's remote staffing and outsourcing approach.">
+    <meta name="twitter:image" content="https://averrastaffing.co.uk/images/image21.jpg">
 
-    <link rel="preload" as="image" href="images/hero-global-talent.jpg">
+    <link rel="preload" as="image" href="images/image21.jpg">
     <link rel="stylesheet" href="style.css">
+
+
+
+<script src="images/images.js" defer></script>
+<script src="images/jobs.js" defer></script>
+<script src="script.js" defer></script>
 
     <style>
         :root {
-            --navy: #0b1f33;
-            --navy-dark: #071522;
-            --blue: #1d5f91;
-            --gold: #c89b3c;
-            --gold-light: #e3c57e;
-            --text: #46576a;
-            --muted: #647386;
-            --light: #f5f7fa;
-            --border: #e0e6ed;
-            --white: #ffffff;
-            --container: 1180px;
-            --radius: 12px;
-            --shadow: 0 12px 32px rgba(11, 31, 51, 0.07);
+            --how-navy: #0b1f33;
+            --how-navy-dark: #071522;
+            --how-blue: #1d5f91;
+            --how-gold: #c89b3c;
+            --how-gold-light: #e3c57e;
+            --how-text: #46576a;
+            --how-muted: #647386;
+            --how-light: #f5f7fa;
+            --how-border: #e0e6ed;
+            --how-white: #ffffff;
+            --how-container: 1180px;
+            --how-radius: 12px;
+            --how-shadow: 0 12px 32px rgba(11, 31, 51, 0.07);
         }
 
         *,
@@ -67,9 +64,10 @@
 
         body {
             margin: 0;
-            color: var(--text);
-            background: var(--white);
+            color: var(--how-text);
+            background: var(--how-white);
             font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
         }
@@ -91,19 +89,16 @@
 
         a:focus-visible,
         button:focus-visible {
-            outline: 3px solid var(--gold);
+            outline: 3px solid var(--how-gold);
             outline-offset: 4px;
         }
 
-        button,
-        input,
-        textarea,
-        select {
+        button {
             font: inherit;
         }
 
         .how-container {
-            width: min(var(--container), calc(100% - 40px));
+            width: min(var(--how-container), calc(100% - 40px));
             margin-inline: auto;
         }
 
@@ -114,8 +109,8 @@
             z-index: 1000;
             padding: 12px 18px;
             border-radius: 6px;
-            background: var(--white);
-            color: var(--navy);
+            background: var(--how-white);
+            color: var(--how-navy);
             font-weight: 700;
         }
 
@@ -123,13 +118,13 @@
             top: 16px;
         }
 
-        /* HEADER */
+        /* HEADER AND BRAND */
 
         .how-header {
             position: relative;
             z-index: 100;
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--how-border);
+            background: var(--how-white);
         }
 
         .how-header-inner {
@@ -142,65 +137,57 @@
 
         .how-logo {
             display: inline-flex;
-            align-items: center;
-            gap: 12px;
             flex-shrink: 0;
-            color: var(--navy);
-            text-decoration: none;
-        }
-
-        .how-logo-text,
-        .how-footer-logo-text {
-            display: flex;
             flex-direction: column;
+            color: var(--how-navy);
+            text-decoration: none;
             line-height: 1.2;
         }
 
-        .how-logo-text strong {
-            color: var(--navy);
-            font-size: 1.3rem;
+        .how-logo strong {
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
             font-weight: 800;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.055em;
         }
 
-        .how-logo-text small {
-            margin-top: 4px;
-            color: var(--muted);
-            font-size: 0.58rem;
+        .how-logo small {
+            margin-top: 6px;
+            color: var(--how-muted);
+            font-size: 0.62rem;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.055em;
         }
 
         .how-navigation {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 22px;
+            gap: 20px;
         }
 
         .how-navigation a {
-            color: var(--navy);
-            font-size: 0.92rem;
+            color: var(--how-navy);
+            font-size: 0.9rem;
             font-weight: 600;
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: color 0.2s ease, background-color 0.2s ease;
         }
 
         .how-navigation a:hover,
         .how-navigation a[aria-current="page"] {
-            color: var(--blue);
+            color: var(--how-blue);
         }
 
         .how-navigation .how-nav-cta {
             padding: 11px 17px;
             border-radius: 6px;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--how-navy);
+            color: var(--how-white);
         }
 
         .how-navigation .how-nav-cta:hover {
-            background: var(--blue);
-            color: var(--white);
+            background: var(--how-blue);
+            color: var(--how-white);
         }
 
         .how-menu-button {
@@ -210,141 +197,20 @@
             width: 44px;
             height: 44px;
             padding: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--how-border);
             border-radius: 7px;
-            background: var(--white);
-            color: var(--navy);
+            background: var(--how-white);
+            color: var(--how-navy);
             font-size: 1.35rem;
             cursor: pointer;
         }
-
-/* =========================================
-   AVERRA FOOTER — PRESERVE EXISTING STRUCTURE
-   ========================================= */
-
-.site-footer {
-    padding: 55px 0 22px;
-    color: #d8e1ea;
-    background: #071522;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 36px;
-    padding-bottom: 35px;
-}
-
-.footer-brand {
-    display: inline-block;
-    margin-bottom: 16px;
-    color: #ffffff;
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.5;
-    text-decoration: none;
-}
-
-.footer-brand:hover {
-    color: #c89b3c;
-}
-
-.footer-description {
-    margin: 0 0 20px;
-    color: #c3cfda;
-    line-height: 1.8;
-}
-
-.footer-contact p {
-    margin: 0 0 11px;
-    color: #c3cfda;
-    font-size: 0.92rem;
-    overflow-wrap: anywhere;
-}
-
-.footer-contact strong {
-    color: #ffffff;
-}
-
-.footer-contact a,
-.footer-links a {
-    color: #c3cfda;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer-contact a:hover,
-.footer-links a:hover {
-    color: #c89b3c;
-}
-
-.footer-heading {
-    margin: 0 0 17px;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.footer-links {
-    display: grid;
-    gap: 11px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.footer-links li {
-    margin: 0;
-    padding: 0;
-    font-size: 0.93rem;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px 24px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.footer-bottom p {
-    margin: 0;
-    color: #aebdca;
-    font-size: 0.85rem;
-    line-height: 1.7;
-}
-
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 30px;
-    }
-}
-
-@media (max-width: 520px) {
-    .site-footer {
-        padding-top: 40px;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 28px;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-    }
-}
-
 
         /* HERO */
 
         .how-hero {
             overflow: hidden;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--how-navy);
+            color: var(--how-white);
         }
 
         .how-hero-inner {
@@ -357,16 +223,21 @@
 
         .how-eyebrow {
             margin: 0 0 14px;
-            color: var(--gold-light);
+            color: #987024;
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
+        .how-hero .how-eyebrow,
+        .how-cta .how-eyebrow {
+            color: var(--how-gold-light);
+        }
+
         .how-hero h1 {
             margin: 0 0 22px;
-            color: var(--white);
+            color: var(--how-white);
             font-size: clamp(2.45rem, 5vw, 4.2rem);
             line-height: 1.1;
             letter-spacing: -0.035em;
@@ -422,21 +293,24 @@
         }
 
         .how-button-primary {
-            background: var(--gold);
-            color: var(--navy);
+            background: var(--how-gold);
+            color: var(--how-navy);
         }
 
         .how-button-primary:hover {
-            background: var(--gold-light);
+            background: var(--how-gold-light);
+            color: var(--how-navy);
         }
 
         .how-button-outline {
             border-color: rgba(255, 255, 255, 0.65);
-            color: var(--white);
+            background: transparent;
+            color: var(--how-white);
         }
 
         .how-button-outline:hover {
             background: rgba(255, 255, 255, 0.1);
+            color: var(--how-white);
         }
 
         .how-hero-points {
@@ -456,7 +330,7 @@
         .how-hero-points li::before {
             content: "✓";
             margin-right: 8px;
-            color: var(--gold-light);
+            color: var(--how-gold-light);
             font-weight: 800;
         }
 
@@ -467,7 +341,7 @@
         }
 
         .how-section-light {
-            background: var(--light);
+            background: var(--how-light);
         }
 
         .how-section-heading {
@@ -476,17 +350,11 @@
             text-align: center;
         }
 
-        .how-section-heading .how-eyebrow,
-        .how-intro > .how-eyebrow,
-        .how-global > .how-eyebrow {
-            color: #987024;
-        }
-
         .how-section-heading h2,
         .how-intro h2,
         .how-global h2 {
             margin: 10px 0 18px;
-            color: var(--navy);
+            color: var(--how-navy);
             font-size: clamp(1.9rem, 3vw, 2.7rem);
             line-height: 1.25;
             letter-spacing: -0.025em;
@@ -494,7 +362,7 @@
 
         .how-section-heading > p:last-child {
             margin-bottom: 0;
-            color: var(--muted);
+            color: var(--how-muted);
         }
 
         .how-intro-grid {
@@ -511,16 +379,16 @@
 
         .how-highlight {
             padding: 30px;
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--gold);
-            border-radius: var(--radius);
-            background: var(--white);
-            box-shadow: var(--shadow);
+            border: 1px solid var(--how-border);
+            border-left: 4px solid var(--how-gold);
+            border-radius: var(--how-radius);
+            background: var(--how-white);
+            box-shadow: var(--how-shadow);
         }
 
         .how-highlight h3 {
             margin-top: 0;
-            color: var(--navy);
+            color: var(--how-navy);
         }
 
         .how-highlight ul {
@@ -529,7 +397,7 @@
             padding-left: 22px;
         }
 
-        /* PRINCIPLES */
+        /* BENEFIT CARDS */
 
         .how-benefit-grid {
             display: grid;
@@ -539,15 +407,15 @@
 
         .how-benefit-card {
             padding: 27px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--white);
+            border: 1px solid var(--how-border);
+            border-radius: var(--how-radius);
+            background: var(--how-white);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .how-benefit-card:hover {
             transform: translateY(-3px);
-            box-shadow: var(--shadow);
+            box-shadow: var(--how-shadow);
         }
 
         .how-benefit-number {
@@ -559,22 +427,22 @@
             margin-bottom: 14px;
             border-radius: 50%;
             background: #f5ead1;
-            color: var(--navy);
+            color: var(--how-navy);
             font-weight: 800;
         }
 
         .how-benefit-card h3 {
             margin: 0 0 10px;
-            color: var(--navy);
+            color: var(--how-navy);
             font-size: 1.15rem;
         }
 
         .how-benefit-card p {
             margin-bottom: 0;
-            color: var(--muted);
+            color: var(--how-muted);
         }
 
-        /* PROCESS STEPS */
+        /* SIX-STEP PROCESS */
 
         .how-steps {
             max-width: 940px;
@@ -586,7 +454,7 @@
             grid-template-columns: 66px minmax(0, 1fr);
             gap: 25px;
             padding-block: 32px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--how-border);
         }
 
         .how-step:first-child {
@@ -604,26 +472,26 @@
             width: 60px;
             height: 60px;
             border-radius: 13px;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--how-navy);
+            color: var(--how-white);
             font-size: 1.1rem;
             font-weight: 800;
         }
 
         .how-step h3 {
             margin: 2px 0 12px;
-            color: var(--navy);
+            color: var(--how-navy);
             font-size: 1.4rem;
             line-height: 1.35;
         }
 
-        .how-step p {
-            color: var(--muted);
+        .how-step p,
+        .how-step ul {
+            color: var(--how-muted);
         }
 
         .how-step ul {
             padding-left: 22px;
-            color: var(--muted);
         }
 
         .how-step li {
@@ -654,31 +522,31 @@
 
         .how-flow-card {
             padding: 21px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--how-border);
             border-radius: 10px;
-            background: var(--white);
+            background: var(--how-white);
             text-align: center;
         }
 
         .how-flow-card strong {
             display: block;
-            color: var(--navy);
+            color: var(--how-navy);
         }
 
         .how-flow-card p {
             margin: 7px 0 0;
-            color: var(--muted);
+            color: var(--how-muted);
             font-size: 0.92rem;
         }
 
         .how-flow-card-highlight {
-            border-color: var(--navy);
-            background: var(--navy);
+            border-color: var(--how-navy);
+            background: var(--how-navy);
         }
 
         .how-flow-card-highlight strong,
         .how-flow-card-highlight p {
-            color: var(--white);
+            color: var(--how-white);
         }
 
         .how-flow-arrow {
@@ -690,12 +558,12 @@
         }
 
         .how-text-link {
-            color: var(--blue);
+            color: var(--how-blue);
             font-weight: 700;
         }
 
         .how-text-link:hover {
-            color: var(--navy);
+            color: var(--how-navy);
         }
 
         /* GETTING STARTED */
@@ -708,28 +576,28 @@
 
         .how-checklist-card {
             padding: 23px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--how-border);
             border-radius: 10px;
-            background: var(--white);
+            background: var(--how-white);
         }
 
         .how-checklist-card h3 {
             margin: 0 0 8px;
-            color: var(--navy);
+            color: var(--how-navy);
             font-size: 1.05rem;
         }
 
         .how-checklist-card p {
             margin: 0;
-            color: var(--muted);
+            color: var(--how-muted);
         }
 
-        /* CALL TO ACTION */
+        /* FINAL CTA */
 
         .how-cta {
             padding-block: 62px;
-            background: var(--navy);
-            color: var(--white);
+            background: var(--how-navy);
+            color: var(--how-white);
         }
 
         .how-cta-inner {
@@ -741,7 +609,7 @@
 
         .how-cta h2 {
             margin: 0 0 12px;
-            color: var(--white);
+            color: var(--how-white);
             font-size: clamp(1.8rem, 3vw, 2.5rem);
             line-height: 1.25;
         }
@@ -756,98 +624,114 @@
             flex-shrink: 0;
         }
 
-        /* FOOTER */
+        /* SHARED AVERRA FOOTER */
 
-        .how-footer {
-            padding: 52px 0 22px;
-            background: var(--navy-dark);
-            color: #d5dfe8;
+        .site-footer {
+            padding: 55px 0 22px;
+            color: #d8e1ea;
+            background: var(--how-navy-dark);
         }
 
-        .how-footer-grid {
+        .site-footer .container {
+            width: min(var(--how-container), calc(100% - 40px));
+            margin-inline: auto;
+        }
+
+        .footer-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr 1fr 1fr;
-            gap: 32px;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 36px;
+            padding-bottom: 35px;
         }
 
-        .how-footer-logo {
+        .footer-brand {
             display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-            color: var(--white);
-            text-decoration: none;
-        }
-
-        .how-footer-logo img {
-            width: 52px;
-            height: 52px;
-            flex-shrink: 0;
-            object-fit: contain;
-        }
-
-        .how-footer-logo-text strong {
-            color: var(--white);
-            font-size: 1.2rem;
-            letter-spacing: 0.08em;
-        }
-
-        .how-footer-logo-text small {
-            margin-top: 4px;
-            color: #cbd5df;
-            font-size: 0.55rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-        }
-
-        .how-footer h2 {
-            margin: 0 0 16px;
-            color: var(--white);
-            font-size: 1rem;
-        }
-
-        .how-footer p {
-            color: #c4d0dc;
-            font-size: 0.92rem;
-        }
-
-        .how-footer-links {
-            display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .how-footer a:not(.how-footer-logo) {
-            color: #d5dfe8;
-            overflow-wrap: anywhere;
+            margin-bottom: 16px;
+            color: var(--how-white);
+            font-size: 1.05rem;
+            font-weight: 800;
+            line-height: 1.5;
             text-decoration: none;
         }
 
-        .how-footer a:hover {
-            color: var(--gold-light);
-            text-decoration: underline;
+        .footer-brand span {
+            margin-top: 5px;
+            color: #cbd5df;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
         }
 
-        .how-footer-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin-top: 34px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.16);
+        .footer-brand:hover {
+            color: var(--how-gold-light);
         }
 
-        .how-footer-bottom p {
+        .footer-description {
+            margin: 0 0 20px;
+            color: #c3cfda;
+            line-height: 1.8;
+        }
+
+        .footer-contact p {
+            margin: 0 0 11px;
+            color: #c3cfda;
+            font-size: 0.92rem;
+            overflow-wrap: anywhere;
+        }
+
+        .footer-contact strong {
+            color: var(--how-white);
+        }
+
+        .footer-contact a,
+        .footer-links a {
+            color: #c3cfda;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-contact a:hover,
+        .footer-links a:hover {
+            color: var(--how-gold-light);
+        }
+
+        .footer-heading {
+            margin: 0 0 17px;
+            color: var(--how-white);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 11px;
             margin: 0;
+            padding: 0;
+            list-style: none;
         }
 
-        .how-footer-legal {
+        .footer-links li {
+            margin: 0;
+            padding: 0;
+            font-size: 0.93rem;
+        }
+
+        .footer-bottom {
             display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 12px 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            color: #aebdca;
+            font-size: 0.85rem;
+            line-height: 1.7;
         }
 
         /* RESPONSIVE */
@@ -864,8 +748,8 @@
                 right: 0;
                 left: 0;
                 padding: 16px 20px 22px;
-                border-bottom: 1px solid var(--border);
-                background: var(--white);
+                border-bottom: 1px solid var(--how-border);
+                background: var(--how-white);
                 box-shadow: 0 12px 22px rgba(11, 31, 51, 0.08);
             }
 
@@ -900,13 +784,18 @@
                 height: 340px;
             }
 
-            .how-footer-grid {
+            .how-benefit-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .footer-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
 
         @media (max-width: 650px) {
-            .how-container {
+            .how-container,
+            .site-footer .container {
                 width: calc(100% - 32px);
             }
 
@@ -915,12 +804,14 @@
                 gap: 12px;
             }
 
-            .how-logo-text strong {
-                font-size: 1.05rem;
+            .how-logo strong {
+                font-size: 0.95rem;
+                letter-spacing: 0.025em;
             }
 
-            .how-logo-text small {
-                font-size: 0.48rem;
+            .how-logo small {
+                font-size: 0.52rem;
+                letter-spacing: 0.015em;
             }
 
             .how-section {
@@ -933,7 +824,7 @@
 
             .how-benefit-grid,
             .how-checklist,
-            .how-footer-grid {
+            .footer-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -987,8 +878,11 @@
                 width: 100%;
             }
 
-            .how-footer-bottom {
-                align-items: flex-start;
+            .footer-grid {
+                gap: 28px;
+            }
+
+            .footer-bottom {
                 flex-direction: column;
             }
         }
@@ -1018,9 +912,9 @@
     <header class="how-header">
         <div class="how-container how-header-inner">
 
-            <a class="brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
-                AVERRA STAFFING SOLUTIONS LTD
-                <span>Connecting UK Businesses with Global Talent</span>
+            <a class="how-logo" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
+                <strong>AVERRA STAFFING SOLUTIONS LTD</strong>
+                <small>CONNECTING UK BUSINESS WITH GLOBAL TALENT</small>
             </a>
 
             <button
@@ -1041,7 +935,7 @@
                 <a href="how-it-works.html" aria-current="page">How It Works</a>
                 <a href="careers.html">Careers</a>
                 <a href="jobs.html">Jobs</a>
-                <a href="contact.html" class="how-nav-cta">Talk to Us</a>
+                <a href="lets-talk.html" class="how-nav-cta">Talk to Us</a>
             </nav>
 
         </div>
@@ -1059,6 +953,7 @@
 
                     <h1 id="how-hero-title">Global talent. A clearer way forward.</h1>
 
+
                     <p>
                         Finding the right people for your business should be
                         straightforward. AVERRA helps UK businesses explore
@@ -1073,7 +968,7 @@
                     </p>
 
                     <div class="how-hero-actions">
-                        <a href="contact.html" class="how-button how-button-primary">
+                        <a href="lets-talk.html" class="how-button how-button-primary">
                             Discuss Your Requirements
                         </a>
 
@@ -1092,7 +987,7 @@
                 <div class="how-hero-image-wrap" id="how-hero-image-wrap">
                     <img
                         class="how-hero-image"
-                        src="images/hero-global-talent.jpg"
+                        src="images/image21.jpg"
                         alt="International professionals collaborating across locations"
                         width="800"
                         height="600"
@@ -1258,17 +1153,14 @@
 
                     <article class="how-step">
                         <div class="how-step-number" aria-hidden="true">01</div>
-
                         <div>
                             <span class="how-step-label">Discover</span>
                             <h3>Understand your business</h3>
-
                             <p>
                                 We begin with a conversation about your
                                 organisation, current workload, business
                                 objectives and the tasks you need support with.
                             </p>
-
                             <ul>
                                 <li>Your business activities and priorities.</li>
                                 <li>Existing workload and resource gaps.</li>
@@ -1280,17 +1172,14 @@
 
                     <article class="how-step">
                         <div class="how-step-number" aria-hidden="true">02</div>
-
                         <div>
                             <span class="how-step-label">Define</span>
                             <h3>Clarify the role and requirements</h3>
-
                             <p>
                                 We establish the skills, responsibilities
                                 and practical requirements of the proposed
                                 position or service.
                             </p>
-
                             <ul>
                                 <li>Role description and relevant experience.</li>
                                 <li>Tasks, responsibilities and deliverables.</li>
@@ -1303,25 +1192,21 @@
 
                     <article class="how-step">
                         <div class="how-step-number" aria-hidden="true">03</div>
-
                         <div>
                             <span class="how-step-label">Identify</span>
                             <h3>Explore suitable professionals</h3>
-
                             <p>
                                 Based on the agreed requirements, we explore
                                 potential staffing options and professionals
                                 with relevant experience. Depending on the
                                 role, this may include talent based in India.
                             </p>
-
                             <ul>
                                 <li>Qualifications and relevant experience.</li>
                                 <li>Role-specific and technical capabilities.</li>
                                 <li>Communication and collaboration skills.</li>
                                 <li>Availability and proposed working arrangements.</li>
                             </ul>
-
                             <p>
                                 Suitability and availability are confirmed
                                 for each specific requirement.
@@ -1331,11 +1216,9 @@
 
                     <article class="how-step">
                         <div class="how-step-number" aria-hidden="true">04</div>
-
                         <div>
                             <span class="how-step-label">Select</span>
                             <h3>Review the proposed match</h3>
-
                             <p>
                                 The proposed staffing option is assessed
                                 against your requirements. Where appropriate,
@@ -1343,7 +1226,6 @@
                                 discussing experience and arranging an
                                 interview.
                             </p>
-
                             <ul>
                                 <li>Review relevant experience and skills.</li>
                                 <li>Discuss expectations and working style.</li>
@@ -1355,17 +1237,14 @@
 
                     <article class="how-step">
                         <div class="how-step-number" aria-hidden="true">05</div>
-
                         <div>
                             <span class="how-step-label">Agree</span>
                             <h3>Confirm the service arrangements</h3>
-
                             <p>
                                 Before work begins, the parties agree the
                                 scope, fees, payment terms, responsibilities
                                 and relevant contractual requirements.
                             </p>
-
                             <ul>
                                 <li>Service scope and deliverables.</li>
                                 <li>Fees, invoices and payment schedule.</li>
@@ -1378,11 +1257,9 @@
 
                     <article class="how-step">
                         <div class="how-step-number" aria-hidden="true">06</div>
-
                         <div>
                             <span class="how-step-label">Collaborate</span>
                             <h3>Onboard, communicate and review</h3>
-
                             <p>
                                 Once the arrangements are confirmed, the
                                 parties plan onboarding, introductions,
@@ -1390,7 +1267,6 @@
                                 Progress can then be reviewed against the
                                 agreed scope and expectations.
                             </p>
-
                             <ul>
                                 <li>Role introductions and task handovers.</li>
                                 <li>Appropriate training and system access.</li>
@@ -1441,7 +1317,7 @@
                     </p>
 
                     <p>
-                        <a class="how-text-link" href="contact.html">
+                        <a class="how-text-link" href="lets-talk.html">
                             Discuss your staffing requirements →
                         </a>
                     </p>
@@ -1550,12 +1426,13 @@
             </div>
         </section>
 
-        <!-- FINAL CALL TO ACTION -->
+        <!-- FINAL CTA -->
 
         <section class="how-cta" aria-labelledby="how-cta-title">
             <div class="how-container how-cta-inner">
 
                 <div>
+                    <p class="how-eyebrow">Your next step</p>
                     <h2 id="how-cta-title">Let's discuss what your business needs</h2>
 
                     <p>
@@ -1574,6 +1451,7 @@
 
     </main>
 
+    <!-- FOOTER -->
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -1630,7 +1508,6 @@
                     <li><a href="pricing.html">Pricing</a></li>
                     <li><a href="FAQ.html">Frequently Asked Questions</a></li>
                     <li><a href="lets-talk.html">Contact Us</a></li>
-
                     <li><a href="industries.html">Industries</a></li>
                 </ul>
             </div>
@@ -1639,6 +1516,7 @@
                 <h3 class="footer-heading">Legal</h3>
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
+
                 </ul>
             </div>
         </div>
@@ -1670,9 +1548,7 @@
                 return;
             }
 
-            function isMobileNavigation() {
-                return window.matchMedia("(max-width: 1000px)").matches;
-            }
+            const mobileNavigation = window.matchMedia("(max-width: 1000px)");
 
             function setMenuOpen(open) {
                 menuButton.setAttribute("aria-expanded", String(open));
@@ -1697,7 +1573,7 @@
 
             navigation.querySelectorAll("a").forEach(function (link) {
                 link.addEventListener("click", function () {
-                    if (isMobileNavigation()) {
+                    if (mobileNavigation.matches) {
                         setMenuOpen(false);
                     }
                 });
@@ -1714,7 +1590,7 @@
             });
 
             document.addEventListener("click", function (event) {
-                if (!isMobileNavigation()) {
+                if (!mobileNavigation.matches) {
                     return;
                 }
 
@@ -1730,22 +1606,32 @@
                 }
             });
 
-            window.addEventListener("resize", function () {
-                if (!isMobileNavigation()) {
+            function handleBreakpointChange() {
+                if (!mobileNavigation.matches) {
                     setMenuOpen(false);
                 }
-            });
+            }
+
+            if (typeof mobileNavigation.addEventListener === "function") {
+                mobileNavigation.addEventListener("change", handleBreakpointChange);
+            } else {
+                mobileNavigation.addListener(handleBreakpointChange);
+            }
 
             const heroImage = document.querySelector(".how-hero-image");
             const heroImageWrap = document.getElementById("how-hero-image-wrap");
 
             if (heroImage && heroImageWrap) {
-                heroImage.addEventListener("error", function () {
-                    heroImageWrap.hidden = true;
-                });
+                function hideBrokenHeroImage() {
+                    if (heroImage.naturalWidth === 0) {
+                        heroImageWrap.hidden = true;
+                    }
+                }
 
-                if (heroImage.complete && heroImage.naturalWidth === 0) {
-                    heroImageWrap.hidden = true;
+                heroImage.addEventListener("error", hideBrokenHeroImage);
+
+                if (heroImage.complete) {
+                    hideBrokenHeroImage();
                 }
             }
         })();
