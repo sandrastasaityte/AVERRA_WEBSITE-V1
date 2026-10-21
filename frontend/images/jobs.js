@@ -36,11 +36,26 @@
 
     const $ = id => document.getElementById(id);
 
-    const jobsGrid = $("jobs-grid");
-    const jobsStatus = $("jobs-status");
-    const jobsCount = $("jobs-results-count");
-    const searchInput = $("job-search");
-    const categoryFilter = $("job-category-filter");
+   // Support the IDs used by both the homepage and Jobs page.
+const jobsGrid =
+    $("jobs-grid") ||
+    $("jobs-container");
+
+const jobsStatus =
+    $("jobs-status") ||
+    $("jobs-message");
+
+const jobsCount =
+    $("jobs-results-count") ||
+    $("jobs-count");
+
+const searchInput =
+    $("job-search") ||
+    $("jobs-search");
+
+const categoryFilter =
+    $("job-category-filter") ||
+    $("job-category");
 
     const applicationForm = $("cv-application-form");
     const vacancySelect = $("applicant-role");

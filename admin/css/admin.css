@@ -1,7 +1,8 @@
 
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
-   PREMIUM ADMIN PANEL — RESPONSIVE STYLESHEET
+   COMPLETE ADMIN PANEL STYLESHEET
+   File: admin/css/admin.css
    ============================================================ */
 
 /* 1. DESIGN TOKENS */
@@ -43,7 +44,7 @@
     --content-width: 1180px;
 }
 
-/* 2. RESET AND PAGE FOUNDATION */
+/* 2. RESET AND FOUNDATION */
 
 *,
 *::before,
@@ -101,6 +102,10 @@ button:disabled {
     opacity: 0.65;
 }
 
+[hidden] {
+    display: none !important;
+}
+
 :focus-visible {
     outline: 3px solid rgba(200, 155, 60, 0.85);
     outline-offset: 3px;
@@ -132,7 +137,8 @@ p {
     margin-top: 0;
 }
 
-.muted {
+.muted,
+.subtitle {
     color: var(--muted);
 }
 
@@ -150,7 +156,19 @@ p {
     text-transform: uppercase;
 }
 
-/* 3. FORMS */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* 3. FORM FIELDS */
 
 label {
     display: block;
@@ -166,6 +184,7 @@ select,
 textarea {
     display: block;
     width: 100%;
+    min-width: 0;
     min-height: 44px;
     padding: 11px 13px;
     color: var(--text);
@@ -209,9 +228,15 @@ input[type="radio"] {
     accent-color: var(--blue);
 }
 
+.field {
+    width: 100%;
+    min-height: 44px;
+}
+
 /* 4. BUTTONS */
 
-.btn {
+.btn,
+.button {
     display: inline-flex;
     min-height: 42px;
     align-items: center;
@@ -220,43 +245,51 @@ input[type="radio"] {
     padding: 10px 16px;
     border: 1px solid transparent;
     border-radius: var(--radius-sm);
+    font-family: inherit;
     font-size: 0.9rem;
     font-weight: 750;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
+    cursor: pointer;
     transition: transform 150ms ease, box-shadow 150ms ease,
         background 150ms ease, border-color 150ms ease;
 }
 
-.btn:hover {
+.btn:hover,
+.button:hover {
     text-decoration: none;
     transform: translateY(-1px);
 }
 
-.btn:active {
+.btn:active,
+.button:active {
     transform: translateY(0);
 }
 
-.btn-primary {
+.btn-primary,
+.button-primary {
     color: #ffffff;
     background: var(--blue);
     box-shadow: 0 4px 10px rgba(29, 95, 145, 0.14);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.button-primary:hover {
     color: #ffffff;
     background: var(--blue-hover);
     box-shadow: 0 7px 16px rgba(29, 95, 145, 0.2);
 }
 
-.btn-secondary {
+.btn-secondary,
+.button-secondary {
     color: var(--navy);
     background: #edf2f7;
     border-color: var(--border);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.button-secondary:hover {
     color: var(--navy);
     background: #e1e9f1;
 }
@@ -283,12 +316,28 @@ input[type="radio"] {
     overflow-wrap: anywhere;
 }
 
-.message.error {
+.message:empty {
+    display: none;
+}
+
+.message.error,
+.message-error {
     color: var(--danger);
 }
 
 .message.success {
     color: var(--success);
+}
+
+.message-info {
+    color: var(--blue);
+    background: var(--blue-light);
+}
+
+.message-error {
+    padding: 11px 14px;
+    background: var(--danger-bg);
+    border-radius: var(--radius-sm);
 }
 
 /* 5. LOGIN PAGE */
@@ -381,13 +430,13 @@ input[type="radio"] {
     opacity: 0.7;
 }
 
-#login-message:empty {
-    display: none;
-}
-
 #login-message {
     margin-top: 14px;
     overflow-wrap: anywhere;
+}
+
+#login-message:empty {
+    display: none;
 }
 
 .login-footer {
@@ -434,7 +483,8 @@ input[type="radio"] {
     text-decoration: none;
 }
 
-.admin-nav {
+.admin-nav,
+.header-links {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -442,7 +492,8 @@ input[type="radio"] {
     flex-wrap: wrap;
 }
 
-.admin-nav a {
+.admin-nav a,
+.header-links a {
     padding: 8px 11px;
     color: #e8eef5;
     border-radius: 6px;
@@ -452,13 +503,15 @@ input[type="radio"] {
 }
 
 .admin-nav a:hover,
-.admin-nav a[aria-current="page"] {
+.admin-nav a[aria-current="page"],
+.header-links a:hover {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.09);
     text-decoration: none;
 }
 
-.admin-nav button {
+.admin-nav button,
+#logout-button {
     min-height: 36px;
     padding: 7px 12px;
     color: #ffffff;
@@ -469,14 +522,17 @@ input[type="radio"] {
     transition: background 150ms ease, border-color 150ms ease;
 }
 
-.admin-nav button:hover {
+.admin-nav button:hover,
+#logout-button:hover {
+    color: #ffffff;
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.65);
 }
 
-/* 7. MAIN CONTENT AND PAGE HEADINGS */
+/* 7. MAIN CONTENT AND HEADINGS */
 
-.admin-main {
+.admin-main,
+.page {
     width: min(var(--content-width), 92%);
     min-height: calc(100vh - 150px);
     margin: 34px auto 48px;
@@ -501,8 +557,22 @@ input[type="radio"] {
     color: var(--muted);
 }
 
-.page-heading .btn {
+.page-heading .btn,
+.page-heading .button {
     flex-shrink: 0;
+}
+
+.panel-heading {
+    margin-bottom: 20px;
+}
+
+.panel-heading h2 {
+    margin-bottom: 6px;
+}
+
+.panel-heading p {
+    margin-bottom: 0;
+    color: var(--muted);
 }
 
 /* 8. DASHBOARD CARDS AND METRICS */
@@ -590,6 +660,10 @@ table {
     background: var(--surface);
 }
 
+caption {
+    text-align: left;
+}
+
 th,
 td {
     padding: 13px 14px;
@@ -625,6 +699,12 @@ td a {
     font-weight: 650;
 }
 
+.empty-state {
+    padding: 34px 22px;
+    color: var(--muted);
+    text-align: center;
+}
+
 /* 10. STATUS CHIPS */
 
 .status {
@@ -643,7 +723,10 @@ td a {
 
 .status.published,
 .status.new,
-.status.completed {
+.status.completed,
+.status.responded,
+.status.replied,
+.status.resolved {
     color: var(--success);
     background: var(--success-bg);
 }
@@ -656,7 +739,10 @@ td a {
 
 .status.draft,
 .status.pending,
-.status.in-progress {
+.status.in-progress,
+.status.in_progress,
+.status.contacted,
+.status.unread {
     color: var(--warning);
     background: var(--warning-bg);
 }
@@ -670,13 +756,29 @@ td a {
     flex-wrap: wrap;
 }
 
-.actions .btn {
+.actions .btn,
+.actions .button {
     min-height: 34px;
     padding: 7px 10px;
     font-size: 0.8rem;
 }
 
-/* 12. ENQUIRIES PAGE */
+.person-name {
+    color: var(--navy);
+    font-weight: 750;
+}
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+/* 12. ENQUIRIES STATISTICS */
 
 .stats {
     display: grid;
@@ -723,6 +825,8 @@ td a {
     line-height: 1.2;
 }
 
+/* 13. ENQUIRY SEARCH AND FILTERS */
+
 .filters {
     display: grid;
     grid-template-columns: minmax(200px, 1fr) minmax(160px, 230px) auto;
@@ -739,7 +843,8 @@ td a {
     margin-top: 0;
 }
 
-.filters .btn {
+.filters .btn,
+.filters .button {
     min-height: 44px;
 }
 
@@ -758,71 +863,99 @@ td a {
     white-space: pre-wrap;
 }
 
-.empty-state {
-    padding: 34px 22px;
-    color: var(--muted);
-    text-align: center;
-}
+/* 14. ENQUIRY DETAILS MODAL
+   Correct HTML structure:
+   .modal-backdrop > .modal
+   The backdrop and white panel are separate elements.
+   ============================================================ */
 
-/* 13. MODALS */
-
-.modal,
-.modal-overlay {
+.modal-backdrop {
     position: fixed;
-    z-index: 1000;
     inset: 0;
-    display: flex;
+    z-index: 9999;
+    display: none;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    background: rgba(7, 21, 34, 0.62);
+    padding: 24px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: rgba(7, 21, 34, 0.68);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-.modal[hidden],
-.modal-overlay[hidden] {
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal-backdrop[aria-hidden="true"] {
     display: none !important;
 }
 
-.modal-content,
-.modal-dialog {
-    width: min(100%, 680px);
-    max-height: min(85vh, 850px);
-    overflow-y: auto;
-    padding: 28px;
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+/* White modal panel */
+
+.modal-backdrop > .modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 760px;
+    max-height: calc(100vh - 48px);
+    margin: auto;
+    padding: 0;
+    overflow: hidden auto;
+    background: #ffffff;
+    color: var(--text);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     animation: admin-card-in 200ms ease both;
 }
 
+/* Modal header */
+
 .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
+    margin: 0;
+    padding: 23px 26px;
+    background: #ffffff;
     border-bottom: 1px solid var(--border);
 }
 
 .modal-header h2 {
-    margin-bottom: 0;
+    margin: 0;
+    color: var(--navy);
+    font-size: 1.3rem;
+}
+
+.modal-header p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
 }
 
 .modal-close {
     display: inline-flex;
+    flex: 0 0 36px;
     width: 36px;
     height: 36px;
-    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    color: var(--muted);
+    margin: 0;
+    padding: 0;
+    color: var(--navy);
     background: #f1f4f8;
-    border: 0;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    font-size: 1.35rem;
+    font-size: 1.4rem;
+    line-height: 1;
 }
 
 .modal-close:hover {
@@ -830,17 +963,155 @@ td a {
     background: #e4eaf1;
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 22px;
-    padding-top: 18px;
+/* Modal body */
+
+.modal-body {
+    min-width: 0;
+    padding: 24px 26px;
+}
+
+#modal-message {
+    margin: 0 0 16px;
+    overflow-wrap: anywhere;
+}
+
+#modal-message:empty {
+    display: none;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.detail-grid > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.detail-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+
+.detail-grid > div > div:not(.detail-label) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.detail-grid a {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.detail-message {
+    grid-column: 1 / -1;
+    min-width: 0;
+    padding-top: 17px;
     border-top: 1px solid var(--border);
 }
 
-/* 14. JOB CREATE / EDIT FORM */
+#detail-message {
+    min-height: 60px;
+    color: var(--text);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* Modal footer and status controls */
+
+.modal-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 20px 26px 24px;
+    background: #f7f9fc;
+    border-top: 1px solid var(--border);
+}
+
+.status-control {
+    display: flex;
+    flex: 1 1 320px;
+    align-items: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.status-control label {
+    flex-basis: 100%;
+    margin: 0 0 -3px;
+}
+
+.status-control select {
+    flex: 1 1 150px;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+}
+
+.status-control button {
+    flex: 0 0 auto;
+}
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.modal-actions a,
+.modal-actions button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+}
+
+.modal-actions a {
+    color: var(--blue);
+    background: #ffffff;
+}
+
+.modal-actions a:hover {
+    color: var(--blue-hover);
+    background: var(--blue-light);
+}
+
+.modal-actions button {
+    color: #ffffff;
+    background: var(--blue);
+    border-color: var(--blue);
+}
+
+.modal-actions button:hover {
+    background: var(--blue-hover);
+}
+
+/* 15. VACANCY FORM */
 
 .form-panel {
     max-width: 850px;
@@ -875,6 +1146,7 @@ td a {
 }
 
 .form-panel .muted {
+    margin-top: 8px;
     overflow-wrap: anywhere;
 }
 
@@ -887,16 +1159,17 @@ td a {
     border-top: 1px solid var(--border);
 }
 
-.form-actions .btn {
+.form-actions .btn,
+.form-actions .button {
     min-height: 43px;
-}
-
-#form-message:empty {
-    display: none;
 }
 
 #form-message {
     overflow-wrap: anywhere;
+}
+
+#form-message:empty {
+    display: none;
 }
 
 #save-button:disabled {
@@ -904,7 +1177,7 @@ td a {
     opacity: 0.7;
 }
 
-/* 15. JOBS LISTING */
+/* 16. JOBS LISTING */
 
 .jobs-panel {
     padding: 0;
@@ -990,25 +1263,13 @@ td a {
     margin-bottom: 18px;
 }
 
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
 #refresh-jobs:disabled,
 #clear-job-filters:disabled {
     cursor: wait;
     opacity: 0.65;
 }
 
-/* 16. FOOTER */
+/* 17. FOOTER */
 
 .admin-footer {
     padding: 20px 16px;
@@ -1023,7 +1284,7 @@ td a {
     font-size: 0.85rem;
 }
 
-/* 17. ANIMATIONS */
+/* 18. ANIMATIONS AND ACCESSIBILITY */
 
 @keyframes admin-card-in {
     from {
@@ -1048,7 +1309,7 @@ td a {
     }
 }
 
-/* 18. TABLET */
+/* 19. TABLET */
 
 @media (max-width: 900px) {
     .admin-header {
@@ -1058,7 +1319,8 @@ td a {
         padding: 18px 4%;
     }
 
-    .admin-nav {
+    .admin-nav,
+    .header-links {
         justify-content: flex-start;
     }
 
@@ -1073,29 +1335,33 @@ td a {
     }
 
     .filters .btn,
+    .filters .button,
     .jobs-clear-filter {
         grid-column: 1 / -1;
     }
 }
 
-/* 19. MOBILE */
+/* 20. MOBILE */
 
 @media (max-width: 700px) {
     .admin-header {
         padding: 17px 4%;
     }
 
-    .admin-nav {
+    .admin-nav,
+    .header-links {
         width: 100%;
         justify-content: flex-start;
         gap: 5px;
     }
 
-    .admin-nav a {
+    .admin-nav a,
+    .header-links a {
         padding: 8px 9px;
     }
 
-    .admin-main {
+    .admin-main,
+    .page {
         width: 92%;
         margin: 24px auto 36px;
     }
@@ -1105,7 +1371,8 @@ td a {
         flex-direction: column;
     }
 
-    .page-heading .btn {
+    .page-heading .btn,
+    .page-heading .button {
         width: 100%;
     }
 
@@ -1131,7 +1398,8 @@ td a {
         padding: 19px;
     }
 
-    .jobs-toolbar .btn {
+    .jobs-toolbar .btn,
+    .jobs-toolbar .button {
         width: 100%;
     }
 
@@ -1143,6 +1411,7 @@ td a {
     }
 
     .filters .btn,
+    .filters .button,
     .jobs-clear-filter {
         width: 100%;
         grid-column: auto;
@@ -1164,14 +1433,13 @@ td a {
         grid-column: auto;
     }
 
-    .form-actions,
-    .modal-actions {
+    .form-actions {
         flex-direction: column;
         align-items: stretch;
     }
 
     .form-actions .btn,
-    .modal-actions .btn {
+    .form-actions .button {
         width: 100%;
     }
 
@@ -1179,13 +1447,58 @@ td a {
         padding: 29px 25px;
     }
 
-    .modal-content,
-    .modal-dialog {
-        padding: 21px;
+    .modal-backdrop {
+        align-items: flex-start;
+        padding: 12px;
+    }
+
+    .modal-backdrop > .modal {
+        max-height: calc(100vh - 24px);
+        border-radius: 12px;
+    }
+
+    .modal-header,
+    .modal-body {
+        padding: 19px;
+    }
+
+    .modal-footer {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 18px 19px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .detail-message {
+        grid-column: auto;
+    }
+
+    .status-control {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .status-control select,
+    .status-control button {
+        width: 100%;
+    }
+
+    .modal-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .modal-actions a,
+    .modal-actions button {
+        width: 100%;
     }
 }
 
-/* 20. SMALL MOBILE */
+/* 21. SMALL MOBILE */
 
 @media (max-width: 480px) {
     body {
@@ -1207,7 +1520,8 @@ td a {
     }
 
     .admin-nav a,
-    .admin-nav button {
+    .admin-nav button,
+    .header-links a {
         font-size: 0.84rem;
     }
 
@@ -1222,167 +1536,21 @@ td a {
         font-size: 1.9rem;
     }
 
-    .modal,
-    .modal-overlay {
+    .modal-backdrop {
         padding: 10px;
     }
 
-    .modal-content,
-    .modal-dialog {
-        max-height: 92vh;
-        padding: 18px;
-        border-radius: 12px;
-    }
-}
-
-/* ============================================================
-   ENQUIRY DETAILS MODAL — LAYOUT FIX
-   ============================================================ */
-
-/* Full-screen dark overlay */
-.modal,
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    padding: 24px;
-    box-sizing: border-box;
-    background: rgba(7, 21, 34, 0.68);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 9999;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
-}
-
-/* Hide closed modals */
-.modal[hidden],
-.modal-overlay[hidden],
-[hidden] {
-    display: none !important;
-}
-
-/* Main modal panel */
-.modal-content,
-.modal-dialog,
-.enquiry-details {
-    position: relative;
-    width: 100%;
-    max-width: 680px;
-    max-height: calc(100vh - 48px);
-    margin: auto;
-    padding: 28px;
-    box-sizing: border-box;
-    overflow-y: auto;
-
-    background: #ffffff;
-    color: #263445;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    box-shadow: 0 24px 70px rgba(7, 21, 34, 0.25);
-}
-
-/* Modal headings */
-.modal-content h2,
-.modal-dialog h2,
-.enquiry-details h2 {
-    margin: 0 48px 24px 0;
-    color: #0b1f33;
-    font-size: 1.35rem;
-    line-height: 1.4;
-}
-
-/* Details layout */
-.modal-content .detail-row,
-.modal-dialog .detail-row,
-.enquiry-details .detail-row {
-    display: grid;
-    grid-template-columns: 130px minmax(0, 1fr);
-    gap: 16px;
-    padding: 12px 0;
-    border-bottom: 1px solid #edf0f4;
-    overflow-wrap: anywhere;
-}
-
-.modal-content label,
-.modal-dialog label,
-.enquiry-details label {
-    display: block;
-    margin: 0 0 8px;
-    color: #0b1f33;
-    font-weight: 600;
-}
-
-/* Inputs and dropdowns inside the modal */
-.modal-content input,
-.modal-content select,
-.modal-content textarea,
-.modal-dialog input,
-.modal-dialog select,
-.modal-dialog textarea,
-.enquiry-details input,
-.enquiry-details select,
-.enquiry-details textarea {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    margin-bottom: 12px;
-}
-
-/* Modal buttons */
-.modal-content button,
-.modal-dialog button,
-.enquiry-details button {
-    cursor: pointer;
-    margin: 6px 8px 0 0;
-}
-
-/* Close button */
-.modal-content .modal-close,
-.modal-dialog .modal-close,
-.enquiry-details .modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #dbe2ea;
-    border-radius: 8px;
-    background: #f8fafc;
-    color: #0b1f33;
-    font-size: 20px;
-}
-
-/* Smaller screens */
-@media (max-width: 600px) {
-    .modal,
-    .modal-overlay {
-        padding: 12px;
-    }
-
-    .modal-content,
-    .modal-dialog,
-    .enquiry-details {
-        max-width: 100%;
-        max-height: calc(100vh - 24px);
-        padding: 20px;
+    .modal-backdrop > .modal {
+        max-height: calc(100vh - 20px);
         border-radius: 12px;
     }
 
-    .modal-content .detail-row,
-    .modal-dialog .detail-row,
-    .enquiry-details .detail-row {
-        grid-template-columns: 1fr;
-        gap: 4px;
+    .modal-header,
+    .modal-body {
+        padding: 16px;
+    }
+
+    .modal-footer {
+        padding: 16px;
     }
 }
