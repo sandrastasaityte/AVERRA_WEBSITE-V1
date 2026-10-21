@@ -59,7 +59,7 @@ LOG_DIR = BASE_DIR / "logs"
 UPLOAD_DIR = BASE_DIR / "uploads"
 
 # Load the backend's environment file before importing the database.
-load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR / ".env", override=True)
 
 for directory in (DATABASE_DIR, LOG_DIR, UPLOAD_DIR):
     directory.mkdir(parents=True, exist_ok=True)
