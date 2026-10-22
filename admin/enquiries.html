@@ -8,191 +8,678 @@
 
     <title>Enquiries | AVERRA Admin</title>
 
-    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="css/admin.css">
 
+    <style>
+        :root {
+            --averra-navy: #0b1f33;
+            --averra-dark: #071522;
+            --averra-blue: #1d5f91;
+            --averra-gold: #c89b3c;
+            --page-bg: #f4f6f9;
+            --border: #e1e7ee;
+            --muted: #64748b;
+            --success: #166534;
+            --danger: #b91c1c;
+        }
 
-<link rel="stylesheet" href="css/admin.css">
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: #172033;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .admin-header {
+            background: var(--averra-navy);
+            color: white;
+            padding: 18px 24px;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .brand span {
+            color: var(--averra-gold);
+        }
+
+        .header-subtitle {
+            margin: 5px 0 0;
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .admin-nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+        }
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .admin-nav a {
+            display: inline-block;
+            padding: 15px 14px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            color: var(--averra-blue);
+            border-bottom-color: var(--averra-gold);
+        }
+
+        .page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 28px 24px 50px;
+        }
+
+        .page-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            color: var(--averra-navy);
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 7px rgb(15 23 42 / 4%);
+        }
+
+        .stat-label {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 29px;
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--averra-navy);
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 2px 7px rgb(15 23 42 / 4%);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--averra-navy);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filters input,
+        .filters select {
+            min-height: 42px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 9px 12px;
+            background: white;
+            color: #172033;
+        }
+
+        .filters input {
+            min-width: 230px;
+        }
+
+        .button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 7px;
+            border: 0;
+            border-radius: 7px;
+            padding: 11px 15px;
+            min-height: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s ease;
+        }
+
+        .button-primary {
+            background: var(--averra-blue);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: var(--averra-navy);
+        }
+
+        .button-secondary {
+            background: #e9eef5;
+            color: var(--averra-navy);
+        }
+
+        .button-secondary:hover {
+            background: #dbe4ef;
+        }
+
+        .button-gold {
+            background: var(--averra-gold);
+            color: var(--averra-dark);
+        }
+
+        .button-gold:hover {
+            background: #d9ae55;
+        }
+
+        .button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 15px 18px;
+            border-bottom: 1px solid #edf0f4;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.45px;
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .cell-primary {
+            color: var(--averra-navy);
+            font-weight: 600;
+        }
+
+        .cell-secondary {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .status-new,
+        .status-unread {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-in_progress {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-contacted,
+        .status-replied {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .status-resolved,
+        .status-closed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .table-actions {
+            white-space: nowrap;
+        }
+
+        .table-actions .button {
+            padding: 8px 11px;
+            min-height: 34px;
+        }
+
+        .message-area {
+            padding: 20px;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .message-area.error {
+            color: var(--danger);
+            background: #fff7f7;
+        }
+
+        .message-area.success {
+            color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgb(7 21 34 / 68%);
+            overflow-y: auto;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 760px;
+            max-height: 92vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 13px;
+            box-shadow: 0 20px 60px rgb(0 0 0 / 25%);
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: white;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 21px;
+            color: var(--averra-navy);
+        }
+
+        .modal-close {
+            border: 0;
+            background: transparent;
+            color: #64748b;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            min-width: 0;
+        }
+
+        .detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--muted);
+        }
+
+        .detail-value {
+            color: #172033;
+            overflow-wrap: anywhere;
+            line-height: 1.55;
+        }
+
+        .detail-value a {
+            color: var(--averra-blue);
+        }
+
+        .message-box {
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            min-height: 80px;
+        }
+
+        .status-editor {
+            margin-top: 25px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .status-editor label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--averra-navy);
+        }
+
+        .status-editor select {
+            width: 100%;
+            max-width: 340px;
+            min-height: 43px;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: white;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .modal-actions-left,
+        .modal-actions-right {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .notice {
+            padding: 12px 14px;
+            margin-top: 15px;
+            border-radius: 7px;
+            font-size: 13px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .notice.error {
+            display: block;
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .notice.success {
+            display: block;
+            color: #166534;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 28px 10px 0;
+        }
+
+        @media (max-width: 900px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .admin-header {
+                padding: 16px;
+            }
+
+            .admin-nav {
+                padding: 0 8px;
+            }
+
+            .admin-nav a {
+                padding: 13px 9px;
+                font-size: 13px;
+            }
+
+            .page {
+                padding: 22px 14px 35px;
+            }
+
+            .page-heading h1 {
+                font-size: 24px;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 25px;
+            }
+
+            .filters {
+                width: 100%;
+            }
+
+            .filters input,
+            .filters select {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-item.full-width {
+                grid-column: auto;
+            }
+
+            .modal-backdrop {
+                padding: 10px;
+            }
+
+            .modal-body {
+                padding: 18px;
+            }
+
+            .modal-header {
+                padding: 17px 18px;
+            }
+
+            .modal-actions,
+            .modal-actions-left,
+            .modal-actions-right {
+                width: 100%;
+            }
+
+            .modal-actions .button {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 
 <body>
 <header class="admin-header">
     <div class="header-inner">
-        <div class="brand">
-            AVERRA
-            <span>Staffing Solutions Ltd · Administration</span>
+        <div>
+            <p class="brand">AVERRA <span>ADMIN</span></p>
+            <p class="header-subtitle">Staffing Solutions Ltd · Administration</p>
         </div>
-
-        <nav class="header-links" aria-label="Admin navigation">
-            <a href="index.html">Dashboard</a>
-            <a href="jobs.html">Jobs</a>
-            <a href="enquiries.html" class="active">Enquiries</a>
-        </nav>
+        <a class="button button-secondary" href="../index.html">View website</a>
     </div>
 </header>
+
+<nav class="admin-nav" aria-label="Admin navigation">
+    <div class="nav-inner">
+        <a href="index.html">Dashboard</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="enquiries.html" class="active" aria-current="page">Enquiries</a>
+    </div>
+</nav>
 
 <main class="page">
     <section class="page-heading">
         <div>
             <h1>Website enquiries</h1>
-            <p class="subtitle">
-                Review and manage messages submitted through the AVERRA website.
-            </p>
+            <p>Review messages from potential clients and candidates.</p>
         </div>
-
-        <button id="refresh-button" class="button button-primary" type="button">
+        <button type="button" class="button button-primary" id="refresh-button">
             Refresh enquiries
         </button>
     </section>
 
     <section class="stats" aria-label="Enquiry statistics">
-        <article class="stat-card">
-            <div class="stat-label">Total enquiries</div>
+        <div class="stat-card">
+            <span class="stat-label">Total enquiries</span>
             <div class="stat-number" id="stat-total">—</div>
-        </article>
-
-        <article class="stat-card">
-            <div class="stat-label">New enquiries</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">New / unread</span>
             <div class="stat-number" id="stat-new">—</div>
-        </article>
-
-        <article class="stat-card">
-            <div class="stat-label">In progress</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">In progress</span>
             <div class="stat-number" id="stat-progress">—</div>
-        </article>
-
-        <article class="stat-card">
-            <div class="stat-label">Resolved / closed</div>
-            <div class="stat-number" id="stat-closed">—</div>
-        </article>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Resolved / closed</span>
+            <div class="stat-number" id="stat-resolved">—</div>
+        </div>
     </section>
 
     <section class="panel">
-        <div class="panel-heading">
+        <div class="panel-header">
             <h2>All enquiries</h2>
-            <p>Search by name, email, company or message.</p>
-        </div>
-
-        <div class="filters">
-            <input
-                id="search-input"
-                class="field"
-                type="search"
-                placeholder="Search enquiries..."
-                aria-label="Search enquiries"
-            >
-
-            <select id="status-filter" class="field" aria-label="Filter by status">
-                <option value="">All statuses</option>
-                <option value="new">New</option>
-                <option value="unread">Unread</option>
-                <option value="contacted">Contacted</option>
-                <option value="in_progress">In progress</option>
-                <option value="replied">Replied</option>
-                <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
-            </select>
-
-            <button id="clear-filters" class="button button-secondary" type="button">
-                Clear filters
-            </button>
-        </div>
-
-        <div id="page-message" role="status" aria-live="polite"></div>
-
-        <div class="table-wrap">
-            <table>
-                <thead>
-                <tr>
-                    <th>Contact</th>
-                    <th>Company</th>
-                    <th>Subject</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody id="enquiries-table-body">
-                <tr>
-                    <td colspan="6" class="empty-state">Loading enquiries...</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="table-footer">
-            <span id="results-count">Loading...</span>
-            <span>AVERRA Staffing Solutions Ltd</span>
-        </div>
-    </section>
-</main>
-
-<div
-    id="enquiry-modal"
-    class="modal-backdrop"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modal-title"
-    aria-hidden="true"
->
-    <section class="modal">
-        <header class="modal-header">
-            <div>
-                <h2 id="modal-title">Enquiry details</h2>
-                <div id="modal-subtitle" class="secondary-text"></div>
-            </div>
-            <button
-                id="modal-close"
-                class="modal-close"
-                type="button"
-                aria-label="Close enquiry details"
-            >&times;</button>
-        </header>
-
-        <div class="modal-body">
-            <div id="modal-message" role="status" aria-live="polite"></div>
-
-            <div class="detail-grid">
-                <div>
-                    <span class="detail-label">Name</span>
-                    <div class="detail-value" id="detail-name">—</div>
-                </div>
-
-                <div>
-                    <span class="detail-label">Email</span>
-                    <div class="detail-value" id="detail-email">—</div>
-                </div>
-
-                <div>
-                    <span class="detail-label">Phone</span>
-                    <div class="detail-value" id="detail-phone">—</div>
-                </div>
-
-                <div>
-                    <span class="detail-label">Company</span>
-                    <div class="detail-value" id="detail-company">—</div>
-                </div>
-
-                <div>
-                    <span class="detail-label">Subject</span>
-                    <div class="detail-value" id="detail-subject">—</div>
-                </div>
-
-                <div>
-                    <span class="detail-label">Received</span>
-                    <div class="detail-value" id="detail-date">—</div>
-                </div>
-
-                <div class="detail-message">
-                    <span class="detail-label">Message</span>
-                    <div id="detail-message">—</div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="modal-footer">
-            <div class="status-control">
-                <label for="detail-status">Status</label>
-                <select id="detail-status" class="field">
+            <div class="filters">
+                <input
+                    type="search"
+                    id="search-input"
+                    placeholder="Search enquiries..."
+                    aria-label="Search enquiries"
+                >
+                <select id="status-filter" aria-label="Filter by status">
+                    <option value="">All statuses</option>
                     <option value="new">New</option>
                     <option value="unread">Unread</option>
                     <option value="contacted">Contacted</option>
@@ -201,76 +688,219 @@
                     <option value="resolved">Resolved</option>
                     <option value="closed">Closed</option>
                 </select>
-                <button id="save-status" class="button button-primary" type="button">
-                    Save status
-                </button>
+            </div>
+        </div>
+
+        <div id="page-message" class="message-area" role="status">
+            Loading enquiries...
+        </div>
+
+        <div class="table-wrap" id="table-container" hidden>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Contact</th>
+                    <th>Company</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="enquiries-table-body"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="footer">
+        AVERRA Staffing Solutions Ltd · Admin enquiries
+    </div>
+</main>
+
+<div
+    class="modal-backdrop"
+    id="enquiry-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+>
+    <section class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Enquiry details</h2>
+            <button
+                type="button"
+                class="modal-close"
+                id="close-modal"
+                aria-label="Close enquiry details"
+            >&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Name</span>
+                    <div class="detail-value" id="detail-name">—</div>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Email</span>
+                    <div class="detail-value" id="detail-email">—</div>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Phone</span>
+                    <div class="detail-value" id="detail-phone">—</div>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Company</span>
+                    <div class="detail-value" id="detail-company">—</div>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Subject</span>
+                    <div class="detail-value" id="detail-subject">—</div>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Received</span>
+                    <div class="detail-value" id="detail-date">—</div>
+                </div>
+
+                <div class="detail-item full-width">
+                    <span class="detail-label">Message</span>
+                    <div class="message-box" id="detail-message">—</div>
+                </div>
             </div>
 
-            <div class="modal-actions">
-                <a id="reply-link" class="button button-secondary" href="#">
-                    Reply by email
-                </a>
-                <button id="modal-done" class="button button-secondary" type="button">
-                    Done
-                </button>
+            <div class="status-editor">
+                <label for="detail-status">Enquiry status</label>
+                <select id="detail-status">
+                    <option value="new">New</option>
+                    <option value="unread">Unread</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="in_progress">In progress</option>
+                    <option value="replied">Replied</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
             </div>
-        </footer>
+
+            <div id="modal-notice" class="notice" role="status"></div>
+
+            <div class="modal-actions">
+                <div class="modal-actions-left">
+                    <button
+                        type="button"
+                        class="button button-secondary"
+                        id="close-modal-bottom"
+                    >Close</button>
+                </div>
+
+                <div class="modal-actions-right">
+                    <a
+                        id="reply-link"
+                        class="button button-gold"
+                        href="#"
+                        target="_blank"
+                        rel="noopener"
+                    >Reply by email</a>
+
+                    <button
+                        type="button"
+                        class="button button-primary"
+                        id="save-status-button"
+                    >Save status</button>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 
 <script src="js/auth.js"></script>
 
 <script>
-(() => {
+(function () {
     "use strict";
 
+    /*
+     * LOCAL DEVELOPMENT:
+     * This is correct when the API is running on your own computer.
+     *
+     * HOSTED WEBSITE:
+     * Replace this with your deployed backend URL when the backend is
+     * hosted. Do not use 127.0.0.1 for a live website.
+     */
     const API_BASE = "http://127.0.0.1:8000";
 
-    const tableBody = document.getElementById("enquiries-table-body");
-    const pageMessage = document.getElementById("page-message");
-    const searchInput = document.getElementById("search-input");
-    const statusFilter = document.getElementById("status-filter");
-    const resultsCount = document.getElementById("results-count");
-    const modal = document.getElementById("enquiry-modal");
+    const STATUS_LABELS = {
+        new: "New",
+        unread: "Unread",
+        contacted: "Contacted",
+        in_progress: "In progress",
+        replied: "Replied",
+        resolved: "Resolved",
+        closed: "Closed"
+    };
 
-    let enquiries = [];
-    let selectedEnquiry = null;
+    const state = {
+        enquiries: [],
+        currentEnquiry: null,
+        loading: false,
+        saving: false
+    };
+
+    const elements = {
+        pageMessage: document.getElementById("page-message"),
+        tableContainer: document.getElementById("table-container"),
+        tableBody: document.getElementById("enquiries-table-body"),
+        searchInput: document.getElementById("search-input"),
+        statusFilter: document.getElementById("status-filter"),
+        refreshButton: document.getElementById("refresh-button"),
+        modal: document.getElementById("enquiry-modal"),
+        modalNotice: document.getElementById("modal-notice"),
+        replyLink: document.getElementById("reply-link"),
+        statusSelect: document.getElementById("detail-status"),
+        saveStatusButton: document.getElementById("save-status-button")
+    };
 
     function escapeHtml(value) {
-        return String(value ?? "").replace(/[&<>"']/g, character => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        })[character]);
+        return String(value == null ? "" : value).replace(
+            /[&<>"']/g,
+            function (character) {
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                }[character];
+            }
+        );
     }
 
     function normaliseStatus(value) {
-        return String(value || "new")
-            .trim()
-            .toLowerCase()
-            .replace(/[\s-]+/g, "_");
+        const status = String(value || "new").trim().toLowerCase();
+        return STATUS_LABELS[status] ? status : "new";
     }
 
-    function statusLabel(value) {
-        const status = normaliseStatus(value);
+    function getEnquiryId(enquiry) {
+        return enquiry.id ?? enquiry.enquiry_id ?? enquiry.enquiryId;
+    }
 
-        const labels = {
-            new: "New",
-            unread: "Unread",
-            contacted: "Contacted",
-            in_progress: "In progress",
-            replied: "Replied",
-            resolved: "Resolved",
-            closed: "Closed"
-        };
+    function getEnquiryName(enquiry) {
+        return enquiry.name || enquiry.full_name || enquiry.fullName || "Unknown";
+    }
 
-        return labels[status] || status.replace(/_/g, " ");
+    function getEnquiryEmail(enquiry) {
+        return String(enquiry.email || "").trim();
     }
 
     function formatDate(value) {
-        if (!value) return "—";
+        if (!value) {
+            return "—";
+        }
 
         const date = new Date(value);
 
@@ -287,418 +917,468 @@
         });
     }
 
-    function setPageMessage(message, type = "info") {
-        if (!message) {
-            pageMessage.innerHTML = "";
-            return;
+    function showPageMessage(message, type) {
+        elements.pageMessage.textContent = message;
+        elements.pageMessage.className = "message-area" +
+            (type ? " " + type : "");
+        elements.pageMessage.hidden = false;
+    }
+
+    function hidePageMessage() {
+        elements.pageMessage.hidden = true;
+    }
+
+    function showModalNotice(message, type) {
+        elements.modalNotice.textContent = message;
+        elements.modalNotice.className = "notice " + type;
+    }
+
+    function clearModalNotice() {
+        elements.modalNotice.textContent = "";
+        elements.modalNotice.className = "notice";
+    }
+
+    async function apiRequest(path, options) {
+        const requestOptions = options || {};
+        const headers = new Headers(requestOptions.headers || {});
+
+        const token = sessionStorage.getItem("averra_admin_token");
+
+        if (token && !headers.has("X-Admin-Token")) {
+            headers.set("X-Admin-Token", token);
         }
 
-        pageMessage.innerHTML =
-            '<div class="message message-' + type + '">' +
-            escapeHtml(message) +
-            "</div>";
+        if (requestOptions.body && !headers.has("Content-Type")) {
+            headers.set("Content-Type", "application/json");
+        }
+
+        /*
+         * If your existing auth.js provides an API helper, use it.
+         * Otherwise, make the request directly with fetch.
+         */
+        if (
+            window.AverraAuth &&
+            typeof window.AverraAuth.api === "function"
+        ) {
+            try {
+                return await window.AverraAuth.api(
+                    API_BASE + path,
+                    {
+                        ...requestOptions,
+                        headers: headers
+                    }
+                );
+            } catch (error) {
+                /*
+                 * Do not silently retry a failed authenticated request:
+                 * a server error must remain visible to the administrator.
+                 */
+                throw error;
+            }
+        }
+
+        let response;
+
+        try {
+            response = await fetch(API_BASE + path, {
+                ...requestOptions,
+                headers: headers
+            });
+        } catch (error) {
+            throw new Error(
+                "Cannot connect to the API. Check that your backend is running " +
+                "and that API_BASE points to the correct address."
+            );
+        }
+
+        const responseText = await response.text();
+        let data = null;
+
+        if (responseText) {
+            try {
+                data = JSON.parse(responseText);
+            } catch (_) {
+                data = { detail: responseText };
+            }
+        }
+
+        if (!response.ok) {
+            const detail = data && (
+                data.detail || data.message || data.error
+            );
+
+            throw new Error(
+                detail || "Request failed with HTTP " + response.status + "."
+            );
+        }
+
+        return data;
     }
 
-    function getEnquiryDate(enquiry) {
-        return enquiry.created_at ||
-            enquiry.submitted_at ||
-            enquiry.created ||
-            enquiry.date ||
-            null;
+    function unwrapEnquiries(data) {
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        if (data && Array.isArray(data.enquiries)) {
+            return data.enquiries;
+        }
+
+        if (data && Array.isArray(data.items)) {
+            return data.items;
+        }
+
+        if (data && Array.isArray(data.results)) {
+            return data.results;
+        }
+
+        return [];
     }
 
-    function getEnquiryStatus(enquiry) {
-        return normaliseStatus(enquiry.status || "new");
-    }
+    function updateStatistics(enquiries) {
+        const total = enquiries.length;
 
-    function getEnquiryId(enquiry) {
-        return enquiry.id ?? enquiry.enquiry_id ?? null;
-    }
+        const newCount = enquiries.filter(function (enquiry) {
+            const status = normaliseStatus(enquiry.status);
+            return status === "new" || status === "unread";
+        }).length;
 
-    function updateStats() {
-        document.getElementById("stat-total").textContent = enquiries.length;
+        const progressCount = enquiries.filter(function (enquiry) {
+            return normaliseStatus(enquiry.status) === "in_progress";
+        }).length;
 
-        const newCount = enquiries.filter(item =>
-            ["new", "unread"].includes(getEnquiryStatus(item))
-        ).length;
+        const resolvedCount = enquiries.filter(function (enquiry) {
+            const status = normaliseStatus(enquiry.status);
+            return status === "resolved" || status === "closed";
+        }).length;
 
-        const progressCount = enquiries.filter(item =>
-            ["contacted", "in_progress", "replied"].includes(
-                getEnquiryStatus(item)
-            )
-        ).length;
-
-        const closedCount = enquiries.filter(item =>
-            ["resolved", "closed"].includes(getEnquiryStatus(item))
-        ).length;
-
+        document.getElementById("stat-total").textContent = total;
         document.getElementById("stat-new").textContent = newCount;
         document.getElementById("stat-progress").textContent = progressCount;
-        document.getElementById("stat-closed").textContent = closedCount;
+        document.getElementById("stat-resolved").textContent = resolvedCount;
     }
 
     function getFilteredEnquiries() {
-        const query = searchInput.value.trim().toLowerCase();
-        const selectedStatus = normaliseStatus(statusFilter.value);
+        const query = elements.searchInput.value.trim().toLowerCase();
+        const selectedStatus = elements.statusFilter.value;
 
-        return enquiries.filter(enquiry => {
+        return state.enquiries.filter(function (enquiry) {
+            const status = normaliseStatus(enquiry.status);
+
+            if (selectedStatus && status !== selectedStatus) {
+                return false;
+            }
+
             const searchable = [
-                enquiry.name,
+                getEnquiryId(enquiry),
+                getEnquiryName(enquiry),
                 enquiry.email,
                 enquiry.phone,
                 enquiry.company,
                 enquiry.subject,
-                enquiry.message
+                enquiry.message,
+                status
             ].join(" ").toLowerCase();
 
-            const matchesSearch = !query || searchable.includes(query);
-
-            const matchesStatus = !selectedStatus ||
-                getEnquiryStatus(enquiry) === selectedStatus;
-
-            return matchesSearch && matchesStatus;
-        }).sort((a, b) => {
-            const dateA = new Date(getEnquiryDate(a) || 0).getTime();
-            const dateB = new Date(getEnquiryDate(b) || 0).getTime();
-            return dateB - dateA;
+            return !query || searchable.includes(query);
         });
     }
 
     function renderTable() {
-        const filtered = getFilteredEnquiries();
+        const enquiries = getFilteredEnquiries();
 
-        resultsCount.textContent =
-            "Showing " + filtered.length + " of " + enquiries.length + " enquiries";
+        elements.tableBody.innerHTML = "";
 
-        if (!filtered.length) {
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="6">
-                        <div class="empty-state">
-                            <h3>No enquiries found</h3>
-                            <p>Try changing your search or status filter.</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
+        if (enquiries.length === 0) {
+            elements.tableContainer.hidden = true;
+            showPageMessage(
+                state.enquiries.length === 0
+                    ? "There are no enquiries yet."
+                    : "No enquiries match your search or selected status."
+            );
             return;
         }
 
-        tableBody.innerHTML = filtered.map(enquiry => {
+        hidePageMessage();
+        elements.tableContainer.hidden = false;
+
+        elements.tableBody.innerHTML = enquiries.map(function (enquiry) {
             const id = getEnquiryId(enquiry);
-            const status = getEnquiryStatus(enquiry);
-            const name = enquiry.name || "Unnamed contact";
+            const status = normaliseStatus(enquiry.status);
+            const name = getEnquiryName(enquiry);
+            const company = enquiry.company || "—";
+            const subject = enquiry.subject || "No subject";
+            const date = formatDate(
+                enquiry.created_at || enquiry.createdAt ||
+                enquiry.date || enquiry.submitted_at
+            );
 
             return `
                 <tr>
+                    <td>${escapeHtml(id ?? "—")}</td>
                     <td>
-                        <div class="person-name">${escapeHtml(name)}</div>
-                        <div class="secondary-text">${escapeHtml(enquiry.email || "")}</div>
+                        <div class="cell-primary">${escapeHtml(name)}</div>
+                        <div class="cell-secondary">${escapeHtml(enquiry.email || "No email")}</div>
                     </td>
-                    <td>${escapeHtml(enquiry.company || "—")}</td>
-                    <td>${escapeHtml(enquiry.subject || "General enquiry")}</td>
-                    <td>${escapeHtml(formatDate(getEnquiryDate(enquiry)))}</td>
+                    <td>${escapeHtml(company)}</td>
+                    <td>${escapeHtml(subject)}</td>
+                    <td>${escapeHtml(date)}</td>
                     <td>
-                        <span class="status status-${escapeHtml(status)}">
-                            ${escapeHtml(statusLabel(status))}
+                        <span class="status-badge status-${escapeHtml(status)}">
+                            ${escapeHtml(STATUS_LABELS[status])}
                         </span>
                     </td>
-                    <td>
+                    <td class="table-actions">
                         <button
-                            class="view-button"
                             type="button"
-                            data-view-id="${escapeHtml(id ?? "")}"
-                        >
-                            View
-                        </button>
+                            class="button button-primary"
+                            data-open-enquiry="${escapeHtml(id ?? "")}"
+                        >View</button>
                     </td>
                 </tr>
             `;
         }).join("");
     }
 
-    async function apiRequest(path, options = {}) {
-        if (window.AverraAuth && typeof window.AverraAuth.api === "function") {
-            return window.AverraAuth.api(path, options);
-        }
-
-        const headers = new Headers(options.headers || {});
-        headers.set("Accept", "application/json");
-
-        const token = sessionStorage.getItem("averra_admin_token");
-
-        if (token) {
-            headers.set("X-Admin-Token", token);
-        }
-
-        if (options.body && !headers.has("Content-Type")) {
-            headers.set("Content-Type", "application/json");
-        }
-
-        const response = await fetch(API_BASE + path, {
-            ...options,
-            headers
-        });
-
-        const raw = await response.text();
-        let data = null;
-
-        if (raw) {
-            try {
-                data = JSON.parse(raw);
-            } catch {
-                data = raw;
-            }
-        }
-
-        if (!response.ok) {
-            const detail = data && data.detail
-                ? (typeof data.detail === "string"
-                    ? data.detail
-                    : JSON.stringify(data.detail))
-                : "Request failed (" + response.status + ").";
-
-            throw new Error(detail);
-        }
-
-        return data;
-    }
-
     async function loadEnquiries() {
-        const refreshButton = document.getElementById("refresh-button");
-
-        refreshButton.disabled = true;
-        refreshButton.textContent = "Loading...";
-        setPageMessage("");
-
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="empty-state">Loading enquiries...</td>
-            </tr>
-        `;
-
-        try {
-            const data = await apiRequest("/api/admin/enquiries");
-
-            enquiries = Array.isArray(data)
-                ? data
-                : Array.isArray(data?.items)
-                    ? data.items
-                    : Array.isArray(data?.enquiries)
-                        ? data.enquiries
-                        : [];
-
-            updateStats();
-            renderTable();
-
-            if (!enquiries.length) {
-                setPageMessage(
-                    "The API returned no enquiries. New website submissions will appear here once the backend stores them.",
-                    "info"
-                );
-            }
-        } catch (error) {
-            console.error("AVERRA enquiry loading error:", error);
-
-            enquiries = [];
-            updateStats();
-
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="6">
-                        <div class="empty-state">
-                            <h3>Unable to load enquiries</h3>
-                            <p>Check that the backend is running and that you are authenticated.</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
-
-            setPageMessage(
-                error.message || "Could not load enquiries from the backend.",
-                "error"
-            );
-
-            resultsCount.textContent = "Enquiries could not be loaded";
-        } finally {
-            refreshButton.disabled = false;
-            refreshButton.textContent = "Refresh enquiries";
-        }
-    }
-
-    function openEnquiry(enquiry) {
-        selectedEnquiry = enquiry;
-
-        const email = enquiry.email || "";
-
-        document.getElementById("modal-title").textContent =
-            enquiry.name || "Enquiry details";
-
-        document.getElementById("modal-subtitle").textContent =
-            "Enquiry ID: " + (getEnquiryId(enquiry) ?? "Unavailable");
-
-        document.getElementById("detail-name").textContent =
-            enquiry.name || "—";
-
-        const emailElement = document.getElementById("detail-email");
-        emailElement.replaceChildren();
-
-        if (email) {
-            const emailLink = document.createElement("a");
-            emailLink.href = "mailto:" + email;
-            emailLink.textContent = email;
-            emailElement.appendChild(emailLink);
-        } else {
-            emailElement.textContent = "—";
-        }
-
-        document.getElementById("detail-phone").textContent =
-            enquiry.phone || "—";
-
-        document.getElementById("detail-company").textContent =
-            enquiry.company || "—";
-
-        document.getElementById("detail-subject").textContent =
-            enquiry.subject || "General enquiry";
-
-        document.getElementById("detail-date").textContent =
-            formatDate(getEnquiryDate(enquiry));
-
-        document.getElementById("detail-message").textContent =
-            enquiry.message || "No message was provided.";
-
-        document.getElementById("detail-status").value =
-            getEnquiryStatus(enquiry);
-
-        const replyLink = document.getElementById("reply-link");
-
-        if (email) {
-            const subject = "Re: " + (enquiry.subject || "Your enquiry to AVERRA");
-            replyLink.href =
-                "mailto:" + encodeURIComponent(email) +
-                "?subject=" + encodeURIComponent(subject);
-            replyLink.style.display = "";
-        } else {
-            replyLink.href = "#";
-            replyLink.style.display = "none";
-        }
-
-        document.getElementById("modal-message").innerHTML = "";
-
-        modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
-        document.getElementById("modal-close").focus();
-    }
-
-    function closeModal() {
-        modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-        selectedEnquiry = null;
-    }
-
-    async function saveStatus() {
-        if (!selectedEnquiry) return;
-
-        const id = getEnquiryId(selectedEnquiry);
-
-        if (id === null || id === undefined) {
-            alert("This enquiry has no ID, so its status cannot be updated.");
+        if (state.loading) {
             return;
         }
 
-        const status = document.getElementById("detail-status").value;
-        const saveButton = document.getElementById("save-status");
-
-        saveButton.disabled = true;
-        saveButton.textContent = "Saving...";
+        state.loading = true;
+        elements.refreshButton.disabled = true;
+        elements.refreshButton.textContent = "Loading...";
+        showPageMessage("Loading enquiries...");
 
         try {
-            /*
-             * This request requires a matching backend endpoint.
-             * The endpoint below is a common REST pattern. If your
-             * backend uses another route, adjust it to match main.py.
-             */
-            await apiRequest(
-                "/api/admin/enquiries/" + encodeURIComponent(id),
-                {
-                    method: "PATCH",
-                    body: JSON.stringify({ status })
-                }
-            );
+            const data = await apiRequest("/api/admin/enquiries", {
+                method: "GET"
+            });
 
-            selectedEnquiry.status = status;
-
-            const current = enquiries.find(item =>
-                String(getEnquiryId(item)) === String(id)
-            );
-
-            if (current) {
-                current.status = status;
-            }
-
-            updateStats();
+            state.enquiries = unwrapEnquiries(data);
+            updateStatistics(state.enquiries);
             renderTable();
-
-            document.getElementById("modal-message").innerHTML =
-                '<div class="message message-info">Enquiry status saved.</div>';
         } catch (error) {
-            console.error("AVERRA enquiry status update error:", error);
+            console.error("Unable to load enquiries:", error);
 
-            document.getElementById("modal-message").innerHTML =
-                '<div class="message message-error">' +
-                escapeHtml(
-                    "Could not save the status. Your backend may not yet support updating enquiry statuses. " +
-                    (error.message || "")
-                ) +
-                "</div>";
+            showPageMessage(
+                "Could not load enquiries. " + error.message,
+                "error"
+            );
+
+            elements.tableContainer.hidden = true;
         } finally {
-            saveButton.disabled = false;
-            saveButton.textContent = "Save status";
+            state.loading = false;
+            elements.refreshButton.disabled = false;
+            elements.refreshButton.textContent = "Refresh enquiries";
         }
     }
 
-    document.getElementById("refresh-button").addEventListener(
-        "click",
-        loadEnquiries
-    );
+    function setDetail(id, value) {
+        document.getElementById(id).textContent =
+            value == null || value === "" ? "—" : String(value);
+    }
 
-    searchInput.addEventListener("input", renderTable);
-    statusFilter.addEventListener("change", renderTable);
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
 
-    document.getElementById("clear-filters").addEventListener("click", () => {
-        searchInput.value = "";
-        statusFilter.value = "";
-        renderTable();
-    });
-
-    tableBody.addEventListener("click", event => {
-        const button = event.target.closest("[data-view-id]");
-
-        if (!button) return;
-
-        const id = button.getAttribute("data-view-id");
-
-        const enquiry = enquiries.find(item =>
-            String(getEnquiryId(item) ?? "") === id
+    function prepareReplyLink(enquiry) {
+        const recipient = getEnquiryEmail(enquiry);
+        const subjectText = "Re: " + (
+            enquiry.subject || "Your enquiry to AVERRA"
         );
+
+        /*
+         * Keep the recipient's @ character unchanged.
+         * Encode the subject and body for a mailto link.
+         */
+        if (!isValidEmail(recipient)) {
+            elements.replyLink.removeAttribute("href");
+            elements.replyLink.setAttribute("aria-disabled", "true");
+            elements.replyLink.style.display = "none";
+            return;
+        }
+
+        const bodyText = [
+            "",
+            "",
+            "Kind regards,",
+            "AVERRA Staffing Solutions Ltd",
+            "info@averrastaffing.co.uk",
+            "https://averrastaffing.co.uk"
+        ].join("\r\n");
+
+        elements.replyLink.href =
+            "mailto:" + recipient +
+            "?subject=" + encodeURIComponent(subjectText) +
+            "&body=" + encodeURIComponent(bodyText);
+
+        elements.replyLink.setAttribute("aria-disabled", "false");
+        elements.replyLink.style.display = "inline-flex";
+    }
+
+    function openEnquiry(enquiry) {
+        state.currentEnquiry = enquiry;
+        clearModalNotice();
+
+        setDetail("detail-name", getEnquiryName(enquiry));
+
+        const email = getEnquiryEmail(enquiry);
+        const emailElement = document.getElementById("detail-email");
+
+        emailElement.textContent = email || "—";
+
+        if (isValidEmail(email)) {
+            emailElement.innerHTML =
+                '<a href="mailto:' + escapeHtml(email) + '">' +
+                escapeHtml(email) + '</a>';
+        }
+
+        setDetail("detail-phone", enquiry.phone);
+        setDetail("detail-company", enquiry.company);
+        setDetail("detail-subject", enquiry.subject);
+
+        setDetail(
+            "detail-date",
+            formatDate(
+                enquiry.created_at || enquiry.createdAt ||
+                enquiry.date || enquiry.submitted_at
+            )
+        );
+
+        setDetail("detail-message", enquiry.message);
+
+        elements.statusSelect.value = normaliseStatus(enquiry.status);
+        elements.saveStatusButton.disabled = false;
+        elements.saveStatusButton.textContent = "Save status";
+
+        prepareReplyLink(enquiry);
+
+        elements.modal.classList.add("open");
+        document.body.style.overflow = "hidden";
+        document.getElementById("close-modal").focus();
+    }
+
+    function closeModal() {
+        elements.modal.classList.remove("open");
+        document.body.style.overflow = "";
+        state.currentEnquiry = null;
+        clearModalNotice();
+    }
+
+    async function saveStatus() {
+        const enquiry = state.currentEnquiry;
+
+        if (!enquiry || state.saving) {
+            return;
+        }
+
+        const id = getEnquiryId(enquiry);
+
+        if (id == null || id === "") {
+            showModalNotice(
+                "This enquiry has no ID, so its status cannot be updated.",
+                "error"
+            );
+            return;
+        }
+
+        const newStatus = normaliseStatus(elements.statusSelect.value);
+
+        state.saving = true;
+        elements.saveStatusButton.disabled = true;
+        elements.saveStatusButton.textContent = "Saving...";
+        clearModalNotice();
+
+        try {
+            /*
+             * This requires a matching backend route:
+             * PATCH /api/admin/enquiries/{id}
+             * Expected JSON body: {"status": "contacted"}
+             */
+            const updated = await apiRequest(
+                "/api/admin/enquiries/" + encodeURIComponent(id),
+                {
+                    method: "PATCH",
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                }
+            );
+
+            const index = state.enquiries.findIndex(function (item) {
+                return String(getEnquiryId(item)) === String(id);
+            });
+
+            if (index !== -1) {
+                state.enquiries[index] = {
+                    ...state.enquiries[index],
+                    ...(updated && typeof updated === "object" ? updated : {}),
+                    status: newStatus
+                };
+            }
+
+            state.currentEnquiry = {
+                ...enquiry,
+                ...(updated && typeof updated === "object" ? updated : {}),
+                status: newStatus
+            };
+
+            updateStatistics(state.enquiries);
+            renderTable();
+
+            showModalNotice("Enquiry status saved successfully.", "success");
+        } catch (error) {
+            console.error("Unable to save enquiry status:", error);
+
+            showModalNotice(
+                "Could not save the status. " + error.message +
+                " If the server reports 404 or 405, the backend route " +
+                "may be missing. If it reports 401 or 403, check admin authentication.",
+                "error"
+            );
+        } finally {
+            state.saving = false;
+            elements.saveStatusButton.disabled = false;
+            elements.saveStatusButton.textContent = "Save status";
+        }
+    }
+
+    elements.tableBody.addEventListener("click", function (event) {
+        const button = event.target.closest("[data-open-enquiry]");
+
+        if (!button) {
+            return;
+        }
+
+        const id = button.getAttribute("data-open-enquiry");
+
+        const enquiry = state.enquiries.find(function (item) {
+            return String(getEnquiryId(item)) === String(id);
+        });
 
         if (enquiry) {
             openEnquiry(enquiry);
         }
     });
 
-    document.getElementById("modal-close").addEventListener("click", closeModal);
-    document.getElementById("modal-done").addEventListener("click", closeModal);
-    document.getElementById("save-status").addEventListener("click", saveStatus);
+    elements.searchInput.addEventListener("input", renderTable);
+    elements.statusFilter.addEventListener("change", renderTable);
+    elements.refreshButton.addEventListener("click", loadEnquiries);
+    elements.saveStatusButton.addEventListener("click", saveStatus);
 
-    modal.addEventListener("click", event => {
-        if (event.target === modal) {
+    document.getElementById("close-modal").addEventListener("click", closeModal);
+    document.getElementById("close-modal-bottom").addEventListener("click", closeModal);
+
+    elements.modal.addEventListener("click", function (event) {
+        if (event.target === elements.modal) {
             closeModal();
         }
     });
 
-    document.addEventListener("keydown", event => {
-        if (event.key === "Escape" && modal.classList.contains("open")) {
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && elements.modal.classList.contains("open")) {
             closeModal();
         }
     });
