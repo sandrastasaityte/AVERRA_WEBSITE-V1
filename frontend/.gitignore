@@ -65,3 +65,23 @@ node_modules/
 # Local exports and private uploads
 private/
 uploads/
+
+# Python test and coverage files
+.coverage
+coverage.xml
+nosetests.xml
+junit.xml
+
+# Local environment and application data
+.streamlit/secrets.toml
+instance/
+*.pid
+
+# Deployment and platform secrets
+.env.production
+.env.development
+
+# Editor and local tooling caches
+.cache/
+.pyright/
+.mypy_cache/

@@ -8,168 +8,220 @@
 
     <title>Jobs and Careers | AVERRA Staffing Solutions Ltd</title>
 
-    <meta name="description" content="Explore job opportunities and submit your CV to AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals based in India.">
+    <meta
+        name="description"
+        content="Explore current job vacancies and submit your CV to AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals in India."
+    >
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://averrastaffing.co.uk/jobs.html">
 
     <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="style.css">
 
-<script src="images/images.js" defer></script>
-<script src="images/jobs.js" defer></script>
-<script src="script.js" defer></script>
+    <script src="images/images.js" defer></script>
+    <script src="images/jobs.js" defer></script>
+    <script src="script.js" defer></script>
 
     <style>
         :root {
-            --av-navy: #0b1f33;
-            --av-navy-dark: #071522;
-            --av-blue: #1d5f91;
-            --av-gold: #c89b3c;
-            --av-light: #f4f7fa;
-            --av-text: #263747;
-            --av-muted: #687786;
-            --av-border: #dce4ec;
-            --av-radius: 14px;
-            --av-shadow: 0 10px 30px rgba(11, 31, 51, 0.08);
+            --jobs-navy: #0b1f33;
+            --jobs-navy-dark: #071522;
+            --jobs-blue: #1d5f91;
+            --jobs-gold: #c89b3c;
+            --jobs-gold-light: #e6c77f;
+            --jobs-background: #f4f7fa;
+            --jobs-text: #263747;
+            --jobs-muted: #687786;
+            --jobs-border: #dce4ec;
+            --jobs-success: #176b43;
+            --jobs-error: #b42318;
+            --jobs-radius: 14px;
+            --jobs-shadow: 0 10px 30px rgba(11, 31, 51, 0.08);
+            --jobs-container: 1180px;
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 100px;
         }
 
         body {
             margin: 0;
-            color: var(--av-text);
+            color: var(--jobs-text);
             background: #fff;
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.65;
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         button,
         input,
         select,
         textarea {
-            font: inherit;
+            font-size: 16px;
+        }
+
+        a {
+            overflow-wrap: anywhere;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid var(--jobs-gold);
+            outline-offset: 3px;
         }
 
         .skip-link {
             position: absolute;
-            left: -9999px;
             top: 10px;
-            z-index: 1000;
+            left: -9999px;
+            z-index: 10000;
+            padding: 12px 16px;
+            color: var(--jobs-navy);
+            background: #fff;
+            border: 2px solid var(--jobs-gold);
+            border-radius: 6px;
         }
 
         .skip-link:focus {
             left: 10px;
-            padding: 10px 15px;
-            background: #fff;
-            color: var(--av-navy);
         }
 
-        /* Standard AVERRA header compatibility */
+        .jobs-container {
+            width: min(var(--jobs-container), calc(100% - 40px));
+            margin-inline: auto;
+        }
 
-        .site-header .header-container {
+        /* Header compatibility with the existing AVERRA website */
+
+        .site-header {
+            position: relative;
+            z-index: 100;
+            background: #fff;
+        }
+
+        .site-header .header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 24px;
             min-height: 86px;
+            padding-top: 12px;
+            padding-bottom: 12px;
         }
 
-        .site-logo {
-            display: block;
-            flex: 0 0 auto;
+        .brand {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            gap: 4px;
+            color: var(--jobs-navy);
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.4;
+            text-decoration: none;
         }
 
-        .site-logo-image {
-            display: block;
-            width: 180px;
-            max-width: 34vw;
-            height: auto;
-            object-fit: contain;
+        .brand span {
+            color: var(--jobs-blue);
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .main-nav {
+        .main-navigation {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             flex-wrap: wrap;
-            gap: 18px;
+            gap: 16px;
         }
 
-        .main-nav .nav-link {
-            color: var(--av-navy);
-            text-decoration: none;
+        .main-navigation a {
+            color: var(--jobs-navy);
             font-size: 14px;
             font-weight: 700;
+            text-decoration: none;
         }
 
-        .main-nav .nav-link:hover,
-        .main-nav .nav-link.active {
-            color: var(--av-blue);
+        .main-navigation a:hover,
+        .main-navigation a[aria-current="page"] {
+            color: var(--jobs-blue);
         }
 
-        .header-button {
+        .main-navigation .nav-contact {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 11px 17px;
+            padding: 11px 18px;
+            border: 1px solid var(--jobs-blue);
             border-radius: 7px;
-            background: var(--av-navy);
-            color: #fff !important;
-            text-decoration: none;
-            font-weight: 700;
+            color: #fff;
+            background: var(--jobs-blue);
         }
 
-        .header-button:hover {
-            background: var(--av-blue);
+        .main-navigation .nav-contact:hover {
+            color: #fff;
+            background: var(--jobs-navy);
+            border-color: var(--jobs-navy);
         }
 
-        .mobile-menu-button {
+        .menu-toggle {
             display: none;
-            border: 0;
-            background: transparent;
-            padding: 8px;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border: 1px solid var(--jobs-border);
+            border-radius: 7px;
+            color: var(--jobs-navy);
+            background: #fff;
+            cursor: pointer;
         }
 
-        .mobile-menu-button span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            margin: 5px;
-            background: var(--av-navy);
-        }
-
-        /* Jobs page */
-
-        .jobs-container {
-            width: min(1180px, calc(100% - 40px));
-            margin: 0 auto;
-        }
+        /* Hero */
 
         .jobs-hero {
-            padding: 85px 0 80px;
+            position: relative;
+            overflow: hidden;
+            padding: 84px 0;
             color: #fff;
             background:
-                radial-gradient(circle at 85% 20%,
-                rgba(200, 155, 60, 0.2), transparent 30%),
-                linear-gradient(125deg,
-                var(--av-navy-dark), var(--av-navy) 60%, #123e60);
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(200, 155, 60, 0.2),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    125deg,
+                    var(--jobs-navy-dark),
+                    var(--jobs-navy) 60%,
+                    #123e60
+                );
         }
 
         .jobs-hero-content {
-            max-width: 780px;
+            max-width: 790px;
         }
 
         .jobs-eyebrow {
             display: inline-block;
-            margin-bottom: 15px;
-            color: var(--av-gold);
-            font-size: 13px;
+            margin-bottom: 13px;
+            color: var(--jobs-gold);
+            font-size: 12px;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -179,119 +231,207 @@
             margin: 0 0 20px;
             font-size: clamp(36px, 5vw, 58px);
             line-height: 1.12;
+            letter-spacing: -1px;
         }
 
         .jobs-hero p {
-            max-width: 690px;
+            max-width: 700px;
             margin: 0 0 28px;
             color: #e2eaf1;
             font-size: 18px;
+        }
+
+        .jobs-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .jobs-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 47px;
-            padding: 12px 21px;
-            border: 1px solid transparent;
+            min-height: 46px;
+            padding: 12px 20px;
+            border: 1px solid var(--jobs-navy);
             border-radius: 7px;
-            background: var(--av-navy);
             color: #fff;
-            text-decoration: none;
+            background: var(--jobs-navy);
             font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+            text-decoration: none;
             cursor: pointer;
+            transition:
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
         }
 
         .jobs-button:hover {
-            background: var(--av-blue);
             color: #fff;
+            background: var(--jobs-blue);
+            border-color: var(--jobs-blue);
         }
 
         .jobs-button-gold {
-            background: var(--av-gold);
-            color: var(--av-navy-dark);
+            color: var(--jobs-navy-dark);
+            background: var(--jobs-gold);
+            border-color: var(--jobs-gold);
         }
 
         .jobs-button-gold:hover {
-            background: #dfb75e;
-            color: var(--av-navy-dark);
+            color: var(--jobs-navy-dark);
+            background: #e0b85e;
+            border-color: #e0b85e;
         }
+
+        .jobs-button-outline {
+            color: #fff;
+            background: transparent;
+            border-color: rgba(255, 255, 255, 0.55);
+        }
+
+        .jobs-button-outline:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #fff;
+        }
+
+        /* General sections */
 
         .jobs-section {
             padding: 76px 0;
         }
 
         .jobs-section-light {
-            background: var(--av-light);
+            background: var(--jobs-background);
         }
 
         .jobs-section-heading {
             max-width: 760px;
-            margin: 0 auto 35px;
+            margin: 0 auto 34px;
             text-align: center;
         }
 
-        .jobs-section-heading h2 {
+        .jobs-section-heading h2,
+        .application-intro h2 {
             margin: 0 0 12px;
-            color: var(--av-navy);
+            color: var(--jobs-navy);
             font-size: clamp(28px, 4vw, 39px);
             line-height: 1.2;
         }
 
-        .jobs-section-heading p {
-            margin: 0;
-            color: var(--av-muted);
+        .jobs-section-heading p,
+        .application-intro > p {
+            color: var(--jobs-muted);
         }
+
+        /* Search and category filters */
 
         .jobs-search-panel {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 14px;
-            padding: 20px;
-            margin-bottom: 28px;
+            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+            align-items: end;
+            gap: 18px;
+            padding: 22px;
+            margin-bottom: 24px;
+            border: 1px solid var(--jobs-border);
+            border-radius: var(--jobs-radius);
             background: #fff;
-            border: 1px solid var(--av-border);
-            border-radius: var(--av-radius);
+        }
+
+        .jobs-search-field,
+        .jobs-toolbar {
+            min-width: 0;
+        }
+
+        .jobs-toolbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 10px;
         }
 
         .jobs-search-panel label,
         .application-form label {
             display: block;
             margin-bottom: 7px;
-            color: var(--av-navy);
+            color: var(--jobs-navy);
             font-size: 14px;
             font-weight: 700;
         }
 
         .jobs-search-panel input,
         .jobs-search-panel select,
-        .application-form input,
+        .application-form input:not([type="checkbox"]),
         .application-form select,
         .application-form textarea {
+            display: block;
             width: 100%;
             min-height: 46px;
             padding: 11px 13px;
             border: 1px solid #cbd5df;
             border-radius: 7px;
+            color: var(--jobs-text);
             background: #fff;
-            color: var(--av-text);
         }
 
-        .application-form textarea {
-            min-height: 125px;
-            resize: vertical;
+        .jobs-search-panel input::placeholder,
+        .application-form textarea::placeholder {
+            color: #7a8794;
+        }
+
+        .jobs-toolbar .button {
+            min-height: 46px;
+            padding: 10px 15px;
+            border: 1px solid var(--jobs-border);
+            border-radius: 7px;
+            color: var(--jobs-navy);
+            background: #f4f7fa;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .jobs-toolbar .button:hover {
+            border-color: var(--jobs-blue);
+            color: var(--jobs-blue);
+            background: #eaf1f7;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .jobs-results-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin-bottom: 18px;
         }
 
         .jobs-results-count {
-            margin: 0 0 18px;
-            color: var(--av-muted);
+            margin: 0;
+            color: var(--jobs-muted);
             font-size: 14px;
         }
+
+        /* Vacancy cards */
 
         .jobs-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: stretch;
             gap: 22px;
         }
 
@@ -300,37 +440,48 @@
             flex-direction: column;
             min-width: 0;
             padding: 25px;
+            border: 1px solid var(--jobs-border);
+            border-radius: var(--jobs-radius);
             background: #fff;
-            border: 1px solid var(--av-border);
-            border-radius: var(--av-radius);
-            box-shadow: var(--av-shadow);
+            box-shadow: var(--jobs-shadow);
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 34px rgba(11, 31, 51, 0.12);
         }
 
         .job-category {
             display: inline-flex;
             align-self: flex-start;
+            max-width: 100%;
             padding: 5px 10px;
             margin-bottom: 14px;
             border-radius: 30px;
+            color: var(--jobs-blue);
             background: #eaf1f7;
-            color: var(--av-blue);
             font-size: 12px;
             font-weight: 800;
+            overflow-wrap: anywhere;
         }
 
         .job-card h3 {
             margin: 0 0 13px;
-            color: var(--av-navy);
-            font-size: 22px;
-            line-height: 1.3;
+            color: var(--jobs-navy);
+            font-size: 21px;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
         }
 
         .job-meta {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            margin-bottom: 16px;
-            color: var(--av-muted);
+            gap: 6px;
+            margin-bottom: 17px;
+            color: var(--jobs-muted);
             font-size: 13px;
         }
 
@@ -342,9 +493,13 @@
         }
 
         .job-responsibilities {
-            padding-left: 19px;
+            padding-left: 20px;
             margin: 0 0 20px;
             font-size: 14px;
+        }
+
+        .job-responsibilities li {
+            margin-bottom: 6px;
         }
 
         .job-card .jobs-button {
@@ -355,7 +510,7 @@
         .jobs-empty,
         .jobs-message {
             padding: 24px;
-            border: 1px solid var(--av-border);
+            border: 1px solid var(--jobs-border);
             border-radius: 10px;
             background: #fff;
         }
@@ -366,90 +521,108 @@
         }
 
         .jobs-empty h3 {
-            color: var(--av-navy);
+            margin-top: 0;
+            color: var(--jobs-navy);
+        }
+
+        .jobs-empty p {
+            margin-bottom: 0;
+            color: var(--jobs-muted);
         }
 
         .jobs-message {
-            margin-bottom: 20px;
+            margin: 0 0 20px;
         }
 
         .jobs-message[hidden] {
             display: none;
         }
 
-        .jobs-message.error {
-            color: #b42318;
-            border-color: #f0c6c3;
-            background: #fff7f6;
+        .jobs-message.info {
+            color: var(--jobs-blue);
+            background: #f2f7fb;
         }
 
         .jobs-message.success {
-            color: #176b43;
+            color: var(--jobs-success);
             border-color: #b9e0cb;
             background: #f3fbf6;
         }
 
-        .jobs-message.info {
-            color: var(--av-blue);
-            background: #f2f7fb;
+        .jobs-message.error {
+            color: var(--jobs-error);
+            border-color: #f0c6c3;
+            background: #fff7f6;
         }
+
+        /* Application section */
 
         .application-layout {
             display: grid;
-            grid-template-columns: 0.85fr 1.15fr;
+            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
             align-items: start;
             gap: 42px;
         }
 
         .application-intro h2 {
-            margin: 0 0 16px;
-            color: var(--av-navy);
-            font-size: clamp(29px, 4vw, 40px);
-            line-height: 1.2;
-        }
-
-        .application-intro p {
-            color: var(--av-muted);
+            margin-top: 0;
         }
 
         .application-benefits {
-            padding-left: 20px;
+            padding-left: 21px;
+            margin: 22px 0;
         }
 
         .application-benefits li {
             margin-bottom: 10px;
         }
 
+        .application-intro a:not(.jobs-button) {
+            color: var(--jobs-blue);
+            font-weight: 700;
+        }
+
         .application-card {
+            min-width: 0;
             padding: 30px;
-            border: 1px solid var(--av-border);
-            border-radius: var(--av-radius);
+            border: 1px solid var(--jobs-border);
+            border-radius: var(--jobs-radius);
             background: #fff;
-            box-shadow: var(--av-shadow);
+            box-shadow: var(--jobs-shadow);
         }
 
         .application-card h3 {
             margin: 0 0 8px;
-            color: var(--av-navy);
+            color: var(--jobs-navy);
             font-size: 25px;
         }
 
         .application-card-intro {
             margin: 0 0 24px;
-            color: var(--av-muted);
+            color: var(--jobs-muted);
             font-size: 14px;
         }
 
         .application-form {
             display: grid;
-            gap: 17px;
+            gap: 18px;
+        }
+
+        .application-field {
+            min-width: 0;
+        }
+
+        .application-form textarea {
+            min-height: 125px;
+            resize: vertical;
         }
 
         .application-field small {
             display: block;
             margin-top: 6px;
-            color: var(--av-muted);
+            color: var(--jobs-muted);
             font-size: 12px;
+            line-height: 1.6;
         }
 
         .application-form input[type="file"] {
@@ -465,129 +638,149 @@
 
         .application-checkbox input {
             width: 17px;
-            min-height: 17px;
-            margin-top: 5px;
+            height: 17px;
             flex: 0 0 auto;
+            margin: 5px 0 0;
+            accent-color: var(--jobs-blue);
         }
 
         .application-checkbox label {
             margin: 0;
             font-size: 13px;
             font-weight: 400;
+            line-height: 1.7;
         }
 
-        .application-form button {
+        .application-checkbox a {
+            color: var(--jobs-blue);
+            font-weight: 700;
+        }
+
+        .application-form button[type="submit"] {
             width: 100%;
-            border: 0;
+            border: 1px solid var(--jobs-gold);
         }
 
         .application-form button:disabled {
             opacity: 0.65;
             cursor: wait;
+            transform: none;
         }
 
         .application-security-note {
             margin: 0;
-            color: var(--av-muted);
+            color: var(--jobs-muted);
             font-size: 12px;
         }
 
-        /* Standard AVERRA footer compatibility */
+        /* Footer compatibility */
 
         .site-footer {
             padding: 52px 0 22px;
-            background: var(--av-navy-dark);
             color: #fff;
+            background: var(--jobs-navy-dark);
         }
 
-        .site-footer a {
-            color: #e6c77f;
-            text-decoration: none;
-        }
-
-        .site-footer a:hover {
-            text-decoration: underline;
+        .site-footer .container {
+            width: min(var(--jobs-container), calc(100% - 40px));
+            margin-inline: auto;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr 1.2fr 1fr;
+            grid-template-columns: 1.4fr 1fr 1fr 0.8fr;
             gap: 30px;
             padding-bottom: 32px;
         }
 
-        .footer-brand-column p {
-            max-width: 320px;
-            color: #d6e0e9;
-        }
-
-        .footer-logo {
+        .footer-brand {
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            color: #fff !important;
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.5;
+            text-decoration: none;
         }
 
-        .footer-logo-image {
-            display: block;
-            width: 160px;
-            max-width: 100%;
-            height: auto;
-            background: #fff;
-            border-radius: 5px;
+        .footer-description {
+            max-width: 350px;
+            margin: 0 0 20px;
+            color: #d1dbe5;
+            font-size: 14px;
+            line-height: 1.8;
         }
 
-        .footer-email {
-            font-weight: 700;
+        .footer-contact p {
+            margin: 0 0 11px;
+            color: #d1dbe5;
+            font-size: 13px;
+            line-height: 1.8;
         }
 
-        .footer-column {
+        .footer-contact strong {
+            color: #fff;
+        }
+
+        .site-footer a {
+            color: #d1dbe5;
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .footer-heading {
+            margin: 0 0 15px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .footer-links {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
         }
 
-        .footer-column h3 {
-            margin: 0 0 8px;
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .footer-column span {
-            color: #d6e0e9;
+        .footer-links a {
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         .footer-bottom {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 18px;
             flex-wrap: wrap;
+            gap: 14px 24px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            color: #d6e0e9;
-            font-size: 13px;
+            border-top: 1px solid #263849;
         }
 
         .footer-bottom p {
             margin: 0;
+            color: #d1dbe5;
+            font-size: 12px;
+            line-height: 1.7;
         }
 
-        .footer-legal {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
+        /* Responsive layouts */
 
-        @media (max-width: 1000px) {
-            .site-header .header-container {
+        @media (max-width: 1050px) {
+            .site-header .header-inner {
                 flex-wrap: wrap;
-                padding: 14px 0;
             }
 
-            .main-nav {
-                order: 3;
-                width: 100%;
-                justify-content: flex-start;
+            .main-navigation {
+                gap: 12px;
             }
 
             .footer-grid {
@@ -604,58 +797,100 @@
                 grid-template-columns: 1fr;
                 gap: 25px;
             }
+
+            .jobs-search-panel {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 650px) {
-            .jobs-container {
+            html {
+                scroll-padding-top: 25px;
+            }
+
+            .jobs-container,
+            .site-footer .container {
                 width: calc(100% - 28px);
             }
 
-            .site-header .header-container {
+            .site-header .header-inner {
                 display: grid;
-                grid-template-columns: 1fr auto;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 12px;
+                padding-top: 14px;
+                padding-bottom: 14px;
             }
 
-            .site-logo-image {
-                width: 155px;
+            .brand {
+                font-size: 14px;
             }
 
-            .mobile-menu-button {
-                display: block;
+            .brand span {
+                max-width: 240px;
+                font-size: 11px;
+            }
+
+            .menu-toggle {
+                display: inline-flex;
                 grid-column: 2;
                 grid-row: 1;
             }
 
-            .main-nav {
+            .main-navigation {
                 display: none;
                 grid-column: 1 / -1;
                 width: 100%;
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-                padding: 10px 0;
+                align-items: stretch;
+                gap: 0;
+                padding: 8px 0;
             }
 
-            .main-nav.is-open {
+            .main-navigation.is-open {
                 display: flex;
             }
 
-            .header-button {
-                grid-column: 1 / -1;
-                justify-self: start;
+            .main-navigation a {
+                padding: 11px 4px;
+            }
+
+            .main-navigation .nav-contact {
+                align-self: flex-start;
+                margin-top: 8px;
+                padding: 11px 18px;
             }
 
             .jobs-hero {
-                padding: 60px 0;
+                padding: 58px 0;
+            }
+
+            .jobs-hero h1 {
+                font-size: clamp(34px, 9vw, 44px);
+            }
+
+            .jobs-hero p {
+                font-size: 16px;
             }
 
             .jobs-section {
-                padding: 53px 0;
+                padding: 52px 0;
             }
 
-            .jobs-search-panel,
+            .jobs-search-panel {
+                padding: 16px;
+            }
+
+            .jobs-toolbar {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .jobs-toolbar .button {
+                width: 100%;
+            }
+
             .jobs-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
+                gap: 16px;
             }
 
             .job-card,
@@ -664,280 +899,26 @@
             }
 
             .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 26px;
+                grid-template-columns: minmax(0, 1fr);
+                gap: 25px;
             }
 
             .footer-bottom {
-                flex-direction: column;
                 align-items: flex-start;
+                flex-direction: column;
             }
         }
 
-
-/* =========================================
-   AVERRA BRAND LINE
-========================================= */
-
-.brand {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex-shrink: 0;
-    text-decoration: none;
-    line-height: 1.3;
-}
-
-.brand-name {
-    color: var(--av-navy);
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: 0.6px;
-}
-
-.brand-tagline {
-    color: var(--av-blue);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.15px;
-}
-
-.brand:hover .brand-name {
-    color: var(--av-blue);
-}
-
-/* =========================================
-   AVERRA FOOTER
-========================================= */
-
-.site-footer {
-    padding: 58px 0 22px;
-    background: var(--av-navy-dark);
-    color: #ffffff;
-}
-
-.site-footer a {
-    color: #e6c77f;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-}
-
-.site-footer a:hover {
-    color: #ffffff;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 0.9fr;
-    gap: 36px;
-    padding-bottom: 36px;
-}
-
-.footer-brand {
-    display: inline-block;
-    margin-bottom: 8px;
-    color: #ffffff !important;
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 0.3px;
-    line-height: 1.4;
-    text-decoration: none !important;
-}
-
-.footer-tagline {
-    margin: 0 0 16px;
-    color: #e6c77f;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.5;
-}
-
-.footer-description {
-    max-width: 350px;
-    margin: 0 0 20px;
-    color: #d6e0e9;
-    font-size: 14px;
-    line-height: 1.8;
-}
-
-.footer-contact p {
-    margin: 0 0 13px;
-    color: #d6e0e9;
-    font-size: 13px;
-    line-height: 1.8;
-}
-
-.footer-contact strong {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-.footer-heading {
-    margin: 0 0 17px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 800;
-}
-
-.footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.footer-links a {
-    color: #d6e0e9;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.footer-links a:hover {
-    color: #e6c77f;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px 24px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.footer-bottom p {
-    margin: 0;
-    color: #d6e0e9;
-    font-size: 12px;
-    line-height: 1.7;
-}
-
-.footer-bottom-tagline {
-    text-align: right;
-}
-
-@media (max-width: 1000px) {
-    .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 30px;
-    }
-}
-
-@media (max-width: 650px) {
-    .brand-name {
-        font-size: 14px;
-    }
-
-    .brand-tagline {
-        max-width: 240px;
-        font-size: 11px;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 27px;
-    }
-
-    .footer-bottom {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .footer-bottom-tagline {
-        text-align: left;
-    }
-}
-
-/* =========================================
-   AVERRA — LET'S TALK BUTTON
-   ========================================= */
-
-.main-navigation a[href="lets-talk.html"],
-.main-navigation a[href="./lets-talk.html"],
-.main-nav a[href="lets-talk.html"],
-.main-nav a[href="./lets-talk.html"] {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 22px;
-    background-color: #1d5f91;
-    color: #ffffff !important;
-    border: 1px solid #1d5f91;
-    border-radius: 6px;
-    font-weight: 600;
-    text-decoration: none;
-    line-height: 1.4;
-    transition: background-color 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.2s ease;
-}
-
-.main-navigation a[href="lets-talk.html"]:hover,
-.main-navigation a[href="./lets-talk.html"]:hover,
-.main-nav a[href="lets-talk.html"]:hover,
-.main-nav a[href="./lets-talk.html"]:hover {
-    background-color: #0b1f33;
-    border-color: #0b1f33;
-    color: #ffffff !important;
-    transform: translateY(-1px);
-}
-
-/* =========================================
-   AVERRA — NAVY FOOTER, NO GOLD
-   ========================================= */
-
-.site-footer,
-footer.site-footer {
-    background-color: #071522;
-    color: #f3f6f9;
-}
-
-.site-footer h2,
-.site-footer h3,
-.site-footer h4,
-.site-footer .footer-heading,
-.site-footer .footer-brand,
-.site-footer .footer-logo {
-    color: #ffffff;
-}
-
-.site-footer p,
-.site-footer li,
-.site-footer .footer-description,
-.site-footer .footer-tagline {
-    color: #d1dbe5;
-}
-
-.site-footer a {
-    color: #d1dbe5;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.site-footer a:hover {
-    color: #ffffff;
-}
-
-.site-footer .footer-bottom {
-    border-top: 1px solid #263849;
-    color: #b9c6d2;
-}
-
-/* Keep the footer consistent on smaller screens */
-@media (max-width: 768px) {
-    .main-navigation a[href="lets-talk.html"],
-    .main-navigation a[href="./lets-talk.html"],
-    .main-nav a[href="lets-talk.html"],
-    .main-nav a[href="./lets-talk.html"] {
-        padding: 11px 18px;
-    }
-}
-
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
     </style>
 </head>
 
@@ -945,36 +926,46 @@ footer.site-footer {
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
-<!-- STANDARD AVERRA HEADER -->
- <header class="site-header" id="site-header">
-        <div class="container header-inner">
-            <a class="brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
-                AVERRA STAFFING SOLUTIONS LTD
-                <span>Connecting UK Businesses with Global Talent</span>
-            </a>
+<header class="site-header" id="site-header">
+    <div class="container header-inner">
 
-            <button
-                class="menu-toggle"
-                id="menu-toggle"
-                type="button"
-                aria-controls="main-navigation"
-                aria-expanded="false"
-                aria-label="Open navigation menu">
-                <span aria-hidden="true">☰</span>
-                <span>Menu</span>
-            </button>
+        <a
+            class="brand"
+            href="index.html"
+            aria-label="AVERRA Staffing Solutions Ltd home"
+        >
+            AVERRA STAFFING SOLUTIONS LTD
+            <span>Connecting UK Businesses with Global Talent</span>
+        </a>
 
-            <nav class="main-navigation" id="main-navigation" aria-label="Main navigation">
-                <a href="index.html">Home</a>
-                <a href="about.html" aria-current="page">About</a>
-                <a href="services.html">Services</a>
-                <a href="how-it-works.html">How It Works</a>
-                <a href="careers.html">Careers</a>
-                <a href="jobs.html">Jobs</a>
-                <a class="nav-contact" href="lets-talk.html">Let's Talk</a>
-            </nav>
-        </div>
-    </header>
+        <button
+            class="menu-toggle"
+            id="menu-toggle"
+            type="button"
+            aria-controls="main-navigation"
+            aria-expanded="false"
+            aria-label="Open navigation menu"
+        >
+            <span aria-hidden="true">☰</span>
+            <span>Menu</span>
+        </button>
+
+        <nav
+            class="main-navigation"
+            id="main-navigation"
+            aria-label="Main navigation"
+        >
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="how-it-works.html">How It Works</a>
+            <a href="careers.html">Careers</a>
+            <a href="jobs.html" aria-current="page">Jobs</a>
+            <a class="nav-contact" href="lets-talk.html">Let's Talk</a>
+        </nav>
+
+    </div>
+</header>
 
 <main id="main-content">
 
@@ -995,16 +986,15 @@ footer.site-footer {
                     their careers.
                 </p>
 
-                <a class="jobs-button jobs-button-gold"
-                   href="#open-positions">
-                    Explore Open Positions
-                </a>
+                <div class="jobs-actions">
+                    <a class="jobs-button jobs-button-gold" href="#open-positions">
+                        Explore Open Positions
+                    </a>
 
-                <a class="jobs-button"
-                   href="#submit-cv"
-                   style="margin-left: 8px; border-color: rgba(255,255,255,.35)">
-                    Submit Your CV
-                </a>
+                    <a class="jobs-button jobs-button-outline" href="#submit-cv">
+                        Submit Your CV
+                    </a>
+                </div>
 
             </div>
         </div>
@@ -1026,36 +1016,81 @@ footer.site-footer {
 
             <div class="jobs-search-panel">
 
-                <div>
+                <div class="jobs-search-field">
                     <label for="job-search">Search Jobs</label>
-                    <input type="search"
-                           id="job-search"
-                           placeholder="Search by job title, skills or location"
-                           autocomplete="off">
+                    <input
+                        type="search"
+                        id="job-search"
+                        name="job-search"
+                        placeholder="Search by title, skills or location"
+                        autocomplete="off"
+                        aria-controls="jobs-grid"
+                    >
                 </div>
 
-                <div>
-                    <label for="job-category-filter">Job Category</label>
-                    <select id="job-category-filter">
-                        <option value="">All Categories</option>
-                    </select>
+                <div class="jobs-toolbar">
+                    <div>
+                        <label for="job-category">Filter by Category</label>
+
+
+<select
+    id="job-category"
+    name="job-category"
+    aria-controls="jobs-grid"
+>
+    <option value="">All categories</option>
+    <option value="finance">Finance &amp; Accounting</option>
+    <option value="technology">IT &amp; Software Development</option>
+    <option value="architecture">Architecture &amp; Design</option>
+    <option value="engineering">Engineering &amp; Technical</option>
+    <option value="administration">Administration &amp; Data Entry</option>
+    <option value="customer-service">Customer Service &amp; Support</option>
+    <option value="sales">Sales &amp; Business Development</option>
+    <option value="marketing">Digital Marketing</option>
+    <option value="human-resources">Human Resources &amp; Recruitment</option>
+    <option value="operations">Business Operations</option>
+    <option value="project-management">Project Management</option>
+    <option value="legal">Legal &amp; Compliance Support</option>
+    <option value="procurement">Procurement &amp; Supply Chain</option>
+    <option value="research">Research &amp; Data Analysis</option>
+    <option value="healthcare">Healthcare Administration</option>
+    <option value="other">Other Professional Roles</option>
+</select>
+
+                        </select>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="reset-jobs"
+                        class="button button-secondary"
+                    >
+                        Reset
+                    </button>
                 </div>
 
             </div>
 
-            <p class="jobs-results-count"
-               id="jobs-results-count"
-               aria-live="polite">
-                Loading vacancies…
-            </p>
+            <div class="jobs-results-bar">
+                <p
+                    class="jobs-results-count"
+                    id="jobs-results-count"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
+                    Loading vacancies…
+                </p>
+            </div>
 
-            <div id="jobs-status"
-                 class="jobs-message info"
-                 role="status"
-                 aria-live="polite"
-                 hidden></div>
+            <div
+                id="jobs-status"
+                class="jobs-message info"
+                role="status"
+                aria-live="polite"
+                hidden
+            ></div>
 
-            <div id="jobs-grid" class="jobs-grid">
+            <div id="jobs-grid" class="jobs-grid" aria-busy="true">
                 <div class="jobs-empty">
                     <p>Loading current vacancies…</p>
                 </div>
@@ -1085,18 +1120,18 @@ footer.site-footer {
 
                     <p>
                         Submit your details and CV for consideration.
-                        You can apply for a published vacancy or register
-                        your interest in future opportunities.
+                        Apply for a published vacancy or register your
+                        interest in future opportunities.
                     </p>
 
                     <ul class="application-benefits">
                         <li>Tell us about your skills and experience.</li>
                         <li>Upload your CV in PDF, DOC or DOCX format.</li>
-                        <li>Select a vacancy or submit a general application.</li>
+                        <li>Select a current vacancy or apply generally.</li>
                     </ul>
 
                     <p>
-                        Questions about opportunities?
+                        Have questions about opportunities?
                         <a href="mailto:info@averrastaffing.co.uk">
                             Contact AVERRA
                         </a>.
@@ -1111,55 +1146,68 @@ footer.site-footer {
                         Fields marked with * are required.
                     </p>
 
-                    <div id="cv-application-status"
-                         class="jobs-message info"
-                         role="status"
-                         aria-live="polite"
-                         hidden></div>
+                    <div
+                        id="cv-application-status"
+                        class="jobs-message info"
+                        role="status"
+                        aria-live="polite"
+                        aria-atomic="true"
+                        hidden
+                    ></div>
 
-                    <form id="cv-application-form"
-                          class="application-form"
-                          enctype="multipart/form-data">
+                    <form
+                        id="cv-application-form"
+                        class="application-form"
+                        enctype="multipart/form-data"
+                    >
 
                         <div class="application-field">
                             <label for="applicant-name">Full Name *</label>
-                            <input type="text"
-                                   id="applicant-name"
-                                   name="full_name"
-                                   maxlength="150"
-                                   autocomplete="name"
-                                   required>
+                            <input
+                                type="text"
+                                id="applicant-name"
+                                name="full_name"
+                                maxlength="150"
+                                autocomplete="name"
+                                required
+                            >
                         </div>
 
                         <div class="application-field">
                             <label for="applicant-email">Email Address *</label>
-                            <input type="email"
-                                   id="applicant-email"
-                                   name="email"
-                                   maxlength="254"
-                                   autocomplete="email"
-                                   required>
+                            <input
+                                type="email"
+                                id="applicant-email"
+                                name="email"
+                                maxlength="254"
+                                autocomplete="email"
+                                required
+                            >
                         </div>
 
                         <div class="application-field">
                             <label for="applicant-phone">Phone Number</label>
-                            <input type="tel"
-                                   id="applicant-phone"
-                                   name="phone"
-                                   maxlength="40"
-                                   autocomplete="tel">
+                            <input
+                                type="tel"
+                                id="applicant-phone"
+                                name="phone"
+                                maxlength="40"
+                                autocomplete="tel"
+                            >
                         </div>
 
                         <div class="application-field">
                             <label for="applicant-role">Vacancy *</label>
-                            <select id="applicant-role"
-                                    name="job_id"
-                                    required>
-                                <option value="">Loading published vacancies…</option>
+                            <select
+                                id="applicant-role"
+                                name="job_id"
+                                required
+                            >
+                                <option value="">Loading vacancies…</option>
                             </select>
                             <small>
-                                To register interest in future opportunities,
-                                select General Application.
+                                Select General Application to register
+                                your interest in future opportunities.
                             </small>
                         </div>
 
@@ -1167,53 +1215,63 @@ footer.site-footer {
                             <label for="applicant-cover-letter">
                                 Cover Letter or Message
                             </label>
-                            <textarea id="applicant-cover-letter"
-                                      name="cover_letter"
-                                      maxlength="5000"
-                                      placeholder="Tell us about your experience and the opportunities you are looking for."></textarea>
+                            <textarea
+                                id="applicant-cover-letter"
+                                name="cover_letter"
+                                maxlength="5000"
+                                placeholder="Tell us about your experience and the opportunities you are looking for."
+                            ></textarea>
                         </div>
 
                         <div class="application-field">
                             <label for="applicant-cv">Upload Your CV *</label>
-                            <input type="file"
-                                   id="applicant-cv"
-                                   name="cv"
-                                   accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                   required>
-                            <small>
+                            <input
+                                type="file"
+                                id="applicant-cv"
+                                name="cv"
+                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                aria-describedby="cv-file-help"
+                                required
+                            >
+                            <small id="cv-file-help">
                                 Accepted formats: PDF, DOC and DOCX.
                                 Maximum file size: 5 MB.
                             </small>
                         </div>
 
                         <div class="application-checkbox">
-                            <input type="checkbox"
-                                   id="applicant-privacy"
-                                   name="privacy_consent"
-                                   required>
+                            <input
+                                type="checkbox"
+                                id="applicant-privacy"
+                                name="privacy_consent"
+                                required
+                            >
 
                             <label for="applicant-privacy">
                                 I have read the
-                                <a href="privacy.html"
-                                   target="_blank"
-                                   rel="noopener">
-                                    Privacy Policy
-                                </a>
+                                <a
+                                    href="privacy.html"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >Privacy Policy</a>
                                 and understand that AVERRA Staffing Solutions
                                 Ltd will use my information to consider my
                                 application. *
                             </label>
                         </div>
 
-                        <button type="submit"
-                                id="cv-submit-button"
-                                class="jobs-button jobs-button-gold">
+                        <button
+                            type="submit"
+                            id="cv-submit-button"
+                            class="jobs-button jobs-button-gold"
+                        >
                             Submit Application
                         </button>
 
                         <p class="application-security-note">
-                            Please do not upload a CV containing information
-                            unrelated to your application.
+                            Please only upload information relevant to your
+                            application. Your application can be submitted
+                            only when the application service is available.
                         </p>
 
                     </form>
@@ -1225,12 +1283,13 @@ footer.site-footer {
 
 </main>
 
-<!-- STANDARD AVERRA FOOTER -->
-
 <!-- FOOTER -->
+
 <footer class="site-footer">
     <div class="container">
+
         <div class="footer-grid">
+
             <div class="footer-company-column">
                 <a class="footer-brand" href="index.html">
                     AVERRA Staffing Solutions Ltd
@@ -1238,28 +1297,28 @@ footer.site-footer {
 
                 <p class="footer-description">
                     Connecting UK businesses with skilled professionals
-                    based in India through remote staffing and outsourcing solutions.
+                    based in India through remote staffing and
+                    outsourcing solutions.
                 </p>
 
                 <div class="footer-contact">
                     <p>
                         <strong>Email:</strong>
-                        <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
+                        <a href="mailto:info@averrastaffing.co.uk">
+                            info@averrastaffing.co.uk
+                        </a>
                     </p>
 
                     <p>
                         <strong>Website:</strong>
-                        <a href="https://averrastaffing.co.uk/">https://averrastaffing.co.uk</a>
+                        <a href="https://averrastaffing.co.uk/">
+                            averrastaffing.co.uk
+                        </a>
                     </p>
 
                     <p>
                         <strong>Phone:</strong>
                         <a href="tel:+447857290628">+44 7857 290628</a>
-                    </p>
-
-                    <p>
-                        <strong>UK phone:</strong>
-                        <a href="tel:+441234567890">+44 1234 567890</a>
                     </p>
                 </div>
             </div>
@@ -1290,9 +1349,9 @@ footer.site-footer {
                 <h3 class="footer-heading">Legal</h3>
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
-
                 </ul>
             </div>
+
         </div>
 
         <div class="footer-bottom">
@@ -1300,12 +1359,15 @@ footer.site-footer {
                 &copy; <span id="current-year">2026</span>
                 AVERRA Staffing Solutions Ltd. All rights reserved.
             </p>
-            <p>UK–India Outsourcing · Connecting Businesses with Global Talent</p>
+            <p>
+                UK–India Outsourcing · Connecting Businesses with Global Talent
+            </p>
         </div>
+
     </div>
 </footer>
 
-<!-- SUPABASE -->
+<!-- SUPABASE CLIENT AND PROJECT CONFIGURATION -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
@@ -1331,7 +1393,8 @@ footer.site-footer {
     const jobsStatus = $("jobs-status");
     const jobsCount = $("jobs-results-count");
     const searchInput = $("job-search");
-    const categoryFilter = $("job-category-filter");
+    const categoryFilter = $("job-category");
+    const resetJobsButton = $("reset-jobs");
 
     const applicationForm = $("cv-application-form");
     const vacancySelect = $("applicant-role");
@@ -1339,10 +1402,11 @@ footer.site-footer {
     const submitButton = $("cv-submit-button");
     const applicationStatus = $("cv-application-status");
 
-    $("current-year").textContent = new Date().getFullYear();
-
     let supabaseClient = null;
     let publishedJobs = [];
+    let isSubmitting = false;
+
+    $("current-year").textContent = String(new Date().getFullYear());
 
     function showMessage(element, message, type = "info") {
         element.textContent = message;
@@ -1369,19 +1433,42 @@ footer.site-footer {
         return element;
     }
 
+    /*
+     * A normalised key is used for filtering.
+     * The original category name is retained for display.
+     */
     function normaliseCategory(category) {
-        return String(category || "Other").trim() || "Other";
+        return String(category || "Other")
+            .trim()
+            .toLowerCase()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "") || "other";
+    }
+
+    function normaliseSearchText(value) {
+        return String(value || "")
+            .trim()
+            .toLowerCase();
     }
 
     function createJobCard(job) {
         const card = makeElement("article", "job-card");
 
         card.appendChild(
-            makeElement("span", "job-category", normaliseCategory(job.category))
+            makeElement(
+                "span",
+                "job-category",
+                String(job.category || "Other")
+            )
         );
 
         card.appendChild(
-            makeElement("h3", "", job.title || "Untitled vacancy")
+            makeElement(
+                "h3",
+                "",
+                job.title || "Untitled vacancy"
+            )
         );
 
         const meta = makeElement("div", "job-meta");
@@ -1394,7 +1481,11 @@ footer.site-footer {
 
         if (job.work_arrangement) {
             meta.appendChild(
-                makeElement("span", "", "Working arrangement: " + job.work_arrangement)
+                makeElement(
+                    "span",
+                    "",
+                    "Working arrangement: " + job.work_arrangement
+                )
             );
         }
 
@@ -1410,7 +1501,11 @@ footer.site-footer {
 
         if (job.description && String(job.description).trim()) {
             card.appendChild(
-                makeElement("p", "job-description", String(job.description).trim())
+                makeElement(
+                    "p",
+                    "job-description",
+                    String(job.description).trim()
+                )
             );
         }
 
@@ -1419,7 +1514,9 @@ footer.site-footer {
 
             job.responsibilities.forEach(item => {
                 if (typeof item === "string" && item.trim()) {
-                    list.appendChild(makeElement("li", "", item.trim()));
+                    list.appendChild(
+                        makeElement("li", "", item.trim())
+                    );
                 }
             });
 
@@ -1435,9 +1532,18 @@ footer.site-footer {
         );
 
         applyButton.href = "#submit-cv";
+        applyButton.setAttribute(
+            "aria-label",
+            "Apply for " + (job.title || "this vacancy")
+        );
 
         applyButton.addEventListener("click", () => {
             vacancySelect.value = String(job.id);
+
+            if (vacancySelect.value !== String(job.id)) {
+                populateVacancySelect();
+                vacancySelect.value = String(job.id);
+            }
         });
 
         card.appendChild(applyButton);
@@ -1446,8 +1552,8 @@ footer.site-footer {
     }
 
     function renderJobs() {
-        const term = searchInput.value.trim().toLowerCase();
-        const category = categoryFilter.value;
+        const term = normaliseSearchText(searchInput.value);
+        const selectedCategory = categoryFilter.value;
 
         const filtered = publishedJobs.filter(job => {
             const searchableText = [
@@ -1465,8 +1571,14 @@ footer.site-footer {
                 .join(" ")
                 .toLowerCase();
 
-            return (!term || searchableText.includes(term)) &&
-                (!category || normaliseCategory(job.category) === category);
+            const matchesSearch =
+                !term || searchableText.includes(term);
+
+            const matchesCategory =
+                !selectedCategory ||
+                normaliseCategory(job.category) === selectedCategory;
+
+            return matchesSearch && matchesCategory;
         });
 
         jobsGrid.replaceChildren();
@@ -1475,7 +1587,13 @@ footer.site-footer {
             const empty = makeElement("div", "jobs-empty");
 
             empty.appendChild(
-                makeElement("h3", "", "No Matching Vacancies Found")
+                makeElement(
+                    "h3",
+                    "",
+                    publishedJobs.length
+                        ? "No Matching Vacancies Found"
+                        : "No Current Vacancies"
+                )
             );
 
             empty.appendChild(
@@ -1483,16 +1601,20 @@ footer.site-footer {
                     "p",
                     "",
                     publishedJobs.length
-                        ? "Try a different search term or category."
-                        : "There are currently no published vacancies. Please check again soon or submit a general application."
+                        ? "Try another search term or category, or reset the filters."
+                        : "There are currently no published vacancies. You can still submit a general application."
                 )
             );
 
             jobsGrid.appendChild(empty);
         } else {
+            const fragment = document.createDocumentFragment();
+
             filtered.forEach(job => {
-                jobsGrid.appendChild(createJobCard(job));
+                fragment.appendChild(createJobCard(job));
             });
+
+            jobsGrid.appendChild(fragment);
         }
 
         jobsCount.textContent =
@@ -1500,49 +1622,106 @@ footer.site-footer {
             (filtered.length === 1
                 ? " vacancy displayed"
                 : " vacancies displayed");
+
+        jobsGrid.setAttribute("aria-busy", "false");
     }
 
     function populateCategories() {
-        const previous = categoryFilter.value;
 
-        const categories = [
-            ...new Set(
-                publishedJobs.map(job => normaliseCategory(job.category))
-            )
-        ].sort((a, b) => a.localeCompare(b));
+function populateCategories() {
+    const previous = categoryFilter.value;
+
+    const categories = [
+        ["finance", "Finance & Accounting"],
+        ["technology", "IT & Software Development"],
+        ["architecture", "Architecture & Design"],
+        ["engineering", "Engineering & Technical"],
+        ["administration", "Administration & Data Entry"],
+        ["customer-service", "Customer Service & Support"],
+        ["sales", "Sales & Business Development"],
+        ["marketing", "Digital Marketing"],
+        ["human-resources", "Human Resources & Recruitment"],
+        ["operations", "Business Operations"],
+        ["project-management", "Project Management"],
+        ["legal", "Legal & Compliance Support"],
+        ["procurement", "Procurement & Supply Chain"],
+        ["research", "Research & Data Analysis"],
+        ["healthcare", "Healthcare Administration"],
+        ["other", "Other Professional Roles"]
+    ];
+
+    categoryFilter.replaceChildren(
+        new Option("All categories", "")
+    );
+
+    categories.forEach(([value, label]) => {
+        categoryFilter.add(new Option(label, value));
+    });
+
+    if (categories.some(([value]) => value === previous)) {
+        categoryFilter.value = previous;
+    }
+}
+
+
+        const sortedCategories = [...categoryMap.entries()]
+            .sort((a, b) => a[1].localeCompare(b[1]));
 
         categoryFilter.replaceChildren(
-            new Option("All Categories", "")
+            new Option("All categories", "")
         );
 
-        categories.forEach(category => {
-            categoryFilter.add(new Option(category, category));
+        sortedCategories.forEach(([key, label]) => {
+            categoryFilter.add(new Option(label, key));
         });
 
-        if (categories.includes(previous)) {
+        if (categoryMap.has(previous)) {
             categoryFilter.value = previous;
         }
     }
 
-    function populateVacancySelect() {
-        const previous = vacancySelect.value;
 
-        vacancySelect.replaceChildren(
-            new Option("General Application", "general")
-        );
+function populateCategories() {
+    const previous = categoryFilter.value;
 
-        publishedJobs.forEach(job => {
-            vacancySelect.add(
-                new Option(job.title || "Untitled vacancy", String(job.id))
-            );
-        });
+    const categories = [
+        ["finance", "Finance & Accounting"],
+        ["technology", "IT & Software Development"],
+        ["architecture", "Architecture & Design"],
+        ["engineering", "Engineering & Technical"],
+        ["administration", "Administration & Data Entry"],
+        ["customer-service", "Customer Service & Support"],
+        ["sales", "Sales & Business Development"],
+        ["marketing", "Digital Marketing"],
+        ["human-resources", "Human Resources & Recruitment"],
+        ["operations", "Business Operations"],
+        ["project-management", "Project Management"],
+        ["legal", "Legal & Compliance Support"],
+        ["procurement", "Procurement & Supply Chain"],
+        ["research", "Research & Data Analysis"],
+        ["healthcare", "Healthcare Administration"],
+        ["other", "Other Professional Roles"]
+    ];
 
-        if (
-            previous === "general" ||
-            publishedJobs.some(job => String(job.id) === previous)
-        ) {
-            vacancySelect.value = previous;
-        }
+    categoryFilter.replaceChildren(
+        new Option("All categories", "")
+    );
+
+    categories.forEach(([value, label]) => {
+        categoryFilter.add(new Option(label, value));
+    });
+
+    if (categories.some(([value]) => value === previous)) {
+        categoryFilter.value = previous;
+    }
+}
+
+
+    function resetFilters() {
+        searchInput.value = "";
+        categoryFilter.value = "";
+        renderJobs();
+        searchInput.focus();
     }
 
     function secureRandomId() {
@@ -1572,11 +1751,14 @@ footer.site-footer {
     }
 
     async function loadPublishedJobs() {
+        jobsGrid.setAttribute("aria-busy", "true");
+
         jobsGrid.replaceChildren(
             makeElement("div", "jobs-empty", "Loading current vacancies…")
         );
 
         jobsCount.textContent = "Loading vacancies…";
+        hideMessage(jobsStatus);
 
         const { data, error } = await supabaseClient
             .from("jobs")
@@ -1590,7 +1772,9 @@ footer.site-footer {
             throw error;
         }
 
-        publishedJobs = (data || []).filter(job => job.published === true);
+        publishedJobs = (data || []).filter(
+            job => job.published === true
+        );
 
         populateCategories();
         populateVacancySelect();
@@ -1610,12 +1794,21 @@ footer.site-footer {
             return "Your CV must be no larger than 5 MB.";
         }
 
-        const extension = file.name.split(".").pop().toLowerCase();
+        const filename = file.name || "";
+        const lastDot = filename.lastIndexOf(".");
+
+        const extension = lastDot >= 0
+            ? filename.slice(lastDot + 1).toLowerCase()
+            : "";
 
         if (!ALLOWED_EXTENSIONS.includes(extension)) {
             return "Please upload a PDF, DOC or DOCX file.";
         }
 
+        /*
+         * Browsers may leave file.type empty.
+         * If supplied, the MIME type must match an accepted format.
+         */
         if (file.type && !ALLOWED_MIME_TYPES.includes(file.type)) {
             return "The file type is not supported. Please upload a PDF, DOC or DOCX.";
         }
@@ -1625,6 +1818,11 @@ footer.site-footer {
 
     async function submitApplication(event) {
         event.preventDefault();
+
+        if (isSubmitting) {
+            return;
+        }
+
         hideMessage(applicationStatus);
 
         if (!supabaseClient) {
@@ -1675,13 +1873,17 @@ footer.site-footer {
             return;
         }
 
+        isSubmitting = true;
         submitButton.disabled = true;
         submitButton.textContent = "Submitting Application…";
 
         let uploadedPath = null;
 
         try {
-            const extension = file.name.split(".").pop().toLowerCase();
+            const extension = file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
 
             const storagePath =
                 secureRandomId() + "/" +
@@ -1725,18 +1927,21 @@ footer.site-footer {
                 .insert([record]);
 
             if (insertError) {
-                console.error("Application database insert failed:", insertError);
+                console.error(
+                    "Application database insert failed:",
+                    insertError
+                );
 
-                try {
-                    const { error: cleanupError } = await supabaseClient
-                        .storage
-                        .from(CV_BUCKET)
-                        .remove([uploadedPath]);
+                /*
+                 * Try to remove the uploaded CV if saving the
+                 * application record fails.
+                 */
+                const { error: cleanupError } = await supabaseClient
+                    .storage
+                    .from(CV_BUCKET)
+                    .remove([uploadedPath]);
 
-                    if (cleanupError) {
-                        console.error("CV cleanup failed:", cleanupError);
-                    }
-                } catch (cleanupError) {
+                if (cleanupError) {
                     console.error("CV cleanup failed:", cleanupError);
                 }
 
@@ -1767,13 +1972,17 @@ footer.site-footer {
             );
 
         } finally {
+            isSubmitting = false;
             submitButton.disabled = false;
             submitButton.textContent = "Submit Application";
         }
     }
 
+    /* Search, filtering, reset and application events */
+
     searchInput.addEventListener("input", renderJobs);
     categoryFilter.addEventListener("change", renderJobs);
+    resetJobsButton.addEventListener("click", resetFilters);
     applicationForm.addEventListener("submit", submitApplication);
 
     async function initialise() {
@@ -1785,7 +1994,9 @@ footer.site-footer {
             !config.url ||
             !config.anonKey
         ) {
-            console.error("Supabase is not configured. Check supabase-config.js.");
+            console.error(
+                "Supabase is not configured. Check supabase-config.js."
+            );
 
             showMessage(
                 jobsStatus,
@@ -1794,9 +2005,14 @@ footer.site-footer {
             );
 
             jobsGrid.replaceChildren(
-                makeElement("div", "jobs-empty", "Vacancies are temporarily unavailable.")
+                makeElement(
+                    "div",
+                    "jobs-empty",
+                    "Vacancies are temporarily unavailable."
+                )
             );
 
+            jobsGrid.setAttribute("aria-busy", "false");
             jobsCount.textContent = "Unable to load vacancies";
 
             vacancySelect.replaceChildren(
@@ -1815,7 +2031,10 @@ footer.site-footer {
             await loadPublishedJobs();
 
         } catch (error) {
-            console.error("AVERRA jobs initialisation failed:", error);
+            console.error(
+                "AVERRA jobs initialisation failed:",
+                error
+            );
 
             showMessage(
                 jobsStatus,
@@ -1824,9 +2043,14 @@ footer.site-footer {
             );
 
             jobsGrid.replaceChildren(
-                makeElement("div", "jobs-empty", "Vacancies are temporarily unavailable.")
+                makeElement(
+                    "div",
+                    "jobs-empty",
+                    "Vacancies are temporarily unavailable."
+                )
             );
 
+            jobsGrid.setAttribute("aria-busy", "false");
             jobsCount.textContent = "Unable to load vacancies";
 
             vacancySelect.replaceChildren(

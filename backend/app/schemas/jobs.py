@@ -1,12 +1,8 @@
-
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/schemas/jobs.py
 
 Pydantic v2 schemas for job vacancies.
-
-Public schemas are used by the website.
-Administrative schemas are intended for authenticated management routes.
 """
 
 import re
@@ -63,7 +59,6 @@ def clean_optional_text(value: str | None) -> str | None:
         return None
 
     value = value.strip()
-
     return value or None
 
 
@@ -195,13 +190,7 @@ class JobCreate(JobBase):
 # ============================================================
 
 class JobUpdate(BaseModel):
-    """
-    Partial job update schema.
-
-    Only supplied fields should be updated by the route.
-    Administrative routes must require authentication and
-    authorisation.
-    """
+    """Partial job update schema."""
 
     model_config = ConfigDict(
         str_strip_whitespace=True,
@@ -326,17 +315,27 @@ class JobResponse(BaseModel):
     updated_at: datetime
     closing_date: date | None = None
 
+    @field_validator("closing_date", mode="before")
+    @classmethod
+    def convert_closing_datetime_to_date(
+        cls,
+        value: date | datetime | None,
+    ) -> date | None:
+        """
+        Convert a database datetime into a calendar date.
+        """
+        if isinstance(value, datetime):
+            return value.date()
+
+        return value
+
 
 # ============================================================
 # ADMINISTRATIVE JOB RESPONSE
 # ============================================================
 
 class JobAdminResponse(JobResponse):
-    """
-    Extended response for authorised administrators.
-
-    Never expose this schema through unauthenticated routes.
-    """
+    """Extended response for authorised administrators."""
 
     status: JobStatus
     application_email: EmailStr | None = None

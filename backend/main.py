@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.1.0
+Version: 4.2.0
 
 FastAPI application for the AVERRA website.
 
@@ -12,7 +12,7 @@ Features:
 - Safe database initialisation and compatibility migrations
 - API health checks
 - Public website contact enquiries
-- Public published job vacancies
+- Public published job vacancies with closing-date filtering
 - Protected job administration
 - Create, edit, publish and close vacancies
 - CORS configuration for local development and production
@@ -29,7 +29,7 @@ import logging
 import os
 import secrets
 from contextlib import asynccontextmanager
-from datetime import datetime, timezone
+from datetime import date, datetime, time, timezone
 from pathlib import Path
 from typing import Any
 
@@ -43,7 +43,8 @@ from fastapi import (
     status,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import inspect, select, text
+from pydantic import BaseModel, ConfigDict, field_validator
+from sqlalchemy import inspect, or_, select, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -58,7 +59,7 @@ DATABASE_DIR = BASE_DIR / "database"
 LOG_DIR = BASE_DIR / "logs"
 UPLOAD_DIR = BASE_DIR / "uploads"
 
-# Load the backend's environment file before importing the database.
+# Load the backend environment file before importing the database.
 load_dotenv(BASE_DIR / ".env", override=True)
 
 for directory in (DATABASE_DIR, LOG_DIR, UPLOAD_DIR):
@@ -69,7 +70,7 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = os.getenv("APP_VERSION", "4.1.0").strip()
+APP_VERSION = os.getenv("APP_VERSION", "4.2.0").strip()
 
 APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
 
@@ -251,6 +252,32 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def closing_date_to_datetime(
+    value: date | datetime | None,
+) -> datetime | None:
+    """
+    Convert a vacancy closing date to a UTC datetime.
+
+    Date-only inputs remain valid throughout their selected day.
+    Datetime inputs are normalised to UTC.
+    """
+    if value is None:
+        return None
+
+    # datetime is a subclass of date, so check it first.
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            return value.replace(tzinfo=timezone.utc)
+
+        return value.astimezone(timezone.utc)
+
+    return datetime.combine(
+        value,
+        time.max,
+        tzinfo=timezone.utc,
+    )
+
+
 # ============================================================
 # APPLICATION LIFECYCLE
 # ============================================================
@@ -319,8 +346,7 @@ if configured_origins:
 else:
     allowed_origins = DEFAULT_ORIGINS.copy()
 
-# In development, always permit the known local development origins,
-# even if CORS_ORIGINS is already set in .env.
+# In development, always permit the known local development origins.
 if APP_ENV != "production":
     local_development_origins = [
         "http://localhost:63342",
@@ -457,11 +483,19 @@ def list_jobs(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """Return published vacancies only."""
+    """Return published vacancies whose closing dates have not passed."""
     try:
+        now = utc_now()
+
         statement = (
             select(Job)
-            .where(Job.status == "published")
+            .where(
+                Job.status == "published",
+                or_(
+                    Job.closing_date.is_(None),
+                    Job.closing_date >= now,
+                ),
+            )
             .order_by(Job.created_at.desc(), Job.id.desc())
             .offset(offset)
             .limit(limit)
@@ -487,12 +521,25 @@ def get_job(
     job_id: int,
     db: Session = Depends(get_db),
 ):
-    """Return one published vacancy."""
+    """Return one published vacancy if it has not expired."""
+    if job_id < 1:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Job ID must be a positive integer.",
+        )
+
     try:
+        now = utc_now()
+
         statement = select(Job).where(
             Job.id == job_id,
             Job.status == "published",
+            or_(
+                Job.closing_date.is_(None),
+                Job.closing_date >= now,
+            ),
         )
+
         job = db.scalars(statement).first()
 
     except SQLAlchemyError:
@@ -565,7 +612,6 @@ def list_admin_enquiries(
     db: Session = Depends(get_db),
 ):
     """List saved website enquiries for authenticated administrators."""
-
     try:
         statement = select(Enquiry)
 
@@ -631,6 +677,104 @@ def list_admin_enquiries(
             detail="Unable to retrieve contact enquiries.",
         ) from None
 
+
+# ============================================================
+# ADMIN: UPDATE ENQUIRY STATUS
+# ============================================================
+
+class EnquiryStatusUpdate(BaseModel):
+    """Validate an administrator's enquiry status update."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: str
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, value: str) -> str:
+        allowed_statuses = {
+            "new",
+            "unread",
+            "contacted",
+            "in_progress",
+            "replied",
+            "responded",
+            "resolved",
+            "closed",
+        }
+
+        value = value.strip().lower()
+
+        if value not in allowed_statuses:
+            raise ValueError("Invalid enquiry status.")
+
+        return value
+
+
+@app.patch(
+    "/api/admin/enquiries/{enquiry_id}",
+    tags=["Admin - Enquiries"],
+)
+def update_admin_enquiry(
+    enquiry_id: int,
+    enquiry_data: EnquiryStatusUpdate,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Update the status of an existing contact enquiry."""
+    try:
+        enquiry = db.get(Enquiry, enquiry_id)
+
+        if enquiry is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Enquiry not found.",
+            )
+
+        enquiry.status = enquiry_data.status
+
+        db.commit()
+        db.refresh(enquiry)
+
+        logger.info(
+            "Administrator updated enquiry id=%s status=%s",
+            enquiry.id,
+            enquiry.status,
+        )
+
+        return {
+            "id": enquiry.id,
+            "name": enquiry.name,
+            "email": enquiry.email,
+            "phone": enquiry.phone,
+            "company": enquiry.company,
+            "subject": enquiry.subject,
+            "message": enquiry.message,
+            "status": enquiry.status,
+            "created_at": (
+                enquiry.created_at.isoformat()
+                if enquiry.created_at
+                else None
+            ),
+        }
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        db.rollback()
+
+        logger.exception(
+            "Could not update enquiry id=%s",
+            enquiry_id,
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to update enquiry status.",
+        ) from None
+
+
 # ============================================================
 # ADMIN: CREATE VACANCY
 # ============================================================
@@ -647,7 +791,13 @@ def create_job(
     db: Session = Depends(get_db),
 ):
     """Create a vacancy as a draft or published job."""
-    job = Job(**job_data.model_dump())
+    job_values = job_data.model_dump()
+
+    job_values["closing_date"] = closing_date_to_datetime(
+        job_values.get("closing_date")
+    )
+
+    job = Job(**job_values)
 
     try:
         db.add(job)
@@ -733,6 +883,11 @@ def update_job(
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Provide at least one field to update.",
+            )
+
+        if "closing_date" in updates:
+            updates["closing_date"] = closing_date_to_datetime(
+                updates["closing_date"]
             )
 
         for field, value in updates.items():

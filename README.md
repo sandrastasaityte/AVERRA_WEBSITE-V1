@@ -17,6 +17,9 @@ Official website project for AVERRA Staffing Solutions Ltd, a UK-based staffing 
 | Project status | Under active development |
 
 ---
+images:
+Get-ChildItem "C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1\frontend\images" -File |
+Select-Object Name, Extension
 
 ## 1. Project Overview
 

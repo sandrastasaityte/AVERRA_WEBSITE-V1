@@ -3,36 +3,35 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b1f33">
     <meta name="color-scheme" content="light">
 
     <title>How It Works | AVERRA Staffing Solutions Ltd</title>
-
-    <meta name="description" content="Discover how AVERRA Staffing Solutions Ltd connects UK businesses with international professionals, including talent based in India, through remote staffing and outsourcing.">
+    <meta name="description" content="Discover how AVERRA Staffing Solutions Ltd helps UK businesses explore remote staffing and outsourcing solutions, connecting business requirements with international professionals, including talent based in India.">
     <meta name="robots" content="index, follow">
+    <meta name="author" content="AVERRA Staffing Solutions Ltd">
     <link rel="canonical" href="https://averrastaffing.co.uk/how-it-works.html">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="How It Works | AVERRA Staffing Solutions Ltd">
-    <meta property="og:description" content="Explore AVERRA's approach to remote staffing, international talent and outsourcing for UK businesses.">
+    <meta property="og:description" content="Discover AVERRA's approach to remote staffing and outsourcing for UK businesses.">
     <meta property="og:url" content="https://averrastaffing.co.uk/how-it-works.html">
     <meta property="og:site_name" content="AVERRA Staffing Solutions Ltd">
     <meta property="og:image" content="https://averrastaffing.co.uk/images/image21.jpg">
+    <meta property="og:image:alt" content="International professionals collaborating across locations">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="How It Works | AVERRA Staffing Solutions Ltd">
     <meta name="twitter:description" content="Understand the process behind AVERRA's remote staffing and outsourcing approach.">
     <meta name="twitter:image" content="https://averrastaffing.co.uk/images/image21.jpg">
 
-    <link rel="preload" as="image" href="images/image21.jpg">
+    <link rel="preload" as="image" href="images/image21.jpg" fetchpriority="high">
     <link rel="stylesheet" href="style.css">
 
-
-
-<script src="images/images.js" defer></script>
-<script src="images/jobs.js" defer></script>
-<script src="script.js" defer></script>
+    <script src="images/images.js" defer></script>
+    <script src="images/jobs.js" defer></script>
+    <script src="script.js" defer></script>
 
     <style>
         :root {
@@ -45,10 +44,11 @@
             --how-muted: #647386;
             --how-light: #f5f7fa;
             --how-border: #e0e6ed;
-            --how-white: #ffffff;
+            --how-white: #fff;
             --how-container: 1180px;
             --how-radius: 12px;
-            --how-shadow: 0 12px 32px rgba(11, 31, 51, 0.07);
+            --how-shadow: 0 12px 32px rgba(11, 31, 51, .07);
+            --how-header-height: 86px;
         }
 
         *,
@@ -59,13 +59,13 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 100px;
+            scroll-padding-top: 105px;
         }
 
         body {
             margin: 0;
-            color: var(--how-text);
             background: var(--how-white);
+            color: var(--how-text);
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16px;
             line-height: 1.7;
@@ -97,7 +97,8 @@
             font: inherit;
         }
 
-        .how-container {
+        .how-container,
+        .site-footer .container {
             width: min(var(--how-container), calc(100% - 40px));
             margin-inline: auto;
         }
@@ -118,17 +119,17 @@
             top: 16px;
         }
 
-        /* HEADER AND BRAND */
+        /* HEADER */
 
         .how-header {
             position: relative;
             z-index: 100;
-            border-bottom: 1px solid var(--how-border);
             background: var(--how-white);
+            border-bottom: 1px solid var(--how-border);
         }
 
         .how-header-inner {
-            min-height: 86px;
+            min-height: var(--how-header-height);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -137,40 +138,41 @@
 
         .how-logo {
             display: inline-flex;
-            flex-shrink: 0;
+            flex: 0 1 auto;
             flex-direction: column;
+            min-width: 0;
             color: var(--how-navy);
             text-decoration: none;
-            line-height: 1.2;
+            line-height: 1.3;
         }
 
         .how-logo strong {
-            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            font-size: clamp(1.05rem, 1.5vw, 1.3rem);
             font-weight: 800;
-            letter-spacing: 0.055em;
+            letter-spacing: .045em;
         }
 
         .how-logo small {
-            margin-top: 6px;
+            margin-top: 5px;
             color: var(--how-muted);
-            font-size: 0.62rem;
+            font-size: .65rem;
             font-weight: 700;
-            letter-spacing: 0.055em;
+            letter-spacing: .055em;
         }
 
         .how-navigation {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 20px;
+            gap: 18px;
         }
 
         .how-navigation a {
             color: var(--how-navy);
-            font-size: 0.9rem;
+            font-size: .9rem;
             font-weight: 600;
             text-decoration: none;
-            transition: color 0.2s ease, background-color 0.2s ease;
+            transition: color .2s ease, background-color .2s ease;
         }
 
         .how-navigation a:hover,
@@ -179,19 +181,21 @@
         }
 
         .how-navigation .how-nav-cta {
-            padding: 11px 17px;
+            padding: 10px 16px;
             border-radius: 6px;
             background: var(--how-navy);
             color: var(--how-white);
         }
 
-        .how-navigation .how-nav-cta:hover {
+        .how-navigation .how-nav-cta:hover,
+        .how-navigation .how-nav-cta:focus-visible {
             background: var(--how-blue);
             color: var(--how-white);
         }
 
         .how-menu-button {
             display: none;
+            flex: 0 0 44px;
             align-items: center;
             justify-content: center;
             width: 44px;
@@ -215,18 +219,18 @@
 
         .how-hero-inner {
             display: grid;
-            grid-template-columns: 1.08fr 0.92fr;
+            grid-template-columns: 1.08fr .92fr;
             align-items: center;
             gap: 52px;
-            padding-block: 76px;
+            padding-block: 72px;
         }
 
         .how-eyebrow {
-            margin: 0 0 14px;
+            margin: 0 0 12px;
             color: #987024;
-            font-size: 0.78rem;
+            font-size: .78rem;
             font-weight: 800;
-            letter-spacing: 0.15em;
+            letter-spacing: .15em;
             text-transform: uppercase;
         }
 
@@ -238,9 +242,9 @@
         .how-hero h1 {
             margin: 0 0 22px;
             color: var(--how-white);
-            font-size: clamp(2.45rem, 5vw, 4.2rem);
+            font-size: clamp(2.4rem, 5vw, 4.1rem);
             line-height: 1.1;
-            letter-spacing: -0.035em;
+            letter-spacing: -.035em;
         }
 
         .how-hero-copy > p:not(.how-eyebrow) {
@@ -250,9 +254,9 @@
         }
 
         .how-hero-image-wrap {
-            min-height: 320px;
+            min-height: 300px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255,255,255,.15);
             border-radius: 16px;
             background: #172d41;
         }
@@ -279,13 +283,14 @@
             border: 1px solid transparent;
             border-radius: 6px;
             font-weight: 700;
+            line-height: 1.4;
             text-align: center;
             text-decoration: none;
             transition:
-                background-color 0.2s ease,
-                color 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.2s ease;
+                background-color .2s ease,
+                color .2s ease,
+                border-color .2s ease,
+                transform .2s ease;
         }
 
         .how-button:hover {
@@ -303,13 +308,13 @@
         }
 
         .how-button-outline {
-            border-color: rgba(255, 255, 255, 0.65);
+            border-color: rgba(255,255,255,.65);
             background: transparent;
             color: var(--how-white);
         }
 
         .how-button-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,.1);
             color: var(--how-white);
         }
 
@@ -324,7 +329,7 @@
 
         .how-hero-points li {
             color: #e0e8f0;
-            font-size: 0.9rem;
+            font-size: .9rem;
         }
 
         .how-hero-points li::before {
@@ -334,7 +339,7 @@
             font-weight: 800;
         }
 
-        /* GENERAL SECTIONS */
+        /* SECTIONS */
 
         .how-section {
             padding-block: 76px;
@@ -357,7 +362,7 @@
             color: var(--how-navy);
             font-size: clamp(1.9rem, 3vw, 2.7rem);
             line-height: 1.25;
-            letter-spacing: -0.025em;
+            letter-spacing: -.025em;
         }
 
         .how-section-heading > p:last-child {
@@ -367,7 +372,7 @@
 
         .how-intro-grid {
             display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
+            grid-template-columns: 1.15fr .85fr;
             align-items: center;
             gap: 48px;
         }
@@ -410,7 +415,7 @@
             border: 1px solid var(--how-border);
             border-radius: var(--how-radius);
             background: var(--how-white);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform .2s ease, box-shadow .2s ease;
         }
 
         .how-benefit-card:hover {
@@ -435,6 +440,7 @@
             margin: 0 0 10px;
             color: var(--how-navy);
             font-size: 1.15rem;
+            line-height: 1.4;
         }
 
         .how-benefit-card p {
@@ -442,7 +448,7 @@
             color: var(--how-muted);
         }
 
-        /* SIX-STEP PROCESS */
+        /* PROCESS */
 
         .how-steps {
             max-width: 940px;
@@ -500,9 +506,9 @@
 
         .how-step-label {
             color: #987024;
-            font-size: 0.75rem;
+            font-size: .75rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
+            letter-spacing: .12em;
             text-transform: uppercase;
         }
 
@@ -510,7 +516,7 @@
 
         .how-global-grid {
             display: grid;
-            grid-template-columns: 1fr 0.85fr;
+            grid-template-columns: 1fr .85fr;
             align-items: center;
             gap: 48px;
         }
@@ -536,7 +542,7 @@
         .how-flow-card p {
             margin: 7px 0 0;
             color: var(--how-muted);
-            font-size: 0.92rem;
+            font-size: .92rem;
         }
 
         .how-flow-card-highlight {
@@ -624,17 +630,12 @@
             flex-shrink: 0;
         }
 
-        /* SHARED AVERRA FOOTER */
+        /* FOOTER */
 
         .site-footer {
             padding: 55px 0 22px;
-            color: #d8e1ea;
             background: var(--how-navy-dark);
-        }
-
-        .site-footer .container {
-            width: min(var(--how-container), calc(100% - 40px));
-            margin-inline: auto;
+            color: #d8e1ea;
         }
 
         .footer-grid {
@@ -655,14 +656,6 @@
             text-decoration: none;
         }
 
-        .footer-brand span {
-            margin-top: 5px;
-            color: #cbd5df;
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.025em;
-        }
-
         .footer-brand:hover {
             color: var(--how-gold-light);
         }
@@ -676,7 +669,7 @@
         .footer-contact p {
             margin: 0 0 11px;
             color: #c3cfda;
-            font-size: 0.92rem;
+            font-size: .92rem;
             overflow-wrap: anywhere;
         }
 
@@ -688,7 +681,7 @@
         .footer-links a {
             color: #c3cfda;
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: color .2s ease;
         }
 
         .footer-contact a:hover,
@@ -714,7 +707,7 @@
         .footer-links li {
             margin: 0;
             padding: 0;
-            font-size: 0.93rem;
+            font-size: .93rem;
         }
 
         .footer-bottom {
@@ -724,19 +717,19 @@
             flex-wrap: wrap;
             gap: 12px 24px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255,255,255,.15);
         }
 
         .footer-bottom p {
             margin: 0;
             color: #aebdca;
-            font-size: 0.85rem;
+            font-size: .85rem;
             line-height: 1.7;
         }
 
-        /* RESPONSIVE */
+        /* TABLET */
 
-        @media (max-width: 1000px) {
+        @media (max-width: 1050px) {
             .how-menu-button {
                 display: inline-flex;
             }
@@ -747,10 +740,13 @@
                 top: 100%;
                 right: 0;
                 left: 0;
-                padding: 16px 20px 22px;
+                z-index: 101;
+                max-height: calc(100vh - var(--how-header-height));
+                overflow-y: auto;
+                padding: 16px max(20px, calc((100% - var(--how-container)) / 2)) 22px;
                 border-bottom: 1px solid var(--how-border);
                 background: var(--how-white);
-                box-shadow: 0 12px 22px rgba(11, 31, 51, 0.08);
+                box-shadow: 0 12px 22px rgba(11,31,51,.08);
             }
 
             .how-navigation.is-open {
@@ -793,6 +789,8 @@
             }
         }
 
+        /* MOBILE */
+
         @media (max-width: 650px) {
             .how-container,
             .site-footer .container {
@@ -804,14 +802,19 @@
                 gap: 12px;
             }
 
+            .how-logo {
+                max-width: calc(100% - 56px);
+            }
+
             .how-logo strong {
-                font-size: 0.95rem;
-                letter-spacing: 0.025em;
+                font-size: 1.02rem;
+                letter-spacing: .02em;
+                line-height: 1.3;
             }
 
             .how-logo small {
-                font-size: 0.52rem;
-                letter-spacing: 0.015em;
+                font-size: .55rem;
+                letter-spacing: .015em;
             }
 
             .how-section {
@@ -842,7 +845,7 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 10px;
-                font-size: 0.95rem;
+                font-size: .95rem;
             }
 
             .how-step h3 {
@@ -870,7 +873,7 @@
             }
 
             .how-cta-inner {
-                align-items: flex-start;
+                align-items: stretch;
                 flex-direction: column;
             }
 
@@ -896,9 +899,9 @@
             *::before,
             *::after {
                 scroll-behavior: auto !important;
-                animation-duration: 0.01ms !important;
+                animation-duration: .01ms !important;
                 animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+                transition-duration: .01ms !important;
             }
         }
     </style>
@@ -907,14 +910,12 @@
 <body>
     <a class="how-skip-link" href="#main-content">Skip to main content</a>
 
-    <!-- HEADER -->
-
     <header class="how-header">
         <div class="how-container how-header-inner">
 
             <a class="how-logo" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
                 <strong>AVERRA STAFFING SOLUTIONS LTD</strong>
-                <small>CONNECTING UK BUSINESS WITH GLOBAL TALENT</small>
+                <small>CONNECTING UK BUSINESSES WITH GLOBAL TALENT</small>
             </a>
 
             <button
@@ -923,8 +924,7 @@
                 type="button"
                 aria-label="Open navigation menu"
                 aria-controls="how-navigation"
-                aria-expanded="false"
-            >
+                aria-expanded="false">
                 <span aria-hidden="true">☰</span>
             </button>
 
@@ -950,9 +950,7 @@
 
                 <div class="how-hero-copy">
                     <p class="how-eyebrow">How It Works</p>
-
                     <h1 id="how-hero-title">Global talent. A clearer way forward.</h1>
-
 
                     <p>
                         Finding the right people for your business should be
@@ -963,15 +961,13 @@
 
                     <p>
                         We start by understanding your needs, clarifying the
-                        role and discussing the practical arrangements before
-                        work begins.
+                        role and discussing practical arrangements before work begins.
                     </p>
 
                     <div class="how-hero-actions">
                         <a href="lets-talk.html" class="how-button how-button-primary">
                             Discuss Your Requirements
                         </a>
-
                         <a href="#our-process" class="how-button how-button-outline">
                             Explore Our Process
                         </a>
@@ -992,8 +988,7 @@
                         width="800"
                         height="600"
                         fetchpriority="high"
-                        decoding="async"
-                    >
+                        decoding="async">
                 </div>
 
             </div>
@@ -1006,7 +1001,6 @@
 
                 <div class="how-intro">
                     <p class="how-eyebrow">Our approach</p>
-
                     <h2 id="how-intro-title">A staffing process built around your business</h2>
 
                     <p>
@@ -1019,26 +1013,20 @@
                     <p>
                         AVERRA begins by understanding what your organisation
                         needs to achieve. We then discuss the role, required
-                        skills, suitable staffing options and working
-                        arrangements.
+                        skills, suitable staffing options and working arrangements.
                     </p>
 
                     <p>
                         Our aim is to make the process clear from the outset:
                         the scope of work, responsibilities, communication
-                        arrangements and commercial terms to be agreed before
+                        arrangements and commercial terms are agreed before
                         the service begins.
                     </p>
                 </div>
 
                 <aside class="how-highlight" aria-labelledby="how-approach-title">
                     <h3 id="how-approach-title">The AVERRA approach</h3>
-
-                    <p>
-                        A practical framework for exploring remote staffing
-                        and outsourcing.
-                    </p>
-
+                    <p>A practical framework for exploring remote staffing and outsourcing.</p>
                     <ul>
                         <li>Understand your business objectives.</li>
                         <li>Define the role and responsibilities.</li>
@@ -1059,13 +1047,10 @@
 
                 <div class="how-section-heading">
                     <p class="how-eyebrow">Our principles</p>
-
                     <h2 id="how-principles-title">What matters throughout the process</h2>
-
                     <p>
-                        Successful remote staffing depends on clear
-                        expectations, appropriate working arrangements,
-                        suitable skills and reliable communication.
+                        Successful remote staffing depends on clear expectations,
+                        appropriate working arrangements, suitable skills and reliable communication.
                     </p>
                 </div>
 
@@ -1075,9 +1060,8 @@
                         <span class="how-benefit-number" aria-hidden="true">01</span>
                         <h3>Clarity from the start</h3>
                         <p>
-                            Establish the role, responsibilities, working
-                            hours, expected outputs and communication
-                            requirements before work begins.
+                            Establish the role, responsibilities, working hours,
+                            expected outputs and communication requirements before work begins.
                         </p>
                     </article>
 
@@ -1086,8 +1070,8 @@
                         <h3>Flexible options</h3>
                         <p>
                             Explore support for specific business functions,
-                            individual remote roles or dedicated-team
-                            requirements, depending on suitability.
+                            individual remote roles or dedicated-team requirements,
+                            depending on suitability.
                         </p>
                     </article>
 
@@ -1105,8 +1089,7 @@
                         <h3>International professionals</h3>
                         <p>
                             Explore suitable talent beyond the UK, including
-                            professionals based in India, where appropriate
-                            for the role.
+                            professionals based in India, where appropriate for the role.
                         </p>
                     </article>
 
@@ -1114,9 +1097,8 @@
                         <span class="how-benefit-number" aria-hidden="true">05</span>
                         <h3>Planned onboarding</h3>
                         <p>
-                            Prepare introductions, training, approved system
-                            access, security expectations and reporting
-                            arrangements.
+                            Prepare introductions, training, approved system access,
+                            security expectations and reporting arrangements.
                         </p>
                     </article>
 
@@ -1124,8 +1106,8 @@
                         <span class="how-benefit-number" aria-hidden="true">06</span>
                         <h3>Ongoing communication</h3>
                         <p>
-                            Use agreed check-ins and progress reviews to
-                            discuss priorities, feedback and changing needs.
+                            Use agreed check-ins and progress reviews to discuss
+                            priorities, feedback and changing needs.
                         </p>
                     </article>
 
@@ -1140,12 +1122,10 @@
 
                 <div class="how-section-heading">
                     <p class="how-eyebrow">The process</p>
-
                     <h2 id="how-process-title">Six steps from discussion to delivery</h2>
-
                     <p>
-                        The precise process depends on the role and service
-                        required. These stages provide a clear starting point.
+                        The precise process depends on the role and service required.
+                        These stages provide a clear starting point.
                     </p>
                 </div>
 
@@ -1157,9 +1137,9 @@
                             <span class="how-step-label">Discover</span>
                             <h3>Understand your business</h3>
                             <p>
-                                We begin with a conversation about your
-                                organisation, current workload, business
-                                objectives and the tasks you need support with.
+                                We begin with a conversation about your organisation,
+                                current workload, business objectives and the tasks
+                                you need support with.
                             </p>
                             <ul>
                                 <li>Your business activities and priorities.</li>
@@ -1176,9 +1156,8 @@
                             <span class="how-step-label">Define</span>
                             <h3>Clarify the role and requirements</h3>
                             <p>
-                                We establish the skills, responsibilities
-                                and practical requirements of the proposed
-                                position or service.
+                                We establish the skills, responsibilities and practical
+                                requirements of the proposed position or service.
                             </p>
                             <ul>
                                 <li>Role description and relevant experience.</li>
@@ -1196,10 +1175,9 @@
                             <span class="how-step-label">Identify</span>
                             <h3>Explore suitable professionals</h3>
                             <p>
-                                Based on the agreed requirements, we explore
-                                potential staffing options and professionals
-                                with relevant experience. Depending on the
-                                role, this may include talent based in India.
+                                Based on the agreed requirements, we explore potential
+                                staffing options and professionals with relevant experience.
+                                Depending on the role, this may include talent based in India.
                             </p>
                             <ul>
                                 <li>Qualifications and relevant experience.</li>
@@ -1207,10 +1185,7 @@
                                 <li>Communication and collaboration skills.</li>
                                 <li>Availability and proposed working arrangements.</li>
                             </ul>
-                            <p>
-                                Suitability and availability are confirmed
-                                for each specific requirement.
-                            </p>
+                            <p>Suitability and availability are confirmed for each specific requirement.</p>
                         </div>
                     </article>
 
@@ -1220,11 +1195,9 @@
                             <span class="how-step-label">Select</span>
                             <h3>Review the proposed match</h3>
                             <p>
-                                The proposed staffing option is assessed
-                                against your requirements. Where appropriate,
-                                this may include reviewing a profile,
-                                discussing experience and arranging an
-                                interview.
+                                The proposed staffing option is assessed against your
+                                requirements. Where appropriate, this may include reviewing
+                                a profile, discussing experience and arranging an interview.
                             </p>
                             <ul>
                                 <li>Review relevant experience and skills.</li>
@@ -1241,9 +1214,8 @@
                             <span class="how-step-label">Agree</span>
                             <h3>Confirm the service arrangements</h3>
                             <p>
-                                Before work begins, the parties agree the
-                                scope, fees, payment terms, responsibilities
-                                and relevant contractual requirements.
+                                Before work begins, the parties agree the scope, fees,
+                                payment terms, responsibilities and relevant contractual requirements.
                             </p>
                             <ul>
                                 <li>Service scope and deliverables.</li>
@@ -1261,11 +1233,10 @@
                             <span class="how-step-label">Collaborate</span>
                             <h3>Onboard, communicate and review</h3>
                             <p>
-                                Once the arrangements are confirmed, the
-                                parties plan onboarding, introductions,
-                                approved system access and communication.
-                                Progress can then be reviewed against the
-                                agreed scope and expectations.
+                                Once the arrangements are confirmed, the parties plan
+                                onboarding, introductions, approved system access and
+                                communication. Progress can then be reviewed against
+                                the agreed scope and expectations.
                             </p>
                             <ul>
                                 <li>Role introductions and task handovers.</li>
@@ -1288,20 +1259,18 @@
 
                 <div class="how-global">
                     <p class="how-eyebrow">International collaboration</p>
-
                     <h2 id="how-global-title">Connecting UK businesses with global talent</h2>
 
                     <p>
                         AVERRA is a UK-based business focused on staffing and
-                        outsourcing solutions that connect UK client
-                        requirements with international professionals.
+                        outsourcing solutions that connect UK client requirements
+                        with international professionals.
                     </p>
 
                     <p>
-                        For suitable roles, this may include professionals
-                        based in India. The precise arrangement depends on
-                        the service, the parties involved and the requirements
-                        agreed for the engagement.
+                        For suitable roles, this may include professionals based
+                        in India. The precise arrangement depends on the service,
+                        the parties involved and the requirements agreed for the engagement.
                     </p>
 
                     <p>
@@ -1311,9 +1280,8 @@
                     </p>
 
                     <p>
-                        We discuss the proposed arrangement with each
-                        prospective client before confirming the scope
-                        and next steps.
+                        We discuss the proposed arrangement with each prospective
+                        client before confirming the scope and next steps.
                     </p>
 
                     <p>
@@ -1362,13 +1330,11 @@
 
                 <div class="how-section-heading">
                     <p class="how-eyebrow">Getting started</p>
-
                     <h2 id="how-start-title">Prepare for your first conversation</h2>
-
                     <p>
-                        You do not need a complete job description to make
-                        an initial enquiry. A few details can help us
-                        understand what you are looking for.
+                        You do not need a complete job description to make an
+                        initial enquiry. A few details can help us understand
+                        what you are looking for.
                     </p>
                 </div>
 
@@ -1377,16 +1343,16 @@
                     <article class="how-checklist-card">
                         <h3>1. Identify the work</h3>
                         <p>
-                            Consider which tasks or responsibilities need
-                            support and what is difficult to manage internally.
+                            Consider which tasks or responsibilities need support
+                            and what is difficult to manage internally.
                         </p>
                     </article>
 
                     <article class="how-checklist-card">
                         <h3>2. Describe the skills</h3>
                         <p>
-                            List essential experience, qualifications,
-                            technical skills and language requirements.
+                            List essential experience, qualifications, technical
+                            skills and language requirements.
                         </p>
                     </article>
 
@@ -1434,11 +1400,10 @@
                 <div>
                     <p class="how-eyebrow">Your next step</p>
                     <h2 id="how-cta-title">Let's discuss what your business needs</h2>
-
                     <p>
-                        Whether you are exploring your first remote role
-                        or considering additional international support,
-                        start with a conversation about your requirements.
+                        Whether you are exploring your first remote role or
+                        considering additional international support, start
+                        with a conversation about your requirements.
                     </p>
                 </div>
 
@@ -1453,83 +1418,84 @@
 
     <!-- FOOTER -->
 
-<!-- FOOTER -->
-<footer class="site-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-company-column">
-                <a class="footer-brand" href="index.html">
-                    AVERRA Staffing Solutions Ltd
-                </a>
+    <footer class="site-footer">
+        <div class="container">
 
-                <p class="footer-description">
-                    Connecting UK businesses with skilled professionals
-                    based in India through remote staffing and outsourcing solutions.
-                </p>
+            <div class="footer-grid">
 
-                <div class="footer-contact">
-                    <p>
-                        <strong>Email:</strong>
-                        <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
+                <div class="footer-company-column">
+                    <a class="footer-brand" href="index.html">
+                        AVERRA Staffing Solutions Ltd
+                    </a>
+
+                    <p class="footer-description">
+                        Connecting UK businesses with skilled professionals
+                        based in India through remote staffing and outsourcing solutions.
                     </p>
 
-                    <p>
-                        <strong>Website:</strong>
-                        <a href="https://averrastaffing.co.uk/">https://averrastaffing.co.uk</a>
-                    </p>
+                    <div class="footer-contact">
+                        <p>
+                            <strong>Email:</strong>
+                            <a href="mailto:info@averrastaffing.co.uk">
+                                info@averrastaffing.co.uk
+                            </a>
+                        </p>
 
-                    <p>
-                        <strong>Phone:</strong>
-                        <a href="tel:+447857290628">+44 7857 290628</a>
-                    </p>
+                        <p>
+                            <strong>Website:</strong>
+                            <a href="https://averrastaffing.co.uk/">
+                                averrastaffing.co.uk
+                            </a>
+                        </p>
 
-                    <p>
-                        <strong>UK phone:</strong>
-                        <a href="tel:+441234567890">+44 1234 567890</a>
-                    </p>
+                        <p>
+                            <strong>Phone:</strong>
+                            <a href="tel:+447857290628">+44 7857 290628</a>
+                        </p>
+                    </div>
                 </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-heading">Explore AVERRA</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="how-it-works.html" aria-current="page">How It Works</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="jobs.html">Job Opportunities</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-heading">Information</h3>
+                    <ul class="footer-links">
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="faq.html">Frequently Asked Questions</a></li>
+                        <li><a href="lets-talk.html">Contact Us</a></li>
+                        <li><a href="industries.html">Industries</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-heading">Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
             </div>
 
-            <div class="footer-section">
-                <h3 class="footer-heading">Explore AVERRA</h3>
-                <ul class="footer-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="services.html">Our Services</a></li>
-                    <li><a href="how-it-works.html">How It Works</a></li>
-                    <li><a href="careers.html">Careers</a></li>
-                    <li><a href="jobs.html">Job Opportunities</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>
+                    &copy; <span id="current-year">2026</span>
+                    AVERRA Staffing Solutions Ltd. All rights reserved.
+                </p>
+                <p>UK–India Outsourcing · Connecting Businesses with Global Talent</p>
             </div>
 
-            <div class="footer-section">
-                <h3 class="footer-heading">Information</h3>
-                <ul class="footer-links">
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="FAQ.html">Frequently Asked Questions</a></li>
-                    <li><a href="lets-talk.html">Contact Us</a></li>
-                    <li><a href="industries.html">Industries</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Legal</h3>
-                <ul class="footer-links">
-                    <li><a href="privacy.html">Privacy Policy</a></li>
-
-                </ul>
-            </div>
         </div>
-
-        <div class="footer-bottom">
-            <p>
-                &copy; <span id="current-year">2026</span>
-                AVERRA Staffing Solutions Ltd. All rights reserved.
-            </p>
-            <p>UK–India Outsourcing · Connecting Businesses with Global Talent</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <script>
         (function () {
@@ -1544,78 +1510,76 @@
             const menuButton = document.getElementById("how-menu-button");
             const navigation = document.getElementById("how-navigation");
 
-            if (!menuButton || !navigation) {
-                return;
-            }
+            if (menuButton && navigation) {
+                const mobileNavigation = window.matchMedia("(max-width: 1050px)");
 
-            const mobileNavigation = window.matchMedia("(max-width: 1000px)");
+                function setMenuOpen(open) {
+                    menuButton.setAttribute("aria-expanded", String(open));
+                    menuButton.setAttribute(
+                        "aria-label",
+                        open ? "Close navigation menu" : "Open navigation menu"
+                    );
 
-            function setMenuOpen(open) {
-                menuButton.setAttribute("aria-expanded", String(open));
-                menuButton.setAttribute(
-                    "aria-label",
-                    open ? "Close navigation menu" : "Open navigation menu"
-                );
+                    menuButton.innerHTML = open
+                        ? '<span aria-hidden="true">✕</span>'
+                        : '<span aria-hidden="true">☰</span>';
 
-                menuButton.innerHTML = open
-                    ? '<span aria-hidden="true">✕</span>'
-                    : '<span aria-hidden="true">☰</span>';
+                    navigation.classList.toggle("is-open", open);
+                }
 
-                navigation.classList.toggle("is-open", open);
-            }
+                menuButton.addEventListener("click", function () {
+                    const isOpen =
+                        menuButton.getAttribute("aria-expanded") === "true";
 
-            menuButton.addEventListener("click", function () {
-                const isOpen =
-                    menuButton.getAttribute("aria-expanded") === "true";
+                    setMenuOpen(!isOpen);
+                });
 
-                setMenuOpen(!isOpen);
-            });
+                navigation.querySelectorAll("a").forEach(function (link) {
+                    link.addEventListener("click", function () {
+                        if (mobileNavigation.matches) {
+                            setMenuOpen(false);
+                        }
+                    });
+                });
 
-            navigation.querySelectorAll("a").forEach(function (link) {
-                link.addEventListener("click", function () {
-                    if (mobileNavigation.matches) {
+                document.addEventListener("keydown", function (event) {
+                    if (
+                        event.key === "Escape" &&
+                        menuButton.getAttribute("aria-expanded") === "true"
+                    ) {
+                        setMenuOpen(false);
+                        menuButton.focus();
+                    }
+                });
+
+                document.addEventListener("click", function (event) {
+                    if (!mobileNavigation.matches) {
+                        return;
+                    }
+
+                    const clickedInsideMenu = navigation.contains(event.target);
+                    const clickedButton = menuButton.contains(event.target);
+
+                    if (
+                        !clickedInsideMenu &&
+                        !clickedButton &&
+                        menuButton.getAttribute("aria-expanded") === "true"
+                    ) {
                         setMenuOpen(false);
                     }
                 });
-            });
 
-            document.addEventListener("keydown", function (event) {
-                if (
-                    event.key === "Escape" &&
-                    menuButton.getAttribute("aria-expanded") === "true"
-                ) {
-                    setMenuOpen(false);
-                    menuButton.focus();
-                }
-            });
-
-            document.addEventListener("click", function (event) {
-                if (!mobileNavigation.matches) {
-                    return;
+                function handleBreakpointChange() {
+                    if (!mobileNavigation.matches) {
+                        setMenuOpen(false);
+                    }
                 }
 
-                const clickedInsideMenu = navigation.contains(event.target);
-                const clickedButton = menuButton.contains(event.target);
-
-                if (
-                    !clickedInsideMenu &&
-                    !clickedButton &&
-                    menuButton.getAttribute("aria-expanded") === "true"
-                ) {
-                    setMenuOpen(false);
+                if (typeof mobileNavigation.addEventListener === "function") {
+                    mobileNavigation.addEventListener("change", handleBreakpointChange);
+                } else {
+                    mobileNavigation.addListener(handleBreakpointChange);
                 }
-            });
-
-            function handleBreakpointChange() {
-                if (!mobileNavigation.matches) {
-                    setMenuOpen(false);
-                }
-            }
-
-            if (typeof mobileNavigation.addEventListener === "function") {
-                mobileNavigation.addEventListener("change", handleBreakpointChange);
-            } else {
-                mobileNavigation.addListener(handleBreakpointChange);
             }
 
             const heroImage = document.querySelector(".how-hero-image");
