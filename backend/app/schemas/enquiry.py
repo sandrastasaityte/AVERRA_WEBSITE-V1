@@ -22,14 +22,17 @@ from pydantic import (
 )
 
 
+
+
 EnquiryStatus = Literal[
     "new",
     "in_progress",
-    "responded",
+  "unread"
     "closed",
-    "spam",
+    "contacted",
+    "replied",
+"resolved"
 ]
-
 
 class EnquiryBase(BaseModel):
     """Shared fields for customer enquiries."""

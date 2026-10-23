@@ -20,6 +20,11 @@
     <script src="images/images.js" defer></script>
     <script src="images/jobs.js" defer></script>
     <script src="script.js" defer></script>
+    <script src="images/applications.js" defer></script>
+    <script>
+    window.AVERRA_API_BASE_URL =
+        "https://averra-backend-dn23.onrender.com";
+</script>
 
     <style>
         :root {
@@ -1056,8 +1061,6 @@
     <option value="healthcare">Healthcare Administration</option>
     <option value="other">Other Professional Roles</option>
 </select>
-
-                        </select>
                     </div>
 
                     <button
@@ -1367,10 +1370,8 @@
     </div>
 </footer>
 
-<!-- SUPABASE CLIENT AND PROJECT CONFIGURATION -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+
 
 <script>
 (() => {
