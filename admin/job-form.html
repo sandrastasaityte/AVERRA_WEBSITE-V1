@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0b1f33">
     <title>Manage Vacancy | AVERRA Admin</title>
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
     <header class="admin-header">
         <div class="admin-container admin-header-inner">
-            <a class="admin-brand" href="dashboard.html">
+            <a class="admin-brand" href="dashboard.html" aria-label="AVERRA Admin Dashboard">
                 <span class="admin-brand-name">AVERRA</span>
                 <span class="admin-brand-subtitle">STAFFING SOLUTIONS LTD</span>
             </a>
@@ -22,7 +23,8 @@
                 <button
                     type="button"
                     id="logout-button"
-                    class="btn btn-secondary">
+                    class="btn btn-secondary"
+                    data-admin-logout>
                     Log out
                 </button>
             </nav>
@@ -44,6 +46,7 @@
             <div class="form-card-header">
                 <h2>Vacancy details</h2>
                 <p>Complete the relevant fields, then save your changes.</p>
+                <p>Fields marked with * are required.</p>
             </div>
 
             <div
@@ -66,8 +69,8 @@
                             type="text"
                             id="title"
                             name="title"
-                            maxlength="150"
                             minlength="3"
+                            maxlength="150"
                             required
                             autocomplete="off"
                             placeholder="e.g. Finance Operations Specialist">
@@ -91,10 +94,10 @@
                             type="text"
                             id="location"
                             name="location"
-                            maxlength="150"
                             minlength="2"
+                            maxlength="150"
                             required
-                            placeholder="e.g. Remote - India">
+                            placeholder="e.g. Remote — India">
                     </div>
 
                     <div class="form-group">
@@ -122,7 +125,7 @@
                             id="salary_range"
                             name="salary_range"
                             maxlength="100"
-                            placeholder="e.g. Competitive or £30,000-£35,000">
+                            placeholder="e.g. £30,000–£35,000 or Competitive">
                     </div>
 
                     <div class="form-group full-width">
@@ -136,9 +139,9 @@
                             minlength="10"
                             maxlength="500"
                             required
-                            placeholder="Enter a short introduction to this vacancy."></textarea>
+                            placeholder="Write a short introduction to this vacancy."></textarea>
                         <small>
-                            This summary can appear on the public Jobs page.
+                            This summary is intended for the vacancy card on your website.
                             Maximum 500 characters.
                         </small>
                     </div>
@@ -156,8 +159,8 @@
                             required
                             placeholder="Describe the role, responsibilities, skills and experience required."></textarea>
                         <small>
-                            Include the main responsibilities, required skills
-                            and relevant experience. Maximum 15,000 characters.
+                            Include the responsibilities, requirements and other important
+                            details. Maximum 15,000 characters.
                         </small>
                     </div>
 
@@ -171,8 +174,8 @@
                             autocomplete="email"
                             placeholder="info@averrastaffing.co.uk">
                         <small>
-                            Optional. Leave blank if applications should use
-                            the backend's existing default process.
+                            Optional. Enter a valid email address if this vacancy uses
+                            a specific application contact.
                         </small>
                     </div>
 
@@ -183,8 +186,8 @@
                             id="closing_date"
                             name="closing_date">
                         <small>
-                            Optional. Applications should remain available
-                            throughout the selected date.
+                            Optional. Check the backend date handling before relying
+                            on this date to stop applications automatically.
                         </small>
                     </div>
 
@@ -193,10 +196,14 @@
                             Vacancy status <span aria-hidden="true">*</span>
                         </label>
                         <select id="status" name="status" required>
-                            <option value="draft">Draft - not published</option>
-                            <option value="published">Published - visible to visitors</option>
+                            <option value="draft">Draft — not published</option>
+                            <option value="published">Published — visible to visitors</option>
                             <option value="closed">Closed</option>
                         </select>
+                        <small>
+                            Draft vacancies should remain unpublished. Choose Published
+                            only when the vacancy is ready for visitors.
+                        </small>
                     </div>
                 </div>
 
@@ -230,12 +237,10 @@
 
         <footer class="admin-footer">
             <p>
-                AVERRA Staffing Solutions Ltd · Connecting UK businesses
-                with global talent.
+                AVERRA Staffing Solutions Ltd · Connecting UK businesses with global talent.
             </p>
             <p>
-                &copy; <span id="current-year"></span>
-                AVERRA Staffing Solutions Ltd
+                &copy; <span id="current-year"></span> AVERRA Staffing Solutions Ltd
             </p>
         </footer>
     </main>
@@ -247,25 +252,28 @@
         (() => {
             "use strict";
 
-            const year = document.getElementById("current-year");
+            const yearElement = document.getElementById("current-year");
 
-            if (year) {
-                year.textContent = String(new Date().getFullYear());
+            if (yearElement) {
+                yearElement.textContent = String(new Date().getFullYear());
             }
 
             const resetButton = document.getElementById("reset-button");
             const form = document.getElementById("job-form");
             const message = document.getElementById("form-message");
+            const params = new URLSearchParams(window.location.search);
 
             if (resetButton && form) {
                 resetButton.addEventListener("click", () => {
-                    const params = new URLSearchParams(
-                        window.location.search
-                    );
-
-                    // When editing a vacancy, return to a blank creation form.
                     if (params.has("id")) {
-                        window.location.href = "job-form.html";
+                        const confirmed = window.confirm(
+                            "Leave this vacancy without saving your changes?"
+                        );
+
+                        if (confirmed) {
+                            window.location.href = "job-form.html";
+                        }
+
                         return;
                     }
 
@@ -273,9 +281,7 @@
 
                     const jobId = document.getElementById("job-id");
                     const statusField = document.getElementById("status");
-                    const title = document.getElementById("form-title");
-                    const saveButton = document.getElementById("save-button");
-                    const deleteButton = document.getElementById("delete-button");
+                    const employmentField = document.getElementById("employment_type");
 
                     if (jobId) {
                         jobId.value = "";
@@ -285,22 +291,27 @@
                         statusField.value = "draft";
                     }
 
-                    if (title) {
-                        title.textContent = "Create Vacancy";
-                    }
-
-                    if (saveButton) {
-                        saveButton.textContent = "Create Vacancy";
-                    }
-
-                    if (deleteButton) {
-                        deleteButton.hidden = true;
+                    if (employmentField) {
+                        employmentField.value = "";
                     }
 
                     if (message) {
                         message.textContent = "";
-                        message.className = "form-message";
                         message.hidden = true;
+                        message.classList.remove(
+                            "success",
+                            "error",
+                            "info",
+                            "message-success",
+                            "message-error",
+                            "message-info"
+                        );
+                    }
+
+                    const title = document.getElementById("title");
+
+                    if (title) {
+                        title.focus();
                     }
                 });
             }

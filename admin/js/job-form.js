@@ -6,14 +6,13 @@
    * ============================================================
    * AVERRA STAFFING SOLUTIONS LTD
    * File: admin/js/job-form.js
-   * Version: 3.4.0
+   * Version: 3.6.0
    * ============================================================
    *
    * Administrator vacancy create/edit form.
    *
    * Requires:
    * - admin/js/auth.js
-   * - admin/css/admin.css
    *
    * Backend:
    * - GET    /api/admin/jobs
@@ -21,15 +20,23 @@
    * - PATCH  /api/admin/jobs/{job_id}
    * - DELETE /api/admin/jobs/{job_id}
    *
-   * IMPORTANT:
-   * This file uses the shared AVERRA_ADMIN authentication system.
-   * It does not store or expose the administrator token itself.
+   * Uses the central AVERRA_ADMIN authentication system.
    * ============================================================
    */
 
   const API_TIMEOUT_MS = 20000;
 
-  const VALID_EMPLOYMENT_TYPES = new Set([
+  const LIMITS = {
+    title: 150,
+    department: 100,
+    location: 150,
+    salary_range: 100,
+    summary: 500,
+    description: 15000,
+    application_email: 254
+  };
+
+  const EMPLOYMENT_TYPES = new Set([
     "Full-time",
     "Part-time",
     "Contract",
@@ -38,7 +45,7 @@
     "Internship"
   ]);
 
-  const VALID_STATUSES = new Set([
+  const STATUSES = new Set([
     "draft",
     "published",
     "closed"
@@ -52,20 +59,32 @@
   let admin;
   let jobId = null;
   let isSaving = false;
-  let originalDeleteButtonDisplay = "";
+  let originalDisabledStates = new Map();
 
-  function getElement(id) {
-    return document.getElementById(id);
+  const $ = (id) => document.getElementById(id);
+
+  function field(name) {
+    return form?.querySelector(`[name="${name}"]`) || $(name);
   }
 
-  function getField(name) {
-    return form
-      ? form.querySelector(`[name="${name}"]`) ||
-          getElement(name)
-      : getElement(name);
+  function value(name) {
+    const element = field(name);
+    return typeof element?.value === "string"
+      ? element.value.trim()
+      : "";
   }
 
-  function setMessage(message, type = "info") {
+  function setValue(name, newValue) {
+    const element = field(name);
+    if (!element) return;
+
+    element.value =
+      newValue === null || newValue === undefined
+        ? ""
+        : String(newValue);
+  }
+
+  function showMessage(message, type = "info") {
     if (!messageElement) {
       console[type === "error" ? "error" : "log"](
         "[AVERRA job form]",
@@ -75,26 +94,17 @@
     }
 
     messageElement.textContent = message;
+    messageElement.hidden = false;
     messageElement.classList.remove(
-      "success",
-      "error",
-      "info",
-      "message-success",
-      "message-error",
-      "message-info"
+      "success", "error", "info",
+      "message-success", "message-error", "message-info"
     );
 
-    messageElement.hidden = false;
-    messageElement.setAttribute("role", "status");
-
-    if (type === "success") {
-      messageElement.classList.add("success", "message-success");
-    } else if (type === "error") {
-      messageElement.classList.add("error", "message-error");
-      messageElement.setAttribute("role", "alert");
-    } else {
-      messageElement.classList.add("info", "message-info");
-    }
+    messageElement.classList.add(type, `message-${type}`);
+    messageElement.setAttribute(
+      "role",
+      type === "error" ? "alert" : "status"
+    );
   }
 
   function clearMessage() {
@@ -103,298 +113,215 @@
     messageElement.textContent = "";
     messageElement.hidden = true;
     messageElement.classList.remove(
-      "success",
-      "error",
-      "info",
-      "message-success",
-      "message-error",
-      "message-info"
+      "success", "error", "info",
+      "message-success", "message-error", "message-info"
     );
   }
 
-  function getValue(name) {
-    const field = getField(name);
-    return field && typeof field.value === "string"
-      ? field.value.trim()
-      : "";
-  }
-
-  function setValue(name, value) {
-    const field = getField(name);
-
-    if (!field) return;
-
-    if (value === null || value === undefined) {
-      field.value = "";
-    } else if (
-      typeof value === "string" ||
-      typeof value === "number"
-    ) {
-      field.value = String(value);
-    } else {
-      field.value = "";
-    }
-  }
-
-  function setSavingState(saving) {
-    isSaving = saving;
-
-    if (saveButton) {
-      saveButton.disabled = saving;
-      saveButton.textContent = saving
-        ? "Saving..."
-        : jobId
-          ? "Save Changes"
-          : "Create Vacancy";
-    }
-
-    if (form) {
-      form.querySelectorAll(
-        "input, textarea, select, button"
-      ).forEach((element) => {
-        if (element === saveButton) return;
-
-        if (element === deleteButton) {
-          element.disabled = saving;
-          return;
-        }
-
-        element.disabled = saving;
-      });
-    }
-
-    if (deleteButton) {
-      deleteButton.disabled = saving;
-    }
-  }
-
-  function normaliseJobs(response) {
-    if (Array.isArray(response)) {
-      return response;
-    }
-
-    if (!response || typeof response !== "object") {
-      return [];
-    }
-
-    if (Array.isArray(response.items)) {
-      return response.items;
-    }
-
-    if (Array.isArray(response.jobs)) {
-      return response.jobs;
-    }
-
-    if (Array.isArray(response.results)) {
-      return response.results;
-    }
-
-    return [];
-  }
-
-  function getJobIdentifier(job) {
-    if (!job || typeof job !== "object") {
-      return null;
-    }
-
-    return job.id ?? job.job_id ?? null;
-  }
-
-  function getJobDateValue(value) {
-    if (!value) return "";
-
-    const text = String(value);
-
-    // An HTML date input requires YYYY-MM-DD.
-    const match = text.match(/^(\d{4}-\d{2}-\d{2})/);
-
-    return match ? match[1] : "";
-  }
-
-  function formatApiError(error) {
+  function apiErrorMessage(error) {
     if (!error) {
       return "An unexpected error occurred. Please try again.";
     }
 
-    if (typeof error === "string") {
-      return error;
-    }
+    if (typeof error === "string") return error;
 
-    if (error.detail) {
+    if (error.detail !== undefined) {
       if (typeof error.detail === "string") {
         return error.detail;
       }
 
       if (Array.isArray(error.detail)) {
-        return error.detail
-          .map((item) => item.msg || JSON.stringify(item))
-          .join(" ");
+        return error.detail.map((item) => {
+          const message = item?.msg || "Invalid value";
+          const location = Array.isArray(item?.loc)
+            ? item.loc.filter((part) => part !== "body").join(".")
+            : "";
+
+          return location ? `${location}: ${message}` : message;
+        }).join(" ");
       }
 
-      return JSON.stringify(error.detail);
+      try {
+        return JSON.stringify(error.detail);
+      } catch (_) {
+        return "The server rejected the request.";
+      }
     }
 
-    if (error.message) {
-      return error.message;
-    }
-
-    return "An unexpected error occurred. Please try again.";
+    return error.message ||
+      "An unexpected error occurred. Please try again.";
   }
 
   async function apiRequest(path, options = {}) {
     if (!admin || typeof admin.api !== "function") {
       throw new Error(
-        "Administrator API is unavailable. Check that admin/js/auth.js loads before this file."
+        "The administrator API is unavailable. Check that js/auth.js loads before js/job-form.js."
       );
     }
 
-    /*
-     * Prefer the shared authentication API so the administrator token
-     * is added centrally and is not duplicated in this file.
-     */
-    const requestOptions = {
+    return admin.api(path, {
       ...options,
       timeout: options.timeout || API_TIMEOUT_MS
-    };
-
-    return admin.api(path, requestOptions);
+    });
   }
 
-  function validateJobId(value) {
-    if (!/^[1-9]\d*$/.test(String(value))) {
+  function validateLength(text, min, max, label) {
+    if (text.length < min) {
+      throw new Error(`${label} must contain at least ${min} characters.`);
+    }
+
+    if (text.length > max) {
+      throw new Error(`${label} must contain no more than ${max} characters.`);
+    }
+  }
+
+  function validateOptionalLength(text, max, label) {
+    if (text.length > max) {
+      throw new Error(`${label} must contain no more than ${max} characters.`);
+    }
+  }
+
+  function validateDate(dateText) {
+    if (!dateText) return;
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateText)) {
+      throw new Error("Please enter a valid closing date.");
+    }
+
+    const date = new Date(`${dateText}T00:00:00Z`);
+
+    if (
+      Number.isNaN(date.getTime()) ||
+      date.toISOString().slice(0, 10) !== dateText
+    ) {
+      throw new Error("Please enter a valid calendar date.");
+    }
+  }
+
+  function validateJobId(id) {
+    if (!/^[1-9]\d*$/.test(String(id))) {
       throw new Error(
         "The vacancy ID is invalid. Return to Jobs and open the vacancy again."
       );
     }
   }
 
-  function validateForm() {
-    const title = getValue("title");
-    const location = getValue("location");
-    const summary = getValue("summary");
-    const description = getValue("description");
-    const employmentType = getValue("employment_type");
-    const statusValue = getValue("status");
-    const email = getValue("application_email");
-    const closingDate = getValue("closing_date");
+  function buildPayload() {
+    const title = value("title");
+    const department = value("department");
+    const location = value("location");
+    const employmentType = value("employment_type");
+    const salaryRange = value("salary_range");
+    const summary = value("summary");
+    const description = value("description");
+    const email = value("application_email");
+    const closingDate = value("closing_date");
+    const status = value("status");
 
-    if (!title) {
-      throw new Error("Please enter a vacancy title.");
+    validateLength(title, 3, LIMITS.title, "Vacancy title");
+    validateOptionalLength(department, LIMITS.department, "Department");
+    validateLength(location, 2, LIMITS.location, "Location");
+
+    if (!EMPLOYMENT_TYPES.has(employmentType)) {
+      throw new Error("Please select a valid employment type.");
     }
 
-    if (title.length > 200) {
-      throw new Error(
-        "The vacancy title must be 200 characters or fewer."
-      );
-    }
+    validateOptionalLength(
+      salaryRange, LIMITS.salary_range, "Salary / rate"
+    );
 
-    if (!location) {
-      throw new Error("Please enter the vacancy location.");
-    }
+    validateLength(summary, 10, LIMITS.summary, "Vacancy summary");
+    validateLength(
+      description, 20, LIMITS.description, "Vacancy description"
+    );
 
-    if (!summary) {
-      throw new Error("Please enter a short vacancy summary.");
-    }
-
-    if (!description) {
-      throw new Error("Please enter the vacancy description.");
-    }
-
-    if (
-      employmentType &&
-      !VALID_EMPLOYMENT_TYPES.has(employmentType)
-    ) {
-      throw new Error(
-        "Please select a valid employment type."
-      );
-    }
-
-    if (!statusValue || !VALID_STATUSES.has(statusValue)) {
-      throw new Error(
-        "Please select Draft, Published or Closed."
-      );
+    if (!STATUSES.has(status)) {
+      throw new Error("Please select Draft, Published or Closed.");
     }
 
     if (email) {
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!emailPattern.test(email) || email.length > 254) {
-        throw new Error(
-          "Please enter a valid application email address."
-        );
-      }
-    }
-
-    if (closingDate) {
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(closingDate)) {
-        throw new Error(
-          "Please enter a valid closing date."
-        );
-      }
-
-      const parsedDate = new Date(
-        `${closingDate}T00:00:00Z`
-      );
-
       if (
-        Number.isNaN(parsedDate.getTime()) ||
-        parsedDate.toISOString().slice(0, 10) !== closingDate
+        email.length > LIMITS.application_email ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
       ) {
-        throw new Error(
-          "Please enter a valid calendar date for the closing date."
-        );
+        throw new Error("Please enter a valid application email address.");
       }
-
-      /*
-       * Do not reject historical dates here. The backend's JobUpdate
-       * schema and application submission logic remain authoritative.
-       * Administrators may need to edit an expired vacancy.
-       */
     }
 
-    const payload = {
-      title,
-      location,
-      summary,
-      description,
-      status: statusValue
-    };
-
-    const department = getValue("department");
-    const salaryRange = getValue("salary_range");
-
-    if (department) {
-      payload.department = department;
-    }
-
-    if (employmentType) {
-      payload.employment_type = employmentType;
-    }
-
-    if (salaryRange) {
-      payload.salary_range = salaryRange;
-    }
-
-    if (email) {
-      payload.application_email = email;
-    }
+    validateDate(closingDate);
 
     /*
-     * Include closing_date only if the form contains that field.
-     * An empty date is sent as null so an administrator can clear it,
-     * provided the backend schema permits null.
+     * These keys match the JobCreate and JobUpdate schemas.
+     * Do not send unsupported HTML-only fields to the API.
      */
-    const closingDateField = getField("closing_date");
+    return {
+      title,
+      department: department || null,
+      location,
+      employment_type: employmentType,
+      salary_range: salaryRange || null,
+      summary,
+      description,
+      application_email: email || null,
+      closing_date: closingDate || null,
+      status
+    };
+  }
 
-    if (closingDateField) {
-      payload.closing_date = closingDate || null;
+  function setSaving(saving) {
+    if (saving === isSaving) return;
+    isSaving = saving;
+
+    if (saving) {
+      originalDisabledStates = new Map();
+
+      form.querySelectorAll("input, textarea, select, button")
+        .forEach((element) => {
+          originalDisabledStates.set(element, element.disabled);
+          element.disabled = true;
+        });
+
+      if (saveButton) saveButton.textContent = "Saving...";
+      return;
     }
 
-    return payload;
+    form.querySelectorAll("input, textarea, select, button")
+      .forEach((element) => {
+        if (originalDisabledStates.has(element)) {
+          element.disabled = originalDisabledStates.get(element);
+        }
+      });
+
+    if (saveButton) {
+      saveButton.textContent = jobId
+        ? "Save Changes"
+        : "Create Vacancy";
+    }
+
+    originalDisabledStates.clear();
+  }
+
+  function getId(job) {
+    return job?.id ?? job?.job_id ?? null;
+  }
+
+  function normaliseJobs(response) {
+    if (Array.isArray(response)) return response;
+    if (Array.isArray(response?.items)) return response.items;
+    if (Array.isArray(response?.jobs)) return response.jobs;
+    if (Array.isArray(response?.results)) return response.results;
+    return [];
+  }
+
+  function dateForInput(dateValue) {
+    if (!dateValue) return "";
+
+    const match = String(dateValue).match(/^(\d{4}-\d{2}-\d{2})/);
+    return match ? match[1] : "";
   }
 
   function populateForm(job) {
-    setValue("job-id", getJobIdentifier(job));
+    setValue("job-id", getId(job));
     setValue("title", job.title);
     setValue("department", job.department);
     setValue("location", job.location);
@@ -403,42 +330,35 @@
     setValue("summary", job.summary);
     setValue("description", job.description);
     setValue("application_email", job.application_email);
+    setValue("closing_date", dateForInput(job.closing_date));
     setValue("status", job.status || "draft");
-    setValue("closing_date", getJobDateValue(job.closing_date));
 
-    if (titleElement) {
-      titleElement.textContent = "Edit Vacancy";
-    }
+    if (titleElement) titleElement.textContent = "Edit Vacancy";
 
     if (deleteButton) {
       deleteButton.hidden = false;
-      deleteButton.style.display =
-        originalDeleteButtonDisplay || "";
+      deleteButton.style.display = "";
     }
 
-    if (saveButton) {
-      saveButton.textContent = "Save Changes";
-    }
+    if (saveButton) saveButton.textContent = "Save Changes";
   }
 
   async function loadVacancy(id) {
     validateJobId(id);
-
-    setMessage("Loading vacancy...", "info");
+    showMessage("Loading vacancy...", "info");
 
     const response = await apiRequest("/api/admin/jobs", {
       method: "GET"
     });
 
     const jobs = normaliseJobs(response);
-
-    const job = jobs.find((item) => {
-      return String(getJobIdentifier(item)) === String(id);
-    });
+    const job = jobs.find(
+      (item) => String(getId(item)) === String(id)
+    );
 
     if (!job) {
       throw new Error(
-        "The vacancy could not be found. It may have been deleted or may not be included in the current results."
+        "Vacancy not found. It may have been deleted or is not in the returned job list."
       );
     }
 
@@ -448,7 +368,6 @@
 
   async function handleSubmit(event) {
     event.preventDefault();
-
     if (isSaving) return;
 
     clearMessage();
@@ -456,13 +375,13 @@
     let payload;
 
     try {
-      payload = validateForm();
+      payload = buildPayload();
     } catch (error) {
-      setMessage(formatApiError(error), "error");
+      showMessage(apiErrorMessage(error), "error");
       return;
     }
 
-    setSavingState(true);
+    setSaving(true);
 
     try {
       let response;
@@ -474,83 +393,52 @@
           `/api/admin/jobs/${encodeURIComponent(jobId)}`,
           {
             method: "PATCH",
-            headers: {
-              "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           }
         );
 
-        setMessage(
-          "Vacancy updated successfully.",
-          "success"
-        );
+        showMessage("Vacancy updated successfully.", "success");
       } else {
-        response = await apiRequest(
-          "/api/admin/jobs",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          }
-        );
+        response = await apiRequest("/api/admin/jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-        const createdId = getJobIdentifier(response);
-
-        if (createdId !== null && createdId !== undefined) {
-          jobId = String(createdId);
-
-          const url = new URL(window.location.href);
-          url.searchParams.set("id", jobId);
-          window.history.replaceState({}, "", url.toString());
-
-          if (deleteButton) {
-            deleteButton.hidden = false;
-            deleteButton.style.display =
-              originalDeleteButtonDisplay || "";
-          }
-
-          if (titleElement) {
-            titleElement.textContent = "Edit Vacancy";
-          }
-        }
-
-        setMessage(
-          "Vacancy created successfully.",
-          "success"
-        );
+        showMessage("Vacancy created successfully.", "success");
       }
 
-      if (response && typeof response === "object") {
-        const returnedId = getJobIdentifier(response);
+      const returnedId = getId(response);
 
-        if (returnedId !== null && returnedId !== undefined) {
-          setValue("job-id", returnedId);
+      if (returnedId !== null && returnedId !== undefined) {
+        jobId = String(returnedId);
+        setValue("job-id", returnedId);
+
+        const url = new URL(window.location.href);
+        url.searchParams.set("id", jobId);
+        window.history.replaceState({}, "", url.toString());
+
+        if (titleElement) titleElement.textContent = "Edit Vacancy";
+
+        if (deleteButton) {
+          deleteButton.hidden = false;
+          deleteButton.style.display = "";
         }
       }
     } catch (error) {
-      console.error(
-        "[AVERRA job form] Save failed:",
-        error
-      );
-
-      setMessage(
-        formatApiError(error),
-        "error"
-      );
+      console.error("[AVERRA job form] Save failed:", error);
+      showMessage(apiErrorMessage(error), "error");
     } finally {
-      setSavingState(false);
+      setSaving(false);
     }
   }
 
   async function handleDelete() {
-    if (!jobId || isSaving) {
-      setMessage(
-        "Save the vacancy before attempting to delete it.",
-        "error"
-      );
+    if (isSaving) return;
+
+    if (!jobId) {
+      showMessage("Save the vacancy before deleting it.", "error");
       return;
     }
 
@@ -559,89 +447,57 @@
     const confirmed = window.confirm(
       "Are you sure you want to delete this vacancy?\n\n" +
       "This action cannot be undone. Vacancies with linked applications " +
-      "cannot be deleted; close or unpublish them instead."
+      "may need to be closed instead."
     );
 
     if (!confirmed) return;
 
     clearMessage();
-    setSavingState(true);
+    setSaving(true);
 
     try {
       await apiRequest(
         `/api/admin/jobs/${encodeURIComponent(jobId)}`,
-        {
-          method: "DELETE"
-        }
+        { method: "DELETE" }
       );
 
-      setMessage(
-        "Vacancy deleted successfully. Returning to the Jobs page...",
-        "success"
-      );
+      showMessage("Vacancy deleted successfully. Returning to Jobs...", "success");
 
       window.setTimeout(() => {
         window.location.href = "jobs.html";
       }, 900);
     } catch (error) {
-      console.error(
-        "[AVERRA job form] Delete failed:",
-        error
-      );
-
-      setMessage(
-        formatApiError(error),
-        "error"
-      );
-
-      setSavingState(false);
+      console.error("[AVERRA job form] Delete failed:", error);
+      showMessage(apiErrorMessage(error), "error");
+      setSaving(false);
     }
   }
 
   function bindEvents() {
-    if (form) {
-      form.addEventListener("submit", handleSubmit);
-    }
+    form.addEventListener("submit", handleSubmit);
 
-    if (deleteButton) {
-      deleteButton.addEventListener("click", (event) => {
-        event.preventDefault();
+    deleteButton?.addEventListener("click", (event) => {
+      event.preventDefault();
 
-        handleDelete().catch((error) => {
-          console.error(
-            "[AVERRA job form] Delete handler failed:",
-            error
-          );
-
-          setMessage(formatApiError(error), "error");
-        });
+      handleDelete().catch((error) => {
+        console.error("[AVERRA job form] Delete failed:", error);
+        showMessage(apiErrorMessage(error), "error");
       });
-    }
+    });
   }
 
-  async function initialiseJobForm() {
-    form = getElement("job-form");
-    messageElement = getElement("form-message");
-    saveButton = getElement("save-button");
-    deleteButton = getElement("delete-button");
-    titleElement = getElement("form-title");
+  async function initialise() {
+    form = $("job-form");
+    messageElement = $("form-message");
+    saveButton = $("save-button");
+    deleteButton = $("delete-button");
+    titleElement = $("form-title");
 
-    if (!form) {
+    if (!form || !saveButton) {
       console.error(
-        "[AVERRA job form] Required element #job-form was not found."
+        "[AVERRA job form] Required #job-form or #save-button element missing."
       );
       return;
-    }
-
-    if (!saveButton) {
-      console.error(
-        "[AVERRA job form] Required element #save-button was not found."
-      );
-      return;
-    }
-
-    if (deleteButton) {
-      originalDeleteButtonDisplay = deleteButton.style.display;
     }
 
     admin = window.AVERRA_ADMIN;
@@ -651,28 +507,22 @@
       typeof admin.api !== "function" ||
       typeof admin.requireLogin !== "function"
     ) {
-      setMessage(
-        "Administrator authentication did not load. Check that auth.js is included before job-form.js.",
+      showMessage(
+        "Administrator authentication did not load. Check that js/auth.js loads before js/job-form.js.",
         "error"
       );
       return;
     }
 
-    /*
-     * Bind events only after the page has the expected elements
-     * and the shared administrator API is available.
-     */
     bindEvents();
 
     try {
-      await admin.requireLogin();
-    } catch (error) {
-      console.error(
-        "[AVERRA job form] Authentication check failed:",
-        error
-      );
+      const authenticated = await admin.requireLogin();
 
-      setMessage(
+      if (authenticated === false) return;
+    } catch (error) {
+      console.error("[AVERRA job form] Authentication failed:", error);
+      showMessage(
         "Administrator authentication failed. Please sign in again.",
         "error"
       );
@@ -688,66 +538,38 @@
       try {
         await loadVacancy(jobId);
       } catch (error) {
-        console.error(
-          "[AVERRA job form] Could not load vacancy:",
-          error
-        );
-
-        setMessage(
-          formatApiError(error),
-          "error"
-        );
-      }
-    } else {
-      jobId = null;
-
-      if (titleElement) {
-        titleElement.textContent = "Create Vacancy";
+        console.error("[AVERRA job form] Could not load vacancy:", error);
+        showMessage(apiErrorMessage(error), "error");
       }
 
-      if (deleteButton) {
-        deleteButton.hidden = true;
-        deleteButton.style.display = "none";
-      }
-
-      if (saveButton) {
-        saveButton.textContent = "Create Vacancy";
-      }
-
-      setValue("status", "draft");
-      clearMessage();
+      return;
     }
+
+    jobId = null;
+
+    if (titleElement) titleElement.textContent = "Create Vacancy";
+
+    if (deleteButton) {
+      deleteButton.hidden = true;
+      deleteButton.style.display = "none";
+    }
+
+    if (saveButton) saveButton.textContent = "Create Vacancy";
+
+    setValue("status", "draft");
+    clearMessage();
+  }
+
+  function start() {
+    initialise().catch((error) => {
+      console.error("[AVERRA job form] Initialisation failed:", error);
+      showMessage(apiErrorMessage(error), "error");
+    });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-        initialiseJobForm().catch((error) => {
-          console.error(
-            "[AVERRA job form] Initialisation failed:",
-            error
-          );
-
-          setMessage(
-            formatApiError(error),
-            "error"
-          );
-        });
-      },
-      { once: true }
-    );
+    document.addEventListener("DOMContentLoaded", start, { once: true });
   } else {
-    initialiseJobForm().catch((error) => {
-      console.error(
-        "[AVERRA job form] Initialisation failed:",
-        error
-      );
-
-      setMessage(
-        formatApiError(error),
-        "error"
-      );
-    });
+    start();
   }
 })();
