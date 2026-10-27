@@ -3,72 +3,60 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0b1f33">
     <meta name="description" content="Find answers about AVERRA Staffing Solutions Ltd, UK–India outsourcing, remote staffing, onboarding, contracts, data protection and careers.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://averrastaffing.co.uk/faq.html">
-
     <title>Frequently Asked Questions | AVERRA Staffing Solutions Ltd</title>
-
     <link rel="stylesheet" href="style.css">
-    <script src="images/images.js" defer></script>
 
     <style>
         :root {
-            --faq-navy: #0b1f33;
-            --faq-deep: #071522;
-            --faq-blue: #1d5f91;
-            --faq-gold: #c89b3c;
-            --faq-ink: #182b3c;
-            --faq-muted: #5e6c79;
-            --faq-line: #dce4eb;
-            --faq-pale: #f3f7fa;
+            --navy: #0b1f33;
+            --deep: #071522;
+            --blue: #1d5f91;
+            --gold: #c89b3c;
+            --ink: #182b3c;
+            --muted: #5e6c79;
+            --line: #dce4eb;
+            --pale: #f3f7fa;
         }
 
-        .faq-page,
-        .faq-page * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body.faq-page {
             margin: 0;
-            color: var(--faq-ink);
+            color: var(--ink);
             background: #fff;
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.65;
         }
 
-        .faq-page a {
-            color: var(--faq-blue);
-        }
+        .faq-page a { color: var(--blue); }
 
         .faq-page a:focus-visible,
         .faq-page button:focus-visible,
         .faq-page input:focus-visible,
         .faq-page summary:focus-visible {
-            outline: 3px solid var(--faq-gold);
+            outline: 3px solid var(--gold);
             outline-offset: 3px;
         }
 
-        .faq-page .container {
+        .container {
             width: min(1180px, calc(100% - 40px));
             margin-inline: auto;
         }
 
-        /* Top contact strip */
-
-        .faq-page .topbar {
-            background: var(--faq-deep);
+        .topbar {
+            background: var(--deep);
             color: #eaf1f7;
             font-size: .85rem;
         }
 
-        .faq-page .topbar-inner {
+        .topbar-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -76,22 +64,16 @@
             min-height: 38px;
         }
 
-        .faq-page .topbar a {
-            color: #fff;
-            text-decoration: none;
-            overflow-wrap: anywhere;
-        }
+        .topbar a { color: #fff; text-decoration: none; }
 
-        /* Header and navigation */
-
-        .faq-page .site-header {
+        .site-header {
             position: relative;
             z-index: 5;
             background: #fff;
             border-bottom: 1px solid #e7edf2;
         }
 
-        .faq-page .header-inner {
+        .header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -100,40 +82,27 @@
             padding-block: 12px;
         }
 
-        .faq-page .brand {
+        .brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-shrink: 0;
-            color: var(--faq-navy);
+            color: var(--navy) !important;
             text-decoration: none;
+            flex-shrink: 0;
         }
 
-        .faq-page .brand img {
-            display: block;
+        .brand img {
             width: 52px;
             height: 52px;
             object-fit: contain;
             border-radius: 7px;
         }
 
-        .faq-page .brand-copy {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.25;
-        }
+        .brand-copy { display: flex; flex-direction: column; line-height: 1.25; }
+        .brand-copy strong { letter-spacing: .06em; }
+        .brand-copy span { margin-top: 4px; font-size: .7rem; color: var(--muted); }
 
-        .faq-page .brand-copy strong {
-            letter-spacing: .06em;
-        }
-
-        .faq-page .brand-copy span {
-            margin-top: 4px;
-            color: var(--faq-muted);
-            font-size: .7rem;
-        }
-
-        .faq-page .main-nav {
+        .main-nav {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -141,56 +110,42 @@
             gap: 5px;
         }
 
-        .faq-page .main-nav a {
-            display: inline-block;
+        .main-nav a {
             padding: 9px 10px;
-            border-radius: 7px;
-            color: var(--faq-navy);
+            color: var(--navy);
             font-size: .88rem;
             font-weight: 600;
             text-decoration: none;
+            border-radius: 7px;
         }
 
-        .faq-page .main-nav a:hover,
-        .faq-page .main-nav a[aria-current="page"] {
-            color: var(--faq-blue);
-            background: var(--faq-pale);
+        .main-nav a:hover,
+        .main-nav a[aria-current="page"] {
+            color: var(--blue);
+            background: var(--pale);
         }
 
-        .faq-page .main-nav .nav-cta {
+        .main-nav .nav-cta {
             color: #fff;
-            background: var(--faq-blue);
+            background: var(--blue);
         }
 
-        .faq-page .main-nav .nav-cta:hover {
+        .main-nav .nav-cta:hover {
             color: #fff;
-            background: var(--faq-navy);
+            background: var(--navy);
         }
 
-        /* Hero */
-
-        .faq-page .hero {
+        .hero {
             padding: 72px 0;
             color: #fff;
             background:
-                radial-gradient(
-                    circle at 85% 15%,
-                    rgba(200, 155, 60, .2),
-                    transparent 32%
-                ),
-                linear-gradient(
-                    125deg,
-                    var(--faq-deep),
-                    var(--faq-navy) 60%,
-                    #153e5d
-                );
+                radial-gradient(circle at 85% 15%, rgba(200,155,60,.2), transparent 32%),
+                linear-gradient(125deg, var(--deep), var(--navy) 60%, #153e5d);
         }
 
-        .faq-page .hero-content {
-            max-width: 800px;
-        }
+        .hero-content { max-width: 800px; }
 
-        .faq-page .eyebrow {
+        .eyebrow {
             margin: 0 0 15px;
             color: #f0cb7a;
             font-size: .78rem;
@@ -199,22 +154,21 @@
             text-transform: uppercase;
         }
 
-        .faq-page .hero h1 {
+        .hero h1 {
             margin: 0;
-            color: #fff;
             font-size: clamp(2.3rem, 5vw, 4rem);
             line-height: 1.1;
             letter-spacing: -.035em;
         }
 
-        .faq-page .hero p {
+        .hero p {
             max-width: 680px;
             margin: 20px 0 0;
             color: #dce8f1;
             font-size: 1.05rem;
         }
 
-        .faq-page .trust-points {
+        .trust-points {
             display: flex;
             flex-wrap: wrap;
             gap: 10px 22px;
@@ -223,182 +177,143 @@
             font-size: .9rem;
         }
 
-        .faq-page .trust-points span::before {
+        .trust-points span::before {
             content: "✓";
             margin-right: 8px;
             color: #f0cb7a;
             font-weight: bold;
         }
 
-        /* FAQ introduction and search */
+        .faq-main { padding: 58px 0 72px; }
 
-        .faq-page .faq-main {
-            padding: 58px 0 72px;
-        }
-
-        .faq-page .intro {
+        .intro {
             max-width: 760px;
             margin: 0 auto 28px;
             text-align: center;
         }
 
-        .faq-page .intro h2 {
+        .intro h2 {
             margin: 0 0 10px;
-            color: var(--faq-navy);
+            color: var(--navy);
             font-size: clamp(1.7rem, 3vw, 2.3rem);
             line-height: 1.2;
         }
 
-        .faq-page .intro p {
-            margin: 0;
-            color: var(--faq-muted);
-        }
+        .intro p { margin: 0; color: var(--muted); }
 
-        .faq-page .faq-tools {
+        .faq-tools {
             max-width: 900px;
             margin: 0 auto 28px;
             padding: 18px;
-            border: 1px solid var(--faq-line);
+            border: 1px solid var(--line);
             border-radius: 16px;
-            background: var(--faq-pale);
+            background: var(--pale);
         }
 
-        .faq-page .search-wrap {
-            position: relative;
-        }
+        .search-wrap { position: relative; }
 
-        .faq-page .search-icon {
+        .search-icon {
             position: absolute;
             top: 50%;
             left: 15px;
             transform: translateY(-50%);
-            color: var(--faq-muted);
+            color: var(--muted);
             font-size: 1.2rem;
             pointer-events: none;
         }
 
-        .faq-page #faq-search {
-            display: block;
+        #faq-search {
             width: 100%;
             min-height: 50px;
             padding: 12px 15px 12px 45px;
             border: 1px solid #cbd6df;
             border-radius: 9px;
             background: #fff;
-            color: var(--faq-ink);
+            color: var(--ink);
             font: inherit;
         }
 
-        .faq-page #faq-search::placeholder {
-            color: #6c7b89;
-        }
-
-        .faq-page .filter-label {
+        .filter-label {
             display: block;
             margin: 16px 0 9px;
-            color: var(--faq-navy);
+            color: var(--navy);
             font-size: .85rem;
             font-weight: 700;
         }
 
-        .faq-page .filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .filters { display: flex; flex-wrap: wrap; gap: 8px; }
 
-        .faq-page .filter-button {
+        .filter-button {
             min-height: 37px;
             padding: 8px 13px;
             border: 1px solid #cbd6df;
             border-radius: 999px;
             background: #fff;
-            color: var(--faq-navy);
+            color: var(--navy);
             font: inherit;
             font-size: .84rem;
             font-weight: 600;
             cursor: pointer;
         }
 
-        .faq-page .filter-button:hover {
-            border-color: var(--faq-blue);
-        }
+        .filter-button:hover { border-color: var(--blue); }
 
-        .faq-page .filter-button[aria-pressed="true"] {
-            border-color: var(--faq-blue);
-            background: var(--faq-blue);
+        .filter-button[aria-pressed="true"] {
+            border-color: var(--blue);
+            background: var(--blue);
             color: #fff;
         }
 
-        /* Results and accordion */
-
-        .faq-page .results-row {
+        .results-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
             max-width: 900px;
             margin: 0 auto 14px;
-            color: var(--faq-muted);
+            color: var(--muted);
             font-size: .88rem;
         }
 
-        .faq-page .expand-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-        }
+        .expand-controls { display: flex; gap: 14px; }
 
-        .faq-page .text-button {
+        .text-button {
             padding: 3px 0;
             border: 0;
             background: transparent;
-            color: var(--faq-blue);
+            color: var(--blue);
             font: inherit;
             font-weight: 700;
             cursor: pointer;
         }
 
-        .faq-page .text-button:hover {
-            text-decoration: underline;
-        }
+        .faq-list { display: grid; gap: 12px; max-width: 900px; margin: auto; }
 
-        .faq-page .faq-list {
-            display: grid;
-            gap: 12px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .faq-page .faq-item {
+        .faq-item {
             overflow: hidden;
-            border: 1px solid var(--faq-line);
+            border: 1px solid var(--line);
             border-radius: 12px;
             background: #fff;
-            box-shadow: 0 4px 16px rgba(7, 21, 34, .035);
+            box-shadow: 0 4px 16px rgba(7,21,34,.035);
         }
 
-        .faq-page .faq-item[hidden] {
-            display: none !important;
-        }
+        .faq-item[hidden] { display: none !important; }
 
-        .faq-page .faq-item summary {
+        .faq-item summary {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 18px;
             padding: 20px;
-            color: var(--faq-navy);
+            color: var(--navy);
             font-weight: 700;
             list-style: none;
             cursor: pointer;
         }
 
-        .faq-page .faq-item summary::-webkit-details-marker {
-            display: none;
-        }
+        .faq-item summary::-webkit-details-marker { display: none; }
 
-        .faq-page .faq-item summary::after {
+        .faq-item summary::after {
             content: "+";
             flex: 0 0 30px;
             display: grid;
@@ -406,64 +321,38 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: var(--faq-pale);
-            color: var(--faq-blue);
+            background: var(--pale);
+            color: var(--blue);
             font-size: 1.25rem;
         }
 
-        .faq-page .faq-item[open] summary::after {
+        .faq-item[open] summary::after {
             content: "−";
-            background: var(--faq-blue);
+            background: var(--blue);
             color: #fff;
         }
 
-        .faq-page .faq-answer {
-            padding: 0 20px 21px;
-            color: #465665;
-        }
+        .faq-answer { padding: 0 20px 21px; color: #465665; }
+        .faq-answer p { margin: 0 0 12px; }
+        .faq-answer p:last-child { margin-bottom: 0; }
+        .faq-answer ul { padding-left: 22px; }
+        .faq-answer li + li { margin-top: 5px; }
+        .faq-answer a { font-weight: 600; }
 
-        .faq-page .faq-answer p {
-            margin: 0 0 12px;
-        }
-
-        .faq-page .faq-answer p:last-child {
-            margin-bottom: 0;
-        }
-
-        .faq-page .faq-answer ul {
-            padding-left: 22px;
-        }
-
-        .faq-page .faq-answer li + li {
-            margin-top: 5px;
-        }
-
-        .faq-page .faq-answer a {
-            font-weight: 600;
-        }
-
-        .faq-page .no-results {
+        .no-results {
             display: none;
             max-width: 900px;
             margin: auto;
             padding: 25px;
             border: 1px dashed #b9c8d4;
             border-radius: 12px;
-            color: var(--faq-muted);
+            color: var(--muted);
             text-align: center;
         }
 
-        .faq-page .no-results.visible {
-            display: block;
-        }
+        .no-results.visible { display: block; }
 
-        .faq-page .no-results p {
-            margin-bottom: 0;
-        }
-
-        /* Contact panel */
-
-        .faq-page .contact-panel {
+        .contact-panel {
             display: grid;
             grid-template-columns: 1.4fr .8fr;
             gap: 28px;
@@ -472,199 +361,104 @@
             padding: clamp(24px, 4vw, 42px);
             border-radius: 17px;
             color: #fff;
-            background: linear-gradient(
-                125deg,
-                var(--faq-navy),
-                #164b70
-            );
+            background: linear-gradient(125deg, var(--navy), #164b70);
         }
 
-        .faq-page .contact-panel h2 {
+        .contact-panel h2 {
             margin: 0 0 10px;
-            color: #fff;
             font-size: clamp(1.5rem, 3vw, 2rem);
             line-height: 1.2;
         }
 
-        .faq-page .contact-panel p {
-            margin: 0;
-            color: #dce8f1;
-        }
+        .contact-panel p { margin: 0; color: #dce8f1; }
 
-        .faq-page .contact-actions {
+        .contact-actions {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             gap: 12px;
         }
 
-        .faq-page .contact-button {
+        .contact-button {
             display: inline-flex;
             align-items: center;
             gap: 9px;
             padding: 12px 18px;
-            border: 1px solid var(--faq-gold);
+            border: 1px solid var(--gold);
             border-radius: 8px;
-            background: var(--faq-gold);
-            color: var(--faq-deep);
+            background: var(--gold);
+            color: var(--deep) !important;
             font-weight: 800;
             text-decoration: none;
         }
 
-        .faq-page .contact-button:hover {
-            background: #e0b451;
-        }
+        .contact-button:hover { background: #e0b451; }
+        .contact-email { color: #fff !important; overflow-wrap: anywhere; }
 
-        .faq-page .contact-email {
-            color: #fff;
-            overflow-wrap: anywhere;
-        }
-
-        /* Footer */
-
-        .faq-page .site-footer {
+        .site-footer {
             padding: 34px 0 22px;
-            background: var(--faq-deep);
+            background: var(--deep);
             color: #d7e1e9;
         }
 
-        .faq-page .footer-grid {
+        .footer-grid {
             display: grid;
             grid-template-columns: 1.3fr 1fr 1fr;
             gap: 30px;
         }
 
-        .faq-page .site-footer h2,
-        .faq-page .site-footer h3 {
+        .site-footer h2,
+        .site-footer h3 {
             margin: 0 0 12px;
             color: #fff;
             font-size: 1rem;
         }
 
-        .faq-page .site-footer p {
-            margin: 0 0 10px;
-            color: #bdcbd6;
-            font-size: .9rem;
-        }
+        .site-footer p { margin: 0 0 10px; color: #bdcbd6; font-size: .9rem; }
 
-        .faq-page .footer-links {
-            display: grid;
-            gap: 8px;
-        }
+        .footer-links { display: grid; gap: 8px; }
+        .site-footer a { color: #e7edf2; text-decoration: none; }
+        .site-footer a:hover { color: #f0cb7a; text-decoration: underline; }
 
-        .faq-page .site-footer a {
-            color: #e7edf2;
-            text-decoration: none;
-            overflow-wrap: anywhere;
-        }
-
-        .faq-page .site-footer a:hover {
-            color: #f0cb7a;
-            text-decoration: underline;
-        }
-
-        .faq-page .footer-bottom {
+        .footer-bottom {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
             margin-top: 28px;
             padding-top: 18px;
-            border-top: 1px solid rgba(255, 255, 255, .15);
+            border-top: 1px solid rgba(255,255,255,.15);
             color: #aebdca;
             font-size: .82rem;
         }
 
-        /* Responsive layout */
-
         @media (max-width: 1050px) {
-            .faq-page .header-inner {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .faq-page .main-nav {
-                justify-content: flex-start;
-            }
+            .header-inner { align-items: flex-start; flex-direction: column; gap: 10px; }
+            .main-nav { justify-content: flex-start; }
         }
 
         @media (max-width: 700px) {
-            .faq-page .container {
-                width: calc(100% - 28px);
-            }
-
-            .faq-page .topbar-inner {
-                justify-content: center;
-                text-align: center;
-            }
-
-            .faq-page .topbar-inner > span:first-child {
-                display: none;
-            }
-
-            .faq-page .hero {
-                padding: 52px 0;
-            }
-
-            .faq-page .faq-main {
-                padding: 40px 0 50px;
-            }
-
-            .faq-page .faq-tools {
-                padding: 13px;
-            }
-
-            .faq-page .results-row {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .faq-page .faq-item summary {
-                padding: 17px 15px;
-                gap: 12px;
-            }
-
-            .faq-page .faq-answer {
-                padding: 0 15px 18px;
-            }
-
-            .faq-page .contact-panel {
-                grid-template-columns: 1fr;
-                margin-top: 40px;
-            }
-
-            .faq-page .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .faq-page .main-nav {
-                gap: 3px;
-            }
-
-            .faq-page .main-nav a {
-                padding: 8px;
-                font-size: .82rem;
-            }
+            .container { width: calc(100% - 28px); }
+            .topbar-inner { justify-content: center; text-align: center; }
+            .topbar-inner > span:first-child { display: none; }
+            .hero { padding: 52px 0; }
+            .faq-main { padding: 40px 0 50px; }
+            .faq-tools { padding: 13px; }
+            .results-row { align-items: flex-start; flex-direction: column; }
+            .faq-item summary { padding: 17px 15px; gap: 12px; }
+            .faq-answer { padding: 0 15px 18px; }
+            .contact-panel { grid-template-columns: 1fr; margin-top: 40px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+            .main-nav { gap: 3px; }
+            .main-nav a { padding: 8px; font-size: .82rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
-
-            .faq-page *,
-            .faq-page *::before,
-            .faq-page *::after {
-                scroll-behavior: auto !important;
-                animation-duration: .01ms !important;
-                transition-duration: .01ms !important;
-            }
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition-duration: .01ms !important; }
         }
     </style>
 
-    <!-- Keep structured data consistent with the visible FAQ questions. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -675,15 +469,7 @@
           "name": "What does AVERRA Staffing Solutions Ltd do?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AVERRA is an outsourcing business that connects UK companies with skilled professionals based in India. We aim to help businesses access remote talent for suitable business functions and projects."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Where are AVERRA's professionals based?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Our service model focuses on professionals based in India supporting businesses in the United Kingdom remotely. The practical arrangement is discussed and agreed for each engagement."
+            "text": "AVERRA connects UK businesses with skilled professionals based in India for suitable remote staffing and outsourcing requirements."
           }
         },
         {
@@ -691,23 +477,7 @@
           "name": "What types of roles can AVERRA help with?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Depending on the requirement and candidate availability, potential role areas include finance and accounting, administration and business support, customer support, sales and marketing, IT and technology, engineering and architecture."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can a professional work remotely for our UK business?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Remote working is central to AVERRA's model. Working hours, communication, equipment, supervision, system access and deliverables should be agreed for each engagement."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can we request a particular skill set or level of experience?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Describe the role, essential skills, relevant experience, software or tools, working hours and expected outcomes. AVERRA can then assess the requirement and discuss whether it can be supported."
+            "text": "Potential role areas include finance and accounting, administration, customer support, sales and marketing, IT and technology, engineering and architecture. Availability and suitability depend on the requirement."
           }
         },
         {
@@ -715,31 +485,7 @@
           "name": "How does the process work?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The process generally involves discussing business needs, defining the role, reviewing suitable profiles, agreeing scope and contract terms in writing, and planning onboarding."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How long does it take to find a suitable professional?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Timing depends on the role, skills required, candidate availability and selection process. After learning about your requirements, we can discuss a realistic timeline."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does onboarding work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Onboarding should cover responsibilities, objectives, working hours, communication channels, tools, reporting, training and access permissions. The steps are agreed for each engagement."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Who manages day-to-day work?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Responsibilities should be agreed before the engagement starts, including who assigns tasks, sets priorities, reviews work, communicates feedback and handles performance questions."
+            "text": "The process generally starts with a discussion of business needs, defining the role, reviewing suitable profiles, agreeing terms in writing and planning onboarding."
           }
         },
         {
@@ -747,47 +493,7 @@
           "name": "How much do AVERRA's services cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Costs depend on the role, experience, scope of work and agreed working arrangement. Contact us with your requirements to discuss a proposal. Pricing should be confirmed in writing."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Are there long-term contracts?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Contract length and terms depend on the engagement. The scope, fees, payment terms, notice arrangements and responsibilities should be set out in the written agreement before work begins."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How are payment terms agreed?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Payment timing and invoicing arrangements should be agreed in the proposal or contract before services start. Please refer to the written terms for the particular engagement."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How is confidential information protected?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Confidentiality obligations, system access, secure working practices and information-handling responsibilities should be addressed before work starts. Businesses should provide access only to information and systems necessary for the agreed duties."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can professionals access our systems and customer data?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Any system or data access must be assessed and agreed for the engagement. Access should be limited to what is necessary, with appropriate permissions and security controls. Applicable data protection requirements should be reviewed before access is granted."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How are data protection responsibilities handled?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Responsibilities depend on the services and parties involved. The relevant parties should establish their roles, lawful basis where applicable, security measures, data-processing terms and any international data-transfer requirements before personal data is accessed or transferred."
+            "text": "Costs depend on the role, experience, scope of work and agreed arrangement. Contact AVERRA to discuss a proposal. Pricing should be confirmed in writing."
           }
         },
         {
@@ -795,31 +501,7 @@
           "name": "How do I apply for a job?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Visit our Careers or Jobs page and follow the application instructions for the relevant opportunity. If no suitable vacancy is listed, you can email us to ask about future opportunities."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does sending my CV guarantee a job?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. Applications are considered against relevant role requirements and candidate availability. Sending a CV does not guarantee an interview, placement or job offer."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I contact AVERRA if I do not see a suitable vacancy?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Email info@averrastaffing.co.uk with a brief introduction and the type of role you are interested in. Avoid sending sensitive personal information unless it is requested through an appropriate channel."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How can I contact AVERRA about my business requirements?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Email info@averrastaffing.co.uk or visit our Let's Talk page. Include the type of support you need, key responsibilities, expected start date and any essential skills."
+            "text": "Visit the Careers or Jobs page and follow the application instructions shown for the relevant opportunity. Applications do not guarantee an interview or job offer."
           }
         }
       ]
@@ -831,23 +513,15 @@
     <div class="topbar">
         <div class="container topbar-inner">
             <span>UK–India outsourcing and remote staffing</span>
-            <span>
-                Enquiries:
-                <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
-            </span>
+            <span>Enquiries: <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a></span>
         </div>
     </div>
 
     <header class="site-header">
         <div class="container header-inner">
             <a class="brand" href="index.html" aria-label="AVERRA Staffing Solutions home">
-                <img
-                    src="images/image23.png"
-                    alt="AVERRA logo"
-                    width="52"
-                    height="52"
-                    onerror="this.hidden = true"
-                >
+                <img src="images/Logo.jpeg" alt="AVERRA logo" width="52" height="52"
+                     onerror="this.style.display='none'">
                 <span class="brand-copy">
                     <strong>AVERRA</strong>
                     <span>STAFFING SOLUTIONS LTD</span>
@@ -867,19 +541,12 @@
         </div>
     </header>
 
-    <main id="main-content">
+    <main>
         <section class="hero">
             <div class="container hero-content">
                 <p class="eyebrow">Frequently asked questions</p>
-
                 <h1>Clear answers. Better ways to work.</h1>
-
-                <p>
-                    Learn how AVERRA Staffing Solutions connects UK businesses
-                    with skilled professionals based in India, and what to
-                    consider when exploring a remote staffing arrangement.
-                </p>
-
+                <p>Learn how AVERRA Staffing Solutions connects UK businesses with skilled professionals based in India, and what to consider when exploring a remote staffing arrangement.</p>
                 <div class="trust-points">
                     <span>UK–India talent connection</span>
                     <span>Remote staffing model</span>
@@ -888,150 +555,55 @@
             </div>
         </section>
 
-        <section class="faq-main" aria-labelledby="faq-intro-heading">
+        <section class="faq-main">
             <div class="container">
                 <div class="intro">
-                    <h2 id="faq-intro-heading">How can we help?</h2>
-                    <p>
-                        Search the questions or choose a topic. If you cannot
-                        find the answer you need, contact our team.
-                    </p>
+                    <h2>How can we help?</h2>
+                    <p>Search the questions or choose a topic. If you cannot find the answer you need, contact our team.</p>
                 </div>
 
-                <div
-                    class="faq-tools"
-                    role="search"
-                    aria-label="Search frequently asked questions"
-                >
+                <div class="faq-tools" role="search" aria-label="Search frequently asked questions">
                     <div class="search-wrap">
                         <span class="search-icon" aria-hidden="true">&#8981;</span>
-
-                        <label
-                            for="faq-search"
-                            style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"
-                        >
-                            Search frequently asked questions
-                        </label>
-
-                        <input
-                            id="faq-search"
-                            type="search"
-                            placeholder="Search questions, services, contracts, security..."
-                            autocomplete="off"
-                            aria-controls="faq-list"
-                        >
+                        <label for="faq-search" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Search FAQs</label>
+                        <input id="faq-search" type="search" placeholder="Search questions, services, contracts, security..." autocomplete="off">
                     </div>
 
                     <span class="filter-label">Browse by topic</span>
-
                     <div class="filters" aria-label="Filter questions by topic">
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="all"
-                            aria-pressed="true"
-                        >All questions</button>
-
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="general"
-                            aria-pressed="false"
-                        >About AVERRA</button>
-
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="services"
-                            aria-pressed="false"
-                        >Services</button>
-
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="process"
-                            aria-pressed="false"
-                        >Process</button>
-
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="pricing"
-                            aria-pressed="false"
-                        >Pricing &amp; contracts</button>
-
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="security"
-                            aria-pressed="false"
-                        >Security &amp; data</button>
-
-                        <button
-                            class="filter-button"
-                            type="button"
-                            data-filter="careers"
-                            aria-pressed="false"
-                        >Careers</button>
+                        <button class="filter-button" type="button" data-filter="all" aria-pressed="true">All questions</button>
+                        <button class="filter-button" type="button" data-filter="general" aria-pressed="false">About AVERRA</button>
+                        <button class="filter-button" type="button" data-filter="services" aria-pressed="false">Services</button>
+                        <button class="filter-button" type="button" data-filter="process" aria-pressed="false">Process</button>
+                        <button class="filter-button" type="button" data-filter="pricing" aria-pressed="false">Pricing & contracts</button>
+                        <button class="filter-button" type="button" data-filter="security" aria-pressed="false">Security & data</button>
+                        <button class="filter-button" type="button" data-filter="careers" aria-pressed="false">Careers</button>
                     </div>
                 </div>
 
                 <div class="results-row">
-                    <span id="faq-results-count" role="status" aria-live="polite">
-                        Showing all questions
-                    </span>
-
+                    <span id="faq-results-count" aria-live="polite">Showing all questions</span>
                     <div class="expand-controls">
-                        <button
-                            class="text-button"
-                            type="button"
-                            id="faq-expand-all"
-                            aria-controls="faq-list"
-                        >Expand all</button>
-
-                        <button
-                            class="text-button"
-                            type="button"
-                            id="faq-collapse-all"
-                            aria-controls="faq-list"
-                        >Collapse all</button>
+                        <button class="text-button" type="button" id="faq-expand-all">Expand all</button>
+                        <button class="text-button" type="button" id="faq-collapse-all">Collapse all</button>
                     </div>
                 </div>
 
                 <div class="faq-list" id="faq-list">
                     <details class="faq-item" data-category="general">
                         <summary>What does AVERRA Staffing Solutions Ltd do?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                AVERRA is an outsourcing business that connects
-                                UK companies with skilled professionals based
-                                in India. We aim to help businesses access
-                                remote talent for suitable business functions
-                                and projects.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>AVERRA is an outsourcing business that connects UK companies with skilled professionals based in India. We aim to help businesses access remote talent for suitable business functions and projects.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="general">
                         <summary>Where are AVERRA's professionals based?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Our service model focuses on professionals
-                                based in India supporting businesses in the
-                                United Kingdom remotely. The practical
-                                arrangement is discussed and agreed for each
-                                engagement.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Our service model focuses on professionals based in India supporting businesses in the United Kingdom remotely. The practical arrangement is discussed and agreed for each engagement.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="services">
                         <summary>What types of roles can AVERRA help with?</summary>
                         <div class="faq-answer">
-                            <p>
-                                Depending on the requirement and candidate
-                                availability, potential role areas include:
-                            </p>
+                            <p>Depending on the requirement and candidate availability, potential role areas include:</p>
                             <ul>
                                 <li>Finance and accounting</li>
                                 <li>Administration and business support</li>
@@ -1040,37 +612,18 @@
                                 <li>IT and technology</li>
                                 <li>Engineering and architecture</li>
                             </ul>
-                            <p>
-                                Tell us about the responsibilities, required
-                                skills and experience so we can assess the
-                                request.
-                            </p>
+                            <p>Tell us about the responsibilities, required skills and experience so we can assess the request.</p>
                         </div>
                     </details>
 
                     <details class="faq-item" data-category="services">
                         <summary>Can a professional work remotely for our UK business?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Remote working is central to AVERRA's model.
-                                Working hours, communication, equipment,
-                                supervision, system access and deliverables
-                                should be agreed for each engagement.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Remote working is central to AVERRA's model. Working hours, communication, equipment, supervision, system access and deliverables should be agreed for each engagement.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="services">
                         <summary>Can we request a particular skill set or level of experience?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Yes. Describe the role, essential skills,
-                                relevant experience, software or tools,
-                                working hours and expected outcomes. AVERRA
-                                can then assess the requirement and discuss
-                                whether it can be supported.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Yes. Describe the role, essential skills, relevant experience, software or tools, working hours and expected outcomes. AVERRA can then assess the requirement and discuss whether it can be supported.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="process">
@@ -1084,211 +637,89 @@
                                 <li>Agree scope, fees, responsibilities and contract terms in writing.</li>
                                 <li>Plan onboarding and access before work begins.</li>
                             </ul>
-                            <p>
-                                The exact process depends on the requirements
-                                of the engagement.
-                            </p>
+                            <p>The exact process depends on the requirements of the engagement.</p>
                         </div>
                     </details>
 
                     <details class="faq-item" data-category="process">
                         <summary>How long does it take to find a suitable professional?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Timing depends on the role, skills required,
-                                candidate availability and selection process.
-                                After learning about your requirements, we can
-                                discuss a realistic timeline.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Timing depends on the role, skills required, candidate availability and selection process. After learning about your requirements, we can discuss a realistic timeline.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="process">
                         <summary>How does onboarding work?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Onboarding should cover responsibilities,
-                                objectives, working hours, communication
-                                channels, tools, reporting, training and
-                                access permissions. The steps are agreed for
-                                each engagement.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Onboarding should cover responsibilities, objectives, working hours, communication channels, tools, reporting, training and access permissions. The steps are agreed for each engagement.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="process">
                         <summary>Who manages day-to-day work?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Responsibilities should be agreed before the
-                                engagement starts, including who assigns tasks,
-                                sets priorities, reviews work, communicates
-                                feedback and handles performance questions.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Responsibilities should be agreed before the engagement starts, including who assigns tasks, sets priorities, reviews work, communicates feedback and handles performance questions.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="pricing">
                         <summary>How much do AVERRA's services cost?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Costs depend on the role, experience, scope of
-                                work and agreed working arrangement. Contact
-                                us with your requirements to discuss a
-                                proposal. Pricing should be confirmed in
-                                writing.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Costs depend on the role, experience, scope of work and agreed working arrangement. Contact us with your requirements to discuss a proposal. Pricing should be confirmed in writing.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="pricing">
                         <summary>Are there long-term contracts?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Contract length and terms depend on the
-                                engagement. The scope, fees, payment terms,
-                                notice arrangements and responsibilities
-                                should be set out in the written agreement
-                                before work begins.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Contract length and terms depend on the engagement. The scope, fees, payment terms, notice arrangements and responsibilities should be set out in the written agreement before work begins.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="pricing">
                         <summary>How are payment terms agreed?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Payment timing and invoicing arrangements
-                                should be agreed in the proposal or contract
-                                before services start. Please refer to the
-                                written terms for the particular engagement.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Payment timing and invoicing arrangements should be agreed in the proposal or contract before services start. Please refer to the written terms for the particular engagement.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="security">
                         <summary>How is confidential information protected?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Confidentiality obligations, system access,
-                                secure working practices and information-
-                                handling responsibilities should be addressed
-                                before work starts. Businesses should provide
-                                access only to information and systems
-                                necessary for the agreed duties.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Confidentiality obligations, system access, secure working practices and information-handling responsibilities should be addressed before work starts. Businesses should provide access only to information and systems necessary for the agreed duties.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="security">
                         <summary>Can professionals access our systems and customer data?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Any system or data access must be assessed and
-                                agreed for the engagement. Access should be
-                                limited to what is necessary, with appropriate
-                                permissions and security controls. Applicable
-                                data protection requirements should be
-                                reviewed before access is granted.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Any system or data access must be assessed and agreed for the engagement. Access should be limited to what is necessary, with appropriate permissions and security controls. Applicable data protection requirements should be reviewed before access is granted.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="security">
                         <summary>How are data protection responsibilities handled?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Responsibilities depend on the services and
-                                parties involved. The relevant parties should
-                                establish their roles, lawful basis where
-                                applicable, security measures, data-processing
-                                terms and any international data-transfer
-                                requirements before personal data is accessed
-                                or transferred.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Responsibilities depend on the services and parties involved. The relevant parties should establish their roles, lawful basis where applicable, security measures, data-processing terms and any international data-transfer requirements before personal data is accessed or transferred.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="careers">
                         <summary>How do I apply for a job?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Visit our <a href="careers.html">Careers</a> or
-                                <a href="jobs.html">Jobs</a> page and follow
-                                the application instructions for the relevant
-                                opportunity. If no suitable vacancy is listed,
-                                you can email us to ask about future
-                                opportunities.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Visit our <a href="careers.html">Careers</a> or <a href="jobs.html">Jobs</a> page and follow the application instructions for the relevant opportunity. If no suitable vacancy is listed, you can email us to ask about future opportunities.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="careers">
                         <summary>Does sending my CV guarantee a job?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                No. Applications are considered against
-                                relevant role requirements and candidate
-                                availability. Sending a CV does not guarantee
-                                an interview, placement or job offer.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>No. Applications are considered against relevant role requirements and candidate availability. Sending a CV does not guarantee an interview, placement or job offer.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="careers">
                         <summary>Can I contact AVERRA if I do not see a suitable vacancy?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Yes. Email
-                                <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
-                                with a brief introduction and the type of role
-                                you are interested in. Avoid sending sensitive
-                                personal information unless it is requested
-                                through an appropriate channel.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Yes. Email <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a> with a brief introduction and the type of role you are interested in. Avoid sending sensitive personal information unless it is requested through an appropriate channel.</p></div>
                     </details>
 
                     <details class="faq-item" data-category="general">
                         <summary>How can I contact AVERRA about my business requirements?</summary>
-                        <div class="faq-answer">
-                            <p>
-                                Email
-                                <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
-                                or visit our
-                                <a href="lets-talk.html">Let's Talk</a> page.
-                                Include the type of support you need, key
-                                responsibilities, expected start date and any
-                                essential skills.
-                            </p>
-                        </div>
+                        <div class="faq-answer"><p>Email <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a> or visit our <a href="lets-talk.html">Let's Talk</a> page. Include the type of support you need, key responsibilities, expected start date and any essential skills.</p></div>
                     </details>
                 </div>
 
                 <div class="no-results" id="faq-no-results" role="status">
                     <strong>No matching questions found.</strong>
-                    <p>Try a different search term or choose "All questions".</p>
+                    <p>Try a different search term or choose “All questions”.</p>
                 </div>
 
                 <section class="contact-panel" aria-labelledby="contact-heading">
                     <div>
                         <h2 id="contact-heading">Still have a question?</h2>
-                        <p>
-                            Tell us what your business needs or ask about
-                            career opportunities. We will review your enquiry
-                            and determine the appropriate next step.
-                        </p>
+                        <p>Tell us what your business needs or ask about career opportunities. We will review your enquiry and determine the appropriate next step.</p>
                     </div>
-
                     <div class="contact-actions">
-                        <a class="contact-button" href="lets-talk.html">
-                            Let's Talk <span aria-hidden="true">→</span>
-                        </a>
-
-                        <a
-                            class="contact-email"
-                            href="mailto:info@averrastaffing.co.uk"
-                        >info@averrastaffing.co.uk</a>
+                        <a class="contact-button" href="lets-talk.html">Let's Talk <span aria-hidden="true">→</span></a>
+                        <a class="contact-email" href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
                     </div>
                 </section>
             </div>
@@ -1300,14 +731,9 @@
             <div class="footer-grid">
                 <div>
                     <h2>AVERRA Staffing Solutions Ltd</h2>
-                    <p>
-                        Connecting UK businesses with skilled professionals
-                        based in India through a remote staffing and
-                        outsourcing model.
-                    </p>
+                    <p>Connecting UK businesses with skilled professionals based in India through a remote staffing and outsourcing model.</p>
                     <p>UK–India outsourcing.</p>
                 </div>
-
                 <div>
                     <h3>Explore</h3>
                     <div class="footer-links">
@@ -1317,7 +743,6 @@
                         <a href="faq.html" aria-current="page">Frequently Asked Questions</a>
                     </div>
                 </div>
-
                 <div>
                     <h3>Get in touch</h3>
                     <div class="footer-links">
@@ -1328,12 +753,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <span>
-                    © <span id="faq-year"></span> AVERRA Staffing Solutions Ltd.
-                    All rights reserved.
-                </span>
+                <span>© <span id="faq-year"></span> AVERRA Staffing Solutions Ltd. All rights reserved.</span>
                 <span>UK–India outsourcing and remote staffing</span>
             </div>
         </div>
@@ -1344,12 +765,8 @@
         "use strict";
 
         const searchInput = document.getElementById("faq-search");
-        const filterButtons = Array.from(
-            document.querySelectorAll(".faq-page .filter-button")
-        );
-        const faqItems = Array.from(
-            document.querySelectorAll(".faq-page .faq-item")
-        );
+        const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
+        const faqItems = Array.from(document.querySelectorAll(".faq-item"));
         const resultCount = document.getElementById("faq-results-count");
         const noResults = document.getElementById("faq-no-results");
         const expandButton = document.getElementById("faq-expand-all");
@@ -1363,22 +780,13 @@
         }
 
         function updateFaqs() {
-            const query = (searchInput?.value || "")
-                .trim()
-                .toLocaleLowerCase("en-GB");
-
+            const query = (searchInput?.value || "").trim().toLocaleLowerCase();
             let visibleCount = 0;
 
             faqItems.forEach((item) => {
                 const category = item.dataset.category || "general";
-
-                const matchesCategory =
-                    activeFilter === "all" || category === activeFilter;
-
-                const matchesSearch =
-                    !query ||
-                    item.textContent.toLocaleLowerCase("en-GB").includes(query);
-
+                const matchesCategory = activeFilter === "all" || category === activeFilter;
+                const matchesSearch = !query || item.textContent.toLocaleLowerCase().includes(query);
                 const visible = matchesCategory && matchesSearch;
 
                 item.hidden = !visible;
@@ -1391,15 +799,12 @@
             });
 
             if (resultCount) {
-                resultCount.textContent =
-                    visibleCount === faqItems.length
-                        ? `Showing all ${visibleCount} questions`
-                        : `Showing ${visibleCount} of ${faqItems.length} questions`;
+                resultCount.textContent = visibleCount === faqItems.length
+                    ? `Showing all ${visibleCount} questions`
+                    : `Showing ${visibleCount} of ${faqItems.length} questions`;
             }
 
-            if (noResults) {
-                noResults.classList.toggle("visible", visibleCount === 0);
-            }
+            noResults?.classList.toggle("visible", visibleCount === 0);
         }
 
         filterButtons.forEach((button) => {
@@ -1417,27 +822,19 @@
             });
         });
 
-        if (searchInput) {
-            searchInput.addEventListener("input", updateFaqs);
-        }
+        searchInput?.addEventListener("input", updateFaqs);
 
-        if (expandButton) {
-            expandButton.addEventListener("click", () => {
-                faqItems.forEach((item) => {
-                    if (!item.hidden) {
-                        item.open = true;
-                    }
-                });
+        expandButton?.addEventListener("click", () => {
+            faqItems.forEach((item) => {
+                if (!item.hidden) item.open = true;
             });
-        }
+        });
 
-        if (collapseButton) {
-            collapseButton.addEventListener("click", () => {
-                faqItems.forEach((item) => {
-                    item.open = false;
-                });
+        collapseButton?.addEventListener("click", () => {
+            faqItems.forEach((item) => {
+                item.open = false;
             });
-        }
+        });
 
         updateFaqs();
     })();
