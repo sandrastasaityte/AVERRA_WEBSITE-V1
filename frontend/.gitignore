@@ -84,4 +84,3 @@ instance/
 # Editor and local tooling caches
 .cache/
 .pyright/
-.mypy_cache/

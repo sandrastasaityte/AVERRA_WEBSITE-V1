@@ -2,25 +2,9 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.2.0
+Version: 4.2.2
 
 FastAPI application for the AVERRA website.
-
-Features:
-- Environment configuration
-- Shared SQLAlchemy database connection
-- Safe database initialisation and compatibility migrations
-- API health checks
-- Public website contact enquiries
-- Public published job vacancies with closing-date filtering
-- Protected job administration
-- Create, edit, publish and close vacancies
-- CORS configuration for local development and production
-- Application logging
-- Interactive API documentation
-
-Run from the backend directory:
-    python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
 """
 
 from __future__ import annotations
@@ -28,8 +12,12 @@ from __future__ import annotations
 import logging
 import os
 import secrets
+import smtplib
+import ssl
+
 from contextlib import asynccontextmanager
-from datetime import date, datetime, time, timezone
+from datetime import datetime, timezone
+from email.message import EmailMessage
 from pathlib import Path
 from typing import Any
 
@@ -44,22 +32,9 @@ from fastapi import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, field_validator
-from sqlalchemy import inspect, or_, select, text
+from sqlalchemy import inspect, select, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-
-import re
-import ssl
-import smtplib
-import zipfile
-
-from email.message import EmailMessage
-from email_validator import EmailNotValidError, validate_email
-from io import BytesIO
-from pathlib import PurePosixPath
-
-from fastapi import File, Form, UploadFile
-from fastapi.responses import StreamingResponse
 
 
 # ============================================================
@@ -72,8 +47,8 @@ DATABASE_DIR = BASE_DIR / "database"
 LOG_DIR = BASE_DIR / "logs"
 UPLOAD_DIR = BASE_DIR / "uploads"
 
-# Load the backend environment file before importing the database.
-load_dotenv(BASE_DIR / ".env", override=True)
+# Render environment variables take precedence over .env.
+load_dotenv(BASE_DIR / ".env", override=False)
 
 for directory in (DATABASE_DIR, LOG_DIR, UPLOAD_DIR):
     directory.mkdir(parents=True, exist_ok=True)
@@ -83,9 +58,12 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = os.getenv("APP_VERSION", "4.2.0").strip()
+APP_VERSION = "4.2.2"
 
-APP_ENV = os.getenv("APP_ENV", "development").strip().lower()
+APP_ENV = os.getenv(
+    "APP_ENV",
+    "production" if os.getenv("RENDER") else "development",
+).strip().lower()
 
 DEBUG = (
     os.getenv("DEBUG", "false").strip().lower()
@@ -131,7 +109,6 @@ if not database_url:
     else:
         database_url = DEFAULT_DATABASE_URL
 
-# Resolve relative SQLite paths against the backend directory.
 if (
     database_url.startswith("sqlite:///")
     and not database_url.startswith("sqlite:////")
@@ -152,20 +129,20 @@ os.environ["DATABASE_URL"] = database_url
 # APPLICATION IMPORTS
 # ============================================================
 
-from database.connection import (  # noqa: E402
+from database.connection import (
     create_tables,
     engine,
     get_db,
 )
 
-from app.models import Base, Enquiry, Job  # noqa: E402
+from app.models import Base, Enquiry, Job, Application  # noqa: F401
 
-from app.schemas.enquiry import (  # noqa: E402
+from app.schemas.enquiry import (
     EnquiryCreate,
     EnquiryResponse,
 )
 
-from app.schemas.jobs import (  # noqa: E402
+from app.schemas.jobs import (
     JobCreate,
     JobUpdate,
     JobResponse,
@@ -196,16 +173,107 @@ logger = logging.getLogger("averra")
 
 
 # ============================================================
-# DATABASE INITIALISATION AND COMPATIBILITY
+# GMAIL SMTP CONFIGURATION
+# ============================================================
+
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com").strip()
+
+try:
+    SMTP_PORT = int(os.getenv("SMTP_PORT", "587").strip())
+except ValueError:
+    SMTP_PORT = 587
+
+SMTP_USERNAME = os.getenv("SMTP_USERNAME", "").strip()
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "").strip()
+
+SMTP_FROM_EMAIL = os.getenv(
+    "SMTP_FROM_EMAIL",
+    SMTP_USERNAME or COMPANY_EMAIL,
+).strip()
+
+SMTP_TIMEOUT = 20
+
+
+def send_enquiry_notification(enquiry: Enquiry) -> bool:
+    """Email the company when a website enquiry is saved."""
+
+    if not SMTP_USERNAME or not SMTP_PASSWORD:
+        logger.warning(
+            "Enquiry notification not sent: SMTP credentials are missing."
+        )
+        return False
+
+    message = EmailMessage()
+    message["Subject"] = (
+        f"New website enquiry - {enquiry.name or 'Website visitor'}"
+    )
+    message["From"] = SMTP_FROM_EMAIL
+    message["To"] = COMPANY_EMAIL
+
+    received = (
+        enquiry.created_at.isoformat()
+        if enquiry.created_at
+        else datetime.now(timezone.utc).isoformat()
+    )
+
+    message.set_content(
+        f"""
+A new contact enquiry has been submitted through the AVERRA website.
+
+Company: {COMPANY_NAME}
+Enquiry ID: {enquiry.id}
+Received: {received}
+
+Name: {enquiry.name or "Not provided"}
+Email: {enquiry.email or "Not provided"}
+Phone: {enquiry.phone or "Not provided"}
+Company: {enquiry.company or "Not provided"}
+Subject: {enquiry.subject or "Not provided"}
+
+Message:
+{enquiry.message or "No message provided"}
+
+Website: {COMPANY_WEBSITE}
+
+Please log in to your administration system to review this enquiry.
+""".strip()
+    )
+
+    try:
+        tls_context = ssl.create_default_context()
+
+        with smtplib.SMTP(
+            SMTP_HOST,
+            SMTP_PORT,
+            timeout=SMTP_TIMEOUT,
+        ) as server:
+            server.ehlo()
+            server.starttls(context=tls_context)
+            server.ehlo()
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.send_message(message)
+
+        logger.info(
+            "Enquiry notification email sent: id=%s",
+            enquiry.id,
+        )
+        return True
+
+    except Exception:
+        logger.exception(
+            "Enquiry saved, but notification email failed: id=%s",
+            enquiry.id,
+        )
+        return False
+
+
+# ============================================================
+# DATABASE INITIALISATION AND MIGRATIONS
 # ============================================================
 
 def migrate_existing_database() -> None:
-    """
-    Add supported columns to existing SQLite tables.
+    """Add supported columns to existing SQLite tables."""
 
-    This compatibility migration preserves existing records.
-    Future schema changes should use versioned migrations.
-    """
     if engine.dialect.name != "sqlite":
         return
 
@@ -247,10 +315,9 @@ def migrate_existing_database() -> None:
 
 
 def initialise_database() -> None:
-    """Create missing tables and apply compatible schema changes."""
-    # Ensure model metadata has been registered.
-    _ = Base.metadata
+    """Create missing tables and apply compatible migrations."""
 
+    _ = Base.metadata
     create_tables()
     migrate_existing_database()
 
@@ -261,34 +328,7 @@ def initialise_database() -> None:
 
 
 def utc_now() -> datetime:
-    """Return the current UTC time."""
     return datetime.now(timezone.utc)
-
-
-def closing_date_to_datetime(
-    value: date | datetime | None,
-) -> datetime | None:
-    """
-    Convert a vacancy closing date to a UTC datetime.
-
-    Date-only inputs remain valid throughout their selected day.
-    Datetime inputs are normalised to UTC.
-    """
-    if value is None:
-        return None
-
-    # datetime is a subclass of date, so check it first.
-    if isinstance(value, datetime):
-        if value.tzinfo is None:
-            return value.replace(tzinfo=timezone.utc)
-
-        return value.astimezone(timezone.utc)
-
-    return datetime.combine(
-        value,
-        time.max,
-        tzinfo=timezone.utc,
-    )
 
 
 # ============================================================
@@ -297,7 +337,8 @@ def closing_date_to_datetime(
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    """Initialise the database and dispose of the engine on shutdown."""
+    """Initialise the database when the application starts."""
+
     logger.info("%s starting in %s mode", APP_NAME, APP_ENV)
 
     try:
@@ -359,32 +400,23 @@ if configured_origins:
 else:
     allowed_origins = DEFAULT_ORIGINS.copy()
 
-# In development, always permit the known local development origins.
 if APP_ENV != "production":
-    local_development_origins = [
+    allowed_origins.extend([
         "http://localhost:63342",
         "http://127.0.0.1:63342",
         "http://localhost:5500",
         "http://127.0.0.1:5500",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
-    ]
+    ])
 
-    allowed_origins.extend(local_development_origins)
-
-# Remove duplicates while preserving order.
 allowed_origins = list(dict.fromkeys(allowed_origins))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=False,
-    allow_methods=[
-        "GET",
-        "POST",
-        "PATCH",
-        "OPTIONS",
-    ],
+    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
     allow_headers=[
         "Accept",
         "Content-Type",
@@ -399,7 +431,6 @@ app.add_middleware(
 
 @app.get("/", tags=["General"])
 def home() -> dict[str, Any]:
-    """Return basic API information."""
     return {
         "name": APP_NAME,
         "company": COMPANY_NAME,
@@ -415,7 +446,8 @@ def home() -> dict[str, Any]:
 
 @app.get("/api/health", tags=["General"])
 def health_check() -> dict[str, str]:
-    """Check whether the API can reach its database."""
+    """Check API and database connectivity."""
+
     try:
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
@@ -429,7 +461,6 @@ def health_check() -> dict[str, str]:
 
     except SQLAlchemyError:
         logger.exception("Database health check failed")
-
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Database is unavailable.",
@@ -450,7 +481,8 @@ def create_enquiry(
     enquiry_data: EnquiryCreate,
     db: Session = Depends(get_db),
 ):
-    """Save a contact enquiry submitted through the website."""
+    """Save a website enquiry and email the company."""
+
     enquiry = Enquiry(
         name=enquiry_data.name,
         email=str(enquiry_data.email).strip().lower(),
@@ -466,20 +498,18 @@ def create_enquiry(
         db.commit()
         db.refresh(enquiry)
 
-        logger.info("Contact enquiry received: id=%s", enquiry.id)
-        return enquiry
-
     except SQLAlchemyError:
         db.rollback()
         logger.exception("Could not save contact enquiry")
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=(
-                "Unable to save your enquiry. "
-                "Please try again later."
-            ),
+            detail="Unable to save your enquiry. Please try again later.",
         ) from None
+
+    logger.info("Contact enquiry saved: id=%s", enquiry.id)
+    send_enquiry_notification(enquiry)
+
+    return enquiry
 
 
 # ============================================================
@@ -496,29 +526,20 @@ def list_jobs(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """Return published vacancies whose closing dates have not passed."""
-    try:
-        now = utc_now()
+    """Return published vacancies only."""
 
+    try:
         statement = (
             select(Job)
-            .where(
-                Job.status == "published",
-                or_(
-                    Job.closing_date.is_(None),
-                    Job.closing_date >= now,
-                ),
-            )
+            .where(Job.status == "published")
             .order_by(Job.created_at.desc(), Job.id.desc())
             .offset(offset)
             .limit(limit)
         )
-
         return db.scalars(statement).all()
 
     except SQLAlchemyError:
         logger.exception("Could not retrieve published jobs")
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve vacancies.",
@@ -534,30 +555,17 @@ def get_job(
     job_id: int,
     db: Session = Depends(get_db),
 ):
-    """Return one published vacancy if it has not expired."""
-    if job_id < 1:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Job ID must be a positive integer.",
-        )
+    """Return one published vacancy."""
 
     try:
-        now = utc_now()
-
         statement = select(Job).where(
             Job.id == job_id,
             Job.status == "published",
-            or_(
-                Job.closing_date.is_(None),
-                Job.closing_date >= now,
-            ),
         )
-
         job = db.scalars(statement).first()
 
     except SQLAlchemyError:
         logger.exception("Could not retrieve vacancy id=%s", job_id)
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve this vacancy.",
@@ -583,14 +591,21 @@ def require_admin(
     ),
 ) -> None:
     """Require the configured private administrator token."""
+
     expected_token = os.getenv("AVERRA_ADMIN_TOKEN", "").strip()
 
-    if (
-        not expected_token
-        or expected_token.startswith("REPLACE_WITH_")
-        or expected_token
-        == "replace_with_your_own_long_random_secret"
-    ):
+    is_placeholder = (
+        expected_token.startswith("REPLACE_WITH_")
+        or expected_token == "replace_with_your_own_long_random_secret"
+    )
+
+    if not expected_token or is_placeholder:
+        logger.error(
+            "Admin token configuration invalid: present=%s placeholder=%s length=%s",
+            bool(expected_token),
+            is_placeholder,
+            len(expected_token),
+        )
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Administrator authentication is not configured.",
@@ -607,51 +622,62 @@ def require_admin(
 
 
 # ============================================================
+# ADMIN: ENQUIRY STATUS COMPATIBILITY
+# ============================================================
+
+ENQUIRY_STATUS_MAP = {
+    "new": "new",
+    "unread": "new",
+    "contacted": "in_progress",
+    "in_progress": "in_progress",
+    "replied": "in_progress",
+    "responded": "in_progress",
+    "resolved": "resolved",
+    "closed": "resolved",
+    "spam": "spam",
+}
+
+
+def canonical_enquiry_status(value: str) -> str:
+    """Convert an admin status to a database-supported status."""
+
+    normalized = value.strip().lower()
+
+    try:
+        return ENQUIRY_STATUS_MAP[normalized]
+    except KeyError:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid enquiry status.",
+        ) from None
+
+
+# ============================================================
 # ADMIN: LIST CONTACT ENQUIRIES
 # ============================================================
 
-@app.get(
-    "/api/admin/enquiries",
-    tags=["Admin - Enquiries"],
-)
+@app.get("/api/admin/enquiries", tags=["Admin - Enquiries"])
 def list_admin_enquiries(
     _: None = Depends(require_admin),
     limit: int = Query(default=100, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
-    enquiry_status: str | None = Query(
-        default=None,
-        alias="status",
-    ),
+    enquiry_status: str | None = Query(default=None, alias="status"),
     db: Session = Depends(get_db),
 ):
-    """List saved website enquiries for authenticated administrators."""
+    """List enquiries for authenticated administrators."""
+
     try:
         statement = select(Enquiry)
 
         if enquiry_status:
-            allowed_statuses = {
-                "new",
-                "in_progress",
-                "responded",
-                "closed",
-            }
-
-            if enquiry_status not in allowed_statuses:
-                raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail="Invalid enquiry status.",
-                )
-
+            canonical_status = canonical_enquiry_status(enquiry_status)
             statement = statement.where(
-                Enquiry.status == enquiry_status
+                Enquiry.status == canonical_status
             )
 
         statement = (
             statement
-            .order_by(
-                Enquiry.created_at.desc(),
-                Enquiry.id.desc(),
-            )
+            .order_by(Enquiry.created_at.desc(), Enquiry.id.desc())
             .offset(offset)
             .limit(limit)
         )
@@ -660,31 +686,28 @@ def list_admin_enquiries(
 
         return [
             {
-                "id": enquiry.id,
-                "name": enquiry.name,
-                "email": enquiry.email,
-                "phone": enquiry.phone,
-                "company": enquiry.company,
-                "subject": enquiry.subject,
-                "message": enquiry.message,
-                "status": enquiry.status,
+                "id": item.id,
+                "name": item.name,
+                "email": item.email,
+                "phone": item.phone,
+                "company": item.company,
+                "subject": item.subject,
+                "message": item.message,
+                "status": item.status,
                 "created_at": (
-                    enquiry.created_at.isoformat()
-                    if enquiry.created_at
+                    item.created_at.isoformat()
+                    if item.created_at
                     else None
                 ),
             }
-            for enquiry in enquiries
+            for item in enquiries
         ]
 
     except HTTPException:
         raise
 
     except SQLAlchemyError:
-        logger.exception(
-            "Could not retrieve administrator enquiries"
-        )
-
+        logger.exception("Could not retrieve administrator enquiries")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve contact enquiries.",
@@ -696,8 +719,6 @@ def list_admin_enquiries(
 # ============================================================
 
 class EnquiryStatusUpdate(BaseModel):
-    """Validate an administrator's enquiry status update."""
-
     model_config = ConfigDict(extra="forbid")
 
     status: str
@@ -714,6 +735,7 @@ class EnquiryStatusUpdate(BaseModel):
             "responded",
             "resolved",
             "closed",
+            "spam",
         }
 
         value = value.strip().lower()
@@ -734,7 +756,8 @@ def update_admin_enquiry(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Update the status of an existing contact enquiry."""
+    """Update an existing enquiry status."""
+
     try:
         enquiry = db.get(Enquiry, enquiry_id)
 
@@ -744,7 +767,7 @@ def update_admin_enquiry(
                 detail="Enquiry not found.",
             )
 
-        enquiry.status = enquiry_data.status
+        enquiry.status = canonical_enquiry_status(enquiry_data.status)
 
         db.commit()
         db.refresh(enquiry)
@@ -776,12 +799,10 @@ def update_admin_enquiry(
 
     except SQLAlchemyError:
         db.rollback()
-
         logger.exception(
             "Could not update enquiry id=%s",
             enquiry_id,
         )
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to update enquiry status.",
@@ -803,14 +824,9 @@ def create_job(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Create a vacancy as a draft or published job."""
-    job_values = job_data.model_dump()
+    """Create a vacancy."""
 
-    job_values["closing_date"] = closing_date_to_datetime(
-        job_values.get("closing_date")
-    )
-
-    job = Job(**job_values)
+    job = Job(**job_data.model_dump())
 
     try:
         db.add(job)
@@ -823,7 +839,6 @@ def create_job(
     except SQLAlchemyError:
         db.rollback()
         logger.exception("Could not create job vacancy")
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to create the job vacancy.",
@@ -845,7 +860,8 @@ def list_admin_jobs(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """List all vacancies. Administrator authentication is required."""
+    """List all vacancies, including unpublished jobs."""
+
     try:
         statement = (
             select(Job)
@@ -853,12 +869,10 @@ def list_admin_jobs(
             .offset(offset)
             .limit(limit)
         )
-
         return db.scalars(statement).all()
 
     except SQLAlchemyError:
         logger.exception("Could not retrieve administrator job list")
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to retrieve job vacancies.",
@@ -881,6 +895,7 @@ def update_job(
     db: Session = Depends(get_db),
 ):
     """Partially update a vacancy."""
+
     try:
         job = db.get(Job, job_id)
 
@@ -896,11 +911,6 @@ def update_job(
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Provide at least one field to update.",
-            )
-
-        if "closing_date" in updates:
-            updates["closing_date"] = closing_date_to_datetime(
-                updates["closing_date"]
             )
 
         for field, value in updates.items():
@@ -921,7 +931,6 @@ def update_job(
     except SQLAlchemyError:
         db.rollback()
         logger.exception("Could not update job id=%s", job_id)
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to update the job vacancy.",

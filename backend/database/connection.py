@@ -162,6 +162,6 @@ def create_tables() -> None:
     This does not alter existing tables. Use migrations to
     manage changes to existing database schemas.
     """
-    from app.models import Base, Enquiry, Job  # noqa: F401
+    from app.models import Base, Enquiry, Job, Application  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
