@@ -5,24 +5,38 @@
    AVERRA STAFFING SOLUTIONS LTD
    JOBS PAGE MANAGEMENT
    File: frontend/images/jobs.js
-   Version: 5.0.0
+   Version: 5.3.0
 
    FEATURES
    - Loads vacancies from the AVERRA Render API
-   - Supports multiple API response formats
-   - Displays published, non-expired jobs
-   - Safely renders vacancy information
+   - Supports common and nested API response formats
+   - Displays published, non-expired vacancies
+   - Hides vacancies with invalid supplied closing dates
+   - Safely renders vacancy information as text
    - Supports descriptions returned as arrays
-   - Lets applicants select a vacancy and reach the application form
-   - Leaves application submission to applications.js
+   - Supports vacancy search and category filters
+   - Selects the chosen vacancy in the application form
    - Supports retrying failed requests
+   - Prevents duplicate event handlers
+   - Prevents overlapping API requests
    - Preserves common existing page selectors
+   - Leaves application submission to applications.js
+   - Does not override shared mobile navigation
    ============================================================ */
 
-(function () {
+(function (window, document) {
     "use strict";
 
-    const CONFIG = {
+    const VERSION = "5.3.0";
+
+    if (
+        window.AVERRAJobs &&
+        window.AVERRAJobs.version === VERSION
+    ) {
+        return;
+    }
+
+    const CONFIG = Object.freeze({
         apiBaseUrl:
             window.AVERRA_API_BASE_URL ||
             "https://averra-backend-dn23.onrender.com",
@@ -31,12 +45,8 @@
         requestTimeout: 20000,
         jobsLimit: 100,
         contactEmail: "info@averrastaffing.co.uk"
-    };
+    });
 
-    /*
-     * Share the API address with applications.js.
-     * An explicitly configured AVERRA_API_BASE_URL always takes priority.
-     */
     window.AVERRA_API_BASE_URL =
         window.AVERRA_API_BASE_URL || CONFIG.apiBaseUrl;
 
@@ -44,7 +54,8 @@
         jobs: [],
         loading: false,
         loaded: false,
-        error: null
+        error: null,
+        requestNumber: 0
     };
 
     const SELECTORS = {
@@ -58,6 +69,7 @@
         jobCounts: [
             "#jobs-count",
             "#job-count",
+            "#jobs-results-count",
             "[data-jobs-count]"
         ],
 
@@ -80,6 +92,7 @@
         ],
 
         jobSelects: [
+            "#applicant-role",
             "#job_id",
             "#job-title",
             "#job",
@@ -87,8 +100,24 @@
             'select[name="job_title"]',
             'select[name="position"]',
             "[data-job-select]"
+        ],
+
+        searchInputs: [
+            "#job-search",
+            "#jobs-search",
+            "[data-job-search]"
+        ],
+
+        categoryFilters: [
+            "#job-category-filter",
+            "#jobs-category-filter",
+            "[data-job-category-filter]"
         ]
     };
+
+    /* --------------------------------------------------------
+       DOM HELPERS
+       -------------------------------------------------------- */
 
     function queryFirst(selectors, root) {
         const scope = root || document;
@@ -119,6 +148,20 @@
         return elements;
     }
 
+    function createElement(tagName, className, text) {
+        const element = document.createElement(tagName);
+
+        if (className) {
+            element.className = className;
+        }
+
+        if (text !== undefined && text !== null) {
+            element.textContent = String(text);
+        }
+
+        return element;
+    }
+
     function normaliseText(value) {
         if (value === null || value === undefined) {
             return "";
@@ -146,11 +189,33 @@
         return String(value).trim();
     }
 
+    function getErrorMessage(error, fallback) {
+        if (
+            error &&
+            typeof error.message === "string" &&
+            error.message.trim()
+        ) {
+            return error.message.trim();
+        }
+
+        return fallback;
+    }
+
+    /* --------------------------------------------------------
+       JOB FIELD HELPERS
+       -------------------------------------------------------- */
+
     function getJobId(job) {
+        if (!job || typeof job !== "object") {
+            return "";
+        }
+
         return normaliseText(
-            job.id !== undefined ? job.id :
-            job.job_id !== undefined ? job.job_id :
-            job.uuid
+            job.id !== undefined && job.id !== null
+                ? job.id
+                : job.job_id !== undefined && job.job_id !== null
+                    ? job.job_id
+                    : job.uuid
         );
     }
 
@@ -206,6 +271,15 @@
         );
     }
 
+    function getJobCategory(job) {
+        return normaliseText(
+            job.category ||
+            job.department ||
+            job.team ||
+            job.job_category
+        );
+    }
+
     function getClosingDate(job) {
         return normaliseText(
             job.closing_date ||
@@ -214,25 +288,80 @@
         );
     }
 
+    /* --------------------------------------------------------
+       DATE HANDLING
+
+       Date-only values are validated as calendar dates.
+       Timestamps are converted to the visitor's local date.
+
+       A missing deadline means no expiry is specified.
+       A supplied but invalid deadline hides the vacancy so
+       malformed dates do not accidentally keep jobs published.
+       -------------------------------------------------------- */
+
     function parseDate(value) {
         if (!value) {
             return null;
         }
 
-        const date = new Date(value);
+        const text = normaliseText(value);
 
-        if (Number.isNaN(date.getTime())) {
+        if (!text) {
             return null;
         }
 
-        return date;
+        const dateOnlyMatch = text.match(
+            /^(\d{4})-(\d{2})-(\d{2})$/
+        );
+
+        if (dateOnlyMatch) {
+            const year = Number(dateOnlyMatch[1]);
+            const month = Number(dateOnlyMatch[2]);
+            const day = Number(dateOnlyMatch[3]);
+
+            const date = new Date(year, month - 1, day);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                return null;
+            }
+
+            return date;
+        }
+
+        const parsed = new Date(text);
+
+        if (Number.isNaN(parsed.getTime())) {
+            return null;
+        }
+
+        return parsed;
+    }
+
+    function dateKey(date) {
+        return (
+            date.getFullYear() +
+            "-" +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(date.getDate()).padStart(2, "0")
+        );
     }
 
     function isExpired(job) {
-        const closingDate = parseDate(getClosingDate(job));
+        const closingDateText = getClosingDate(job);
+
+        if (!closingDateText) {
+            return false;
+        }
+
+        const closingDate = parseDate(closingDateText);
 
         if (!closingDate) {
-            return false;
+            return true;
         }
 
         const today = new Date();
@@ -240,8 +369,26 @@
 
         closingDate.setHours(0, 0, 0, 0);
 
-        return closingDate < today;
+        return dateKey(closingDate) < dateKey(today);
     }
+
+    function formatDate(value) {
+        const date = parseDate(value);
+
+        if (!date) {
+            return normaliseText(value);
+        }
+
+        return date.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    }
+
+    /* --------------------------------------------------------
+       PUBLICATION STATUS
+       -------------------------------------------------------- */
 
     function isPublished(job) {
         if (!job || typeof job !== "object") {
@@ -259,13 +406,6 @@
 
         const status = normaliseText(job.status).toLowerCase();
 
-        /*
-         * Do not display jobs explicitly marked as drafts,
-         * archived, closed, unpublished or otherwise inactive.
-         *
-         * If the API omits status, the job can still be displayed
-         * unless another field explicitly marks it unpublished.
-         */
         const blockedStatuses = [
             "draft",
             "archived",
@@ -291,13 +431,27 @@
         return !isExpired(job);
     }
 
+    /* --------------------------------------------------------
+       API RESPONSE NORMALISATION
+
+       Supports arrays and common wrappers, including:
+       { jobs: [...] }
+       { items: [...] }
+       { results: [...] }
+       { data: [...] }
+       { data: { jobs: [...] } }
+       { data: { items: [...] } }
+       -------------------------------------------------------- */
+
     function extractJobs(payload) {
         if (Array.isArray(payload)) {
-            return payload;
+            return payload.filter(function (item) {
+                return item && typeof item === "object";
+            });
         }
 
         if (!payload || typeof payload !== "object") {
-            return [];
+            return null;
         }
 
         const possibleArrays = [
@@ -310,49 +464,63 @@
 
         for (const item of possibleArrays) {
             if (Array.isArray(item)) {
-                return item;
+                return item.filter(function (job) {
+                    return job && typeof job === "object";
+                });
             }
 
             if (item && typeof item === "object") {
-                if (Array.isArray(item.jobs)) {
-                    return item.jobs;
-                }
+                const nestedArrays = [
+                    item.jobs,
+                    item.results,
+                    item.items,
+                    item.vacancies
+                ];
 
-                if (Array.isArray(item.results)) {
-                    return item.results;
-                }
-
-                if (Array.isArray(item.items)) {
-                    return item.items;
+                for (const nested of nestedArrays) {
+                    if (Array.isArray(nested)) {
+                        return nested.filter(function (job) {
+                            return job && typeof job === "object";
+                        });
+                    }
                 }
             }
         }
 
-        return [];
+        return null;
     }
 
     function makeUrl(path) {
         const base = CONFIG.apiBaseUrl.replace(/\/+$/, "");
-        const endpoint = path.startsWith("/") ? path : "/" + path;
+        const endpoint = path.startsWith("/")
+            ? path
+            : "/" + path;
 
         return base + endpoint;
     }
 
-    async function apiRequest(path, options) {
-        const controller = new AbortController();
+    /* --------------------------------------------------------
+       API REQUEST
+
+       Checks HTTP errors, reports useful server messages,
+       handles timeouts, and clears its timeout reliably.
+       -------------------------------------------------------- */
+
+    async function apiRequest(path) {
+        const controller = new window.AbortController();
 
         const timeoutId = window.setTimeout(function () {
             controller.abort();
         }, CONFIG.requestTimeout);
 
         try {
-            const response = await fetch(makeUrl(path), {
+            const response = await window.fetch(makeUrl(path), {
                 method: "GET",
                 headers: {
                     Accept: "application/json"
                 },
                 signal: controller.signal,
-                ...(options || {})
+                credentials: "omit"
             });
 
             const responseText = await response.text();
@@ -361,37 +529,43 @@
             if (responseText) {
                 try {
                     payload = JSON.parse(responseText);
-                } catch (error) {
+                } catch {
                     payload = responseText;
                 }
             }
 
             if (!response.ok) {
-                const detail =
-                    payload &&
-                    typeof payload === "object" &&
-                    (payload.detail || payload.message || payload.error);
+                let detail = "";
+
+                if (payload && typeof payload === "object") {
+                    detail = normaliseText(
+                        payload.detail ||
+                        payload.message ||
+                        payload.error
+                    );
+                } else if (typeof payload === "string") {
+                    detail = payload.trim();
+                }
 
                 throw new Error(
                     detail ||
-                    "The jobs service returned HTTP " + response.status + "."
+                    "The jobs service returned HTTP " +
+                    response.status + "."
                 );
             }
 
             return payload;
         } catch (error) {
-            if (error.name === "AbortError") {
+            if (error && error.name === "AbortError") {
                 throw new Error(
                     "The jobs request timed out. Please try again."
                 );
             }
 
-            if (
-                error instanceof TypeError &&
-                /fetch/i.test(error.message)
-            ) {
+            if (error instanceof TypeError) {
                 throw new Error(
-                    "Unable to connect to the jobs service. Please check your connection and try again."
+                    "Unable to connect to the jobs service. " +
+                    "Please check your connection and try again."
                 );
             }
 
@@ -401,33 +575,62 @@
         }
     }
 
-    function formatDate(value) {
-        const date = parseDate(value);
+    /* --------------------------------------------------------
+       STATUS AND COUNTS
+       -------------------------------------------------------- */
 
-        if (!date) {
-            return value || "";
+    function setStatus(message, type) {
+        const statusElement = queryFirst(
+            SELECTORS.statusMessages
+        );
+
+        if (!statusElement) {
+            return;
         }
 
-        return date.toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
+        statusElement.textContent = message;
+        statusElement.dataset.statusType = type || "info";
+        statusElement.setAttribute("role", "status");
+        statusElement.setAttribute("aria-live", "polite");
+    }
+
+    function updateJobCount(count) {
+        const countElement = queryFirst(
+            SELECTORS.jobCounts
+        );
+
+        if (!countElement) {
+            return;
+        }
+
+        countElement.textContent =
+            count +
+            (count === 1
+                ? " vacancy available"
+                : " vacancies available");
+    }
+
+    function showError(message) {
+        const containers = queryAllUnique(
+            SELECTORS.jobsContainers
+        );
+
+        setStatus(message, "error");
+
+        containers.forEach(function (container) {
+            container.replaceChildren();
+
+            container.appendChild(
+                createElement("p", "jobs-error", message)
+            );
         });
+
+        updateJobCount(0);
     }
 
-    function createElement(tagName, className, text) {
-        const element = document.createElement(tagName);
-
-        if (className) {
-            element.className = className;
-        }
-
-        if (text !== undefined && text !== null) {
-            element.textContent = text;
-        }
-
-        return element;
-    }
+    /* --------------------------------------------------------
+       JOB CARD RENDERING
+       -------------------------------------------------------- */
 
     function appendMetadata(card, label, value) {
         if (!value) {
@@ -435,7 +638,12 @@
         }
 
         const item = createElement("p", "job-meta-item");
-        const strong = createElement("strong", "", label + ": ");
+
+        const strong = createElement(
+            "strong",
+            "",
+            label + ": "
+        );
 
         item.appendChild(strong);
         item.appendChild(document.createTextNode(value));
@@ -458,8 +666,9 @@
             card.dataset.jobId = jobId;
         }
 
-        const heading = createElement("h3", "job-title", title);
-        card.appendChild(heading);
+        card.appendChild(
+            createElement("h3", "job-title", title)
+        );
 
         const metadata = createElement("div", "job-meta");
 
@@ -483,34 +692,41 @@
         appendMetadata(card, "Salary", salary);
 
         if (description) {
-            const descriptionElement = createElement(
-                "p",
-                "job-description",
-                description
+            card.appendChild(
+                createElement(
+                    "p",
+                    "job-description",
+                    description
+                )
             );
-
-            card.appendChild(descriptionElement);
         }
 
         if (closingDate) {
-            const deadline = createElement(
-                "p",
-                "job-closing-date",
-                "Application deadline: " + formatDate(closingDate)
+            card.appendChild(
+                createElement(
+                    "p",
+                    "job-closing-date",
+                    "Application deadline: " +
+                    formatDate(closingDate)
+                )
             );
-
-            card.appendChild(deadline);
         }
 
         const actions = createElement("div", "job-actions");
+
         const applyButton = createElement(
             "button",
             "job-apply-button",
-            "How to Apply"
+            "Apply for this role"
         );
 
         applyButton.type = "button";
         applyButton.dataset.jobApply = "true";
+
+        applyButton.setAttribute(
+            "aria-label",
+            "Apply for " + title
+        );
 
         if (jobId) {
             applyButton.dataset.jobId = jobId;
@@ -528,161 +744,231 @@
         return card;
     }
 
-    function setStatus(message, type) {
-        const statusElement = queryFirst(SELECTORS.statusMessages);
+    /* --------------------------------------------------------
+       SEARCH AND CATEGORY FILTERS
+       -------------------------------------------------------- */
 
-        if (!statusElement) {
-            return;
-        }
+    function getFilteredJobs() {
+        const searchInput = queryFirst(
+            SELECTORS.searchInputs
+        );
 
-        statusElement.textContent = message;
-        statusElement.dataset.statusType = type || "info";
-        statusElement.setAttribute("role", "status");
-        statusElement.setAttribute("aria-live", "polite");
+        const categoryFilter = queryFirst(
+            SELECTORS.categoryFilters
+        );
+
+        const searchTerm = searchInput
+            ? searchInput.value.trim().toLowerCase()
+            : "";
+
+        const selectedCategory = categoryFilter
+            ? categoryFilter.value.trim().toLowerCase()
+            : "";
+
+        return state.jobs.filter(function (job) {
+            if (!isPublished(job)) {
+                return false;
+            }
+
+            const searchableText = [
+                getJobTitle(job),
+                getJobDescription(job),
+                getJobLocation(job),
+                getJobType(job),
+                getJobSalary(job),
+                getJobDepartment(job)
+            ]
+                .join(" ")
+                .toLowerCase();
+
+            if (
+                searchTerm &&
+                !searchableText.includes(searchTerm)
+            ) {
+                return false;
+            }
+
+            if (selectedCategory) {
+                const category = getJobCategory(job)
+                    .toLowerCase();
+
+                if (category !== selectedCategory) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
-    function updateJobCount(count) {
-        const countElement = queryFirst(SELECTORS.jobCounts);
-
-        if (!countElement) {
-            return;
-        }
-
-        countElement.textContent =
-            count + (count === 1 ? " vacancy available" : " vacancies available");
-    }
-
-    function showError(message) {
-        const container = queryFirst(SELECTORS.jobsContainers);
-
-        setStatus(message, "error");
-
-        if (container) {
-            container.replaceChildren();
-
-            const errorMessage = createElement(
-                "p",
-                "jobs-error",
-                message
-            );
-
-            container.appendChild(errorMessage);
-        }
-
-        updateJobCount(0);
-    }
-
-    function renderJobs(jobs) {
-        const containers = queryAllUnique(SELECTORS.jobsContainers);
+    function renderJobs() {
+        const containers = queryAllUnique(
+            SELECTORS.jobsContainers
+        );
 
         if (containers.length === 0) {
             console.warn(
-                "AVERRA Jobs: no jobs container was found. Expected #jobs-grid or a supported alternative."
+                "AVERRA Jobs: no jobs container found. " +
+                "Expected #jobs-grid or a supported alternative."
             );
             return;
         }
 
-        const validJobs = jobs.filter(isPublished);
+        const filteredJobs = getFilteredJobs();
 
         containers.forEach(function (container) {
             container.replaceChildren();
 
-            if (validJobs.length === 0) {
-                const emptyMessage = createElement(
-                    "p",
-                    "jobs-empty",
-                    "There are currently no vacancies available. Please check again soon."
+            if (filteredJobs.length === 0) {
+                const hasPublishedJobs =
+                    state.jobs.some(isPublished);
+
+                container.appendChild(
+                    createElement(
+                        "p",
+                        "jobs-empty",
+                        hasPublishedJobs
+                            ? "No vacancies match your search. " +
+                              "Try another keyword or category."
+                            : "There are currently no vacancies available. " +
+                              "Please check again soon."
+                    )
                 );
 
-                container.appendChild(emptyMessage);
                 return;
             }
 
-            validJobs.forEach(function (job) {
-                container.appendChild(createJobCard(job));
+            const fragment =
+                document.createDocumentFragment();
+
+            filteredJobs.forEach(function (job) {
+                fragment.appendChild(createJobCard(job));
             });
+
+            container.appendChild(fragment);
         });
 
-        updateJobCount(validJobs.length);
+        updateJobCount(filteredJobs.length);
 
-        if (validJobs.length === 0) {
-            setStatus("There are currently no vacancies available.", "empty");
+        if (filteredJobs.length === 0) {
+            setStatus(
+                "No matching vacancies found.",
+                "empty"
+            );
         } else {
             setStatus(
-                "Loaded " + validJobs.length +
-                (validJobs.length === 1 ? " vacancy." : " vacancies."),
+                "Showing " + filteredJobs.length +
+                (filteredJobs.length === 1
+                    ? " vacancy."
+                    : " vacancies."),
                 "success"
             );
         }
     }
 
+    /* --------------------------------------------------------
+       APPLICATION FORM INTEGRATION
+
+       Selects the vacancy only. Actual application submission
+       and CV upload remain the responsibility of applications.js.
+       -------------------------------------------------------- */
+
     function getApplicationForm() {
         return queryFirst(SELECTORS.applicationForms);
     }
 
+    function setSelectValue(select, jobId, jobTitle) {
+        const options = Array.from(select.options);
+
+        let matchingOption = options.find(function (option) {
+            return jobId && option.value === jobId;
+        });
+
+        if (!matchingOption) {
+            matchingOption = options.find(function (option) {
+                return option.textContent.trim() === jobTitle;
+            });
+        }
+
+        if (!matchingOption) {
+            matchingOption = options.find(function (option) {
+                return option.value.trim().toLowerCase() ===
+                    jobTitle.trim().toLowerCase();
+            });
+        }
+
+        /*
+         * Add an option for the selected vacancy if the form's
+         * dropdown does not already contain it. The value uses
+         * the vacancy ID where available.
+         */
+        if (!matchingOption && (jobId || jobTitle)) {
+            matchingOption = document.createElement("option");
+            matchingOption.value = jobId || jobTitle;
+            matchingOption.textContent = jobTitle;
+            select.appendChild(matchingOption);
+        }
+
+        if (!matchingOption) {
+            return false;
+        }
+
+        select.value = matchingOption.value;
+
+        select.dispatchEvent(
+            new window.Event("change", {
+                bubbles: true
+            })
+        );
+
+        return true;
+    }
+
     function selectJobForApplication(job) {
         const form = getApplicationForm();
+        const jobId = getJobId(job);
+        const jobTitle = getJobTitle(job);
 
         if (!form) {
             setStatus(
                 "To apply, email " + CONFIG.contactEmail +
-                " and include the job title: " + getJobTitle(job) + ".",
+                " and include the job title: " + jobTitle + ".",
                 "info"
             );
 
             return;
         }
 
-        const jobId = getJobId(job);
-        const jobTitle = getJobTitle(job);
-        const selects = queryAllUnique(SELECTORS.jobSelects, form);
-
         let selectionMade = false;
+
+        const selects = queryAllUnique(
+            SELECTORS.jobSelects,
+            form
+        );
 
         selects.forEach(function (select) {
             if (select.tagName !== "SELECT") {
                 return;
             }
 
-            const options = Array.from(select.options);
-
-            let matchingOption = options.find(function (option) {
-                return (
-                    (jobId && option.value === jobId) ||
-                    option.textContent.trim() === jobTitle
-                );
-            });
-
-            if (!matchingOption) {
-                matchingOption = options.find(function (option) {
-                    return (
-                        option.value.trim().toLowerCase() ===
-                        jobTitle.trim().toLowerCase()
-                    );
-                });
-            }
-
-            if (matchingOption) {
-                select.value = matchingOption.value;
-                select.dispatchEvent(
-                    new Event("change", { bubbles: true })
-                );
+            if (setSelectValue(select, jobId, jobTitle)) {
                 selectionMade = true;
             }
         });
 
-        /*
-         * Support a hidden or text-based job field if the page uses one.
-         */
         const hiddenJobId = form.querySelector(
             'input[name="job_id"]'
         );
 
         if (hiddenJobId && hiddenJobId.type !== "file") {
-            hiddenJobId.value = jobId || "general";
+            hiddenJobId.value = jobId || "";
+
             hiddenJobId.dispatchEvent(
-                new Event("change", { bubbles: true })
+                new window.Event("change", {
+                    bubbles: true
+                })
             );
+
             selectionMade = true;
         }
 
@@ -690,14 +976,25 @@
             'input[name="job_title"]'
         );
 
-        if (hiddenJobTitle && hiddenJobTitle.type !== "file") {
+        if (
+            hiddenJobTitle &&
+            hiddenJobTitle.type !== "file"
+        ) {
             hiddenJobTitle.value = jobTitle;
+
             hiddenJobTitle.dispatchEvent(
-                new Event("change", { bubbles: true })
+                new window.Event("change", {
+                    bubbles: true
+                })
             );
+
             selectionMade = true;
         }
 
+        /*
+         * If no matching form field exists, do not claim that
+         * the vacancy was selected successfully.
+         */
         form.scrollIntoView({
             behavior: "smooth",
             block: "start"
@@ -705,21 +1002,38 @@
 
         if (selectionMade) {
             setStatus(
-                "Selected vacancy: " + jobTitle + ". Complete the application form below.",
+                "Selected vacancy: " + jobTitle +
+                ". Complete the application form below.",
+                "info"
+            );
+        } else {
+            setStatus(
+                "You selected " + jobTitle +
+                ". Please select the same vacancy in the application form.",
                 "info"
             );
         }
 
         const firstField = form.querySelector(
-            'input:not([type="hidden"]):not([type="file"]):not([disabled]), select:not([disabled]), textarea:not([disabled])'
+            'input:not([type="hidden"]):not([type="file"]):not([disabled]), ' +
+            'select:not([disabled]), textarea:not([disabled])'
         );
 
         if (firstField) {
             window.setTimeout(function () {
-                firstField.focus({ preventScroll: true });
+                firstField.focus({
+                    preventScroll: true
+                });
             }, 350);
         }
     }
+
+    /* --------------------------------------------------------
+       LOAD VACANCIES
+
+       Requests are guarded against overlap. Failed requests
+       preserve the error for diagnostics and offer a retry.
+       -------------------------------------------------------- */
 
     async function loadJobs() {
         if (state.loading) {
@@ -729,9 +1043,16 @@
         state.loading = true;
         state.error = null;
 
-        setStatus("Loading current vacancies…", "loading");
+        const requestNumber = ++state.requestNumber;
 
-        const retryButtons = queryAllUnique(SELECTORS.retryButtons);
+        setStatus(
+            "Loading current vacancies…",
+            "loading"
+        );
+
+        const retryButtons = queryAllUnique(
+            SELECTORS.retryButtons
+        );
 
         retryButtons.forEach(function (button) {
             button.disabled = true;
@@ -739,36 +1060,76 @@
 
         try {
             const payload = await apiRequest(
-                CONFIG.jobsEndpoint + "?limit=" + CONFIG.jobsLimit
+                CONFIG.jobsEndpoint +
+                "?limit=" + CONFIG.jobsLimit +
+                "&offset=0"
             );
+
+            if (requestNumber !== state.requestNumber) {
+                return;
+            }
 
             const jobs = extractJobs(payload);
 
+            if (jobs === null) {
+                throw new Error(
+                    "The jobs service returned an unexpected response."
+                );
+            }
+
             state.jobs = jobs;
             state.loaded = true;
+            state.error = null;
 
-            renderJobs(jobs);
+            renderJobs();
         } catch (error) {
-            state.error = error.message || "Unable to load vacancies.";
+            if (requestNumber !== state.requestNumber) {
+                return;
+            }
 
-            console.error("AVERRA Jobs: failed to load vacancies.", error);
+            state.error = getErrorMessage(
+                error,
+                "Unable to load vacancies."
+            );
+
+            console.error(
+                "AVERRA Jobs: failed to load vacancies.",
+                error
+            );
 
             showError(
-                "We couldn't load the vacancies right now. Please try again shortly."
+                "We couldn't load the vacancies right now. " +
+                "Please try again shortly."
             );
         } finally {
-            state.loading = false;
+            if (requestNumber === state.requestNumber) {
+                state.loading = false;
 
-            retryButtons.forEach(function (button) {
-                button.disabled = false;
-            });
+                retryButtons.forEach(function (button) {
+                    button.disabled = false;
+                });
+            }
         }
     }
 
+    /* --------------------------------------------------------
+       EVENT HANDLERS
+       -------------------------------------------------------- */
+
     function setupRetryButtons() {
-        const retryButtons = queryAllUnique(SELECTORS.retryButtons);
+        const retryButtons = queryAllUnique(
+            SELECTORS.retryButtons
+        );
 
         retryButtons.forEach(function (button) {
+            if (
+                button.dataset.averraJobsRetryReady === "true"
+            ) {
+                return;
+            }
+
+            button.dataset.averraJobsRetryReady = "true";
+
             button.addEventListener("click", function (event) {
                 event.preventDefault();
                 loadJobs();
@@ -776,61 +1137,76 @@
         });
     }
 
-    /*
-     * IMPORTANT:
-     * This file intentionally does not add a submit handler to application
-     * forms. The application form submission belongs to applications.js.
-     * This prevents the jobs page from blocking CV uploads or API requests.
-     */
+    function setupFilters() {
+        const searchInputs = queryAllUnique(
+            SELECTORS.searchInputs
+        );
+
+        const categoryFilters = queryAllUnique(
+            SELECTORS.categoryFilters
+        );
+
+        searchInputs.forEach(function (input) {
+            if (
+                input.dataset.averraJobsFilterReady === "true"
+            ) {
+                return;
+            }
+
+            input.dataset.averraJobsFilterReady = "true";
+
+            input.addEventListener("input", function () {
+                if (state.loaded) {
+                    renderJobs();
+                }
+            });
+        });
+
+        categoryFilters.forEach(function (select) {
+            if (
+                select.dataset.averraJobsFilterReady === "true"
+            ) {
+                return;
+            }
+
+            select.dataset.averraJobsFilterReady = "true";
+
+            select.addEventListener("change", function () {
+                if (state.loaded) {
+                    renderJobs();
+                }
+            });
+        });
+    }
+
     function setupApplicationForms() {
-        const forms = queryAllUnique(SELECTORS.applicationForms);
+        const forms = queryAllUnique(
+            SELECTORS.applicationForms
+        );
 
         forms.forEach(function (form) {
-            form.dataset.averrraApplicationFormDetected = "true";
+            form.dataset.averraApplicationFormDetected = "true";
         });
     }
 
-    function setupMobileNavigation() {
-        const menuButton = document.querySelector(
-            "#menu-toggle, #mobile-menu-toggle, [data-menu-toggle]"
-        );
-
-        const navigation = document.querySelector(
-            "#main-navigation, #main-nav, [data-main-navigation]"
-        );
-
-        if (!menuButton || !navigation) {
-            return;
-        }
-
-        if (menuButton.dataset.averraJobsNavigationReady === "true") {
-            return;
-        }
-
-        menuButton.dataset.averraJobsNavigationReady = "true";
-
-        menuButton.addEventListener("click", function () {
-            const isExpanded =
-                menuButton.getAttribute("aria-expanded") === "true";
-
-            menuButton.setAttribute(
-                "aria-expanded",
-                String(!isExpanded)
-            );
-
-            navigation.classList.toggle("is-open", !isExpanded);
-            navigation.classList.toggle("active", !isExpanded);
-        });
-    }
+    /* --------------------------------------------------------
+       INITIALISATION
+       -------------------------------------------------------- */
 
     function initialise() {
         setupRetryButtons();
+        setupFilters();
         setupApplicationForms();
-        setupMobileNavigation();
         loadJobs();
     }
 
+    /* --------------------------------------------------------
+       PUBLIC API
+       -------------------------------------------------------- */
+
     window.AVERRAJobs = {
+        version: VERSION,
+
         load: loadJobs,
 
         getJobs: function () {
@@ -850,9 +1226,11 @@
     };
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initialise, {
-            once: true
-        });
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialise,
+            { once: true }
+        );
     } else {
         initialise();
     }

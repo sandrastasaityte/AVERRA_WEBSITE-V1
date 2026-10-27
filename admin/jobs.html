@@ -11,10 +11,77 @@
 
     <meta
         name="description"
-        content="Manage recruitment vacancies for AVERRA Staffing Solutions Ltd."
+        content="Create, review, edit and delete recruitment vacancies for AVERRA Staffing Solutions Ltd."
     >
 
     <link rel="stylesheet" href="css/admin.css">
+
+    <style>
+        .job-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .job-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 7px 11px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .job-action-edit {
+            color: #164b73;
+            background: #edf5fb;
+            border-color: #c9dfef;
+        }
+
+        .job-action-delete {
+            color: #a51d18;
+            background: #fff1f0;
+            border-color: #f0c7c4;
+        }
+
+        .job-action:hover:not(:disabled) {
+            filter: brightness(0.96);
+        }
+
+        .job-action:focus-visible {
+            outline: 3px solid rgba(29, 95, 145, 0.3);
+            outline-offset: 2px;
+        }
+
+        .job-action:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .jobs-delete-warning {
+            margin: 12px 0;
+            padding: 12px 14px;
+            border: 1px solid #f0c7c4;
+            border-radius: 7px;
+            background: #fff8f7;
+            color: #8f201b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 650px) {
+            .job-actions {
+                min-width: 135px;
+            }
+        }
+    </style>
 
     <script src="js/auth.js" defer></script>
     <script src="js/jobs.js" defer></script>
@@ -40,7 +107,6 @@
 
     <main class="admin-main">
 
-        <!-- PAGE HEADING -->
         <section class="page-heading">
             <div>
                 <p class="eyebrow">VACANCY MANAGEMENT</p>
@@ -48,7 +114,7 @@
                 <h1>Manage jobs</h1>
 
                 <p class="muted">
-                    Create, review, edit and manage AVERRA recruitment vacancies.
+                    Create, review, edit, publish, close and delete AVERRA vacancies.
                 </p>
             </div>
 
@@ -58,7 +124,6 @@
             </a>
         </section>
 
-        <!-- PAGE FEEDBACK -->
         <p
             id="jobs-message"
             class="message"
@@ -69,7 +134,13 @@
             Loading vacancies…
         </p>
 
-        <!-- VACANCY MANAGEMENT -->
+        <p class="jobs-delete-warning">
+            <strong>Important:</strong> Deleting a vacancy may permanently remove
+            its record. Check whether it has linked applications before deleting.
+            If the server rejects deletion because applications are linked, close
+            the vacancy instead.
+        </p>
+
         <section class="panel jobs-panel" aria-labelledby="jobs-heading">
 
             <div class="jobs-toolbar">
@@ -90,7 +161,6 @@
                 </button>
             </div>
 
-            <!-- SEARCH AND FILTERS -->
             <div class="jobs-filters">
 
                 <div class="jobs-search">
@@ -98,6 +168,7 @@
 
                     <input
                         id="jobs-search"
+                        name="search"
                         type="search"
                         placeholder="Search title or location…"
                         autocomplete="off"
@@ -107,7 +178,7 @@
                 <div class="jobs-status-filter">
                     <label for="jobs-status-filter">Publication status</label>
 
-                    <select id="jobs-status-filter">
+                    <select id="jobs-status-filter" name="status">
                         <option value="all">All statuses</option>
                         <option value="draft">Draft</option>
                         <option value="published">Published</option>
@@ -125,19 +196,21 @@
 
             </div>
 
-            <!-- RESULTS SUMMARY -->
             <div class="jobs-results">
-                <p class="small muted" id="jobs-results-count">
+                <p
+                    class="small muted"
+                    id="jobs-results-count"
+                    aria-live="polite"
+                >
                     Loading vacancy records…
                 </p>
             </div>
 
-            <!-- TABLE -->
             <div class="table-wrap">
                 <table>
                     <caption class="visually-hidden">
-                        AVERRA recruitment vacancies, their locations,
-                        employment types, publication statuses and available actions.
+                        AVERRA vacancies, locations, employment types, statuses
+                        and management actions.
                     </caption>
 
                     <thead>
@@ -160,7 +233,6 @@
                 </table>
             </div>
 
-            <!-- EMPTY / ERROR STATE CONTAINER -->
             <div
                 id="jobs-empty-state"
                 class="empty-state jobs-empty-state"
@@ -169,12 +241,11 @@
                 <h3>No vacancies found</h3>
 
                 <p class="muted">
-                    Try changing your search or status filter,
-                    or create a new vacancy.
+                    Try changing your search or status filter, or create a new vacancy.
                 </p>
 
                 <a class="btn btn-primary" href="job-form.html">
-                    Add your first vacancy
+                    Add vacancy
                 </a>
             </div>
 
@@ -183,6 +254,10 @@
         <footer class="admin-footer">
             <p class="small muted">
                 AVERRA Staffing Solutions Ltd
+            </p>
+
+            <p class="small muted">
+                Connecting UK businesses with global talent.
             </p>
         </footer>
 

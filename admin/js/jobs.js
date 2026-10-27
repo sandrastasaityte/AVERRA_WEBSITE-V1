@@ -1,283 +1,465 @@
 
-(() => {
-  "use strict";
+"use strict";
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    const admin = window.AVERRA_ADMIN;
+/* ============================================================
+   AVERRA STAFFING SOLUTIONS LTD
+   File: admin/js/jobs.js
+   Version: 3.6.0
 
-    if (!admin || !admin.requireLogin()) return;
+   Features:
+   - Load and refresh vacancies
+   - Search by job title and location
+   - Filter by draft, published and closed status
+   - Edit vacancies
+   - Publish, unpublish and close vacancies
+   - Delete vacancies with confirmation
+   - Display API errors
+   ============================================================ */
 
-    const byId = (id) => document.getElementById(id);
+(function () {
+    const state = {
+        jobs: [],
+        loading: false,
+        search: "",
+        status: "all"
+    };
 
-    const table = byId("jobs-table");
-    const message = byId("jobs-message");
-    const searchInput = byId("jobs-search");
-    const statusFilter = byId("jobs-status-filter");
-    const refreshButton = byId("refresh-jobs");
-    const clearButton = byId("clear-job-filters");
-    const resultsCount = byId("jobs-results-count");
-    const emptyState = byId("jobs-empty-state");
+    let elements = {};
 
-    byId("logout-button")?.addEventListener("click", () => {
-      admin.logout();
-    });
+    document.addEventListener("DOMContentLoaded", initialise);
 
-    if (!table || !message) {
-      console.error("AVERRA jobs page is missing required elements.");
-      return;
+    function initialise() {
+        elements = {
+            message: document.getElementById("jobs-message"),
+            table: document.getElementById("jobs-table"),
+            search: document.getElementById("jobs-search"),
+            status: document.getElementById("jobs-status-filter"),
+            refresh: document.getElementById("refresh-jobs"),
+            clear: document.getElementById("clear-job-filters"),
+            count: document.getElementById("jobs-results-count"),
+            empty: document.getElementById("jobs-empty-state"),
+            logout: document.getElementById("logout-button")
+        };
+
+        const admin = window.AVERRA_ADMIN;
+
+        if (!admin || typeof admin.api !== "function") {
+            showMessage(
+                "Authentication could not be initialized. Check that js/auth.js loads successfully before js/jobs.js.",
+                "error"
+            );
+            showTableMessage("Authentication script unavailable.");
+            return;
+        }
+
+        if (elements.search) {
+            elements.search.addEventListener("input", function () {
+                state.search = elements.search.value.trim().toLowerCase();
+                renderJobs();
+            });
+        }
+
+        if (elements.status) {
+            elements.status.addEventListener("change", function () {
+                state.status = elements.status.value;
+                renderJobs();
+            });
+        }
+
+        if (elements.refresh) {
+            elements.refresh.addEventListener("click", loadJobs);
+        }
+
+        if (elements.clear) {
+            elements.clear.addEventListener("click", clearFilters);
+        }
+
+        if (elements.logout) {
+            elements.logout.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                if (typeof admin.logout === "function") {
+                    admin.logout();
+                }
+            });
+        }
+
+        loadJobs();
     }
 
-    let allJobs = [];
-    let loading = false;
+    function showMessage(message, type) {
+        if (!elements.message) return;
 
-    function showMessage(text, type = "") {
-      message.textContent = text;
-      message.className = type ? `message ${type}` : "message";
+        elements.message.textContent = message;
+        elements.message.className = "message";
+
+        if (type) {
+            elements.message.classList.add(type);
+        }
+    }
+
+    function setCount(message) {
+        if (elements.count) {
+            elements.count.textContent = message;
+        }
+    }
+
+    function showTableMessage(message) {
+        if (!elements.table) return;
+
+        elements.table.replaceChildren();
+
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 5;
+        cell.className = "empty-state";
+        cell.textContent = message;
+
+        row.appendChild(cell);
+        elements.table.appendChild(row);
     }
 
     function normaliseJobs(response) {
-      if (Array.isArray(response)) return response;
-      if (Array.isArray(response?.items)) return response.items;
-      if (Array.isArray(response?.jobs)) return response.jobs;
-      if (Array.isArray(response?.results)) return response.results;
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.items)) return response.items;
+        if (response && Array.isArray(response.jobs)) return response.jobs;
+        if (response && Array.isArray(response.results)) return response.results;
 
-      throw new Error(
-        "The jobs API returned an unexpected response format."
-      );
+        throw new Error("The jobs API returned an unexpected response format.");
     }
 
-    function createCell(text) {
-      const cell = document.createElement("td");
-      cell.textContent = String(text ?? "");
-      return cell;
+    function getJobId(job) {
+        return job.id ?? job.job_id ?? job.uuid ?? null;
     }
 
-    function makeButton(label, className, action) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `btn ${className}`;
-      button.textContent = label;
-      button.addEventListener("click", action);
-      return button;
+    function getStatus(job) {
+        const status = String(job.status || "draft").trim().toLowerCase();
+
+        return ["draft", "published", "closed"].includes(status)
+            ? status
+            : "draft";
     }
 
     function getFilteredJobs() {
-      const query = (searchInput?.value || "").trim().toLowerCase();
-      const selectedStatus = statusFilter?.value || "all";
+        return state.jobs.filter(function (job) {
+            const title = String(job.title || "").toLowerCase();
+            const location = String(job.location || "").toLowerCase();
 
-      return allJobs.filter((job) => {
-        const searchableText = [
-          job.title,
-          job.department,
-          job.location,
-          job.employment_type,
-          job.summary
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
+            const matchesSearch =
+                !state.search ||
+                title.includes(state.search) ||
+                location.includes(state.search);
 
-        const matchesSearch =
-          !query || searchableText.includes(query);
+            const matchesStatus =
+                state.status === "all" ||
+                getStatus(job) === state.status;
 
-        const matchesStatus =
-          selectedStatus === "all" ||
-          String(job.status || "draft").toLowerCase() === selectedStatus;
+            return matchesSearch && matchesStatus;
+        });
+    }
 
-        return matchesSearch && matchesStatus;
-      });
+    function addCell(row, value) {
+        const cell = document.createElement("td");
+        cell.textContent = String(value || "Not specified");
+        row.appendChild(cell);
+        return cell;
+    }
+
+    function makeButton(label, className, onClick, disabled) {
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.textContent = label;
+        button.className = className;
+        button.disabled = Boolean(disabled);
+        button.addEventListener("click", onClick);
+
+        return button;
     }
 
     function renderJobs() {
-      table.replaceChildren();
+        if (!elements.table) return;
 
-      const filteredJobs = getFilteredJobs();
+        const jobs = getFilteredJobs();
 
-      if (resultsCount) {
-        resultsCount.textContent =
-          `Showing ${filteredJobs.length} of ${allJobs.length} vacancies`;
-      }
+        elements.table.replaceChildren();
 
-      if (emptyState) {
-        emptyState.hidden = filteredJobs.length !== 0;
-      }
-
-      if (filteredJobs.length === 0) {
-        const row = document.createElement("tr");
-        const cell = document.createElement("td");
-
-        cell.colSpan = 5;
-        cell.className = "empty-state";
-        cell.textContent = allJobs.length === 0
-          ? "No vacancies yet. Use Add vacancy to create your first job."
-          : "No vacancies match your current filters.";
-
-        row.appendChild(cell);
-        table.appendChild(row);
-        return;
-      }
-
-      filteredJobs.forEach((job) => {
-        const row = document.createElement("tr");
-        const status = String(job.status || "draft").toLowerCase();
-        const validStatuses = ["draft", "published", "closed"];
-
-        row.appendChild(createCell(job.title || "Untitled"));
-        row.appendChild(createCell(job.location || "Not specified"));
-        row.appendChild(
-          createCell(job.employment_type || "Not specified")
-        );
-
-        const statusCell = document.createElement("td");
-        const badge = document.createElement("span");
-
-        badge.className =
-          `status ${validStatuses.includes(status) ? status : "draft"}`;
-        badge.textContent = validStatuses.includes(status)
-          ? status
-          : "draft";
-
-        statusCell.appendChild(badge);
-        row.appendChild(statusCell);
-
-        const actionsCell = document.createElement("td");
-        const actionGroup = document.createElement("div");
-
-        actionGroup.className = "actions";
-
-        actionGroup.appendChild(
-          makeButton("Edit", "btn-secondary", () => {
-            window.location.href =
-              `job-form.html?id=${encodeURIComponent(job.id)}`;
-          })
-        );
-
-        if (status !== "published" && status !== "closed") {
-          actionGroup.appendChild(
-            makeButton("Publish", "btn-primary", () => {
-              changeStatus(job, "published");
-            })
-          );
+        if (elements.empty) {
+            elements.empty.hidden = jobs.length !== 0;
         }
 
-        if (status !== "closed") {
-          actionGroup.appendChild(
-            makeButton("Close", "btn-danger", () => {
-              changeStatus(job, "closed");
-            })
-          );
+        setCount(
+            "Showing " + jobs.length + " of " + state.jobs.length +
+            " vacancy record" + (state.jobs.length === 1 ? "" : "s") + "."
+        );
+
+        if (jobs.length === 0) {
+            showTableMessage(
+                state.jobs.length === 0
+                    ? "No vacancies have been created yet."
+                    : "No vacancies match your search or filters."
+            );
+            return;
         }
 
-        actionsCell.appendChild(actionGroup);
-        row.appendChild(actionsCell);
-        table.appendChild(row);
-      });
+        jobs.forEach(function (job) {
+            const row = document.createElement("tr");
+            const id = getJobId(job);
+            const hasId = id !== null && id !== undefined && id !== "";
+
+            addCell(row, job.title || "Untitled vacancy");
+            addCell(row, job.location || "Not specified");
+            addCell(
+                row,
+                job.employment_type ||
+                job.employmentType ||
+                job.employment ||
+                "Not specified"
+            );
+
+            const status = getStatus(job);
+            const statusCell = document.createElement("td");
+            const badge = document.createElement("span");
+
+            badge.className = "status " + status;
+            badge.textContent =
+                status.charAt(0).toUpperCase() + status.slice(1);
+
+            statusCell.appendChild(badge);
+            row.appendChild(statusCell);
+
+            const actionsCell = document.createElement("td");
+            const actions = document.createElement("div");
+
+            actions.className = "job-actions";
+
+            actions.appendChild(
+                makeButton(
+                    "Edit",
+                    "job-action job-action-edit",
+                    function () {
+                        if (!hasId) {
+                            showMessage("This vacancy has no record ID.", "error");
+                            return;
+                        }
+
+                        window.location.href =
+                            "job-form.html?id=" + encodeURIComponent(id);
+                    },
+                    !hasId
+                )
+            );
+
+            if (status !== "closed") {
+                const nextStatus =
+                    status === "published" ? "draft" : "published";
+
+                const statusButton = makeButton(
+                    status === "published" ? "Unpublish" : "Publish",
+                    "job-action job-action-edit",
+                    function () {
+                        changeStatus(id, nextStatus, statusButton);
+                    },
+                    !hasId
+                );
+
+                actions.appendChild(statusButton);
+
+                const closeButton = makeButton(
+                    "Close",
+                    "job-action job-action-edit",
+                    function () {
+                        if (!window.confirm(
+                            "Close this vacancy? It will no longer be marked as open."
+                        )) {
+                            return;
+                        }
+
+                        changeStatus(id, "closed", closeButton);
+                    },
+                    !hasId
+                );
+
+                actions.appendChild(closeButton);
+            }
+
+            actions.appendChild(
+                makeButton(
+                    "Delete",
+                    "job-action job-action-delete",
+                    function () {
+                        deleteJobRecord(id);
+                    },
+                    !hasId
+                )
+            );
+
+            actionsCell.appendChild(actions);
+            row.appendChild(actionsCell);
+            elements.table.appendChild(row);
+        });
     }
 
-    async function changeStatus(job, newStatus) {
-      const verb = newStatus === "published" ? "publish" : "close";
-      const title = job.title || "this vacancy";
+    async function loadJobs() {
+        if (state.loading) return;
 
-      if (!window.confirm(
-        `Are you sure you want to ${verb} "${title}"?`
-      )) {
-        return;
-      }
+        const admin = window.AVERRA_ADMIN;
 
-      try {
-        showMessage(
-          `${verb === "publish" ? "Publishing" : "Closing"} vacancy…`
-        );
+        if (!admin || typeof admin.api !== "function") {
+            showMessage("The authentication helper is unavailable.", "error");
+            return;
+        }
 
-        await admin.api(
-          `/api/admin/jobs/${encodeURIComponent(job.id)}`,
-          {
-            method: "PATCH",
-            body: JSON.stringify({ status: newStatus })
-          }
-        );
+        state.loading = true;
 
-        await loadJobs(false);
+        if (elements.refresh) {
+            elements.refresh.disabled = true;
+            elements.refresh.textContent = "Loading…";
+        }
 
-        showMessage(
-          `Vacancy ${newStatus === "published" ? "published" : "closed"} successfully.`,
-          "success"
-        );
-      } catch (error) {
-        console.error("AVERRA status update error:", error);
-        showMessage(
-          `Could not update vacancy: ${error.message}`,
-          "error"
-        );
-      }
-    }
-
-    async function loadJobs(showLoadingMessage = true) {
-      if (loading) return;
-
-      loading = true;
-
-      if (refreshButton) refreshButton.disabled = true;
-
-      if (showLoadingMessage) {
         showMessage("Loading vacancies…");
-      }
+        setCount("Loading vacancy records…");
+        showTableMessage("Loading vacancies…");
 
-      try {
-        const response = await admin.api("/api/admin/jobs");
-        allJobs = normaliseJobs(response);
+        try {
+            if (typeof admin.requireLogin === "function") {
+                const permitted = await admin.requireLogin();
+
+                if (!permitted) return;
+            }
+
+            const response = await admin.api("/api/admin/jobs");
+
+            state.jobs = normaliseJobs(response);
+
+            renderJobs();
+            showMessage("Vacancies loaded successfully.", "success");
+        } catch (error) {
+            console.error("AVERRA jobs loading error:", error);
+
+            showMessage(
+                "Unable to load vacancies: " +
+                (error.message || "An unexpected error occurred."),
+                "error"
+            );
+
+            showTableMessage("Vacancies could not be loaded.");
+            setCount("Unable to load vacancy records.");
+        } finally {
+            state.loading = false;
+
+            if (elements.refresh) {
+                elements.refresh.disabled = false;
+                elements.refresh.textContent = "Refresh list";
+            }
+        }
+    }
+
+    async function changeStatus(id, newStatus, button) {
+        if (id === null || id === undefined || id === "") {
+            showMessage("A vacancy ID is required.", "error");
+            return;
+        }
+
+        const admin = window.AVERRA_ADMIN;
+
+        if (!admin || typeof admin.api !== "function") {
+            showMessage("The authentication helper is unavailable.", "error");
+            return;
+        }
+
+        const originalText = button.textContent;
+
+        button.disabled = true;
+        button.textContent = "Saving…";
+
+        try {
+            await admin.api(
+                "/api/admin/jobs/" + encodeURIComponent(id),
+                {
+                    method: "PATCH",
+                    body: JSON.stringify({ status: newStatus })
+                }
+            );
+
+            showMessage("Vacancy status updated.", "success");
+            await loadJobs();
+        } catch (error) {
+            console.error("AVERRA status update error:", error);
+
+            showMessage(
+                "Unable to update vacancy: " +
+                (error.message || "An unexpected error occurred."),
+                "error"
+            );
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    }
+
+    async function deleteJobRecord(id) {
+        if (id === null || id === undefined || id === "") {
+            showMessage("A vacancy ID is required.", "error");
+            return;
+        }
+
+        if (!window.confirm(
+            "Are you sure you want to delete this vacancy? This action may be permanent."
+        )) {
+            return;
+        }
+
+        const admin = window.AVERRA_ADMIN;
+
+        if (!admin || typeof admin.api !== "function") {
+            showMessage("The authentication helper is unavailable.", "error");
+            return;
+        }
+
+        try {
+            showMessage("Deleting vacancy…");
+
+            if (typeof admin.deleteJob === "function") {
+                await admin.deleteJob(id);
+            } else {
+                await admin.api(
+                    "/api/admin/jobs/" + encodeURIComponent(id),
+                    { method: "DELETE" }
+                );
+            }
+
+            state.jobs = state.jobs.filter(function (job) {
+                return String(getJobId(job)) !== String(id);
+            });
+
+            renderJobs();
+            showMessage("Vacancy deleted successfully.", "success");
+        } catch (error) {
+            console.error("AVERRA vacancy deletion error:", error);
+
+            showMessage(
+                "Unable to delete vacancy: " +
+                (error.message || "An unexpected error occurred.") +
+                " If it has linked applications, close it instead.",
+                "error"
+            );
+        }
+    }
+
+    function clearFilters() {
+        state.search = "";
+        state.status = "all";
+
+        if (elements.search) {
+            elements.search.value = "";
+        }
+
+        if (elements.status) {
+            elements.status.value = "all";
+        }
 
         renderJobs();
-
-        if (showLoadingMessage) {
-          showMessage(
-            `${allJobs.length} vacancy/vacancies loaded.`,
-            "success"
-          );
-        }
-      } catch (error) {
-        console.error("AVERRA jobs loading error:", error);
-
-        showMessage(
-          `Unable to load vacancies: ${error.message}`,
-          "error"
-        );
-
-        table.replaceChildren();
-
-        const row = document.createElement("tr");
-        const cell = document.createElement("td");
-
-        cell.colSpan = 5;
-        cell.className = "empty-state";
-        cell.textContent = "Could not load vacancies. Please try again.";
-
-        row.appendChild(cell);
-        table.appendChild(row);
-
-        if (emptyState) emptyState.hidden = true;
-        if (resultsCount) resultsCount.textContent = "";
-      } finally {
-        loading = false;
-        if (refreshButton) refreshButton.disabled = false;
-      }
     }
-
-    searchInput?.addEventListener("input", renderJobs);
-    statusFilter?.addEventListener("change", renderJobs);
-
-    refreshButton?.addEventListener("click", () => {
-      loadJobs();
-    });
-
-    clearButton?.addEventListener("click", () => {
-      if (searchInput) searchInput.value = "";
-      if (statusFilter) statusFilter.value = "all";
-
-      renderJobs();
-      showMessage("Filters cleared.", "success");
-    });
-
-    await loadJobs();
-  });
 })();

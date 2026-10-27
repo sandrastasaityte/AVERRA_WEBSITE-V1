@@ -84,3 +84,16 @@ instance/
 # Editor and local tooling caches
 .cache/
 .pyright/
+# Candidate CVs and application uploads
+*.pdf
+*.doc
+*.docx
+
+# Local database exports
+*.dump
+*.sql
+*.sqlite-wal
+*.sqlite-shm
+
+# Python environment configuration
+.python-version

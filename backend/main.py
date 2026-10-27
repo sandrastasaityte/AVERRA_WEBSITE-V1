@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.2.2
+Version: 4.4.0
 
 FastAPI application for the AVERRA website.
 """
@@ -25,9 +25,12 @@ from dotenv import load_dotenv
 from fastapi import (
     Depends,
     FastAPI,
+    File,
+    Form,
     Header,
     HTTPException,
     Query,
+    UploadFile,
     status,
 )
 from fastapi.middleware.cors import CORSMiddleware
@@ -58,7 +61,7 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = "4.2.2"
+APP_VERSION = "4.4.0"
 
 APP_ENV = os.getenv(
     "APP_ENV",
@@ -416,7 +419,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=False,
-    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=[
         "Accept",
         "Content-Type",
@@ -578,6 +581,319 @@ def get_job(
         )
 
     return job
+
+
+# ============================================================
+# PUBLIC JOB APPLICATIONS
+# ============================================================
+
+MAX_CV_BYTES = 5 * 1024 * 1024
+ALLOWED_CV_EXTENSIONS = {".pdf", ".doc", ".docx"}
+PDF_SIGNATURE = b"%PDF-"
+DOC_SIGNATURE = bytes.fromhex("D0 CF 11 E0 A1 B1 1A E1")
+DOCX_SIGNATURE = b"PK"
+
+
+def send_application_notification(application: Application) -> bool:
+    """Notify the company that a CV application has been saved.
+
+    The CV itself is deliberately not attached to the notification email.
+    The uploaded CV is stored in the database.
+    """
+    if not SMTP_USERNAME or not SMTP_PASSWORD:
+        logger.warning(
+            "Application notification not sent: SMTP credentials are missing. "
+            "application_id=%s",
+            application.id,
+        )
+        return False
+
+    message = EmailMessage()
+    message["Subject"] = (
+        f"New job application - {application.job_title} "
+        f"(Application #{application.id})"
+    )
+    message["From"] = SMTP_FROM_EMAIL
+    message["To"] = COMPANY_EMAIL
+
+    message.set_content(
+        f"""
+A new application has been submitted through the AVERRA website.
+
+Company: {COMPANY_NAME}
+Application reference: {application.id}
+Received: {application.created_at.isoformat() if application.created_at else utc_now().isoformat()}
+
+Applicant: {application.full_name}
+Email: {application.email}
+Phone: {application.phone or "Not provided"}
+Vacancy: {application.job_title}
+Job ID: {application.job_id if application.job_id is not None else "General application"}
+CV filename: {application.cv_original_name}
+CV size: {application.cv_size} bytes
+Privacy consent: {"Yes" if application.privacy_consent else "No"}
+Application status: {application.status}
+
+The CV is stored in the application database. The notification email does not
+contain the CV attachment. Review the application through your secured
+administration workflow.
+
+Website: {COMPANY_WEBSITE}
+""".strip()
+    )
+
+    try:
+        tls_context = ssl.create_default_context()
+
+        with smtplib.SMTP(
+            SMTP_HOST,
+            SMTP_PORT,
+            timeout=SMTP_TIMEOUT,
+        ) as server:
+            server.ehlo()
+            server.starttls(context=tls_context)
+            server.ehlo()
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.send_message(message)
+
+        logger.info(
+            "Application notification email sent: id=%s",
+            application.id,
+        )
+        return True
+
+    except Exception:
+        logger.exception(
+            "Application saved, but notification email failed: id=%s",
+            application.id,
+        )
+        return False
+
+
+def _valid_cv_signature(extension: str, content: bytes) -> bool:
+    """Check that the uploaded file signature matches its extension."""
+    if extension == ".pdf":
+        return content.startswith(PDF_SIGNATURE)
+
+    if extension == ".doc":
+        return content.startswith(DOC_SIGNATURE)
+
+    if extension == ".docx":
+        # DOCX is a ZIP-based Office Open XML document.
+        return content.startswith(DOCX_SIGNATURE)
+
+    return False
+
+
+@app.post(
+    "/api/applications",
+    status_code=status.HTTP_201_CREATED,
+    tags=["Applications"],
+)
+async def create_application(
+    full_name: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(default=""),
+    job_id: str = Form(default=""),
+    job_title: str = Form(default="General Application"),
+    cover_letter: str = Form(default=""),
+    privacy_consent: str = Form(...),
+    cv: UploadFile = File(...),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    """Validate, store and notify AVERRA about a submitted CV application."""
+    full_name = full_name.strip()
+    email = email.strip().lower()
+    phone = phone.strip()
+    cover_letter = cover_letter.strip()
+
+    if not full_name or len(full_name) > 150:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Please provide a name of no more than 150 characters.",
+        )
+
+    if (
+        len(email) > 254
+        or not email
+        or "@" not in email
+        or email.startswith("@")
+        or email.endswith("@")
+        or any(character.isspace() for character in email)
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Please provide a valid email address.",
+        )
+
+    if len(phone) > 50:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Phone number must be 50 characters or fewer.",
+        )
+
+    if len(cover_letter) > 10000:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Cover letter must be 10,000 characters or fewer.",
+        )
+
+    if privacy_consent.strip().lower() not in {"true", "1", "yes", "on"}:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Privacy consent is required to submit an application.",
+        )
+
+    original_name = Path(cv.filename or "").name.strip()
+    if not original_name or len(original_name) > 255:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Please upload a CV with a valid filename.",
+        )
+
+    extension = Path(original_name).suffix.lower()
+    if extension not in ALLOWED_CV_EXTENSIONS:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="CV must be a PDF, DOC or DOCX file.",
+        )
+
+    try:
+        cv_content = await cv.read(MAX_CV_BYTES + 1)
+    finally:
+        await cv.close()
+
+    if not cv_content:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="The uploaded CV file is empty.",
+        )
+
+    if len(cv_content) > MAX_CV_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="CV must be no larger than 5 MB.",
+        )
+
+    if not _valid_cv_signature(extension, cv_content):
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="The uploaded file content does not match a supported CV format.",
+        )
+
+    selected_job: Job | None = None
+    parsed_job_id: int | None = None
+
+    if job_id.strip() and job_id.strip().lower() != "general":
+        try:
+            parsed_job_id = int(job_id.strip())
+        except ValueError:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="The selected vacancy is invalid. Please select it again.",
+            ) from None
+
+        if parsed_job_id <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="The selected vacancy is invalid.",
+            )
+
+        try:
+            selected_job = db.scalars(
+                select(Job).where(
+                    Job.id == parsed_job_id,
+                    Job.status == "published",
+                )
+            ).first()
+        except SQLAlchemyError:
+            logger.exception(
+                "Could not verify selected job id=%s",
+                parsed_job_id,
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Unable to verify the selected vacancy. Please try again.",
+            ) from None
+
+        if selected_job is None:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="The selected vacancy is no longer available.",
+            )
+
+        if selected_job.closing_date:
+            closing_date = selected_job.closing_date
+            if closing_date.tzinfo is None:
+                closing_date = closing_date.replace(tzinfo=timezone.utc)
+
+            if closing_date < utc_now():
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Applications for this vacancy are closed.",
+                )
+
+    # Use the database's vacancy title rather than trusting a browser value.
+    authoritative_job_title = (
+        selected_job.title if selected_job else "General Application"
+    )
+
+    application = Application(
+        full_name=full_name,
+        email=email,
+        phone=phone or None,
+        job_id=selected_job.id if selected_job else None,
+        job_title=authoritative_job_title,
+        cover_letter=cover_letter or None,
+        cv_original_name=original_name,
+        cv_size=len(cv_content),
+        cv_content=cv_content,
+        privacy_consent=True,
+        status="new",
+        email_status="pending",
+    )
+
+    try:
+        db.add(application)
+        db.commit()
+        db.refresh(application)
+    except SQLAlchemyError:
+        db.rollback()
+        logger.exception("Could not save job application")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to save your application. Please try again later.",
+        ) from None
+
+    notification_sent = send_application_notification(application)
+
+    try:
+        application.email_status = "sent" if notification_sent else "failed"
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        logger.exception(
+            "Could not update application email status: id=%s",
+            application.id,
+        )
+        # The application has already been saved, so do not report the
+        # submission itself as failed solely because this status update failed.
+        notification_sent = False
+
+    logger.info(
+        "Job application saved: id=%s job_id=%s notification_sent=%s",
+        application.id,
+        application.job_id,
+        notification_sent,
+    )
+
+    return {
+        "success": True,
+        "application_id": application.id,
+        "message": "Your application has been received.",
+        "notification_sent": notification_sent,
+        "email_status": "sent" if notification_sent else "failed",
+    }
 
 
 # ============================================================
@@ -934,6 +1250,158 @@ def update_job(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to update the job vacancy.",
+        ) from None
+
+
+# ============================================================
+# ADMIN: DELETE A VACANCY, ENQUIRY OR APPLICATION
+# ============================================================
+
+@app.delete(
+    "/api/admin/jobs/{job_id}",
+    tags=["Admin - Jobs"],
+)
+def delete_job(
+    job_id: int,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    """Delete a vacancy only when no applications reference it.
+
+    If applications exist, the administrator must close or unpublish the
+    vacancy instead. This prevents accidental loss of application history.
+    """
+    try:
+        job = db.get(Job, job_id)
+
+        if job is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Job vacancy not found.",
+            )
+
+        linked_application = db.scalars(
+            select(Application.id)
+            .where(Application.job_id == job_id)
+            .limit(1)
+        ).first()
+
+        if linked_application is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "This vacancy has applications and cannot be deleted. "
+                    "Close or unpublish the vacancy to preserve application history."
+                ),
+            )
+
+        db.delete(job)
+        db.commit()
+
+        logger.warning("Administrator deleted job id=%s", job_id)
+        return {
+            "success": True,
+            "message": "Job vacancy deleted successfully.",
+            "id": job_id,
+        }
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        db.rollback()
+        logger.exception("Could not delete job id=%s", job_id)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to delete the job vacancy.",
+        ) from None
+
+
+@app.delete(
+    "/api/admin/enquiries/{enquiry_id}",
+    tags=["Admin - Enquiries"],
+)
+def delete_admin_enquiry(
+    enquiry_id: int,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    """Permanently delete one enquiry after administrator confirmation."""
+    try:
+        enquiry = db.get(Enquiry, enquiry_id)
+
+        if enquiry is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Enquiry not found.",
+            )
+
+        db.delete(enquiry)
+        db.commit()
+
+        logger.warning("Administrator deleted enquiry id=%s", enquiry_id)
+        return {
+            "success": True,
+            "message": "Enquiry deleted successfully.",
+            "id": enquiry_id,
+        }
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        db.rollback()
+        logger.exception("Could not delete enquiry id=%s", enquiry_id)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to delete the enquiry.",
+        ) from None
+
+
+@app.delete(
+    "/api/admin/applications/{application_id}",
+    tags=["Admin - Applications"],
+)
+def delete_admin_application(
+    application_id: int,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> dict[str, Any]:
+    """Permanently delete an application and its CV stored in the database."""
+    try:
+        application = db.get(Application, application_id)
+
+        if application is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Application not found.",
+            )
+
+        db.delete(application)
+        db.commit()
+
+        logger.warning(
+            "Administrator permanently deleted application and stored CV: id=%s",
+            application_id,
+        )
+        return {
+            "success": True,
+            "message": "Application and stored CV deleted successfully.",
+            "id": application_id,
+        }
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        db.rollback()
+        logger.exception(
+            "Could not delete application id=%s",
+            application_id,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to delete the application.",
         ) from None
 
 

@@ -2,1982 +2,1258 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b1f33">
-    <meta name="color-scheme" content="light">
-
-    <title>AVERRA Staffing Solutions Ltd | UKâ€“India Outsourcing</title>
-    <meta name="description" content="AVERRA Staffing Solutions Ltd connects UK businesses with skilled professionals based in India through remote staffing, outsourcing and dedicated team solutions.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://averrastaffing.co.uk/">
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        :root {
-            --navy: #0b1f33;
-            --navy-dark: #071522;
-            --blue: #1d5f91;
-            --gold: #c89b3c;
-            --light: #f4f7fa;
-            --white: #ffffff;
-            --text: #243447;
-            --muted: #64748b;
-            --border: #dce4ec;
-            --radius: 14px;
-            --container: 1180px;
-            --shadow: 0 12px 35px rgba(11, 31, 51, 0.09);
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 100px;
-        }
-
-        body {
-            margin: 0;
-            background: var(--white);
-            color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.7;
-        }
-
-        img {
-            display: block;
-            max-width: 100%;
-        }
-
-        a {
-            color: var(--blue);
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font: inherit;
-        }
-
-        button,
-        a {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        a:focus-visible,
-        button:focus-visible,
-        input:focus-visible,
-        select:focus-visible,
-        textarea:focus-visible {
-            outline: 3px solid var(--gold);
-            outline-offset: 3px;
-        }
-
-        [hidden] {
-            display: none !important;
-        }
-
-        .container {
-            width: min(var(--container), calc(100% - 40px));
-            margin-inline: auto;
-        }
-
-        .section {
-            padding: 78px 0;
-        }
-
-        .section-light {
-            background: var(--light);
-        }
-
-        h1,
-        h2,
-        h3 {
-            color: var(--navy);
-            line-height: 1.25;
-        }
-
-        h1 {
-            margin: 0 0 22px;
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            letter-spacing: -1.5px;
-        }
-
-        h2 {
-            margin: 0 0 18px;
-            font-size: clamp(1.9rem, 3.5vw, 2.8rem);
-        }
-
-        h3 {
-            margin: 0 0 12px;
-            font-size: 1.2rem;
-        }
-
-        p {
-            overflow-wrap: anywhere;
-        }
-
-        .eyebrow {
-            display: inline-block;
-            margin-bottom: 12px;
-            color: var(--blue);
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .section-heading {
-            max-width: 760px;
-            margin: 0 auto 40px;
-            text-align: center;
-        }
-
-        .section-heading p {
-            color: var(--muted);
-        }
-
-        .button {
-            display: inline-flex;
-            min-height: 48px;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 20px;
-            border: 2px solid transparent;
-            border-radius: 7px;
-            background: var(--gold);
-            color: var(--navy-dark);
-            font-weight: 800;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            background: #ddb452;
-            color: var(--navy-dark);
-        }
-
-        .button-blue {
-            background: var(--blue);
-            color: var(--white);
-        }
-
-        .button-blue:hover {
-            background: var(--navy);
-            color: var(--white);
-        }
-
-        .button-outline {
-            border-color: rgba(255, 255, 255, 0.8);
-            background: transparent;
-            color: var(--white);
-        }
-
-        .button-outline:hover {
-            background: var(--white);
-            color: var(--navy);
-        }
-
-        /* FIX: Style the existing Reset button consistently. */
-        .button-secondary {
-            border-color: var(--border);
-            background: var(--white);
-            color: var(--navy);
-        }
-
-        .button-secondary:hover {
-            background: var(--light);
-            color: var(--navy);
-        }
-
-        .button:disabled {
-            cursor: not-allowed;
-            opacity: 0.65;
-            transform: none;
-        }
-
-        /* HEADER */
-
-        .site-header {
-            position: sticky;
-            z-index: 1000;
-            top: 0;
-            background: var(--white);
-            box-shadow: 0 3px 18px rgba(11, 31, 51, 0.08);
-        }
-
-        .header-inner {
-            display: flex;
-            min-height: 82px;
-            align-items: center;
-            justify-content: space-between;
-            gap: 22px;
-        }
-
-        .brand {
-            display: inline-block;
-            max-width: 360px;
-            color: var(--navy);
-            font-size: 1.05rem;
-            font-weight: 900;
-            line-height: 1.3;
-            text-decoration: none;
-        }
-
-        .brand span {
-            display: block;
-            margin-top: 4px;
-            color: var(--blue);
-            font-size: 0.7rem;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-        }
-
-        .main-navigation {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .main-navigation a {
-            color: var(--navy);
-            font-size: 0.88rem;
-            font-weight: 700;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .main-navigation a:hover,
-        .main-navigation a[aria-current="page"] {
-            color: var(--blue);
-        }
-
-        .main-navigation .nav-contact {
-            padding: 10px 14px;
-            border-radius: 6px;
-            background: var(--navy);
-            color: var(--white);
-        }
-
-        .main-navigation .nav-contact:hover {
-            background: var(--blue);
-            color: var(--white);
-        }
-
-        .menu-toggle {
-            display: none;
-            padding: 9px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--white);
-            color: var(--navy);
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* HERO */
-
-        .hero {
-            display: flex;
-            min-height: 620px;
-            align-items: center;
-            background-color: var(--navy);
-            background-image:
-                linear-gradient(
-                    90deg,
-                    rgba(7, 21, 34, 0.94),
-                    rgba(7, 21, 34, 0.68) 60%,
-                    rgba(7, 21, 34, 0.3)
-                ),
-                url("images/image15.jpg");
-            background-position: center;
-            background-size: cover;
-        }
-
-        .hero-inner {
-            padding-block: 75px;
-        }
-
-        .hero-content {
-            max-width: 760px;
-            color: var(--white);
-        }
-
-        .hero .eyebrow,
-        .hero h1 span {
-            color: #f0ca72;
-        }
-
-        .hero h1 {
-            color: var(--white);
-        }
-
-        .hero-description {
-            max-width: 660px;
-            margin-bottom: 28px;
-            color: #e7edf4;
-            font-size: clamp(1.05rem, 2vw, 1.2rem);
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 13px;
-        }
-
-        .hero-note {
-            margin-top: 24px;
-            color: #d7e1eb;
-            font-size: 0.9rem;
-        }
-
-        /* TRUST STRIP */
-
-        .trust-strip {
-            padding: 22px 0;
-            background: var(--navy);
-            color: var(--white);
-        }
-
-        .trust-items {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 20px;
-            text-align: center;
-        }
-
-        .trust-items span {
-            margin-right: 8px;
-            color: #f0ca72;
-        }
-
-        /* ABOUT */
-
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 50px;
-        }
-
-        .content-copy p {
-            color: #526174;
-        }
-
-        .content-image {
-            width: 100%;
-            min-height: 300px;
-            max-height: 470px;
-            border-radius: var(--radius);
-            object-fit: cover;
-            box-shadow: var(--shadow);
-        }
-
-        .check-list {
-            display: grid;
-            gap: 12px;
-            margin: 24px 0 28px;
-            padding: 0;
-            list-style: none;
-        }
-
-        .check-list li {
-            position: relative;
-            padding-left: 28px;
-        }
-
-        .check-list li::before {
-            position: absolute;
-            left: 0;
-            color: var(--blue);
-            content: "âœ“";
-            font-weight: 900;
-        }
-
-        /* SERVICES */
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 24px;
-        }
-
-        .service-card {
-            overflow: hidden;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--white);
-            box-shadow: 0 6px 20px rgba(11, 31, 51, 0.04);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-
-        .service-card img {
-            width: 100%;
-            height: 205px;
-            object-fit: cover;
-            background: #e5ebf1;
-        }
-
-        .service-card-content {
-            padding: 24px;
-        }
-
-        .service-card-content p {
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        .text-link {
-            display: inline-block;
-            margin-top: 12px;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        /* PROCESS */
-
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 20px;
-        }
-
-        .step-card {
-            padding: 25px 21px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--white);
-        }
-
-        .step-number {
-            display: grid;
-            width: 46px;
-            height: 46px;
-            margin-bottom: 18px;
-            place-items: center;
-            border-radius: 50%;
-            background: var(--navy);
-            color: var(--white);
-            font-weight: 900;
-        }
-
-        .step-card p {
-            margin-bottom: 0;
-            color: var(--muted);
-            font-size: 0.94rem;
-        }
-
-        /* BENEFITS */
-
-        .benefit-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 45px;
-            padding: 42px;
-            border-radius: 18px;
-            background: var(--navy);
-            color: #e7edf4;
-        }
-
-        .benefit-panel h2,
-        .benefit-panel h3 {
-            color: var(--white);
-        }
-
-        .benefit-panel p {
-            color: #d1dce7;
-        }
-
-        .benefit-list {
-            display: grid;
-            gap: 18px;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-        }
-
-        .benefit-icon {
-            display: grid;
-            width: 38px;
-            height: 38px;
-            flex: 0 0 38px;
-            place-items: center;
-            border-radius: 8px;
-            background: rgba(200, 155, 60, 0.18);
-            color: #f0ca72;
-            font-weight: 900;
-        }
-
-        .benefit-item h3 {
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-
-        .benefit-item p {
-            margin-bottom: 0;
-            font-size: 0.9rem;
-        }
-
-        /* JOB SEARCH */
-
-        .jobs-toolbar {
-            display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            align-items: end;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .jobs-toolbar label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--navy);
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .form-control {
-            width: 100%;
-            min-height: 48px;
-            padding: 11px 13px;
-            border: 1px solid #cbd5e1;
-            border-radius: 7px;
-            background: var(--white);
-            color: var(--text);
-        }
-
-        .form-control:focus {
-            border-color: var(--blue);
-            outline: 3px solid rgba(29, 95, 145, 0.13);
-        }
-
-        .jobs-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 22px;
-        }
-
-        .job-card {
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--white);
-            box-shadow: 0 5px 18px rgba(11, 31, 51, 0.04);
-        }
-
-        .job-category-label {
-            align-self: flex-start;
-            margin-bottom: 13px;
-            padding: 5px 10px;
-            border-radius: 30px;
-            background: #eaf1f8;
-            color: var(--blue);
-            font-size: 0.76rem;
-            font-weight: 800;
-        }
-
-        .job-meta {
-            color: var(--muted);
-            font-size: 0.86rem;
-        }
-
-        .job-card p {
-            color: var(--muted);
-            font-size: 0.93rem;
-        }
-
-        .job-card .button {
-            width: 100%;
-            margin-top: auto;
-        }
-
-        .jobs-status {
-            color: var(--muted);
-            font-size: 0.92rem;
-        }
-
-        .no-jobs {
-            padding: 25px;
-            border: 1px dashed var(--border);
-            border-radius: var(--radius);
-            text-align: center;
-        }
-
-        /* APPLICATION FORM */
-
-        .application-panel {
-            display: grid;
-            grid-template-columns: 0.85fr 1.15fr;
-            gap: 35px;
-            padding: 35px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--white);
-            box-shadow: var(--shadow);
-        }
-
-        .application-intro p {
-            color: var(--muted);
-        }
-
-        .application-form {
-            display: grid;
-            gap: 15px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .form-field label {
-            display: block;
-            margin-bottom: 7px;
-            color: var(--navy);
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .form-field textarea {
-            min-height: 125px;
-            resize: vertical;
-        }
-
-        .form-help {
-            color: var(--muted);
-            font-size: 0.82rem;
-        }
-
-        .form-message {
-            padding: 13px;
-            border: 1px solid #cbdce9;
-            border-radius: 7px;
-            background: #edf5fb;
-            color: var(--navy);
-            overflow-wrap: anywhere;
-        }
-
-        .form-message a {
-            font-weight: 700;
-        }
-
-        /* CTA */
-
-        .cta-section {
-            padding: 70px 0;
-            background: #edf3f8;
-            text-align: center;
-        }
-
-        .cta-content {
-            max-width: 780px;
-            margin: auto;
-        }
-
-        .cta-content p {
-            margin-bottom: 24px;
-            color: var(--muted);
-        }
-
-        .cta-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        /* FOOTER */
-
-        .site-footer {
-            padding: 55px 0 22px;
-            background: var(--navy-dark);
-            color: #d1dce7;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 28px;
-            padding-bottom: 32px;
-        }
-
-        .footer-brand {
-            display: inline-block;
-            margin-bottom: 12px;
-            color: var(--white);
-            font-size: 1.12rem;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        .footer-description {
-            max-width: 420px;
-            color: #d1dce7;
-            font-size: 0.92rem;
-        }
-
-        .footer-heading {
-            margin: 0 0 15px;
-            color: var(--white);
-            font-size: 1rem;
-        }
-
-        .footer-links {
-            display: grid;
-            gap: 8px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .footer-links a,
-        .footer-contact a {
-            color: #d1dce7;
-            text-decoration: none;
-            overflow-wrap: anywhere;
-        }
-
-        .footer-links a:hover,
-        .footer-contact a:hover {
-            color: #f0ca72;
-        }
-
-        .footer-contact p {
-            margin: 8px 0;
-        }
-
-        .footer-bottom {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 12px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            color: #bdc9d6;
-            font-size: 0.85rem;
-        }
-
-        .footer-bottom p {
-            margin: 0;
-        }
-
-        .image-fallback {
-            padding: 24px;
-            background: #e9eff5;
-            color: #526174;
-            text-align: center;
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 1100px) {
-            .header-inner {
-                gap: 14px;
-            }
-
-            .main-navigation {
-                gap: 10px;
-            }
-
-            .main-navigation a {
-                font-size: 0.8rem;
-            }
-
-            .footer-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 800px) {
-            .header-inner {
-                min-height: 74px;
-            }
-
-            .menu-toggle {
-                display: inline-flex;
-            }
-
-            .main-navigation {
-                position: absolute;
-                top: 100%;
-                right: 0;
-                left: 0;
-                display: none;
-                align-items: stretch;
-                gap: 0;
-                padding: 12px 20px 20px;
-                border-top: 1px solid var(--border);
-                background: var(--white);
-                box-shadow: 0 12px 20px rgba(11, 31, 51, 0.1);
-            }
-
-            .main-navigation.is-open {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .main-navigation a {
-                padding: 12px 8px;
-                font-size: 0.95rem;
-            }
-
-            .main-navigation .nav-contact {
-                margin-top: 7px;
-                text-align: center;
-            }
-
-            .hero {
-                min-height: 540px;
-                background-position: 60% center;
-            }
-
-            .two-column,
-            .benefit-panel,
-            .application-panel {
-                grid-template-columns: 1fr;
-            }
-
-            .card-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .trust-items {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .steps-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .jobs-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .footer-company-column {
-                grid-column: 1 / -1;
-            }
-        }
-
-        @media (max-width: 560px) {
-            .container {
-                width: calc(100% - 30px);
-            }
-
-            .section {
-                padding: 55px 0;
-            }
-
-            .hero-inner {
-                padding-block: 55px;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .brand {
-                max-width: 245px;
-                font-size: 0.9rem;
-            }
-
-            .brand span {
-                font-size: 0.62rem;
-                letter-spacing: 0.8px;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-            }
-
-            .hero-actions .button {
-                width: 100%;
-            }
-
-            .card-grid,
-            .steps-grid,
-            .jobs-grid,
-            .jobs-toolbar,
-            .form-row,
-            .footer-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .benefit-panel,
-            .application-panel {
-                padding: 23px;
-            }
-
-            .footer-company-column {
-                grid-column: auto;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-            }
-
-            .cta-actions .button {
-                width: 100%;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
-
-            *,
-            *::before,
-            *::after {
-                transition-duration: 0.01ms !important;
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AVERRA Staffing Solutions connects UK businesses with skilled professionals based in India through remote staffing and outsourcing.">
+  <meta name="theme-color" content="#0b1f33">
+  <title>AVERRA Staffing Solutions Ltd | Connecting UK Businesses with Global Talent</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --averra-navy: #0b1f33;
+      --averra-dark: #071522;
+      --averra-blue: #1d5f91;
+      --averra-gold: #c89b3c;
+      --averra-light: #f4f7fa;
+      --averra-text: #253447;
+      --averra-white: #fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--averra-text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.65;
+    }
+
+    img { max-width: 100%; height: auto; }
+    a { color: var(--averra-blue); }
+
+    .container {
+      width: min(1180px, 92%);
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: relative;
+      z-index: 10;
+      background: var(--averra-white);
+      border-bottom: 1px solid #e5eaf0;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 82px;
+    }
+
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      color: var(--averra-navy);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .brand span {
+      margin-top: 4px;
+      color: var(--averra-blue);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .main-navigation {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .main-navigation a {
+      color: var(--averra-navy);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .main-navigation a:hover,
+    .main-navigation a:focus-visible {
+      color: var(--averra-blue);
+    }
+
+    .main-navigation .nav-contact {
+      padding: 10px 16px;
+      color: var(--averra-white);
+      background: var(--averra-blue);
+      border-radius: 5px;
+    }
+
+    .menu-toggle {
+      display: none;
+      padding: 9px 12px;
+      color: var(--averra-navy);
+      background: var(--averra-white);
+      border: 1px solid #d8e0e8;
+      border-radius: 5px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 500px;
+      padding: 80px 0;
+      color: var(--averra-white);
+      background:
+        linear-gradient(90deg, rgba(7,21,34,.94), rgba(11,31,51,.72)),
+        url("images/image15.jpg") center/cover no-repeat,
+        var(--averra-navy);
+    }
+
+    .hero-content { max-width: 760px; }
+
+    .eyebrow {
+      color: var(--averra-gold);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 14px 0 20px;
+      font-size: clamp(36px, 5vw, 58px);
+      line-height: 1.12;
+    }
+
+    .hero p {
+      max-width: 680px;
+      font-size: 18px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 21px;
+      color: var(--averra-white);
+      background: var(--averra-blue);
+      border: 2px solid var(--averra-blue);
+      border-radius: 5px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: var(--averra-navy);
+      border-color: var(--averra-navy);
+    }
+
+    .button-gold {
+      color: var(--averra-dark);
+      background: var(--averra-gold);
+      border-color: var(--averra-gold);
+    }
+
+    .button-gold:hover,
+    .button-gold:focus-visible {
+      color: var(--averra-white);
+      background: var(--averra-blue);
+      border-color: var(--averra-blue);
+    }
+
+    .section { padding: 72px 0; }
+    .section-light { background: var(--averra-light); }
+
+    .section-heading {
+      max-width: 760px;
+      margin: 0 auto 35px;
+      text-align: center;
+    }
+
+    .section-heading h2 {
+      margin: 8px 0 12px;
+      color: var(--averra-navy);
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.2;
+    }
+
+    .section-heading p { margin-bottom: 0; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      overflow: hidden;
+      background: var(--averra-white);
+      border: 1px solid #e0e7ee;
+      border-radius: 8px;
+      box-shadow: 0 8px 25px rgba(11,31,51,.05);
+    }
+
+    .card img {
+      display: block;
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .card-content { padding: 24px; }
+
+    .card h3 {
+      margin: 8px 0;
+      color: var(--averra-navy);
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    .card p { margin-bottom: 18px; }
+
+    .card-tag {
+      color: var(--averra-blue);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 25px;
+    }
+
+    .step {
+      padding: 25px;
+      background: var(--averra-white);
+      border-radius: 8px;
+      border-top: 4px solid var(--averra-gold);
+    }
+
+    .step h3 {
+      margin-top: 0;
+      color: var(--averra-navy);
+    }
+
+    .jobs-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(230px, .7fr) auto;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--averra-navy);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 12px;
+      color: var(--averra-text);
+      background: var(--averra-white);
+      border: 1px solid #ccd6e0;
+      border-radius: 5px;
+      font: inherit;
+    }
+
+    .field textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .job-count {
+      margin: 0 0 22px;
+      color: #4d5c6d;
+      font-size: 14px;
+    }
+
+    .job-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .job-card .card-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .job-card .button { margin-top: auto; }
+
+    .job-meta {
+      margin: 0 0 14px;
+      color: #58697a;
+      font-size: 14px;
+    }
+
+    .empty-state {
+      padding: 30px;
+      text-align: center;
+      background: var(--averra-white);
+      border: 1px dashed #bccbd8;
+      border-radius: 8px;
+    }
+
+    .application-panel {
+      max-width: 760px;
+      margin-inline: auto;
+      padding: 30px;
+      background: var(--averra-white);
+      border: 1px solid #e0e7ee;
+      border-radius: 8px;
+    }
+
+    .application-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field-full { grid-column: 1 / -1; }
+
+    .form-note {
+      color: #596b7b;
+      font-size: 13px;
+    }
+
+    .site-footer {
+      padding: 52px 0 20px;
+      color: #e6edf4;
+      background: var(--averra-dark);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 35px;
+      padding-bottom: 32px;
+    }
+
+    .site-footer h2,
+    .site-footer h3 {
+      margin-top: 0;
+      color: var(--averra-white);
+    }
+
+    .site-footer a {
+      color: #e6edf4;
+      text-decoration: none;
+    }
+
+    .site-footer a:hover,
+    .site-footer a:focus-visible {
+      color: var(--averra-gold);
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 8px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .footer-brand {
+      color: var(--averra-white);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .footer-description { margin-top: 14px; }
+
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.16);
+      font-size: 13px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 1000px) {
+      .menu-toggle { display: inline-block; }
+
+      .main-navigation {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        display: none;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+        padding: 12px 4% 20px;
+        background: var(--averra-white);
+        border-bottom: 1px solid #e0e7ee;
+        box-shadow: 0 10px 20px rgba(11,31,51,.08);
+      }
+
+      .main-navigation.is-open { display: flex; }
+      .main-navigation a { padding: 12px 0; }
+
+      .main-navigation .nav-contact {
+        margin-top: 8px;
+        padding: 10px 14px;
+        text-align: center;
+      }
+
+      .cards, .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 650px) {
+      .hero { min-height: 420px; padding: 58px 0; }
+      .section { padding: 52px 0; }
+
+      .cards, .steps, .footer-grid,
+      .application-form, .jobs-toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .application-panel { padding: 20px; }
+      .field-full { grid-column: auto; }
+      .footer-bottom { flex-direction: column; }
+    }
+  </style>
+
+  <script src="images/images.js" defer></script>
+  <script src="images/jobs.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 
 <body>
-<header class="site-header">
+  <header class="site-header" id="site-header">
     <div class="container header-inner">
-        <a class="brand" href="index.html"
-           aria-label="AVERRA Staffing Solutions Ltd home">
-            AVERRA STAFFING SOLUTIONS LTD
-            <span>Connecting UK Businesses with Global Talent</span>
-        </a>
+      <a class="brand" href="index.html" aria-label="AVERRA Staffing Solutions Ltd home">
+        AVERRA STAFFING SOLUTIONS LTD
+        <span>Connecting UK Businesses with Global Talent</span>
+      </a>
 
-        <button class="menu-toggle" id="menu-toggle" type="button"
-                aria-controls="main-navigation"
-                aria-expanded="false">
-            Menu â˜°
-        </button>
+      <button class="menu-toggle" id="menu-toggle" type="button"
+              aria-controls="main-navigation" aria-expanded="false"
+              aria-label="Open navigation menu">
+        <span aria-hidden="true">☰</span>
+        <span>Menu</span>
+      </button>
 
-        <nav class="main-navigation" id="main-navigation"
-             aria-label="Main navigation">
-            <a href="index.html" aria-current="page">Home</a>
-            <a href="about.html">About</a>
-            <a href="services.html">Services</a>
-            <a href="how-it-works.html">How It Works</a>
-            <a href="careers.html">Careers</a>
-            <a href="jobs.html">Jobs</a>
-            <a class="nav-contact" href="lets-talk.html">Let's Talk</a>
-        </nav>
+      <nav class="main-navigation" id="main-navigation" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="careers.html">Careers</a>
+        <a href="jobs.html">Jobs</a>
+        <a class="nav-contact" href="lets-talk.html">Let's Talk</a>
+      </nav>
     </div>
-</header>
+  </header>
 
-<main>
-    <!-- HERO -->
-    <section class="hero" id="home">
-        <div class="container hero-inner">
-            <div class="hero-content">
-                <span class="eyebrow">Connecting the UK and India</span>
-
-                <h1>Global talent.<br>
-                    <span>Smarter business.</span>
-                </h1>
-
-                <p class="hero-description">
-                    AVERRA Staffing Solutions Ltd connects UK businesses
-                    with skilled professionals based in India. Access remote
-                    talent, support your operations and build a workforce
-                    suited to your business requirements.
-                </p>
-
-                <div class="hero-actions">
-                    <a class="button" href="lets-talk.html">
-                        Discuss Your Requirements â†’
-                    </a>
-
-                    <a class="button button-outline" href="#services">
-                        Explore Our Services
-                    </a>
-                </div>
-
-                <p class="hero-note">
-                    UK business relationships Â· India-based professionals
-                    Â· Remote delivery
-                </p>
-            </div>
-        </div>
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <span class="eyebrow">UK–India Outsourcing</span>
+        <h1>Connecting UK Businesses with Global Talent</h1>
+        <p>
+          AVERRA Staffing Solutions helps UK businesses access skilled
+          professionals based in India through remote staffing and outsourcing
+          solutions tailored to business needs.
+        </p>
+        <a class="button button-gold" href="lets-talk.html">Let’s Talk</a>
+        <a class="button" href="services.html">Explore Our Services</a>
+      </div>
     </section>
 
-    <!-- TRUST -->
-    <section class="trust-strip" aria-label="AVERRA service principles">
-        <div class="container trust-items">
-            <div><span aria-hidden="true">âœ“</span> Skilled international professionals</div>
-            <div><span aria-hidden="true">âœ“</span> Flexible remote staffing</div>
-            <div><span aria-hidden="true">âœ“</span> UKâ€“India business connections</div>
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Who We Are</span>
+          <h2>A Bridge Between the UK and India</h2>
+          <p>
+            We connect UK businesses with skilled professionals in India,
+            helping organisations access international talent and build
+            flexible remote teams.
+          </p>
         </div>
+
+        <div class="cards">
+          <article class="card">
+            <img src="images/image2.jpg" alt="Professionals collaborating in an office" loading="lazy">
+            <div class="card-content">
+              <h3>Access Global Talent</h3>
+              <p>Find professionals whose skills align with your business requirements and agreed responsibilities.</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/image3.jpg" alt="Professional working on a computer" loading="lazy">
+            <div class="card-content">
+              <h3>Flexible Remote Support</h3>
+              <p>Explore remote staffing options for finance, technology, administration and other professional functions.</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/image4.jpg" alt="Business team discussing a project" loading="lazy">
+            <div class="card-content">
+              <h3>Business-Focused Solutions</h3>
+              <p>Discuss your goals, expected workload and support needs so the service can be matched to your organisation.</p>
+            </div>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <!-- ABOUT -->
-    <section class="section" id="about">
-        <div class="container two-column">
-            <div class="content-copy">
-                <span class="eyebrow">About AVERRA</span>
-                <h2>Connecting UK businesses with talent in India</h2>
-
-                <p>
-                    AVERRA Staffing Solutions Ltd is an outsourcing business
-                    that connects UK companies with skilled professionals
-                    based in India. We help businesses access international
-                    talent while creating employment opportunities for
-                    professionals in India.
-                </p>
-
-                <p>
-                    We aim to understand each client's requirements and
-                    identify appropriate professionals for remote business
-                    support. Responsibilities and working arrangements are
-                    agreed before an engagement begins.
-                </p>
-
-                <ul class="check-list">
-                    <li>Finance and administration support</li>
-                    <li>Technology and development professionals</li>
-                    <li>Remote staffing tailored to agreed requirements</li>
-                    <li>Communication across UKâ€“India teams</li>
-                </ul>
-
-                <a class="button button-blue" href="about.html">
-                    Learn More About Us
-                </a>
-            </div>
-
-            <div>
-                <img class="content-image"
-                     src="images/image2.jpg"
-                     alt="Professionals collaborating on business activities"
-                     loading="lazy">
-
-                <div class="image-fallback" hidden>
-                    AVERRA connects UK businesses with professionals in India.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section class="section section-light" id="services">
-        <div class="container">
-            <div class="section-heading">
-                <span class="eyebrow">What We Do</span>
-                <h2>Remote staffing and outsourcing services</h2>
-                <p>
-                    Explore support options for your operational and
-                    specialist business requirements.
-                </p>
-            </div>
-
-            <div class="card-grid">
-                <article class="service-card">
-                    <img src="images/image3.jpg"
-                         alt="Finance and business support"
-                         loading="lazy">
-                    <div class="image-fallback" hidden>
-                        Finance and business support
-                    </div>
-
-                    <div class="service-card-content">
-                        <h3>Finance &amp; Administration</h3>
-                        <p>
-                            Finance operations support, reconciliations,
-                            reporting preparation, data management and
-                            administrative tasks, subject to agreed
-                            responsibilities.
-                        </p>
-                        <a class="text-link" href="services.html">
-                            Explore Services â†’
-                        </a>
-                    </div>
-                </article>
-
-                <article class="service-card">
-                    <img src="images/image4.jpg"
-                         alt="Technology and development professionals"
-                         loading="lazy">
-                    <div class="image-fallback" hidden>
-                        Technology and development
-                    </div>
-
-                    <div class="service-card-content">
-                        <h3>Technology &amp; Development</h3>
-                        <p>
-                            Remote technical professionals for websites,
-                            software projects, maintenance and other agreed
-                            digital requirements.
-                        </p>
-                        <a class="text-link" href="services.html">
-                            Explore Services â†’
-                        </a>
-                    </div>
-                </article>
-
-                <article class="service-card">
-                    <img src="images/image5.jpg"
-                         alt="Professional business services"
-                         loading="lazy">
-                    <div class="image-fallback" hidden>
-                        Professional business services
-                    </div>
-
-                    <div class="service-card-content">
-                        <h3>Professional Support</h3>
-                        <p>
-                            Remote support for project coordination,
-                            research, document preparation and agreed
-                            business functions.
-                        </p>
-                        <a class="text-link" href="services.html">
-                            Explore Services â†’
-                        </a>
-                    </div>
-                </article>
-
-                <article class="service-card">
-                    <img src="images/image6.jpg"
-                         alt="Customer service and operations"
-                         loading="lazy">
-                    <div class="image-fallback" hidden>
-                        Customer service and operations
-                    </div>
-
-                    <div class="service-card-content">
-                        <h3>Customer Service &amp; Operations</h3>
-                        <p>
-                            Support customer enquiries, operational
-                            workflows and routine business processes.
-                        </p>
-                        <a class="text-link" href="services.html">
-                            Explore Services â†’
-                        </a>
-                    </div>
-                </article>
-
-                <article class="service-card">
-                    <img src="images/image7.jpg"
-                         alt="Business administration and documents"
-                         loading="lazy">
-                    <div class="image-fallback" hidden>
-                        Business administration
-                    </div>
-
-                    <div class="service-card-content">
-                        <h3>Business Administration</h3>
-                        <p>
-                            Document organisation, data entry, scheduling
-                            and other agreed administrative tasks.
-                        </p>
-                        <a class="text-link" href="services.html">
-                            Explore Services â†’
-                        </a>
-                    </div>
-                </article>
-
-                <article class="service-card">
-                    <img src="images/image25.jpg"
-                         alt="Remote teams working across locations"
-                         loading="lazy">
-                    <div class="image-fallback" hidden>
-                        Dedicated remote teams
-                    </div>
-
-                    <div class="service-card-content">
-                        <h3>Dedicated Remote Teams</h3>
-                        <p>
-                            Remote staffing arrangements shaped around
-                            your workload, required skills and agreed
-                            service expectations.
-                        </p>
-                        <a class="text-link" href="how-it-works.html">
-                            How It Works â†’
-                        </a>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="section" id="how-it-works">
-        <div class="container">
-            <div class="section-heading">
-                <span class="eyebrow">A Clear Process</span>
-                <h2>How our UKâ€“India model works</h2>
-                <p>
-                    A clear process to understand your requirements and
-                    identify suitable staffing solutions.
-                </p>
-            </div>
-
-            <div class="steps-grid">
-                <article class="step-card">
-                    <div class="step-number" aria-hidden="true">1</div>
-                    <h3>Understand</h3>
-                    <p>
-                        Discuss your business, workload, required skills
-                        and budget.
-                    </p>
-                </article>
-
-                <article class="step-card">
-                    <div class="step-number" aria-hidden="true">2</div>
-                    <h3>Match</h3>
-                    <p>
-                        Identify suitable India-based professionals for
-                        the agreed role.
-                    </p>
-                </article>
-
-                <article class="step-card">
-                    <div class="step-number" aria-hidden="true">3</div>
-                    <h3>Agree</h3>
-                    <p>
-                        Confirm responsibilities, pricing, confidentiality
-                        and working arrangements.
-                    </p>
-                </article>
-
-                <article class="step-card">
-                    <div class="step-number" aria-hidden="true">4</div>
-                    <h3>Collaborate</h3>
-                    <p>
-                        Begin the agreed arrangement and review
-                        communication and performance.
-                    </p>
-                </article>
-            </div>
-
-            <p style="text-align: center; margin-top: 30px;">
-                <a class="button button-blue" href="how-it-works.html">
-                    View the Full Process
-                </a>
-            </p>
-        </div>
-    </section>
-
-    <!-- BENEFITS -->
     <section class="section section-light">
-        <div class="container">
-            <div class="benefit-panel">
-                <div>
-                    <span class="eyebrow">Why AVERRA</span>
-                    <h2>A practical approach to global talent</h2>
-                    <p>
-                        We focus on understanding your needs and developing
-                        suitable remote staffing arrangements.
-                    </p>
-                    <a class="button" href="lets-talk.html">
-                        Talk to Our Team â†’
-                    </a>
-                </div>
-
-                <div class="benefit-list">
-                    <div class="benefit-item">
-                        <div class="benefit-icon" aria-hidden="true">01</div>
-                        <div>
-                            <h3>International talent</h3>
-                            <p>
-                                Explore professionals based in India for
-                                appropriate remote roles.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon" aria-hidden="true">02</div>
-                        <div>
-                            <h3>Flexible arrangements</h3>
-                            <p>
-                                Discuss workloads, responsibilities and
-                                service expectations.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon" aria-hidden="true">03</div>
-                        <div>
-                            <h3>Cross-border collaboration</h3>
-                            <p>
-                                Connect UK businesses and India-based
-                                professionals.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon" aria-hidden="true">04</div>
-                        <div>
-                            <h3>Clear communication</h3>
-                            <p>
-                                Agree reporting lines and communication
-                                methods from the start.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Our Services</span>
+          <h2>Professional Support for Growing Businesses</h2>
+          <p>Explore areas where remote professionals may support your day-to-day operations.</p>
         </div>
+
+        <div class="cards">
+          <article class="card">
+            <img src="images/image5.jpg" alt="Finance professional working with reports" loading="lazy">
+            <div class="card-content">
+              <h3>Finance &amp; Administration</h3>
+              <p>Finance administration, reconciliations, document handling and reporting support, depending on the agreed scope.</p>
+              <a class="button" href="services.html">Explore Services</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/image6.jpg" alt="Developer working on a computer" loading="lazy">
+            <div class="card-content">
+              <h3>Technology &amp; Development</h3>
+              <p>Website development, maintenance and digital project support aligned with your technical requirements.</p>
+              <a class="button" href="services.html">Explore Services</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img src="images/image7.jpg" alt="Professionals planning business operations" loading="lazy">
+            <div class="card-content">
+              <h3>Business Operations</h3>
+              <p>Administrative and operational support to help teams manage tasks, documents and workflows.</p>
+              <a class="button" href="services.html">Explore Services</a>
+            </div>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <!-- JOB OPPORTUNITIES -->
-    <section class="section" id="jobs">
-        <div class="container">
-            <div class="section-heading">
-                <span class="eyebrow">Careers at AVERRA</span>
-                <h2>Explore job opportunities</h2>
-                <p>
-                    Register your interest in professional roles that may
-                    support UK businesses remotely from India.
-                </p>
-            </div>
-
-            <!-- FIX 1: Restore the missing jobs-toolbar wrapper. -->
-            <div class="jobs-toolbar">
-                <div>
-                    <label class="visually-hidden" for="job-search">
-                        Search illustrative job roles
-                    </label>
-                    <input
-                        class="form-control"
-                        id="job-search"
-                        name="job-search"
-                        type="search"
-                        placeholder="Search job rolesâ€¦"
-                        autocomplete="off">
-                </div>
-
-                <div>
-                    <label for="job-category">Category</label>
-                    <select
-                        class="form-control"
-                        id="job-category"
-                        name="job-category">
-                        <option value="all">All categories</option>
-                        <option value="finance">Finance &amp; Accounting</option>
-                        <option value="technology">IT &amp; Software Development</option>
-                        <option value="architecture">Architecture &amp; Design</option>
-                        <option value="engineering">Engineering &amp; Technical</option>
-                        <option value="administration">Administration &amp; Data Entry</option>
-                        <option value="customer-service">Customer Service &amp; Support</option>
-                        <option value="sales">Sales &amp; Business Development</option>
-                        <option value="marketing">Digital Marketing</option>
-                        <option value="human-resources">Human Resources &amp; Recruitment</option>
-                        <option value="operations">Business Operations</option>
-                        <option value="project-management">Project Management</option>
-                        <option value="legal">Legal &amp; Compliance Support</option>
-                        <option value="procurement">Procurement &amp; Supply Chain</option>
-                        <option value="research">Research &amp; Data Analysis</option>
-                        <option value="healthcare">Healthcare Administration</option>
-                        <option value="other">Other Professional Roles</option>
-                    </select>
-                </div>
-
-                <button
-                    type="button"
-                    id="reset-jobs"
-                    class="button button-secondary">
-                    Reset
-                </button>
-            </div>
-
-            <p class="jobs-status" id="jobs-count" aria-live="polite">
-                Showing 3 illustrative role categories.
-            </p>
-
-            <div class="jobs-grid" id="jobs-grid">
-                <article class="job-card" data-category="finance">
-                    <span class="job-category-label">Finance</span>
-                    <h3>Finance Support Professional</h3>
-                    <p class="job-meta">India-based Â· Remote</p>
-                    <p>
-                        Potential responsibilities include finance
-                        administration, reconciliations and reporting
-                        support, depending on the agreed role.
-                    </p>
-                    <a class="button button-blue apply-job"
-                       href="#application"
-                       data-role="Finance Support Professional">
-                        Register Interest
-                    </a>
-                </article>
-
-                <article class="job-card" data-category="technology">
-                    <span class="job-category-label">Technology</span>
-                    <h3>Web Development Professional</h3>
-                    <p class="job-meta">India-based Â· Remote</p>
-                    <p>
-                        Potential responsibilities include website
-                        development, maintenance and digital project support.
-                    </p>
-                    <a class="button button-blue apply-job"
-                       href="#application"
-                       data-role="Web Development Professional">
-                        Register Interest
-                    </a>
-                </article>
-
-                <article class="job-card" data-category="administration">
-                    <span class="job-category-label">Administration</span>
-                    <h3>Administrative Support Professional</h3>
-                    <p class="job-meta">India-based Â· Remote</p>
-                    <p>
-                        Potential responsibilities include document
-                        organisation, data entry and general business
-                        administration.
-                    </p>
-                    <a class="button button-blue apply-job"
-                       href="#application"
-                       data-role="Administrative Support Professional">
-                        Register Interest
-                    </a>
-                </article>
-            </div>
-
-            <div class="no-jobs" id="no-jobs" hidden>
-                <p>
-                    No matching role categories were found. Try another
-                    search or contact AVERRA.
-                </p>
-                <a href="mailto:info@averrastaffing.co.uk">
-                    Contact AVERRA
-                </a>
-            </div>
-
-            <p class="form-help" style="margin-top: 22px;">
-                These are illustrative role categories, not confirmed
-                live vacancies. Availability, eligibility, compensation
-                and terms must be confirmed by AVERRA.
-            </p>
-
-            <p style="text-align: center; margin-top: 28px;">
-                <a class="button" href="jobs.html">
-                    Visit the Jobs Page â†’
-                </a>
-                <a class="button button-blue" href="careers.html">
-                    Careers at AVERRA
-                </a>
-            </p>
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">How It Works</span>
+          <h2>A Straightforward Approach</h2>
+          <p>We start by understanding your requirements and discussing suitable options for remote support.</p>
         </div>
+
+        <div class="steps">
+          <article class="step">
+            <h3>1. Understand Your Needs</h3>
+            <p>Discuss your business, the tasks involved, required skills and preferred working arrangements.</p>
+          </article>
+          <article class="step">
+            <h3>2. Identify Suitable Support</h3>
+            <p>Consider relevant skills, experience, availability and the responsibilities agreed for the role.</p>
+          </article>
+          <article class="step">
+            <h3>3. Agree the Arrangement</h3>
+            <p>Confirm the scope, communication, responsibilities and commercial terms before work begins.</p>
+          </article>
+        </div>
+
+        <p style="text-align:center;margin-top:30px">
+          <a class="button" href="how-it-works.html">Learn How It Works</a>
+        </p>
+      </div>
     </section>
 
-    <!-- JOB APPLICATION -->
-    <section class="section section-light" id="application">
-        <div class="container">
-            <div class="application-panel">
-                <div class="application-intro">
-                    <span class="eyebrow">Register Your Interest</span>
-                    <h2>Tell us about yourself</h2>
-
-                    <p>
-                        Provide your contact details and the role you are
-                        interested in. Your email application will be
-                        prepared for you to review and send.
-                    </p>
-
-                    <p>
-                        <strong>Email:</strong><br>
-                        <a href="mailto:info@averrastaffing.co.uk">
-                            info@averrastaffing.co.uk
-                        </a>
-                    </p>
-
-                    <p class="form-help">
-                        This form does not transmit or store applications
-                        on a server.
-                    </p>
-                </div>
-
-                <form class="application-form" id="job-application-form">
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="applicant-name">Full name *</label>
-                            <input
-                                class="form-control"
-                                id="applicant-name"
-                                name="name"
-                                type="text"
-                                autocomplete="name"
-                                maxlength="120"
-                                required>
-                        </div>
-
-                        <div class="form-field">
-                            <label for="applicant-email">Email address *</label>
-                            <input
-                                class="form-control"
-                                id="applicant-email"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                maxlength="254"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="applicant-phone">Phone number</label>
-                            <input
-                                class="form-control"
-                                id="applicant-phone"
-                                name="phone"
-                                type="tel"
-                                autocomplete="tel"
-                                maxlength="40">
-                        </div>
-
-                        <div class="form-field">
-                            <label for="application-role">Role of interest *</label>
-                            <select
-                                class="form-control"
-                                id="application-role"
-                                name="role"
-                                required>
-                                <option value="">Select a role</option>
-                                <option value="finance">Finance &amp; Accounting</option>
-                                <option value="technology">IT &amp; Software Development</option>
-                                <option value="architecture">Architecture &amp; Design</option>
-                                <option value="engineering">Engineering &amp; Technical</option>
-                                <option value="administration">Administration &amp; Data Entry</option>
-                                <option value="customer-service">Customer Service &amp; Support</option>
-                                <option value="sales">Sales &amp; Business Development</option>
-                                <option value="marketing">Digital Marketing</option>
-                                <option value="human-resources">Human Resources &amp; Recruitment</option>
-                                <option value="operations">Business Operations</option>
-                                <option value="project-management">Project Management</option>
-                                <option value="legal">Legal &amp; Compliance Support</option>
-                                <option value="procurement">Procurement &amp; Supply Chain</option>
-                                <option value="research">Research &amp; Data Analysis</option>
-                                <option value="healthcare">Healthcare Administration</option>
-                                <option value="other">Other Professional Roles</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="applicant-message">
-                            Skills and experience *
-                        </label>
-                        <textarea
-                            class="form-control"
-                            id="applicant-message"
-                            name="message"
-                            maxlength="5000"
-                            required
-                            placeholder="Briefly describe your skills, experience and availability."></textarea>
-                    </div>
-
-                    <p class="form-help">
-                        Do not include passwords, bank details or other
-                        sensitive personal information.
-                    </p>
-
-                    <button class="button button-blue" type="submit">
-                        Prepare Email Application
-                    </button>
-
-                    <div class="form-message"
-                         id="application-message"
-                         role="status"
-                         aria-live="polite"
-                         hidden></div>
-                </form>
-            </div>
+    <!-- LIVE JOBS: LOADED FROM THE AVERRA BACKEND -->
+    <section class="section section-light" id="job-opportunities">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Careers at AVERRA</span>
+          <h2>Explore Job Opportunities</h2>
+          <p>Explore published vacancies for professional roles supporting UK businesses remotely from India.</p>
         </div>
+
+        <div class="jobs-toolbar">
+          <div class="field">
+            <label for="job-search">Search job opportunities</label>
+            <input id="job-search" type="search" placeholder="Search job titles or skills" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label for="job-category">Category</label>
+            <select id="job-category">
+              <option value="all">All categories</option>
+              <option value="finance">Finance &amp; Accounting</option>
+              <option value="technology">IT &amp; Software Development</option>
+              <option value="architecture">Architecture &amp; Design</option>
+              <option value="engineering">Engineering &amp; Technical</option>
+              <option value="administration">Administration &amp; Data Entry</option>
+              <option value="customer-service">Customer Service &amp; Support</option>
+              <option value="sales">Sales &amp; Business Development</option>
+              <option value="marketing">Digital Marketing</option>
+              <option value="hr">Human Resources &amp; Recruitment</option>
+              <option value="operations">Business Operations</option>
+              <option value="project-management">Project Management</option>
+              <option value="legal">Legal &amp; Compliance Support</option>
+              <option value="procurement">Procurement &amp; Supply Chain</option>
+              <option value="research">Research &amp; Data Analysis</option>
+              <option value="healthcare">Healthcare Administration</option>
+              <option value="other">Other Professional Roles</option>
+            </select>
+          </div>
+
+          <button class="button" id="reset-jobs" type="button">Reset</button>
+        </div>
+
+        <p class="job-count" id="jobs-count" aria-live="polite">Loading published vacancies…</p>
+
+        <div class="cards" id="job-list" aria-live="polite"></div>
+
+        <div class="empty-state" id="no-jobs" hidden>
+          <h3 id="jobs-empty-title">No published vacancies are currently available</h3>
+          <p id="jobs-empty-message">
+            Please check again later, or register your general interest below.
+          </p>
+          <a class="button" href="#application" data-role="other">Register General Interest</a>
+        </div>
+
+        <p style="text-align:center;margin-top:30px">
+          Looking for more information?
+          <a href="jobs.html">Visit the Jobs page</a> or
+          <a href="careers.html">explore Careers</a>.
+        </p>
+      </div>
     </section>
 
-    <!-- CONTACT CTA -->
-    <section class="cta-section" id="contact">
-        <div class="container cta-content">
-            <span class="eyebrow">Let's Connect</span>
-            <h2>
-                Looking for the right people to support your business?
-            </h2>
-
-            <p>
-                Tell us about your requirements and explore whether
-                AVERRA's UKâ€“India outsourcing model is suitable for
-                your business.
-            </p>
-
-            <div class="cta-actions">
-                <a class="button" href="lets-talk.html">
-                    Discuss Your Requirements â†’
-                </a>
-                <a class="button button-blue"
-                   href="mailto:info@averrastaffing.co.uk">
-                    Email AVERRA
-                </a>
-            </div>
+    <section class="section" id="application">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Register Your Interest</span>
+          <h2>Tell Us About Yourself</h2>
+          <p>Share your contact details and the type of professional role you are interested in.</p>
         </div>
-    </section>
-</main>
 
-<!-- FOOTER -->
-<footer class="site-footer">
+        <div class="application-panel">
+          <form class="application-form" id="job-application-form">
+            <div class="field">
+              <label for="applicant-name">Full name *</label>
+              <input id="applicant-name" name="name" type="text" autocomplete="name" required maxlength="150">
+            </div>
+
+            <div class="field">
+              <label for="applicant-email">Email address *</label>
+              <input id="applicant-email" name="email" type="email" autocomplete="email" required maxlength="254">
+            </div>
+
+            <div class="field">
+              <label for="applicant-phone">Phone number</label>
+              <input id="applicant-phone" name="phone" type="tel" autocomplete="tel" maxlength="50">
+            </div>
+
+            <div class="field">
+              <label for="applicant-role">Role of interest *</label>
+              <select id="applicant-role" name="role" required>
+                <option value="">Select a role</option>
+                <option value="other">Other professional role / general interest</option>
+              </select>
+            </div>
+
+            <div class="field field-full">
+              <label for="applicant-message">Tell us about your skills and experience</label>
+              <textarea id="applicant-message" name="message" maxlength="5000"
+                placeholder="Briefly describe your skills, experience and the role you are interested in."></textarea>
+            </div>
+
+            <div class="field field-full">
+              <button class="button" type="submit">Prepare Email</button>
+              <p class="form-note">
+                This form prepares an email to info@averrastaffing.co.uk. It does not send or store your application on this website.
+                Your application is submitted only if you send the message from your email application.
+              </p>
+              <p id="application-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-light">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">For UK Businesses</span>
+          <h2>Discuss Your Staffing Requirements</h2>
+          <p>Tell us which tasks your business needs support with, and we can discuss potential outsourcing arrangements.</p>
+          <p style="margin-top:25px">
+            <a class="button button-gold" href="lets-talk.html">Talk to Us</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- STANDARD AVERRA FOOTER -->
+  <footer class="site-footer">
     <div class="container">
-        <div class="footer-grid">
-            <div class="footer-company-column">
-                <a class="footer-brand" href="index.html">
-                    AVERRA Staffing Solutions Ltd
-                </a>
+      <div class="footer-grid">
+        <div class="footer-company-column">
+          <a class="footer-brand" href="index.html">AVERRA Staffing Solutions Ltd</a>
 
-                <p class="footer-description">
-                    Connecting UK businesses with skilled professionals
-                    based in India through remote staffing and
-                    outsourcing solutions.
-                </p>
+          <p class="footer-description">
+            Connecting UK businesses with skilled professionals based in India through remote staffing and outsourcing solutions.
+          </p>
 
-                <div class="footer-contact">
-                    <p>
-                        <strong>Email:</strong>
-                        <a href="mailto:info@averrastaffing.co.uk">
-                            info@averrastaffing.co.uk
-                        </a>
-                    </p>
-
-                    <p>
-                        <strong>Website:</strong>
-                        <a href="https://averrastaffing.co.uk/">
-                            averrastaffing.co.uk
-                        </a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Explore AVERRA</h3>
-                <ul class="footer-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="services.html">Our Services</a></li>
-                    <li><a href="how-it-works.html">How It Works</a></li>
-                    <li><a href="careers.html">Careers</a></li>
-                    <li><a href="jobs.html">Job Opportunities</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Information</h3>
-                <ul class="footer-links">
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="FAQ.html">Frequently Asked Questions</a></li>
-                    <li><a href="lets-talk.html">Contact Us</a></li>
-                    <li><a href="industries.html">Industries</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Legal</h3>
-                <ul class="footer-links">
-                    <li><a href="privacy.html">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
+          <div class="footer-contact">
             <p>
-                &copy; <span id="current-year">2026</span>
-                AVERRA Staffing Solutions Ltd. All rights reserved.
+              <strong>Email:</strong>
+              <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
             </p>
             <p>
-                UKâ€“India Outsourcing Â· Connecting Businesses with Global Talent
+              <strong>Website:</strong>
+              <a href="https://averrastaffing.co.uk/">https://averrastaffing.co.uk</a>
             </p>
+            <p>
+              <strong>Phone:</strong>
+              <a href="tel:+447857290628">+44 7857 290628</a>
+            </p>
+          </div>
         </div>
+
+        <div class="footer-section">
+          <h3 class="footer-heading">Explore AVERRA</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Our Services</a></li>
+            <li><a href="how-it-works.html">How It Works</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="jobs.html">Job Opportunities</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h3 class="footer-heading">Information</h3>
+          <ul class="footer-links">
+            <li><a href="pricing.html">Pricing</a></li>
+            <li><a href="faq.html">Frequently Asked Questions</a></li>
+            <li><a href="lets-talk.html">Contact Us</a></li>
+            <li><a href="industries.html">Industries</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h3 class="footer-heading">Legal</h3>
+          <ul class="footer-links">
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>
+          &copy; <span id="current-year">2026</span>
+          AVERRA Staffing Solutions Ltd. All rights reserved.
+        </p>
+        <p>UK–India Outsourcing · Connecting Businesses with Global Talent</p>
+      </div>
     </div>
-</footer>
+  </footer>
 
-<!-- Keep these scripts until their contents have been checked. -->
-<script src="images/images.js" defer></script>
-<script src="images/jobs.js" defer></script>
-<script src="script.js" defer></script>
-
-<script>
-(function () {
+  <script>
     "use strict";
 
     document.addEventListener("DOMContentLoaded", function () {
-        /* Update the copyright year automatically. */
-        const year = document.getElementById("current-year");
+      const API_BASE = "https://averra-backend-dn23.onrender.com";
+      const JOBS_API = API_BASE + "/api/jobs";
 
-        if (year) {
-            year.textContent = String(new Date().getFullYear());
-        }
+      const yearElement = document.getElementById("current-year");
+      if (yearElement) yearElement.textContent = String(new Date().getFullYear());
 
-        /* Mobile navigation. */
-        const menuButton = document.getElementById("menu-toggle");
-        const navigation = document.getElementById("main-navigation");
+      // Mobile menu.
+      const menuButton = document.getElementById("menu-toggle");
+      const navigation = document.getElementById("main-navigation");
 
-        function closeNavigation() {
-            if (!menuButton || !navigation) return;
+      if (menuButton && navigation) {
+        menuButton.addEventListener("click", function () {
+          const isOpen = navigation.classList.toggle("is-open");
+          menuButton.setAttribute("aria-expanded", String(isOpen));
+          menuButton.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+        });
 
+        navigation.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () {
             navigation.classList.remove("is-open");
             menuButton.setAttribute("aria-expanded", "false");
-            menuButton.textContent = "Menu â˜°";
+            menuButton.setAttribute("aria-label", "Open navigation menu");
+          });
+        });
+      }
+
+      // Live vacancies.
+      const jobList = document.getElementById("job-list");
+      const searchInput = document.getElementById("job-search");
+      const categorySelect = document.getElementById("job-category");
+      const resetButton = document.getElementById("reset-jobs");
+      const countElement = document.getElementById("jobs-count");
+      const emptyState = document.getElementById("no-jobs");
+      const emptyTitle = document.getElementById("jobs-empty-title");
+      const emptyMessage = document.getElementById("jobs-empty-message");
+      const roleSelect = document.getElementById("applicant-role");
+
+      let allJobs = [];
+      let jobsLoadFailed = false;
+
+      const categoryLabels = {
+        finance: "Finance & Accounting",
+        accounting: "Finance & Accounting",
+        "finance & accounting": "Finance & Accounting",
+        technology: "IT & Software Development",
+        tech: "IT & Software Development",
+        it: "IT & Software Development",
+        software: "IT & Software Development",
+        "it & software development": "IT & Software Development",
+        architecture: "Architecture & Design",
+        design: "Architecture & Design",
+        engineering: "Engineering & Technical",
+        technical: "Engineering & Technical",
+        administration: "Administration & Data Entry",
+        admin: "Administration & Data Entry",
+        "data entry": "Administration & Data Entry",
+        "customer service": "Customer Service & Support",
+        "customer-service": "Customer Service & Support",
+        sales: "Sales & Business Development",
+        marketing: "Digital Marketing",
+        "digital marketing": "Digital Marketing",
+        hr: "Human Resources & Recruitment",
+        recruitment: "Human Resources & Recruitment",
+        operations: "Business Operations",
+        "business operations": "Business Operations",
+        "project management": "Project Management",
+        legal: "Legal & Compliance Support",
+        compliance: "Legal & Compliance Support",
+        procurement: "Procurement & Supply Chain",
+        "supply chain": "Procurement & Supply Chain",
+        research: "Research & Data Analysis",
+        "data analysis": "Research & Data Analysis",
+        healthcare: "Healthcare Administration",
+        "healthcare administration": "Healthcare Administration",
+        other: "Other Professional Roles"
+      };
+
+      function getFirst(job, keys, fallback) {
+        for (const key of keys) {
+          const value = job[key];
+          if (value !== undefined && value !== null && String(value).trim() !== "") {
+            return value;
+          }
+        }
+        return fallback;
+      }
+
+      function normaliseCategory(value) {
+        const raw = String(value || "").trim();
+        const key = raw.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ");
+        return categoryLabels[key] || raw || "Other Professional Roles";
+      }
+
+      function categoryValue(label) {
+        const entry = Object.entries(categoryLabels).find(function (item) {
+          return item[1].toLowerCase() === label.toLowerCase();
+        });
+        return entry ? entry[1].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") : "other";
+      }
+
+      function isPublished(job) {
+        // The public /api/jobs endpoint should already return published jobs.
+        // If the response also provides publication fields, honour them.
+        if (job.is_published === false || job.published === false) return false;
+        if (job.is_published === 0 || job.published === 0) return false;
+
+        const status = String(job.status || "").trim().toLowerCase();
+        if (["draft", "unpublished", "closed", "archived", "inactive"].includes(status)) return false;
+
+        const closingDate = getFirst(job, ["closing_date", "application_deadline", "expires_at"], "");
+        if (closingDate) {
+          const closing = new Date(closingDate);
+          if (!Number.isNaN(closing.getTime())) {
+            closing.setHours(23, 59, 59, 999);
+            if (closing < new Date()) return false;
+          }
         }
 
-        if (menuButton && navigation) {
-            menuButton.addEventListener("click", function () {
-                const isOpen = navigation.classList.toggle("is-open");
+        return true;
+      }
 
-                menuButton.setAttribute("aria-expanded", String(isOpen));
-                menuButton.textContent = isOpen ? "Close âœ•" : "Menu â˜°";
-            });
+      function extractJobs(payload) {
+        if (Array.isArray(payload)) return payload;
+        if (payload && Array.isArray(payload.jobs)) return payload.jobs;
+        if (payload && Array.isArray(payload.results)) return payload.results;
+        if (payload && Array.isArray(payload.data)) return payload.data;
+        return [];
+      }
 
-            navigation.querySelectorAll("a").forEach(function (link) {
-                link.addEventListener("click", closeNavigation);
-            });
+      function setEmptyState(title, message) {
+        emptyTitle.textContent = title;
+        emptyMessage.textContent = message;
+        emptyState.hidden = false;
+      }
 
-            document.addEventListener("keydown", function (event) {
-                if (event.key === "Escape") {
-                    closeNavigation();
-                }
-            });
+      function populateCategoryFilter(jobs) {
+        const existingValue = categorySelect.value;
+        const labels = Array.from(new Set(jobs.map(function (job) {
+          return normaliseCategory(getFirst(job, ["category", "department", "job_category", "sector"], ""));
+        }))).sort();
 
-            window.addEventListener("resize", function () {
-                if (window.innerWidth > 800) {
-                    closeNavigation();
-                }
-            });
-        }
+        // Preserve the existing AVERRA category list and add any categories
+        // used by published jobs that are not already present.
+        labels.forEach(function (label) {
+          const value = categoryValue(label);
+          const exists = Array.from(categorySelect.options).some(function (option) {
+            return option.value === value || option.textContent.trim().toLowerCase() === label.toLowerCase();
+          });
 
-        /* Display a fallback when an image fails to load. */
-        document.querySelectorAll("img").forEach(function (img) {
-            function showFallback() {
-                img.hidden = true;
-
-                const fallback = img.nextElementSibling;
-
-                if (fallback && fallback.classList.contains("image-fallback")) {
-                    fallback.hidden = false;
-                }
-            }
-
-            img.addEventListener("error", showFallback);
-
-            if (img.complete && img.naturalWidth === 0) {
-                showFallback();
-            }
+          if (!exists) {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = label;
+            categorySelect.appendChild(option);
+          }
         });
 
-        /* Job search and category filtering. */
-        const search = document.getElementById("job-search");
-        const category = document.getElementById("job-category");
-        const reset = document.getElementById("reset-jobs");
-        const grid = document.getElementById("jobs-grid");
-        const count = document.getElementById("jobs-count");
-        const empty = document.getElementById("no-jobs");
+        if (Array.from(categorySelect.options).some(function (option) {
+          return option.value === existingValue;
+        })) {
+          categorySelect.value = existingValue;
+        }
+      }
 
-        function filterJobs() {
-            if (!grid) return;
+      function createJobCard(job) {
+        const title = String(getFirst(job, ["title", "job_title", "name", "position"], "Professional Opportunity"));
+        const description = String(getFirst(job, ["description", "job_description", "summary", "details"], "Please contact AVERRA for further information about this role."));
+        const category = normaliseCategory(getFirst(job, ["category", "department", "job_category", "sector"], ""));
+        const location = String(getFirst(job, ["location", "work_location", "country"], "India-based"));
+        const workArrangement = String(getFirst(job, ["work_type", "working_arrangement", "remote_type"], "Remote"));
+        const employmentType = String(getFirst(job, ["employment_type", "job_type", "contract_type"], ""));
+        const salary = String(getFirst(job, ["salary_range", "salary", "pay_range"], ""));
+        const closingDate = String(getFirst(job, ["closing_date", "application_deadline"], ""));
+        const jobId = getFirst(job, ["id", "job_id", "uuid"], "");
+        const applicationUrl = getFirst(job, ["application_url", "apply_url"], "");
+        const categoryKey = categoryValue(category);
 
-            const term = search
-                ? search.value.trim().toLowerCase()
-                : "";
+        const card = document.createElement("article");
+        card.className = "card job-card";
+        card.dataset.category = categoryKey;
+        card.dataset.search = [title, description, category, location, employmentType].join(" ");
 
-            const selectedCategory = category
-                ? category.value.trim().toLowerCase()
-                : "all";
+        const content = document.createElement("div");
+        content.className = "card-content";
 
-            const cards = Array.from(grid.querySelectorAll(".job-card"));
-            let visible = 0;
+        const tag = document.createElement("span");
+        tag.className = "card-tag";
+        tag.textContent = category;
+        content.appendChild(tag);
 
-            cards.forEach(function (card) {
-                const cardText = card.textContent.toLowerCase();
-                const cardCategory =
-                    (card.dataset.category || "").toLowerCase();
+        const heading = document.createElement("h3");
+        heading.textContent = title;
+        content.appendChild(heading);
 
-                const matchesSearch =
-                    !term || cardText.includes(term);
+        const meta = document.createElement("p");
+        meta.className = "job-meta";
+        meta.textContent = [location, workArrangement, employmentType].filter(Boolean).join(" · ");
+        content.appendChild(meta);
 
-                /* FIX 2: "all" must match every job category. */
-                const matchesCategory =
-                    selectedCategory === "all" ||
-                    !selectedCategory ||
-                    cardCategory === selectedCategory;
+        const details = document.createElement("p");
+        // textContent prevents descriptions from injecting HTML into the page.
+        details.textContent = description;
+        content.appendChild(details);
 
-                const shouldShow = matchesSearch && matchesCategory;
+        if (salary) {
+          const salaryText = document.createElement("p");
+          salaryText.className = "job-meta";
+          salaryText.textContent = "Salary: " + salary;
+          content.appendChild(salaryText);
+        }
 
-                card.hidden = !shouldShow;
+        if (closingDate) {
+          const closingText = document.createElement("p");
+          closingText.className = "job-meta";
+          const parsedDate = new Date(closingDate);
+          closingText.textContent = "Closing date: " +
+            (Number.isNaN(parsedDate.getTime()) ? closingDate :
+              parsedDate.toLocaleDateString("en-GB"));
+          content.appendChild(closingText);
+        }
 
-                if (shouldShow) {
-                    visible += 1;
-                }
-            });
+        const applyLink = document.createElement("a");
+        applyLink.className = "button";
+        applyLink.textContent = "Register Interest";
 
-            if (count) {
-                count.textContent =
-                    "Showing " + visible + " of " + cards.length +
-                    " illustrative role categories.";
+        if (applicationUrl) {
+          try {
+            const parsedUrl = new URL(applicationUrl, window.location.href);
+            if (["https:", "http:"].includes(parsedUrl.protocol)) {
+              applyLink.href = parsedUrl.href;
+            } else {
+              applyLink.href = "#application";
+            }
+          } catch (_) {
+            applyLink.href = "#application";
+          }
+        } else {
+          applyLink.href = "#application";
+        }
+
+        applyLink.addEventListener("click", function (event) {
+          if (!applicationUrl || applyLink.href.endsWith("#application")) {
+            event.preventDefault();
+            if (roleSelect) {
+              const option = document.createElement("option");
+              option.value = "job:" + String(jobId || title);
+              option.textContent = title;
+              option.dataset.dynamicJob = "true";
+
+              const existing = Array.from(roleSelect.options).find(function (item) {
+                return item.value === option.value;
+              });
+
+              if (!existing) roleSelect.appendChild(option);
+              roleSelect.value = option.value;
             }
 
-            if (empty) {
-                empty.hidden = visible !== 0;
+            const messageField = document.getElementById("applicant-message");
+            if (messageField && !messageField.value.includes("Role of interest:")) {
+              messageField.value = "Role of interest: " + title + "\n\n" + messageField.value;
             }
-        }
 
-        if (search) {
-            search.addEventListener("input", filterJobs);
-        }
-
-        if (category) {
-            category.addEventListener("change", filterJobs);
-        }
-
-        if (reset) {
-            reset.addEventListener("click", function () {
-                if (search) search.value = "";
-
-                /* FIX 3: Reset to the actual "all" option. */
-                if (category) category.value = "all";
-
-                filterJobs();
-
-                if (search) search.focus();
-            });
-        }
-
-        /*
-         * FIX 4: Map the full role title on each card to the category
-         * code used by the application form.
-         */
-        const roleValueMap = {
-            "Finance Support Professional": "finance",
-            "Web Development Professional": "technology",
-            "Administrative Support Professional": "administration"
-        };
-
-        document.querySelectorAll(".apply-job").forEach(function (link) {
-            link.addEventListener("click", function () {
-                const roleSelect =
-                    document.getElementById("application-role");
-
-                const roleTitle = link.dataset.role || "";
-                const roleValue = roleValueMap[roleTitle] || "other";
-
-                if (!roleSelect) return;
-
-                const matchingOption = Array.from(roleSelect.options).find(
-                    function (option) {
-                        return option.value === roleValue;
-                    }
-                );
-
-                roleSelect.value = matchingOption ? roleValue : "other";
-            });
+            document.getElementById("application").scrollIntoView({ behavior: "smooth" });
+          }
         });
 
-        /*
-         * Prepare an email draft.
-         * The website does not send or store the application.
-         */
-        const form = document.getElementById("job-application-form");
-        const messageBox =
-            document.getElementById("application-message");
+        content.appendChild(applyLink);
+        card.appendChild(content);
+        return card;
+      }
 
-        if (form) {
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
+      function renderJobs() {
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedCategory = categorySelect.value;
+        jobList.replaceChildren();
 
-                if (!form.reportValidity()) return;
+        const filteredJobs = allJobs.filter(function (job) {
+          const title = String(getFirst(job, ["title", "job_title", "name", "position"], ""));
+          const description = String(getFirst(job, ["description", "job_description", "summary", "details"], ""));
+          const category = normaliseCategory(getFirst(job, ["category", "department", "job_category", "sector"], ""));
+          const searchableText = [title, description, category,
+            getFirst(job, ["location", "work_location", "country"], ""),
+            getFirst(job, ["employment_type", "job_type", "contract_type"], ""),
+            getFirst(job, ["skills", "requirements"], "")
+          ].join(" ").toLowerCase();
 
-                const name =
-                    document.getElementById("applicant-name").value.trim();
+          const matchesSearch = !query || searchableText.includes(query);
+          const matchesCategory = selectedCategory === "all" ||
+            categoryValue(category) === selectedCategory ||
+            category.toLowerCase() === selectedCategory.replace(/-/g, " ").toLowerCase();
 
-                const email =
-                    document.getElementById("applicant-email").value.trim();
+          return matchesSearch && matchesCategory;
+        });
 
-                const phone =
-                    document.getElementById("applicant-phone").value.trim();
+        filteredJobs.forEach(function (job) {
+          jobList.appendChild(createJobCard(job));
+        });
 
-                const roleSelect =
-                    document.getElementById("application-role");
+        countElement.textContent = "Showing " + filteredJobs.length +
+          " of " + allJobs.length + " published vacancies.";
 
-                const roleValue = roleSelect.value;
-                const selectedOption =
-                    roleSelect.options[roleSelect.selectedIndex];
-
-                /* FIX 5: Use the readable dropdown label in the email. */
-                const roleName = selectedOption
-                    ? selectedOption.textContent.trim()
-                    : "Other Professional Roles";
-
-                const experience =
-                    document.getElementById("applicant-message").value.trim();
-
-                if (!name || !email || !roleValue || !experience) {
-                    if (messageBox) {
-                        messageBox.hidden = false;
-                        messageBox.textContent =
-                            "Please complete all required fields.";
-                    }
-                    return;
-                }
-
-                const subject = "AVERRA Job Interest - " + roleName;
-
-                const body = [
-                    "Application / expression of interest",
-                    "",
-                    "Full name: " + name,
-                    "Email: " + email,
-                    "Phone: " + (phone || "Not provided"),
-                    "Role of interest: " + roleName,
-                    "",
-                    "Skills and experience:",
-                    experience,
-                    "",
-                    "This email was prepared using the AVERRA website."
-                ].join("\n");
-
-                const mailto =
-                    "mailto:info@averrastaffing.co.uk?subject=" +
-                    encodeURIComponent(subject) +
-                    "&body=" +
-                    encodeURIComponent(body);
-
-                if (messageBox) {
-                    messageBox.hidden = false;
-                    messageBox.textContent =
-                        "Your email application has been prepared. " +
-                        "Your default email application should open. " +
-                        "Review the details and press Send to submit it. " +
-                        "If no email application opens, email " +
-                        "info@averrastaffing.co.uk directly. " +
-                        "Your application has not been sent or stored " +
-                        "by this website.";
-                }
-
-                window.location.href = mailto;
-            });
+        if (filteredJobs.length === 0) {
+          setEmptyState(
+            allJobs.length === 0 ? "No published vacancies are currently available" : "No vacancies match your search",
+            allJobs.length === 0
+              ? "When a job is published in Admin Jobs, it can appear here. You can also register your general interest below."
+              : "Try another search term or category, or register your general interest below."
+          );
+        } else {
+          emptyState.hidden = true;
         }
+      }
 
-        /* Display the correct initial job count. */
-        filterJobs();
+      async function loadJobs() {
+        countElement.textContent = "Loading published vacancies…";
+        jobList.replaceChildren();
+        emptyState.hidden = true;
+
+        try {
+          const response = await fetch(JOBS_API, {
+            method: "GET",
+            headers: { "Accept": "application/json" },
+            cache: "no-store"
+          });
+
+          if (!response.ok) {
+            throw new Error("Jobs API returned HTTP " + response.status);
+          }
+
+          const payload = await response.json();
+          allJobs = extractJobs(payload).filter(isPublished);
+          jobsLoadFailed = false;
+
+          populateCategoryFilter(allJobs);
+          renderJobs();
+        } catch (error) {
+          console.error("Unable to load AVERRA published jobs:", error);
+          jobsLoadFailed = true;
+          allJobs = [];
+          jobList.replaceChildren();
+          countElement.textContent = "Published vacancies could not be loaded.";
+          setEmptyState(
+            "We are unable to load vacancies right now",
+            "Please try again later. If you manage AVERRA jobs, check that the Render API is running and that /api/jobs is publicly accessible."
+          );
+        }
+      }
+
+      searchInput.addEventListener("input", renderJobs);
+      categorySelect.addEventListener("change", renderJobs);
+
+      resetButton.addEventListener("click", function () {
+        searchInput.value = "";
+        categorySelect.value = "all";
+        renderJobs();
+      });
+
+      // Load actual job roles into the application dropdown.
+      // Keep the general-interest option and add published roles dynamically.
+      function updateApplicationRoleOptions() {
+        const generalOption = Array.from(roleSelect.options).find(function (option) {
+          return option.value === "other";
+        });
+
+        roleSelect.replaceChildren();
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Select a role";
+        roleSelect.appendChild(placeholder);
+
+        allJobs.forEach(function (job) {
+          const title = String(getFirst(job, ["title", "job_title", "name", "position"], "Professional Opportunity"));
+          const id = getFirst(job, ["id", "job_id", "uuid"], title);
+          const option = document.createElement("option");
+          option.value = "job:" + String(id);
+          option.textContent = title;
+          option.dataset.jobTitle = title;
+          roleSelect.appendChild(option);
+        });
+
+        const otherOption = document.createElement("option");
+        otherOption.value = "other";
+        otherOption.textContent = "Other professional role / general interest";
+        roleSelect.appendChild(otherOption);
+      }
+
+      const originalRenderJobs = renderJobs;
+      renderJobs = function () {
+        originalRenderJobs();
+        updateApplicationRoleOptions();
+      };
+
+      // Prepare an email draft only; no application data is stored or sent by this page.
+      const applicationForm = document.getElementById("job-application-form");
+      const statusElement = document.getElementById("application-status");
+
+      applicationForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        if (!applicationForm.reportValidity()) return;
+
+        const formData = new FormData(applicationForm);
+        const fullName = String(formData.get("name") || "").trim();
+        const email = String(formData.get("email") || "").trim();
+        const phone = String(formData.get("phone") || "").trim();
+        const roleCode = String(formData.get("role") || "");
+        const message = String(formData.get("message") || "").trim();
+
+        const selectedOption = roleSelect.options[roleSelect.selectedIndex];
+        const roleName = selectedOption && selectedOption.dataset.jobTitle
+          ? selectedOption.dataset.jobTitle
+          : roleCode === "other"
+            ? "Other professional role / general interest"
+            : "General interest";
+
+        const subject = "AVERRA Careers - Register Interest - " + roleName;
+        const body = [
+          "Register of interest for AVERRA Staffing Solutions Ltd",
+          "",
+          "Full name: " + fullName,
+          "Email: " + email,
+          "Phone: " + (phone || "Not provided"),
+          "Role of interest: " + roleName,
+          "",
+          "Skills and experience:",
+          message || "Not provided"
+        ].join("\n");
+
+        const mailtoUrl = "mailto:info@averrastaffing.co.uk" +
+          "?subject=" + encodeURIComponent(subject) +
+          "&body=" + encodeURIComponent(body);
+
+        statusElement.textContent =
+          "Your email application is being prepared. Check your email application and send the message to submit your interest.";
+
+        window.location.href = mailtoUrl;
+      });
+
+      // Start loading jobs as soon as the page is ready.
+      loadJobs();
     });
-})();
-</script>
+  </script>
 </body>
 </html>
-

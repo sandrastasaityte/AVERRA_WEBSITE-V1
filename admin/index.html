@@ -2,89 +2,637 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0b1f33">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b1f33">
 
-    <title>Admin Login | AVERRA Staffing Solutions Ltd</title>
+  <title>Manage Vacancy | AVERRA Staffing Solutions Ltd</title>
 
-    <meta
-        name="description"
-        content="Secure administrator sign-in for AVERRA Staffing Solutions Ltd."
-    >
+  <style>
+    :root {
+      --navy: #0b1f33;
+      --dark-navy: #071522;
+      --blue: #1d5f91;
+      --gold: #c89b3c;
+      --white: #ffffff;
+      --text: #263445;
+      --muted: #718096;
+      --border: #dce3eb;
+      --background: #f3f6fa;
+      --danger: #b42318;
+      --success: #16794b;
+    }
 
-    <link rel="stylesheet" href="css/admin.css">
+    * {
+      box-sizing: border-box;
+    }
 
-    <script src="js/auth.js" defer></script>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .topbar {
+      background: var(--navy);
+      color: var(--white);
+      border-bottom: 3px solid var(--gold);
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 76px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      color: var(--gold);
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 5px;
+      color: #d2dce7;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-link,
+    .logout-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 9px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 7px;
+      background: transparent;
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .top-link:hover,
+    .logout-button:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .container {
+      width: min(1000px, calc(100% - 40px));
+      margin: 35px auto 55px;
+    }
+
+    .breadcrumbs {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .breadcrumbs a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 9px;
+      color: var(--navy);
+      font-size: clamp(26px, 4vw, 34px);
+    }
+
+    .page-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .form-card {
+      padding: 32px;
+      border: 1px solid #e6ebf1;
+      border-radius: 13px;
+      background: var(--white);
+      box-shadow: 0 8px 25px rgba(11, 31, 51, 0.06);
+    }
+
+    .section-heading {
+      margin: 0 0 22px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid #edf0f4;
+      color: var(--navy);
+      font-size: 17px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px 20px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      display: block;
+      width: 100%;
+      min-height: 45px;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(29, 95, 145, 0.12);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: #9aa6b4;
+    }
+
+    .help-text {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .form-message {
+      display: none;
+      margin-bottom: 22px;
+      padding: 13px 15px;
+      border-radius: 7px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .form-message.error {
+      display: block;
+      border: 1px solid #f2c4c0;
+      background: #fff3f2;
+      color: var(--danger);
+    }
+
+    .form-message.success {
+      display: block;
+      border: 1px solid #b9e5ce;
+      background: #effaf4;
+      color: var(--success);
+    }
+
+    .form-message.info {
+      display: block;
+      border: 1px solid #c6dced;
+      background: #f0f7fc;
+      color: #174b70;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-top: 30px;
+      padding-top: 22px;
+      border-top: 1px solid #edf0f4;
+    }
+
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 11px 17px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .button-primary:hover:not(:disabled) {
+      background: #164b73;
+    }
+
+    .button-secondary {
+      border-color: var(--border);
+      background: var(--white);
+      color: var(--navy);
+    }
+
+    .button-secondary:hover:not(:disabled) {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .footer {
+      padding: 23px 20px;
+      background: var(--navy);
+      color: #c5d0dc;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .footer strong {
+      color: var(--gold);
+    }
+
+    @media (max-width: 650px) {
+      .topbar-inner {
+        width: calc(100% - 30px);
+        padding: 15px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .container {
+        width: calc(100% - 30px);
+        margin-top: 25px;
+      }
+
+      .form-card {
+        padding: 22px 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 19px;
+      }
+
+      .field.full-width {
+        grid-column: auto;
+      }
+
+      .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .action-group {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .action-group .button,
+      .form-actions > .button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
-<body class="login-page">
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="dashboard.html">
+        AVERRA <span>STAFFING</span>
+        <small>Administrator Portal</small>
+      </a>
 
-    <main class="login-card">
+      <nav class="top-actions" aria-label="Administrator navigation">
+        <a class="top-link" href="dashboard.html">Dashboard</a>
+        <a class="top-link" href="jobs.html">Manage Vacancies</a>
+        <button class="logout-button" id="logout-button" type="button">
+          Log Out
+        </button>
+      </nav>
+    </div>
+  </header>
 
-        <header class="login-brand">
-            <p class="eyebrow">AVERRA STAFFING SOLUTIONS LTD</p>
+  <main class="container">
+    <div class="breadcrumbs">
+      <a href="dashboard.html">Dashboard</a>
+      &nbsp; / &nbsp;
+      <a href="jobs.html">Vacancies</a>
+      &nbsp; / &nbsp;
+      <span id="breadcrumb-current">Create Vacancy</span>
+    </div>
 
-            <h1>Administrator sign in</h1>
+    <div class="page-heading">
+      <h1 id="form-title">Create a Vacancy</h1>
+      <p>
+        Add a new job opportunity to the AVERRA website or update an existing
+        vacancy. Review all details before publishing.
+      </p>
+    </div>
 
-            <p class="muted">
-                Sign in to manage recruitment vacancies and
-                authorised administration tasks.
-            </p>
-        </header>
+    <section class="form-card" aria-labelledby="form-title">
+      <div
+        id="form-message"
+        class="form-message"
+        role="status"
+        aria-live="polite"
+      ></div>
 
-        <div class="login-divider" aria-hidden="true"></div>
+      <form id="job-form">
+        <h2 class="section-heading">Vacancy Details</h2>
 
-        <form id="login-form" autocomplete="on">
-
-            <label for="admin-token">
-                Administrator token
+        <div class="form-grid">
+          <div class="field full-width">
+            <label for="title">
+              Job title <span class="required">*</span>
             </label>
-
             <input
-                id="admin-token"
-                name="admin-token"
-                type="password"
-                autocomplete="current-password"
-                placeholder="Enter your administrator token"
-                required
-                minlength="1"
-                aria-describedby="login-help login-message"
+              id="title"
+              name="title"
+              type="text"
+              maxlength="200"
+              placeholder="e.g. Senior Accountant"
+              required
             >
+          </div>
 
-            <p id="login-help" class="small muted">
-                This area is restricted to authorised administrators.
-            </p>
+          <div class="field">
+            <label for="department">Department</label>
+            <input
+              id="department"
+              name="department"
+              type="text"
+              maxlength="150"
+              placeholder="e.g. Finance"
+            >
+          </div>
 
+          <div class="field">
+            <label for="location">
+              Location <span class="required">*</span>
+            </label>
+            <input
+              id="location"
+              name="location"
+              type="text"
+              maxlength="200"
+              placeholder="e.g. Remote — India"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="employment_type">Employment type</label>
+            <select id="employment_type" name="employment_type">
+              <option value="">Select employment type</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="work_type">Working arrangement</label>
+            <select id="work_type" name="work_type">
+              <option value="">Select arrangement</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="On-site">On-site</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="salary">Salary or rate</label>
+            <input
+              id="salary"
+              name="salary"
+              type="text"
+              maxlength="150"
+              placeholder="e.g. £30,000–£35,000 per year"
+            >
+          </div>
+
+          <div class="field">
+            <label for="category">Job category</label>
+            <input
+              id="category"
+              name="category"
+              type="text"
+              maxlength="150"
+              placeholder="e.g. Finance, Technology"
+            >
+          </div>
+
+          <div class="field">
+            <label for="closing_date">Application closing date</label>
+            <input
+              id="closing_date"
+              name="closing_date"
+              type="date"
+            >
+            <span class="help-text">
+              Leave blank if the vacancy has no specified closing date.
+            </span>
+          </div>
+
+          <div class="field">
+            <label for="status">
+              Publication status <span class="required">*</span>
+            </label>
+            <select id="status" name="status" required>
+              <option value="draft">Draft — not publicly visible</option>
+              <option value="published">Published — visible on the website</option>
+              <option value="closed">Closed — no longer accepting applications</option>
+            </select>
+          </div>
+
+          <div class="field full-width">
+            <label for="description">
+              Job description <span class="required">*</span>
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              maxlength="30000"
+              placeholder="Describe the role, responsibilities, requirements, skills and experience needed."
+              required
+            ></textarea>
+            <span class="help-text">
+              Use clear paragraphs and include the key responsibilities and
+              qualifications candidates need.
+            </span>
+          </div>
+
+          <div class="field full-width">
+            <label for="requirements">Skills and requirements</label>
+            <textarea
+              id="requirements"
+              name="requirements"
+              maxlength="15000"
+              placeholder="List essential skills, qualifications and experience."
+            ></textarea>
+          </div>
+
+          <div class="field full-width">
+            <label for="benefits">Benefits and additional information</label>
+            <textarea
+              id="benefits"
+              name="benefits"
+              maxlength="15000"
+              placeholder="Describe benefits, training, working hours or other relevant details."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a class="button button-secondary" href="jobs.html">
+            Cancel
+          </a>
+
+          <div class="action-group">
             <button
-                class="btn btn-primary full-width"
-                id="login-button"
-                type="submit"
+              class="button button-secondary"
+              id="reset-button"
+              type="reset"
             >
-                Sign in securely
+              Reset Form
             </button>
 
-            <p
-                id="login-message"
-                class="message"
-                role="status"
-                aria-live="polite"
-            ></p>
+            <button
+              class="button button-primary"
+              id="save-button"
+              type="submit"
+            >
+              Save Vacancy
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
 
-        </form>
+  <footer class="footer">
+    <strong>AVERRA STAFFING SOLUTIONS LTD</strong><br>
+    Connecting UK businesses with global talent.<br>
+    &copy; <span id="current-year"></span> AVERRA. All rights reserved.
+  </footer>
 
-        <footer class="login-footer">
-            <p class="small muted">
-                AVERRA Staffing Solutions Ltd
-            </p>
+  <script>
+    "use strict";
 
-            <p class="small muted">
-                Authorised access only.
-            </p>
-        </footer>
+    document.getElementById("current-year").textContent =
+      new Date().getFullYear();
 
-    </main>
+    /*
+     * The main form logic is in job-form.js.
+     * The authentication script provides the shared admin API and logout.
+     */
+    document.getElementById("logout-button").addEventListener("click", function () {
+      if (window.AVERRA_ADMIN &&
+          typeof window.AVERRA_ADMIN.logout === "function") {
+        window.AVERRA_ADMIN.logout();
+        return;
+      }
 
+      if (window.confirm("Log out of the AVERRA administrator portal?")) {
+        sessionStorage.removeItem("averra_admin_token");
+        window.location.replace("index.html");
+      }
+    });
+
+    document.getElementById("reset-button").addEventListener("click", function () {
+      window.setTimeout(function () {
+        const message = document.getElementById("form-message");
+        message.textContent = "";
+        message.className = "form-message";
+      }, 0);
+    });
+  </script>
+
+  <script src="js/auth.js"></script>
+  <script src="js/job-form.js"></script>
 </body>
 </html>

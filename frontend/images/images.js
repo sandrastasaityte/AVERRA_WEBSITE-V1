@@ -5,55 +5,42 @@
    AVERRA STAFFING SOLUTIONS LTD
    CENTRAL WEBSITE IMAGE MANAGEMENT SYSTEM
    File: frontend/images/images.js
-   Version: 11.0
+   Version: 12.1
 
    FEATURES
-   - Exact catalogue for image1 through image33
-   - Correct JPG, PNG and JPEG extensions
+   - Verified catalogue for image1 through image33
+   - Exact filename extensions from the current inventory
    - Backwards-compatible public image helpers
-   - Supports data-image-key and data-image attributes
-   - Supports CSS background images
-   - Optional section aliases
+   - data-image-key and data-image support
+   - CSS background image support
+   - Optional semantic aliases
    - Accessible alt-text defaults
-   - Missing-image detection and diagnostics
-   - Image inventory and validation helpers
-   - Processes newly added and updated elements
+   - Missing-image diagnostics
+   - Catalogue validation
+   - Dynamic element support through MutationObserver
+   - Safe reprocessing when managed image keys change
    - No external dependencies
-
-   EXPECTED STRUCTURE
-
-   frontend/
-   |-- index.html
-   |-- about.html
-   |-- services.html
-   |-- careers.html
-   |-- images/
-       |-- images.js
-       |-- image1.jpg
-       |-- image2.jpg
-       |-- ...
-       |-- image33.jpg (extensions may differ)
-
-   IMPORTANT
-   Paths are relative to the HTML page URL.
-   Jobs and applications remain in their own JavaScript files.
    ============================================================ */
 
 (function (window, document) {
     "use strict";
 
+    const VERSION = "12.1";
+    const COMPANY = "AVERRA Staffing Solutions Ltd";
+
     const CONFIG = Object.freeze({
-        version: "11.0",
-        company: "AVERRA Staffing Solutions Ltd",
+        version: VERSION,
+        company: COMPANY,
         basePath: "images/",
         autoInitialise: true,
         observeNewElements: true,
         missingImageClass: "averra-image-missing",
-        defaultAlt: "AVERRA Staffing Solutions Ltd"
+        defaultAlt: "AVERRA Staffing Solutions Ltd",
+        debug: false
     });
 
     /* --------------------------------------------------------
-       EXACT IMAGE FILE CATALOGUE
+       VERIFIED IMAGE FILE CATALOGUE
        -------------------------------------------------------- */
 
     const IMAGE_FILES = Object.freeze({
@@ -93,10 +80,10 @@
     });
 
     /* --------------------------------------------------------
-       OPTIONAL SECTION ALIASES
+       SEMANTIC ALIASES
 
-       These are convenience mappings only.
-       They do not verify the contents of individual images.
+       These are convenience names. They do not verify the
+       actual contents of the image files.
        -------------------------------------------------------- */
 
     const IMAGE_ALIASES = Object.freeze({
@@ -139,13 +126,28 @@
 
     const processedImages = new WeakSet();
     const reportedFailures = new WeakMap();
+    const processedBackgrounds = new WeakMap();
 
     let observer = null;
     let initialised = false;
 
     /* --------------------------------------------------------
-       KEY AND PATH HELPERS
+       GENERAL HELPERS
        -------------------------------------------------------- */
+
+    function log() {
+        if (CONFIG.debug) {
+            console.info("[AVERRA Images]", ...arguments);
+        }
+    }
+
+    function warn() {
+        console.warn("[AVERRA Images]", ...arguments);
+    }
+
+    function isElement(value) {
+        return Boolean(value && value.nodeType === 1);
+    }
 
     function normaliseKey(key) {
         return typeof key === "string" ? key.trim() : "";
@@ -158,21 +160,17 @@
             return "";
         }
 
-        if (
-            Object.prototype.hasOwnProperty.call(
-                IMAGE_FILES,
-                normalised
-            )
-        ) {
+        if (Object.prototype.hasOwnProperty.call(
+            IMAGE_FILES,
+            normalised
+        )) {
             return normalised;
         }
 
-        if (
-            Object.prototype.hasOwnProperty.call(
-                IMAGE_ALIASES,
-                normalised
-            )
-        ) {
+        if (Object.prototype.hasOwnProperty.call(
+            IMAGE_ALIASES,
+            normalised
+        )) {
             return IMAGE_ALIASES[normalised];
         }
 
@@ -217,8 +215,16 @@
         ).trim();
     }
 
-    function isElement(element) {
-        return Boolean(element && element.nodeType === 1);
+    function getBackgroundKey(element) {
+        if (!element || !element.getAttribute) {
+            return "";
+        }
+
+        return (
+            element.getAttribute("data-background-image") ||
+            element.getAttribute("data-bg-image") ||
+            ""
+        ).trim();
     }
 
     function isImageElement(element) {
@@ -228,9 +234,36 @@
         );
     }
 
+    function matchesImage(element) {
+        return Boolean(
+            isElement(element) &&
+            element.matches &&
+            element.matches("img[data-image-key], img[data-image]")
+        );
+    }
+
+    function matchesBackground(element) {
+        return Boolean(
+            isElement(element) &&
+            element.matches &&
+            element.matches(
+                "[data-background-image], [data-bg-image]"
+            )
+        );
+    }
+
     /* --------------------------------------------------------
-       IMAGE STATUS AND DIAGNOSTICS
+       STATUS AND DIAGNOSTICS
        -------------------------------------------------------- */
+
+    function clearMissingState(element) {
+        if (!element) {
+            return;
+        }
+
+        element.classList.remove(CONFIG.missingImageClass);
+        element.removeAttribute("data-image-error-key");
+    }
 
     function markMissing(element, path) {
         if (!element) {
@@ -243,8 +276,8 @@
         if (reportedFailures.get(element) !== path) {
             reportedFailures.set(element, path);
 
-            console.warn(
-                "[AVERRA Images] Could not load image:",
+            warn(
+                "Could not load image:",
                 path || "(unknown path)",
                 element
             );
@@ -256,7 +289,7 @@
             return;
         }
 
-        element.classList.remove(CONFIG.missingImageClass);
+        clearMissingState(element);
         element.setAttribute("data-image-status", "loaded");
         reportedFailures.delete(element);
     }
@@ -266,21 +299,12 @@
             return;
         }
 
-        const previousKey = element.getAttribute(
-            "data-image-error-key"
-        );
-
         element.classList.add(CONFIG.missingImageClass);
         element.setAttribute("data-image-status", "missing");
 
-        if (previousKey !== key) {
+        if (element.getAttribute("data-image-error-key") !== key) {
             element.setAttribute("data-image-error-key", key);
-
-            console.warn(
-                "[AVERRA Images] Unknown image key:",
-                key,
-                element
-            );
+            warn("Unknown image key:", key, element);
         }
     }
 
@@ -359,34 +383,56 @@
 
         if (!processedImages.has(element)) {
             element.addEventListener("load", function () {
-                markLoaded(element);
+                const currentKey = getElementKey(element);
+                const currentPath = makeImagePath(currentKey);
+                const managedPath = element.getAttribute(
+                    "data-image-managed-src"
+                );
+
+                if (currentPath && currentPath === managedPath) {
+                    markLoaded(element);
+                }
             });
 
             element.addEventListener("error", function () {
-                markMissing(
-                    element,
-                    element.currentSrc || element.src || path
+                const currentKey = getElementKey(element);
+                const currentPath = makeImagePath(currentKey);
+                const managedPath = element.getAttribute(
+                    "data-image-managed-src"
                 );
+
+                if (currentPath && currentPath === managedPath) {
+                    markMissing(element, managedPath);
+                }
             });
 
             processedImages.add(element);
         }
 
-        const currentManagedPath = element.getAttribute(
+        const previousPath = element.getAttribute(
             "data-image-managed-src"
         );
 
-        if (currentManagedPath !== path) {
+        if (previousPath !== path) {
+            clearMissingState(element);
+
+            element.setAttribute("data-image-status", "loading");
             element.setAttribute("data-image-managed-src", path);
             element.setAttribute("src", path);
+
+            return true;
         }
 
-        if (element.complete) {
-            if (element.naturalWidth > 0) {
-                markLoaded(element);
-            } else {
-                markMissing(element, path);
-            }
+        if (
+            element.complete &&
+            element.naturalWidth === 0
+        ) {
+            markMissing(element, path);
+        } else if (
+            element.complete &&
+            element.naturalWidth > 0
+        ) {
+            markLoaded(element);
         }
 
         return true;
@@ -401,11 +447,7 @@
             return false;
         }
 
-        const key = (
-            element.getAttribute("data-background-image") ||
-            element.getAttribute("data-bg-image") ||
-            ""
-        ).trim();
+        const key = getBackgroundKey(element);
 
         if (!key) {
             return false;
@@ -414,23 +456,44 @@
         const path = makeImagePath(key);
 
         if (!path) {
-            element.classList.add(CONFIG.missingImageClass);
-            element.setAttribute("data-image-status", "missing");
-
-            console.warn(
-                "[AVERRA Images] Unknown background image key:",
-                key,
-                element
-            );
-
+            markUnknownKey(element, key);
             return false;
         }
 
-        element.style.backgroundImage =
-            'url("' + path.replace(/"/g, '\\"') + '")';
+        element.removeAttribute("data-image-error-key");
 
-        element.setAttribute("data-image-status", "assigned");
-        element.classList.remove(CONFIG.missingImageClass);
+        const previousPath = processedBackgrounds.get(element);
+
+        if (previousPath === path) {
+            return true;
+        }
+
+        processedBackgrounds.set(element, path);
+        clearMissingState(element);
+
+        element.style.backgroundImage =
+            'url("' +
+            path.replace(/\\/g, "\\\\").replace(/"/g, '\\"') +
+            '")';
+
+        element.setAttribute("data-image-status", "loading");
+
+        const probe = new window.Image();
+
+        probe.onload = function () {
+            if (processedBackgrounds.get(element) === path) {
+                clearMissingState(element);
+                element.setAttribute("data-image-status", "loaded");
+            }
+        };
+
+        probe.onerror = function () {
+            if (processedBackgrounds.get(element) === path) {
+                markMissing(element, path);
+            }
+        };
+
+        probe.src = path;
 
         return true;
     }
@@ -447,66 +510,55 @@
             container.nodeType !== 9 &&
             container.nodeType !== 11
         ) {
-            console.warn(
-                "[AVERRA Images] Invalid root passed to initialiseImages()."
-            );
-
+            warn("Invalid root passed to initialiseImages().");
             return 0;
         }
 
         let processedCount = 0;
 
-        if (
-            isElement(container) &&
-            container.matches &&
-            container.matches(
-                "img[data-image-key], img[data-image]"
-            )
-        ) {
+        if (matchesImage(container)) {
             if (processImageElement(container)) {
                 processedCount++;
             }
         }
 
-        if (
-            isElement(container) &&
-            container.matches &&
-            container.matches(
-                "[data-background-image], [data-bg-image]"
-            )
-        ) {
+        if (matchesBackground(container)) {
             if (processBackgroundElement(container)) {
                 processedCount++;
             }
         }
 
-        container.querySelectorAll(
-            "img[data-image-key], img[data-image]"
-        ).forEach(function (element) {
-            if (processImageElement(element)) {
-                processedCount++;
-            }
-        });
+        if (container.querySelectorAll) {
+            container.querySelectorAll(
+                "img[data-image-key], img[data-image]"
+            ).forEach(function (element) {
+                if (processImageElement(element)) {
+                    processedCount++;
+                }
+            });
 
-        container.querySelectorAll(
-            "[data-background-image], [data-bg-image]"
-        ).forEach(function (element) {
-            if (processBackgroundElement(element)) {
-                processedCount++;
-            }
-        });
+            container.querySelectorAll(
+                "[data-background-image], [data-bg-image]"
+            ).forEach(function (element) {
+                if (processBackgroundElement(element)) {
+                    processedCount++;
+                }
+            });
+        }
+
+        log("Processed elements:", processedCount);
 
         return processedCount;
     }
 
     /* --------------------------------------------------------
-       AUTOMATIC ELEMENT OBSERVER
+       DYNAMIC ELEMENT OBSERVER
        -------------------------------------------------------- */
 
     function observeNewElements() {
         if (
             !CONFIG.observeNewElements ||
-            typeof MutationObserver === "undefined" ||
+            typeof window.MutationObserver === "undefined" ||
             !document.body
         ) {
             return;
@@ -516,24 +568,14 @@
             observer.disconnect();
         }
 
-        observer = new MutationObserver(function (mutations) {
+        observer = new window.MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 if (mutation.type === "attributes") {
                     const element = mutation.target;
 
-                    if (
-                        element.matches &&
-                        element.matches(
-                            "img[data-image-key], img[data-image]"
-                        )
-                    ) {
+                    if (matchesImage(element)) {
                         processImageElement(element);
-                    } else if (
-                        element.matches &&
-                        element.matches(
-                            "[data-background-image], [data-bg-image]"
-                        )
-                    ) {
+                    } else if (matchesBackground(element)) {
                         processBackgroundElement(element);
                     }
 
@@ -593,9 +635,7 @@
             filenames.add(item.filename);
 
             if (!item.filename) {
-                problems.push(
-                    "Missing filename for " + item.key
-                );
+                problems.push("Missing filename for " + item.key);
             }
         });
 
@@ -625,11 +665,16 @@
             )
         ).map(function (element) {
             return {
-                key: getElementKey(element) ||
-                    element.getAttribute("data-background-image") ||
-                    element.getAttribute("data-bg-image") ||
+                key:
+                    getElementKey(element) ||
+                    getBackgroundKey(element) ||
                     "",
-                source: element.currentSrc || element.src || "",
+                source:
+                    element.getAttribute("data-image-managed-src") ||
+                    element.style.backgroundImage ||
+                    element.currentSrc ||
+                    element.src ||
+                    "",
                 status: element.getAttribute("data-image-status"),
                 element: element
             };
@@ -640,8 +685,8 @@
         const catalogue = validateImageCatalogue();
 
         const report = {
-            company: CONFIG.company,
-            version: CONFIG.version,
+            company: COMPANY,
+            version: VERSION,
             catalogueCount: getImageCount(),
             catalogueValid: catalogue.valid,
             catalogueProblems: catalogue.problems,
@@ -664,14 +709,14 @@
 
         if (catalogue.problems.length) {
             console.warn(
-                "[AVERRA Images] Catalogue problems:",
+                "Catalogue problems:",
                 catalogue.problems
             );
         }
 
         if (report.missingImages.length) {
             console.warn(
-                "[AVERRA Images] Missing images:",
+                "Images that need checking:",
                 report.missingImages
             );
         }
@@ -704,8 +749,8 @@
        -------------------------------------------------------- */
 
     const publicAPI = Object.freeze({
-        version: CONFIG.version,
-        company: CONFIG.company,
+        version: VERSION,
+        company: COMPANY,
         basePath: CONFIG.basePath,
 
         files: IMAGE_FILES,
@@ -734,10 +779,7 @@
     window.AVERRAImages = publicAPI;
     window.AVERRAImageManager = publicAPI;
 
-    /*
-     * Preserve compatibility with existing global helper names.
-     * Do not overwrite functions already defined by other scripts.
-     */
+    // Preserve helper functions if another script already owns them.
     if (typeof window.getImagePath !== "function") {
         window.getImagePath = getImagePath;
     }

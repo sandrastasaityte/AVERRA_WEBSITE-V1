@@ -3,127 +3,109 @@
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0b1f33">
-
-    <title>Add Vacancy | AVERRA Admin</title>
-
-    <meta
-        name="description"
-        content="Create and manage recruitment vacancies for AVERRA Staffing Solutions Ltd."
-    >
-
+    <title>Manage Vacancy | AVERRA Admin</title>
     <link rel="stylesheet" href="css/admin.css">
-
-    <script src="js/auth.js" defer></script>
-    <script src="js/job-form.js" defer></script>
 </head>
-
 <body>
-
     <header class="admin-header">
-        <a class="brand" href="dashboard.html" aria-label="AVERRA Admin home">
-            AVERRA ADMIN
-        </a>
+        <div class="admin-container admin-header-inner">
+            <a class="admin-brand" href="dashboard.html">
+                <span class="admin-brand-name">AVERRA</span>
+                <span class="admin-brand-subtitle">STAFFING SOLUTIONS LTD</span>
+            </a>
 
-        <nav class="admin-nav" aria-label="Admin navigation">
-            <a href="dashboard.html">Dashboard</a>
-            <a href="jobs.html" aria-current="page">Jobs</a>
-            <a href="enquiries.html">Enquiries</a>
-
-            <button type="button" id="logout-button">
-                Log out
-            </button>
-        </nav>
+            <nav class="admin-nav" aria-label="Administrator navigation">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="jobs.html">Jobs</a>
+                <button
+                    type="button"
+                    id="logout-button"
+                    class="btn btn-secondary">
+                    Log out
+                </button>
+            </nav>
+        </div>
     </header>
 
-    <main class="admin-main">
-
+    <main class="admin-container admin-main">
         <div class="page-heading">
             <div>
-                <p class="eyebrow">VACANCY MANAGEMENT</p>
-
-                <h1 id="form-title">Add vacancy</h1>
-
-                <p class="muted">
-                    Create a recruitment advertisement for the AVERRA website.
-                    Complete all required fields before saving.
-                </p>
+                <p class="eyebrow">AVERRA STAFFING SOLUTIONS LTD</p>
+                <h1 id="form-title">Create Vacancy</h1>
+                <p>Create a new vacancy or update an existing vacancy.</p>
             </div>
 
-            <a class="btn btn-secondary" href="jobs.html">
-                &larr; Back to jobs
-            </a>
+            <a class="btn btn-secondary" href="jobs.html">Back to Jobs</a>
         </div>
 
-        <section class="panel form-panel" aria-labelledby="form-title">
-
-            <div class="form-intro">
-                <h2>Job details</h2>
-
-                <p class="muted small">
-                    Fields marked with an asterisk (*) are required.
-                </p>
+        <section class="form-card" aria-labelledby="form-title">
+            <div class="form-card-header">
+                <h2>Vacancy details</h2>
+                <p>Complete the relevant fields, then save your changes.</p>
             </div>
 
-            <form id="job-form">
+            <div
+                id="form-message"
+                class="form-message"
+                role="status"
+                aria-live="polite"
+                hidden>
+            </div>
+
+            <form id="job-form" novalidate>
+                <input type="hidden" id="job-id" name="job-id">
 
                 <div class="form-grid">
-
-                    <!-- JOB TITLE -->
-                    <div class="field-full">
-                        <label for="title">Job title *</label>
-
+                    <div class="form-group full-width">
+                        <label for="title">
+                            Vacancy title <span aria-hidden="true">*</span>
+                        </label>
                         <input
+                            type="text"
                             id="title"
                             name="title"
-                            type="text"
                             maxlength="150"
-                            placeholder="e.g. Senior Accountant"
-                            autocomplete="organization-title"
+                            minlength="3"
                             required
-                        >
+                            autocomplete="off"
+                            placeholder="e.g. Finance Operations Specialist">
                     </div>
 
-                    <!-- DEPARTMENT -->
-                    <div>
+                    <div class="form-group">
                         <label for="department">Department</label>
-
                         <input
+                            type="text"
                             id="department"
                             name="department"
-                            type="text"
                             maxlength="100"
-                            placeholder="e.g. Finance"
-                        >
+                            placeholder="e.g. Finance">
                     </div>
 
-                    <!-- LOCATION -->
-                    <div>
-                        <label for="location">Location *</label>
-
+                    <div class="form-group">
+                        <label for="location">
+                            Location <span aria-hidden="true">*</span>
+                        </label>
                         <input
+                            type="text"
                             id="location"
                             name="location"
-                            type="text"
                             maxlength="150"
-                            placeholder="e.g. Remote, United Kingdom"
+                            minlength="2"
                             required
-                        >
+                            placeholder="e.g. Remote - India">
                     </div>
 
-                    <!-- EMPLOYMENT TYPE -->
-                    <div>
+                    <div class="form-group">
                         <label for="employment_type">
-                            Employment type *
+                            Employment type <span aria-hidden="true">*</span>
                         </label>
-
                         <select
                             id="employment_type"
                             name="employment_type"
-                            required
-                        >
+                            required>
+                            <option value="">Select employment type</option>
                             <option value="Full-time">Full-time</option>
                             <option value="Part-time">Part-time</option>
                             <option value="Contract">Contract</option>
@@ -133,150 +115,196 @@
                         </select>
                     </div>
 
-                    <!-- SALARY -->
-                    <div>
-                        <label for="salary_range">Salary range</label>
-
+                    <div class="form-group">
+                        <label for="salary_range">Salary / rate</label>
                         <input
+                            type="text"
                             id="salary_range"
                             name="salary_range"
-                            type="text"
                             maxlength="100"
-                            placeholder="e.g. £30,000–£35,000 per year"
-                        >
+                            placeholder="e.g. Competitive or £30,000-£35,000">
                     </div>
 
-                    <!-- SHORT SUMMARY -->
-                    <div class="field-full">
-                        <label for="summary">Short summary *</label>
-
+                    <div class="form-group full-width">
+                        <label for="summary">
+                            Short summary <span aria-hidden="true">*</span>
+                        </label>
                         <textarea
                             id="summary"
                             name="summary"
                             rows="3"
+                            minlength="10"
                             maxlength="500"
                             required
-                            placeholder="Introduce the role and explain why a candidate might be interested."
-                        ></textarea>
-
-                        <p class="small muted">
-                            Keep this concise. It can be used as the introduction
-                            on the public vacancy listing.
-                        </p>
+                            placeholder="Enter a short introduction to this vacancy."></textarea>
+                        <small>
+                            This summary can appear on the public Jobs page.
+                            Maximum 500 characters.
+                        </small>
                     </div>
 
-                    <!-- FULL DESCRIPTION -->
-                    <div class="field-full">
-                        <label for="description">Full job description *</label>
-
+                    <div class="form-group full-width">
+                        <label for="description">
+                            Full description <span aria-hidden="true">*</span>
+                        </label>
                         <textarea
                             id="description"
                             name="description"
-                            rows="9"
+                            rows="10"
+                            minlength="20"
+                            maxlength="15000"
                             required
-                            placeholder="Describe the role, responsibilities, required experience, qualifications and benefits."
-                        ></textarea>
-
-                        <p class="small muted">
-                            Use clear, accurate information and avoid including
-                            confidential client details.
-                        </p>
+                            placeholder="Describe the role, responsibilities, skills and experience required."></textarea>
+                        <small>
+                            Include the main responsibilities, required skills
+                            and relevant experience. Maximum 15,000 characters.
+                        </small>
                     </div>
 
-                    <!-- APPLICATION EMAIL -->
-                    <div class="field-full">
-                        <label for="application_email">
-                            Application email
-                        </label>
-
+                    <div class="form-group">
+                        <label for="application_email">Application email</label>
                         <input
+                            type="email"
                             id="application_email"
                             name="application_email"
-                            type="email"
                             maxlength="254"
                             autocomplete="email"
-                            placeholder="info@averrastaffing.co.uk"
-                        >
-
-                        <p class="small muted">
-                            Leave blank if applications are handled through
-                            another approved process.
-                        </p>
+                            placeholder="info@averrastaffing.co.uk">
+                        <small>
+                            Optional. Leave blank if applications should use
+                            the backend's existing default process.
+                        </small>
                     </div>
 
-                    <!-- CLOSING DATE -->
-                    <div>
+                    <div class="form-group">
                         <label for="closing_date">Closing date</label>
-
                         <input
-                            id="closing_date"
-                            name="closing_date"
                             type="date"
-                        >
+                            id="closing_date"
+                            name="closing_date">
+                        <small>
+                            Optional. Applications should remain available
+                            throughout the selected date.
+                        </small>
                     </div>
 
-                    <!-- PUBLICATION STATUS -->
-                    <div>
-                        <label for="status">Publication status *</label>
-
+                    <div class="form-group">
+                        <label for="status">
+                            Vacancy status <span aria-hidden="true">*</span>
+                        </label>
                         <select id="status" name="status" required>
-                            <option value="draft">
-                                Draft — not public
-                            </option>
-
-                            <option value="published">
-                                Published — public
-                            </option>
-
-                            <option value="closed">
-                                Closed — no longer accepting applications
-                            </option>
+                            <option value="draft">Draft - not published</option>
+                            <option value="published">Published - visible to visitors</option>
+                            <option value="closed">Closed</option>
                         </select>
                     </div>
-
                 </div>
 
-                <!-- FORM FEEDBACK -->
-                <div
-                    id="form-message"
-                    class="message"
-                    role="status"
-                    aria-live="polite"
-                    aria-atomic="true"
-                ></div>
-
-                <!-- ACTIONS -->
                 <div class="form-actions">
-
                     <button
-                        class="btn btn-primary"
                         type="submit"
                         id="save-button"
-                    >
-                        Save vacancy
+                        class="btn btn-primary">
+                        Create Vacancy
                     </button>
 
-                    <a class="btn btn-secondary" href="jobs.html">
-                        Cancel
-                    </a>
+                    <button
+                        type="button"
+                        id="reset-button"
+                        class="btn btn-secondary">
+                        Clear Form
+                    </button>
 
+                    <button
+                        type="button"
+                        id="delete-button"
+                        class="btn btn-danger"
+                        hidden>
+                        Delete Vacancy
+                    </button>
+
+                    <a class="btn btn-secondary" href="jobs.html">Cancel</a>
                 </div>
-
-                <p class="small muted">
-                    Review the job details and publication status before saving.
-                    Published vacancies may become visible on the public website.
-                </p>
-
             </form>
         </section>
 
         <footer class="admin-footer">
-            <p class="small muted">
+            <p>
+                AVERRA Staffing Solutions Ltd · Connecting UK businesses
+                with global talent.
+            </p>
+            <p>
+                &copy; <span id="current-year"></span>
                 AVERRA Staffing Solutions Ltd
             </p>
         </footer>
-
     </main>
 
+    <script src="js/auth.js"></script>
+    <script src="js/job-form.js"></script>
+
+    <script>
+        (() => {
+            "use strict";
+
+            const year = document.getElementById("current-year");
+
+            if (year) {
+                year.textContent = String(new Date().getFullYear());
+            }
+
+            const resetButton = document.getElementById("reset-button");
+            const form = document.getElementById("job-form");
+            const message = document.getElementById("form-message");
+
+            if (resetButton && form) {
+                resetButton.addEventListener("click", () => {
+                    const params = new URLSearchParams(
+                        window.location.search
+                    );
+
+                    // When editing a vacancy, return to a blank creation form.
+                    if (params.has("id")) {
+                        window.location.href = "job-form.html";
+                        return;
+                    }
+
+                    form.reset();
+
+                    const jobId = document.getElementById("job-id");
+                    const statusField = document.getElementById("status");
+                    const title = document.getElementById("form-title");
+                    const saveButton = document.getElementById("save-button");
+                    const deleteButton = document.getElementById("delete-button");
+
+                    if (jobId) {
+                        jobId.value = "";
+                    }
+
+                    if (statusField) {
+                        statusField.value = "draft";
+                    }
+
+                    if (title) {
+                        title.textContent = "Create Vacancy";
+                    }
+
+                    if (saveButton) {
+                        saveButton.textContent = "Create Vacancy";
+                    }
+
+                    if (deleteButton) {
+                        deleteButton.hidden = true;
+                    }
+
+                    if (message) {
+                        message.textContent = "";
+                        message.className = "form-message";
+                        message.hidden = true;
+                    }
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

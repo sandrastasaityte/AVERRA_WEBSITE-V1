@@ -1,77 +1,203 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+
   <title>Dashboard | AVERRA Admin</title>
+
+  <meta
+    name="description"
+    content="Secure administration dashboard for AVERRA Staffing Solutions Ltd."
+  >
+
   <link rel="stylesheet" href="css/admin.css">
-  <script src="js/auth.js" defer></script>
-  <script src="js/dashboard.js" defer></script>
+
+<script src="js/auth.js" defer></script>
+<script src="js/dashboard.js" defer></script>
+
 </head>
+
 <body>
   <header class="admin-header">
-    <a class="brand" href="dashboard.html">AVERRA ADMIN</a>
-    <nav class="admin-nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="enquiries.html">Enquiries</a>
-      <button type="button" id="logout-button">Log out</button>
+    <div>
+      <p class="brand">
+        AVERRA <span>ADMIN</span>
+      </p>
+
+      <p class="header-subtitle">
+        Staffing Solutions Ltd · Administration
+      </p>
+    </div>
+
+    <nav class="admin-nav" aria-label="Administrator navigation">
+      <a href="dashboard.html" aria-current="page">
+        Dashboard
+      </a>
+
+      <a href="jobs.html">
+        Jobs
+      </a>
+
+      <a href="enquiries.html">
+        Enquiries
+      </a>
+
+      <a
+        class="button button-secondary"
+        href="https://averrastaffing.co.uk/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View website
+      </a>
+
+      <button
+        type="button"
+        class="button button-secondary"
+        id="logout-button"
+      >
+        Log out
+      </button>
     </nav>
   </header>
 
   <main class="admin-main">
-    <div class="page-heading">
+    <section
+      class="page-heading"
+      aria-labelledby="dashboard-title"
+    >
       <div>
         <p class="eyebrow">STAFFING SOLUTIONS</p>
-        <h1>Dashboard</h1>
-        <p class="muted">Manage your AVERRA recruitment activity.</p>
-      </div>
-      <a class="btn btn-primary" href="job-form.html">+ Add vacancy</a>
-    </div>
 
-    <p id="dashboard-message" class="message" role="status">
+        <h1 id="dashboard-title">
+          Dashboard
+        </h1>
+
+        <p class="muted">
+          Manage your AVERRA recruitment activity.
+        </p>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="refresh-dashboard"
+        >
+          Refresh
+        </button>
+
+        <a
+          class="btn btn-primary"
+          href="job-form.html"
+        >
+          + Add vacancy
+        </a>
+      </div>
+    </section>
+
+    <p
+      id="dashboard-message"
+      class="message"
+      role="status"
+      aria-live="polite"
+    >
       Loading dashboard…
     </p>
 
-    <section class="cards" aria-label="Job statistics">
+    <section
+      class="cards"
+      aria-label="Vacancy statistics"
+    >
       <article class="card">
         <h2>Total vacancies</h2>
-        <p class="metric" id="total-jobs">—</p>
+
+        <p
+          class="metric"
+          id="total-jobs"
+          aria-live="polite"
+        >
+          —
+        </p>
       </article>
+
       <article class="card">
         <h2>Published vacancies</h2>
-        <p class="metric" id="published-jobs">—</p>
+
+        <p
+          class="metric"
+          id="published-jobs"
+          aria-live="polite"
+        >
+          —
+        </p>
       </article>
+
       <article class="card">
         <h2>Draft vacancies</h2>
-        <p class="metric" id="draft-jobs">—</p>
+
+        <p
+          class="metric"
+          id="draft-jobs"
+          aria-live="polite"
+        >
+          —
+        </p>
       </article>
     </section>
 
-    <section class="panel">
+    <section
+      class="panel"
+      aria-labelledby="recent-vacancies-title"
+    >
       <div class="page-heading">
         <div>
-          <h2>Recent vacancies</h2>
-          <p class="muted">Your latest job records.</p>
+          <h2 id="recent-vacancies-title">
+            Recent vacancies
+          </h2>
+
+          <p class="muted">
+            Your latest job records.
+          </p>
         </div>
-        <a href="jobs.html">Manage all jobs →</a>
+
+        <a href="jobs.html">
+          Manage all jobs →
+        </a>
       </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Job title</th>
-              <th>Location</th>
-              <th>Status</th>
+              <th scope="col">Job title</th>
+              <th scope="col">Location</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
+
           <tbody id="recent-jobs">
-            <tr><td colspan="3">Loading…</td></tr>
+            <tr>
+              <td colspan="4">
+                Loading vacancies…
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
+
+      <p
+        id="recent-jobs-empty"
+        class="muted"
+        hidden
+      >
+        No vacancies are available yet.
+        Select Add vacancy to create your first job.
+      </p>
     </section>
   </main>
 </body>
