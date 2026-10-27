@@ -505,28 +505,45 @@
 </head>
 
 <body>
-<header class="site-header">
+
+<header class="site-header" id="site-header">
     <div class="container header-inner">
-        <a class="brand" href="index.html">AVERRA</a>
+
+        <a
+            class="brand"
+            href="index.html"
+            aria-label="AVERRA Staffing Solutions Ltd home"
+        >
+            AVERRA STAFFING SOLUTIONS LTD
+            <span>Connecting UK Businesses with Global Talent</span>
+        </a>
 
         <button
             class="menu-toggle"
             id="menu-toggle"
             type="button"
             aria-controls="main-navigation"
-            aria-expanded="false">
-            Menu
+            aria-expanded="false"
+            aria-label="Open navigation menu"
+        >
+            <span aria-hidden="true">☰</span>
+            <span>Menu</span>
         </button>
 
-        <nav class="navigation" id="main-navigation" aria-label="Main navigation">
+        <nav
+            class="main-navigation"
+            id="main-navigation"
+            aria-label="Main navigation"
+        >
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="services.html">Services</a>
             <a href="how-it-works.html">How It Works</a>
-            <a href="careers.html" aria-current="page">Careers</a>
-            <a href="jobs.html">Jobs</a>
-            <a href="lets-talk.html" class="nav-cta">Let's Talk</a>
+            <a href="careers.html">Careers</a>
+            <a href="jobs.html" aria-current="page">Jobs</a>
+            <a class="nav-contact" href="lets-talk.html">Let's Talk</a>
         </nav>
+
     </div>
 </header>
 
@@ -787,55 +804,88 @@
 
 <footer class="site-footer">
     <div class="container">
+
         <div class="footer-grid">
-            <div>
-                <a class="footer-brand" href="index.html">AVERRA Staffing Solutions Ltd</a>
-                <p>
-                    Connecting UK businesses with skilled professionals based
-                    in India through remote staffing and outsourcing solutions.
+
+            <div class="footer-company-column">
+                <a class="footer-brand" href="index.html">
+                    AVERRA Staffing Solutions Ltd
+                </a>
+
+                <p class="footer-description">
+                    Connecting UK businesses with skilled professionals
+                    based in India through remote staffing and
+                    outsourcing solutions.
                 </p>
-                <p>
-                    Email:
-                    <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
-                </p>
-                <p>
-                    Website:
-                    <a href="https://averrastaffing.co.uk/">averrastaffing.co.uk</a>
-                </p>
-                <p>
-                    Phone:
-                    <a href="tel:+447857290628">+44 7857 290628</a>
-                </p>
+
+                <div class="footer-contact">
+                    <p>
+                        <strong>Email:</strong>
+                        <a href="mailto:info@averrastaffing.co.uk">
+                            info@averrastaffing.co.uk
+                        </a>
+                    </p>
+
+                    <p>
+                        <strong>Website:</strong>
+                        <a href="https://averrastaffing.co.uk/">
+                            averrastaffing.co.uk
+                        </a>
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        <a href="tel:+447857290628">+44 7857 290628</a>
+                    </p>
+                </div>
             </div>
 
-            <div>
-                <h3>Explore</h3>
+            <div class="footer-section">
+                <h3 class="footer-heading">Explore AVERRA</h3>
                 <ul class="footer-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About Us</a></li>
-                    <li><a href="services.html">Services</a></li>
+                    <li><a href="services.html">Our Services</a></li>
                     <li><a href="how-it-works.html">How It Works</a></li>
                     <li><a href="careers.html">Careers</a></li>
-                    <li><a href="jobs.html">Jobs</a></li>
+                    <li><a href="jobs.html">Job Opportunities</a></li>
                 </ul>
             </div>
 
-            <div>
-                <h3>Information</h3>
+            <div class="footer-section">
+                <h3 class="footer-heading">Information</h3>
                 <ul class="footer-links">
-                    <li><a href="faq.html">FAQs</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="FAQ.html">Frequently Asked Questions</a></li>
                     <li><a href="lets-talk.html">Contact Us</a></li>
+                    <li><a href="industries.html">Industries</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3 class="footer-heading">Legal</h3>
+                <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
                 </ul>
             </div>
+
         </div>
 
         <div class="footer-bottom">
-            <p>© <span id="current-year">2026</span> AVERRA Staffing Solutions Ltd. All rights reserved.</p>
-            <p>UK–India Outsourcing · Connecting UK Businesses with Global Talent</p>
+            <p>
+                &copy; <span id="current-year">2026</span>
+                AVERRA Staffing Solutions Ltd. All rights reserved.
+            </p>
+            <p>
+                UK–India Outsourcing · Connecting Businesses with Global Talent
+            </p>
         </div>
+
     </div>
 </footer>
+
+
+
 
 <script>
 "use strict";
