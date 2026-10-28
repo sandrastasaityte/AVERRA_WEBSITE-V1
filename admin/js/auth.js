@@ -4,43 +4,42 @@
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    File: admin/js/auth.js
-   Version: 3.7.0
+   Version: 3.8.0
 
    Administrator authentication and API client.
    Backend: FastAPI on Render.
 
    FEATURES
-   - Secure session-scoped token storage
-   - Administrator token verification
+   - Session-scoped administrator token storage
+   - Backend token verification before login
    - API requests with X-Admin-Token
-   - Login and logout handling
-   - Protected-page session verification
+   - Login, logout and protected-page verification
    - Enquiry, application and job deletion
-   - Clear backend configuration error messages
+   - Clear authentication configuration errors
    - Request timeouts and connection error handling
+   - JSON and non-JSON response handling
    - Compatible with existing AVERRA admin pages
 
-   IMPORTANT
-   This file cannot configure administrator authentication
-   on Render. The backend must have its required administrator
-   token environment variable configured.
+   SECURITY
+   - Never hard-code the administrator token here.
+   - Configure AVERRA_ADMIN_TOKEN on the backend.
+   - Never store the token in localStorage.
    ============================================================ */
 
 (function () {
-    if (
-        window.AVERRA_ADMIN &&
-        window.AVERRA_ADMIN.__authVersion === "3.7.0"
-    ) {
-        return;
-    }
-
-    const VERSION = "3.7.0";
+    const VERSION = "3.8.0";
     const TOKEN_KEY = "averra_admin_token";
+    const DEFAULT_TIMEOUT = 20000;
 
     const DEFAULT_API_BASE =
         "https://averra-backend-dn23.onrender.com";
 
-    const DEFAULT_TIMEOUT = 20000;
+    if (
+        window.AVERRA_ADMIN &&
+        window.AVERRA_ADMIN.__authVersion === VERSION
+    ) {
+        return;
+    }
 
     const config = window.AVERRA_ADMIN_CONFIG || {};
 
@@ -51,8 +50,6 @@
     ).trim().replace(/\/+$/, "");
 
     let loginRedirecting = false;
-    let loginHandlerBound = false;
-    let logoutHandlersBound = false;
 
     /* ============================================================
        TOKEN MANAGEMENT
@@ -63,7 +60,7 @@
             return sessionStorage.getItem(TOKEN_KEY) || "";
         } catch (error) {
             console.error(
-                "AVERRA: Unable to read the login session.",
+                "AVERRA: Could not read the login session.",
                 error
             );
 
@@ -84,7 +81,7 @@
             sessionStorage.setItem(TOKEN_KEY, value);
         } catch (error) {
             throw new Error(
-                "Your browser could not save the login session. " +
+                "The browser could not save your login session. " +
                 "Check your browser privacy settings."
             );
         }
@@ -95,7 +92,7 @@
             sessionStorage.removeItem(TOKEN_KEY);
         } catch (error) {
             console.error(
-                "AVERRA: Unable to clear the login session.",
+                "AVERRA: Could not clear the login session.",
                 error
             );
         }
@@ -106,8 +103,26 @@
     }
 
     /* ============================================================
-       PAGE AND REDIRECT HELPERS
+       PAGE HELPERS
        ============================================================ */
+
+    function isLoginPage() {
+        const path = window.location.pathname.toLowerCase();
+
+        return (
+            /\/admin\/?$/.test(path) ||
+            /\/admin\/index\.html$/.test(path) ||
+            document.documentElement.dataset.page ===
+                "admin-login" ||
+            Boolean(
+                document.querySelector(
+                    "#login-form, " +
+                    "#admin-login-form, " +
+                    "[data-admin-login-form]"
+                )
+            )
+        );
+    }
 
     function getLoginUrl() {
         const path = window.location.pathname;
@@ -132,28 +147,25 @@
     }
 
     function getDashboardUrl() {
+        const path = window.location.pathname;
+        const lowerPath = path.toLowerCase();
+        const adminIndex = lowerPath.lastIndexOf("/admin/");
+
+        if (adminIndex !== -1) {
+            return (
+                path.substring(0, adminIndex) +
+                "/admin/dashboard.html"
+            );
+        }
+
+        if (/\/admin$/i.test(path)) {
+            return path + "/dashboard.html";
+        }
+
         return new URL(
             "dashboard.html",
             window.location.href
         ).href;
-    }
-
-    function isLoginPage() {
-        const path = window.location.pathname.toLowerCase();
-
-        return (
-            /\/admin\/?$/.test(path) ||
-            /\/admin\/index\.html$/.test(path) ||
-            document.documentElement.dataset.page ===
-                "admin-login" ||
-            Boolean(
-                document.querySelector(
-                    "#login-form, " +
-                    "#admin-login-form, " +
-                    "[data-admin-login-form]"
-                )
-            )
-        );
     }
 
     function redirectToLogin() {
@@ -162,7 +174,6 @@
         }
 
         loginRedirecting = true;
-
         window.location.assign(getLoginUrl());
     }
 
@@ -175,7 +186,22 @@
             typeof detail === "string" &&
             detail.trim()
         ) {
-            return detail.trim();
+            const message = detail.trim();
+
+            if (
+                status === 503 &&
+                /administrator authentication is not configured/i
+                    .test(message)
+            ) {
+                return (
+                    "Administrator authentication is not configured " +
+                    "on the backend. In Render, open the AVERRA backend " +
+                    "service, go to Environment, add AVERRA_ADMIN_TOKEN " +
+                    "with a secure secret value, and deploy the changes."
+                );
+            }
+
+            return message;
         }
 
         if (Array.isArray(detail)) {
@@ -221,15 +247,16 @@
                 "Check the submitted information.",
 
             401:
-                "The administrator token is invalid or " +
-                "the session has expired. Please sign in again.",
+                "The administrator token is invalid or the session " +
+                "has expired. Please sign in again.",
 
             403:
-                "You do not have permission to perform this action.",
+                "Administrator access was denied. Check your " +
+                "permissions and backend authentication settings.",
 
             404:
                 "The requested API endpoint or record was not found. " +
-                "Check the backend routes.",
+                "Check the backend routes and API URL.",
 
             409:
                 "This action conflicts with the current record.",
@@ -250,11 +277,8 @@
                 "Check the Render service.",
 
             503:
-                "The AVERRA backend returned HTTP 503. " +
-                "If the response says administrator authentication " +
-                "is not configured, configure the required " +
-                "administrator token environment variable in Render " +
-                "and restart or redeploy the backend."
+                "The AVERRA backend returned HTTP 503. Check the " +
+                "backend configuration and Render logs."
         };
 
         return (
@@ -303,14 +327,19 @@
         } catch (error) {
             if (error && error.name === "AbortError") {
                 throw new Error(
-                    "The request timed out. The Render backend " +
-                    "may be starting or unavailable. Please try again."
+                    "The request timed out. The Render backend may " +
+                    "be starting or unavailable. Please try again."
                 );
             }
 
+            console.error(
+                "AVERRA: Network request failed.",
+                error
+            );
+
             throw new Error(
-                "Could not connect to the AVERRA backend. " +
-                "Check the Render service, API URL and CORS settings."
+                "Could not connect to the AVERRA backend. Check the " +
+                "Render service, API URL and backend CORS settings."
             );
         } finally {
             window.clearTimeout(timeoutId);
@@ -360,15 +389,10 @@
             typeof path !== "string" ||
             !path.trim()
         ) {
-            throw new Error(
-                "A valid API path is required."
-            );
+            throw new Error("A valid API path is required.");
         }
 
-        const settings = Object.assign(
-            {},
-            options || {}
-        );
+        const settings = Object.assign({}, options || {});
 
         const timeout = Number(settings.timeout) > 0
             ? Number(settings.timeout)
@@ -381,9 +405,7 @@
             : API_BASE +
                 (path.startsWith("/") ? path : "/" + path);
 
-        const headers = new Headers(
-            settings.headers || {}
-        );
+        const headers = new Headers(settings.headers || {});
 
         headers.set("Accept", "application/json");
 
@@ -407,29 +429,20 @@
 
         settings.headers = headers;
 
-        let response;
-
-        try {
-            response = await request(
-                endpoint,
-                settings,
-                timeout
-            );
-        } catch (error) {
-            console.error(
-                "AVERRA API connection error:",
-                error
-            );
-
-            throw error;
-        }
+        const response = await request(
+            endpoint,
+            settings,
+            timeout
+        );
 
         const result = await readResponse(response);
 
         if (!response.ok) {
+            const detail = getResponseDetail(result);
+
             const message = formatApiError(
                 response.status,
-                getResponseDetail(result),
+                detail,
                 "The server returned an error."
             );
 
@@ -491,22 +504,19 @@
         }
 
         if (!response.ok) {
-            const detail = getResponseDetail(result);
-
             const message = formatApiError(
                 response.status,
-                detail,
+                getResponseDetail(result),
                 "Unable to verify the administrator token."
             );
 
-            if (response.status === 503) {
-                console.error(
-                    "AVERRA authentication configuration error. " +
-                    "The backend must be configured before login " +
-                    "can succeed. Response:",
-                    result
-                );
-            }
+            console.error(
+                "AVERRA: Administrator verification failed.",
+                {
+                    status: response.status,
+                    response: result
+                }
+            );
 
             throw new Error(message);
         }
@@ -535,7 +545,7 @@
             return true;
         } catch (error) {
             console.error(
-                "AVERRA session verification failed:",
+                "AVERRA: Session verification failed.",
                 error
             );
 
@@ -543,22 +553,21 @@
                 error && error.message || ""
             );
 
-            /*
-             * Do not repeatedly redirect for server or
-             * network failures. These do not prove that
-             * the stored token is incorrect.
-             */
             const temporaryFailure =
                 /HTTP 5\d\d|authentication.*not configured|administrator authentication|backend.*unavailable|could not connect|timed out|CORS|too many requests|temporarily unavailable|internal error/i
                     .test(message);
 
+            /*
+             * Keep the token during temporary server failures.
+             * A server problem does not prove the token is invalid.
+             */
             if (temporaryFailure) {
                 throw error;
             }
 
             /*
-             * Invalid tokens and other definitive
-             * authorization failures require a new login.
+             * An invalid or unauthorized token requires
+             * a fresh login.
              */
             clearToken();
             redirectToLogin();
@@ -568,7 +577,7 @@
     }
 
     /* ============================================================
-       LOGIN FORM MESSAGES
+       LOGIN MESSAGES
        ============================================================ */
 
     function showLoginMessage(message, isError) {
@@ -586,6 +595,7 @@
 
         element.textContent = message;
         element.hidden = false;
+
         element.setAttribute(
             "role",
             isError ? "alert" : "status"
@@ -626,10 +636,6 @@
        ============================================================ */
 
     function initialiseLoginForm() {
-        if (loginHandlerBound) {
-            return;
-        }
-
         const form = document.querySelector(
             "#login-form, " +
             "#admin-login-form, " +
@@ -647,14 +653,13 @@
 
         if (!tokenInput) {
             console.error(
-                "AVERRA: Login form found, but its token " +
-                "input is missing."
+                "AVERRA: Login form found, but the token input " +
+                "field is missing."
             );
 
             return;
         }
 
-        loginHandlerBound = true;
         form.dataset.averraAuthBound = "true";
 
         form.addEventListener(
@@ -693,13 +698,10 @@
                 if (submitButton) {
                     submitButton.disabled = true;
 
-                    if (
-                        submitButton.tagName === "INPUT"
-                    ) {
+                    if (submitButton.tagName === "INPUT") {
                         submitButton.value = "Signing in...";
                     } else {
-                        submitButton.textContent =
-                            "Signing in...";
+                        submitButton.textContent = "Signing in...";
                     }
                 }
 
@@ -707,8 +709,8 @@
                     await verifyLogin(token);
 
                     /*
-                     * Store the token only after the
-                     * backend confirms that it is valid.
+                     * Save only after the backend verifies
+                     * the submitted token successfully.
                      */
                     saveToken(token);
 
@@ -717,14 +719,15 @@
                         false
                     );
 
-                    window.location.assign(
-                        getDashboardUrl()
-                    );
+                    window.location.assign(getDashboardUrl());
                 } catch (error) {
+                    /*
+                     * Do not leave an unverified token saved.
+                     */
                     clearToken();
 
                     console.error(
-                        "AVERRA login failed:",
+                        "AVERRA: Login failed.",
                         error
                     );
 
@@ -738,9 +741,7 @@
                     if (submitButton) {
                         submitButton.disabled = false;
 
-                        if (
-                            submitButton.tagName === "INPUT"
-                        ) {
+                        if (submitButton.tagName === "INPUT") {
                             submitButton.value =
                                 originalText || "Log in";
                         } else {
@@ -759,25 +760,16 @@
 
     function logout() {
         clearToken();
-
-        window.location.assign(
-            getLoginUrl()
-        );
+        window.location.assign(getLoginUrl());
     }
 
     function bindLogoutButtons() {
-        if (logoutHandlersBound) {
-            return;
-        }
-
         const buttons = document.querySelectorAll(
             "#logout-button, [data-admin-logout]"
         );
 
         buttons.forEach(function (button) {
-            if (
-                button.dataset.averraLogoutBound === "true"
-            ) {
+            if (button.dataset.averraLogoutBound === "true") {
                 return;
             }
 
@@ -791,8 +783,6 @@
                 }
             );
         });
-
-        logoutHandlersBound = true;
     }
 
     /* ============================================================
@@ -800,14 +790,8 @@
        ============================================================ */
 
     async function deleteEnquiry(id) {
-        if (
-            id === undefined ||
-            id === null ||
-            id === ""
-        ) {
-            throw new Error(
-                "An enquiry ID is required."
-            );
+        if (id === undefined || id === null || id === "") {
+            throw new Error("An enquiry ID is required.");
         }
 
         return api(
@@ -820,14 +804,8 @@
     }
 
     async function deleteApplication(id) {
-        if (
-            id === undefined ||
-            id === null ||
-            id === ""
-        ) {
-            throw new Error(
-                "An application ID is required."
-            );
+        if (id === undefined || id === null || id === "") {
+            throw new Error("An application ID is required.");
         }
 
         return api(
@@ -840,14 +818,8 @@
     }
 
     async function deleteJob(id) {
-        if (
-            id === undefined ||
-            id === null ||
-            id === ""
-        ) {
-            throw new Error(
-                "A vacancy ID is required."
-            );
+        if (id === undefined || id === null || id === "") {
+            throw new Error("A vacancy ID is required.");
         }
 
         return api(

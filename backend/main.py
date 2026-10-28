@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.4.0
+Version: 4.4.1
 
 FastAPI application for the AVERRA website.
 """
@@ -61,7 +61,7 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = "4.4.0"
+APP_VERSION = "4.4.1"
 
 APP_ENV = os.getenv(
     "APP_ENV",
@@ -390,6 +390,8 @@ DEFAULT_ORIGINS = [
     "http://127.0.0.1:8000",
     "https://averrastaffing.co.uk",
     "https://www.averrastaffing.co.uk",
+    "https://averrawebsite-v1-frontend-9ha2.vercel.app",
+    "https://averra-admin-smoky.vercel.app",
 ]
 
 configured_origins = os.getenv("CORS_ORIGINS", "").strip()
@@ -581,7 +583,6 @@ def get_job(
         )
 
     return job
-
 
 # ============================================================
 # PUBLIC JOB APPLICATIONS
@@ -967,7 +968,6 @@ def canonical_enquiry_status(value: str) -> str:
             detail="Invalid enquiry status.",
         ) from None
 
-
 # ============================================================
 # ADMIN: LIST CONTACT ENQUIRIES
 # ============================================================
@@ -1251,7 +1251,6 @@ def update_job(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to update the job vacancy.",
         ) from None
-
 
 # ============================================================
 # ADMIN: DELETE A VACANCY, ENQUIRY OR APPLICATION

@@ -1377,221 +1377,264 @@
 (() => {
     "use strict";
 
-    const MAX_CV_SIZE = 5 * 1024 * 1024;
-    const CV_BUCKET = "candidate-cvs";
-
-    const ALLOWED_EXTENSIONS = ["pdf", "doc", "docx"];
-
-    const ALLOWED_MIME_TYPES = [
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ];
+    const API_BASE = (
+        window.AVERRA_API_BASE_URL ||
+        "https://averra-backend-dn23.onrender.com"
+    ).replace(/\/+$/, "");
 
     const $ = id => document.getElementById(id);
 
-    const jobsGrid = $("jobs-grid");
-    const jobsStatus = $("jobs-status");
-    const jobsCount = $("jobs-results-count");
-    const searchInput = $("job-search");
-    const categoryFilter = $("job-category");
-    const resetJobsButton = $("reset-jobs");
-
-    const applicationForm = $("cv-application-form");
+    const grid = $("jobs-grid");
+    const status = $("jobs-status");
+    const count = $("jobs-results-count");
+    const search = $("job-search");
+    const category = $("job-category");
+    const reset = $("reset-jobs");
     const vacancySelect = $("applicant-role");
-    const cvInput = $("applicant-cv");
-    const submitButton = $("cv-submit-button");
-    const applicationStatus = $("cv-application-status");
 
-    let supabaseClient = null;
-    let publishedJobs = [];
-    let isSubmitting = false;
-
-    $("current-year").textContent = String(new Date().getFullYear());
-
-    function showMessage(element, message, type = "info") {
-        element.textContent = message;
-        element.className = "jobs-message " + type;
-        element.hidden = false;
+    if (!grid || !status || !count || !search || !category || !reset) {
+        console.error("AVERRA Jobs: one or more required page elements are missing.");
+        return;
     }
 
-    function hideMessage(element) {
-        element.hidden = true;
-        element.textContent = "";
+    let allJobs = [];
+
+    const categoryAliases = {
+        finance: ["finance", "accounting", "finance-accounting"],
+        technology: [
+            "technology", "it", "software", "software-development",
+            "it-software-development"
+        ],
+        architecture: ["architecture", "design", "architecture-design"],
+        engineering: ["engineering", "technical", "engineering-technical"],
+        administration: [
+            "administration", "data-entry", "administration-data-entry"
+        ],
+        "customer-service": [
+            "customer-service", "customer-service-support",
+            "customer-support", "support"
+        ],
+        sales: ["sales", "business-development", "sales-business-development"],
+        marketing: ["marketing", "digital-marketing"],
+        "human-resources": [
+            "human-resources", "hr", "recruitment",
+            "human-resources-recruitment"
+        ],
+        operations: ["operations", "business-operations"],
+        "project-management": ["project-management"],
+        legal: ["legal", "compliance", "legal-compliance-support"],
+        procurement: ["procurement", "supply-chain", "procurement-supply-chain"],
+        research: ["research", "data-analysis", "research-data-analysis"],
+        healthcare: ["healthcare", "healthcare-administration"],
+        other: ["other", "other-professional-roles"]
+    };
+
+    function normalise(value) {
+        return String(value || "")
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    }
+
+    function jobCategoryKey(value) {
+        const valueKey = normalise(value);
+
+        for (const [key, aliases] of Object.entries(categoryAliases)) {
+            if (
+                key === valueKey ||
+                aliases.some(alias => normalise(alias) === valueKey)
+            ) {
+                return key;
+            }
+        }
+
+        return valueKey || "other";
     }
 
     function makeElement(tag, className, text) {
         const element = document.createElement(tag);
 
-        if (className) {
-            element.className = className;
-        }
-
+        if (className) element.className = className;
         if (text !== undefined && text !== null) {
-            element.textContent = text;
+            element.textContent = String(text);
         }
 
         return element;
     }
 
-    /*
-     * A normalised key is used for filtering.
-     * The original category name is retained for display.
-     */
-    function normaliseCategory(category) {
-        return String(category || "Other")
-            .trim()
-            .toLowerCase()
-            .replace(/&/g, " and ")
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-+|-+$/g, "") || "other";
+    function showStatus(message, type = "info") {
+        status.textContent = message;
+        status.className = "jobs-message " + type;
+        status.hidden = false;
     }
 
-    function normaliseSearchText(value) {
-        return String(value || "")
-            .trim()
-            .toLowerCase();
+    function hideStatus() {
+        status.hidden = true;
+        status.textContent = "";
+    }
+
+    function extractJobs(payload) {
+        if (Array.isArray(payload)) return payload;
+
+        if (payload && Array.isArray(payload.jobs)) return payload.jobs;
+        if (payload && Array.isArray(payload.results)) return payload.results;
+        if (payload && Array.isArray(payload.data)) return payload.data;
+
+        return null;
+    }
+
+    function isPublished(job) {
+        if (
+            job.published === false ||
+            job.is_published === false ||
+            job.status === "draft" ||
+            job.status === "closed" ||
+            job.status === "expired"
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function addMeta(meta, label, value) {
+        if (value === undefined || value === null || String(value).trim() === "") {
+            return;
+        }
+
+        meta.appendChild(
+            makeElement("span", "", label + ": " + value)
+        );
+    }
+
+    function populateVacancySelect() {
+        if (!vacancySelect) return;
+
+        const previousValue = vacancySelect.value;
+        vacancySelect.replaceChildren(
+            new Option("General Application", "general")
+        );
+
+        allJobs.forEach(job => {
+            if (job.id === undefined || job.id === null) return;
+
+            const title = job.title || "Untitled vacancy";
+            vacancySelect.add(
+                new Option(title, String(job.id))
+            );
+        });
+
+        if (
+            previousValue &&
+            Array.from(vacancySelect.options).some(
+                option => option.value === previousValue
+            )
+        ) {
+            vacancySelect.value = previousValue;
+        }
     }
 
     function createJobCard(job) {
         const card = makeElement("article", "job-card");
 
         card.appendChild(
-            makeElement(
-                "span",
-                "job-category",
-                String(job.category || "Other")
-            )
+            makeElement("span", "job-category", job.category || "Other")
         );
 
         card.appendChild(
-            makeElement(
-                "h3",
-                "",
-                job.title || "Untitled vacancy"
-            )
+            makeElement("h3", "", job.title || "Untitled vacancy")
         );
 
         const meta = makeElement("div", "job-meta");
 
-        if (job.location) {
-            meta.appendChild(
-                makeElement("span", "", "Location: " + job.location)
-            );
+        addMeta(meta, "Location", job.location);
+        addMeta(meta, "Working arrangement", job.work_arrangement);
+        addMeta(meta, "Employment type", job.employment_type);
+        addMeta(meta, "Salary", job.salary);
+
+        if (job.closing_date) {
+            addMeta(meta, "Closing date", job.closing_date);
         }
 
-        if (job.work_arrangement) {
-            meta.appendChild(
-                makeElement(
-                    "span",
-                    "",
-                    "Working arrangement: " + job.work_arrangement
-                )
-            );
-        }
+        if (meta.childNodes.length) card.appendChild(meta);
 
-        if (job.salary) {
-            meta.appendChild(
-                makeElement("span", "", "Salary: " + job.salary)
-            );
-        }
-
-        if (meta.childNodes.length) {
-            card.appendChild(meta);
-        }
-
-        if (job.description && String(job.description).trim()) {
+        if (job.description) {
             card.appendChild(
-                makeElement(
-                    "p",
-                    "job-description",
-                    String(job.description).trim()
-                )
+                makeElement("p", "job-description", job.description)
             );
         }
 
-        if (Array.isArray(job.responsibilities)) {
+        if (Array.isArray(job.responsibilities) && job.responsibilities.length) {
             const list = makeElement("ul", "job-responsibilities");
 
             job.responsibilities.forEach(item => {
-                if (typeof item === "string" && item.trim()) {
-                    list.appendChild(
-                        makeElement("li", "", item.trim())
-                    );
-                }
+                if (item) list.appendChild(makeElement("li", "", item));
             });
 
-            if (list.childNodes.length) {
-                card.appendChild(list);
-            }
+            if (list.childNodes.length) card.appendChild(list);
         }
 
-        const applyButton = makeElement(
-            "a",
-            "jobs-button",
-            "Apply for This Job"
-        );
-
-        applyButton.href = "#submit-cv";
-        applyButton.setAttribute(
+        const apply = makeElement("a", "jobs-button", "Apply for This Job");
+        apply.href = "#submit-cv";
+        apply.setAttribute(
             "aria-label",
             "Apply for " + (job.title || "this vacancy")
         );
 
-        applyButton.addEventListener("click", () => {
-            vacancySelect.value = String(job.id);
+        apply.addEventListener("click", () => {
+            if (!vacancySelect) return;
 
-            if (vacancySelect.value !== String(job.id)) {
-                populateVacancySelect();
-                vacancySelect.value = String(job.id);
-            }
+            const id = String(job.id ?? "");
+            const exists = Array.from(vacancySelect.options).some(
+                option => option.value === id
+            );
+
+            if (exists) vacancySelect.value = id;
         });
 
-        card.appendChild(applyButton);
-
+        card.appendChild(apply);
         return card;
     }
 
     function renderJobs() {
-        const term = normaliseSearchText(searchInput.value);
-        const selectedCategory = categoryFilter.value;
+        const term = search.value.trim().toLowerCase();
+        const selectedCategory = category.value;
 
-        const filtered = publishedJobs.filter(job => {
-            const searchableText = [
+        const filteredJobs = allJobs.filter(job => {
+            const searchable = [
                 job.title,
                 job.category,
                 job.location,
                 job.work_arrangement,
+                job.employment_type,
                 job.salary,
                 job.description,
                 ...(Array.isArray(job.responsibilities)
                     ? job.responsibilities
                     : [])
-            ]
-                .filter(Boolean)
-                .join(" ")
-                .toLowerCase();
+            ].filter(Boolean).join(" ").toLowerCase();
 
-            const matchesSearch =
-                !term || searchableText.includes(term);
+            const matchesSearch = !term || searchable.includes(term);
 
             const matchesCategory =
                 !selectedCategory ||
-                normaliseCategory(job.category) === selectedCategory;
+                jobCategoryKey(job.category) === selectedCategory;
 
             return matchesSearch && matchesCategory;
         });
 
-        jobsGrid.replaceChildren();
+        grid.replaceChildren();
 
-        if (!filtered.length) {
+        if (filteredJobs.length === 0) {
             const empty = makeElement("div", "jobs-empty");
 
             empty.appendChild(
                 makeElement(
                     "h3",
                     "",
-                    publishedJobs.length
+                    allJobs.length
                         ? "No Matching Vacancies Found"
                         : "No Current Vacancies"
                 )
@@ -1601,411 +1644,122 @@
                 makeElement(
                     "p",
                     "",
-                    publishedJobs.length
-                        ? "Try another search term or category, or reset the filters."
-                        : "There are currently no published vacancies. You can still submit a general application."
+                    allJobs.length
+                        ? "Try another search term or category, or select Reset."
+                        : "There are currently no published vacancies. Please check again soon, or submit a General Application."
                 )
             );
 
-            jobsGrid.appendChild(empty);
+            grid.appendChild(empty);
         } else {
             const fragment = document.createDocumentFragment();
 
-            filtered.forEach(job => {
+            filteredJobs.forEach(job => {
                 fragment.appendChild(createJobCard(job));
             });
 
-            jobsGrid.appendChild(fragment);
+            grid.appendChild(fragment);
         }
 
-        jobsCount.textContent =
-            filtered.length +
-            (filtered.length === 1
+        count.textContent =
+            filteredJobs.length +
+            (filteredJobs.length === 1
                 ? " vacancy displayed"
                 : " vacancies displayed");
 
-        jobsGrid.setAttribute("aria-busy", "false");
+        grid.setAttribute("aria-busy", "false");
     }
 
     function populateCategories() {
+        const previous = category.value;
 
-function populateCategories() {
-    const previous = categoryFilter.value;
+        const categories = [
+            ["finance", "Finance & Accounting"],
+            ["technology", "IT & Software Development"],
+            ["architecture", "Architecture & Design"],
+            ["engineering", "Engineering & Technical"],
+            ["administration", "Administration & Data Entry"],
+            ["customer-service", "Customer Service & Support"],
+            ["sales", "Sales & Business Development"],
+            ["marketing", "Digital Marketing"],
+            ["human-resources", "Human Resources & Recruitment"],
+            ["operations", "Business Operations"],
+            ["project-management", "Project Management"],
+            ["legal", "Legal & Compliance Support"],
+            ["procurement", "Procurement & Supply Chain"],
+            ["research", "Research & Data Analysis"],
+            ["healthcare", "Healthcare Administration"],
+            ["other", "Other Professional Roles"]
+        ];
 
-    const categories = [
-        ["finance", "Finance & Accounting"],
-        ["technology", "IT & Software Development"],
-        ["architecture", "Architecture & Design"],
-        ["engineering", "Engineering & Technical"],
-        ["administration", "Administration & Data Entry"],
-        ["customer-service", "Customer Service & Support"],
-        ["sales", "Sales & Business Development"],
-        ["marketing", "Digital Marketing"],
-        ["human-resources", "Human Resources & Recruitment"],
-        ["operations", "Business Operations"],
-        ["project-management", "Project Management"],
-        ["legal", "Legal & Compliance Support"],
-        ["procurement", "Procurement & Supply Chain"],
-        ["research", "Research & Data Analysis"],
-        ["healthcare", "Healthcare Administration"],
-        ["other", "Other Professional Roles"]
-    ];
+        category.replaceChildren(new Option("All categories", ""));
 
-    categoryFilter.replaceChildren(
-        new Option("All categories", "")
-    );
-
-    categories.forEach(([value, label]) => {
-        categoryFilter.add(new Option(label, value));
-    });
-
-    if (categories.some(([value]) => value === previous)) {
-        categoryFilter.value = previous;
-    }
-}
-
-
-        const sortedCategories = [...categoryMap.entries()]
-            .sort((a, b) => a[1].localeCompare(b[1]));
-
-        categoryFilter.replaceChildren(
-            new Option("All categories", "")
-        );
-
-        sortedCategories.forEach(([key, label]) => {
-            categoryFilter.add(new Option(label, key));
+        categories.forEach(([value, label]) => {
+            category.add(new Option(label, value));
         });
 
-        if (categoryMap.has(previous)) {
-            categoryFilter.value = previous;
+        if (categories.some(([value]) => value === previous)) {
+            category.value = previous;
         }
     }
 
-
-function populateCategories() {
-    const previous = categoryFilter.value;
-
-    const categories = [
-        ["finance", "Finance & Accounting"],
-        ["technology", "IT & Software Development"],
-        ["architecture", "Architecture & Design"],
-        ["engineering", "Engineering & Technical"],
-        ["administration", "Administration & Data Entry"],
-        ["customer-service", "Customer Service & Support"],
-        ["sales", "Sales & Business Development"],
-        ["marketing", "Digital Marketing"],
-        ["human-resources", "Human Resources & Recruitment"],
-        ["operations", "Business Operations"],
-        ["project-management", "Project Management"],
-        ["legal", "Legal & Compliance Support"],
-        ["procurement", "Procurement & Supply Chain"],
-        ["research", "Research & Data Analysis"],
-        ["healthcare", "Healthcare Administration"],
-        ["other", "Other Professional Roles"]
-    ];
-
-    categoryFilter.replaceChildren(
-        new Option("All categories", "")
-    );
-
-    categories.forEach(([value, label]) => {
-        categoryFilter.add(new Option(label, value));
-    });
-
-    if (categories.some(([value]) => value === previous)) {
-        categoryFilter.value = previous;
-    }
-}
-
-
-    function resetFilters() {
-        searchInput.value = "";
-        categoryFilter.value = "";
-        renderJobs();
-        searchInput.focus();
-    }
-
-    function secureRandomId() {
-        if (
-            window.crypto &&
-            typeof window.crypto.randomUUID === "function"
-        ) {
-            return window.crypto.randomUUID();
-        }
-
-        if (
-            window.crypto &&
-            typeof window.crypto.getRandomValues === "function"
-        ) {
-            const bytes = new Uint8Array(16);
-            window.crypto.getRandomValues(bytes);
-
-            return Array.from(
-                bytes,
-                byte => byte.toString(16).padStart(2, "0")
-            ).join("");
-        }
-
-        throw new Error(
-            "Secure file naming is unavailable. Please use an up-to-date browser."
-        );
-    }
-
-    async function loadPublishedJobs() {
-        jobsGrid.setAttribute("aria-busy", "true");
-
-        jobsGrid.replaceChildren(
+    async function loadJobs() {
+        grid.setAttribute("aria-busy", "true");
+        count.textContent = "Loading vacancies…";
+        grid.replaceChildren(
             makeElement("div", "jobs-empty", "Loading current vacancies…")
         );
-
-        jobsCount.textContent = "Loading vacancies…";
-        hideMessage(jobsStatus);
-
-        const { data, error } = await supabaseClient
-            .from("jobs")
-            .select(
-                "id,title,category,location,work_arrangement,salary,description,responsibilities,published,created_at"
-            )
-            .eq("published", true)
-            .order("created_at", { ascending: false });
-
-        if (error) {
-            throw error;
-        }
-
-        publishedJobs = (data || []).filter(
-            job => job.published === true
-        );
-
-        populateCategories();
-        populateVacancySelect();
-        renderJobs();
-    }
-
-    function validateCv(file) {
-        if (!file) {
-            return "Please select your CV before submitting.";
-        }
-
-        if (file.size <= 0) {
-            return "The selected CV file is empty.";
-        }
-
-        if (file.size > MAX_CV_SIZE) {
-            return "Your CV must be no larger than 5 MB.";
-        }
-
-        const filename = file.name || "";
-        const lastDot = filename.lastIndexOf(".");
-
-        const extension = lastDot >= 0
-            ? filename.slice(lastDot + 1).toLowerCase()
-            : "";
-
-        if (!ALLOWED_EXTENSIONS.includes(extension)) {
-            return "Please upload a PDF, DOC or DOCX file.";
-        }
-
-        /*
-         * Browsers may leave file.type empty.
-         * If supplied, the MIME type must match an accepted format.
-         */
-        if (file.type && !ALLOWED_MIME_TYPES.includes(file.type)) {
-            return "The file type is not supported. Please upload a PDF, DOC or DOCX.";
-        }
-
-        return null;
-    }
-
-    async function submitApplication(event) {
-        event.preventDefault();
-
-        if (isSubmitting) {
-            return;
-        }
-
-        hideMessage(applicationStatus);
-
-        if (!supabaseClient) {
-            showMessage(
-                applicationStatus,
-                "The application service is not configured. Please contact info@averrastaffing.co.uk.",
-                "error"
-            );
-            return;
-        }
-
-        if (!applicationForm.reportValidity()) {
-            return;
-        }
-
-        const name = $("applicant-name").value.trim();
-        const email = $("applicant-email").value.trim();
-        const phone = $("applicant-phone").value.trim();
-        const selectedJobId = vacancySelect.value;
-        const coverLetter = $("applicant-cover-letter").value.trim();
-        const file = cvInput.files[0];
-
-        const cvError = validateCv(file);
-
-        if (cvError) {
-            showMessage(applicationStatus, cvError, "error");
-            return;
-        }
-
-        if (!name || !email) {
-            showMessage(
-                applicationStatus,
-                "Please enter your full name and email address.",
-                "error"
-            );
-            return;
-        }
-
-        if (
-            selectedJobId !== "general" &&
-            !publishedJobs.some(job => String(job.id) === selectedJobId)
-        ) {
-            showMessage(
-                applicationStatus,
-                "That vacancy is no longer available. Refresh the page and select a current vacancy.",
-                "error"
-            );
-            return;
-        }
-
-        isSubmitting = true;
-        submitButton.disabled = true;
-        submitButton.textContent = "Submitting Application…";
-
-        let uploadedPath = null;
+        hideStatus();
 
         try {
-            const extension = file.name
-                .split(".")
-                .pop()
-                .toLowerCase();
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 20000);
 
-            const storagePath =
-                secureRandomId() + "/" +
-                secureRandomId() + "." + extension;
+            let response;
 
-            const { error: uploadError } = await supabaseClient
-                .storage
-                .from(CV_BUCKET)
-                .upload(storagePath, file, {
-                    cacheControl: "0",
-                    upsert: false,
-                    contentType: file.type || "application/octet-stream"
+            try {
+                response = await fetch(API_BASE + "/api/jobs?limit=100", {
+                    method: "GET",
+                    headers: { "Accept": "application/json" },
+                    signal: controller.signal,
+                    cache: "no-store"
                 });
+            } finally {
+                clearTimeout(timeout);
+            }
 
-            if (uploadError) {
-                console.error("CV upload failed:", uploadError);
-
+            if (!response.ok) {
                 throw new Error(
-                    "Your CV could not be uploaded. Please check the storage setup and try again."
+                    "The jobs service returned HTTP " + response.status + "."
                 );
             }
 
-            uploadedPath = storagePath;
+            const payload = await response.json();
+            const jobs = extractJobs(payload);
 
-            const record = {
-                full_name: name,
-                email: email,
-                phone: phone || null,
-                job_id: selectedJobId === "general"
-                    ? null
-                    : selectedJobId,
-                cover_letter: coverLetter || null,
-                cv_path: storagePath,
-                cv_original_name: file.name,
-                cv_size: file.size,
-                status: "new"
-            };
-
-            const { error: insertError } = await supabaseClient
-                .from("applications")
-                .insert([record]);
-
-            if (insertError) {
-                console.error(
-                    "Application database insert failed:",
-                    insertError
-                );
-
-                /*
-                 * Try to remove the uploaded CV if saving the
-                 * application record fails.
-                 */
-                const { error: cleanupError } = await supabaseClient
-                    .storage
-                    .from(CV_BUCKET)
-                    .remove([uploadedPath]);
-
-                if (cleanupError) {
-                    console.error("CV cleanup failed:", cleanupError);
-                }
-
-                uploadedPath = null;
-
-                throw new Error(
-                    "Your CV was uploaded, but your application could not be saved. Please try again or contact info@averrastaffing.co.uk."
-                );
+            if (!jobs) {
+                throw new Error("The jobs service returned an unexpected response.");
             }
 
-            applicationForm.reset();
+            allJobs = jobs.filter(isPublished);
 
-            showMessage(
-                applicationStatus,
-                "Thank you. Your application has been submitted successfully.",
-                "success"
-            );
+            populateCategories();
+            populateVacancySelect();
+            renderJobs();
 
+            if (allJobs.length === 0) {
+                showStatus(
+                    "The website connected to the jobs service, but no published vacancies were returned. Check the admin dashboard and publish a vacancy.",
+                    "info"
+                );
+            }
         } catch (error) {
-            console.error("Application submission failed:", error);
+            console.error("AVERRA jobs could not be loaded:", error);
 
-            showMessage(
-                applicationStatus,
-                error && error.message
-                    ? error.message
-                    : "We could not submit your application. Please try again later.",
-                "error"
-            );
+            allJobs = [];
+            grid.replaceChildren();
 
-        } finally {
-            isSubmitting = false;
-            submitButton.disabled = false;
-            submitButton.textContent = "Submit Application";
-        }
-    }
-
-    /* Search, filtering, reset and application events */
-
-    searchInput.addEventListener("input", renderJobs);
-    categoryFilter.addEventListener("change", renderJobs);
-    resetJobsButton.addEventListener("click", resetFilters);
-    applicationForm.addEventListener("submit", submitApplication);
-
-    async function initialise() {
-        const config = window.AVERRA_SUPABASE_CONFIG;
-
-        if (
-            !window.supabase ||
-            !config ||
-            !config.url ||
-            !config.anonKey
-        ) {
-            console.error(
-                "Supabase is not configured. Check supabase-config.js."
-            );
-
-            showMessage(
-                jobsStatus,
-                "The vacancy service is not configured. Please contact info@averrastaffing.co.uk.",
-                "error"
-            );
-
-            jobsGrid.replaceChildren(
+            grid.appendChild(
                 makeElement(
                     "div",
                     "jobs-empty",
@@ -2013,54 +1767,35 @@ function populateCategories() {
                 )
             );
 
-            jobsGrid.setAttribute("aria-busy", "false");
-            jobsCount.textContent = "Unable to load vacancies";
+            grid.setAttribute("aria-busy", "false");
+            count.textContent = "Unable to load vacancies";
 
-            vacancySelect.replaceChildren(
-                new Option("General Application", "general")
-            );
-
-            return;
-        }
-
-        try {
-            supabaseClient = window.supabase.createClient(
-                config.url,
-                config.anonKey
-            );
-
-            await loadPublishedJobs();
-
-        } catch (error) {
-            console.error(
-                "AVERRA jobs initialisation failed:",
-                error
-            );
-
-            showMessage(
-                jobsStatus,
-                "We could not connect to the vacancy service. Please try again later.",
+            showStatus(
+                error.name === "AbortError"
+                    ? "The jobs service took too long to respond. Please refresh the page and try again."
+                    : "We could not load vacancies from the AVERRA jobs service. Please try again later or contact info@averrastaffing.co.uk.",
                 "error"
             );
 
-            jobsGrid.replaceChildren(
-                makeElement(
-                    "div",
-                    "jobs-empty",
-                    "Vacancies are temporarily unavailable."
-                )
-            );
-
-            jobsGrid.setAttribute("aria-busy", "false");
-            jobsCount.textContent = "Unable to load vacancies";
-
-            vacancySelect.replaceChildren(
-                new Option("General Application", "general")
-            );
+            if (vacancySelect) {
+                vacancySelect.replaceChildren(
+                    new Option("General Application", "general")
+                );
+            }
         }
     }
 
-    initialise();
+    search.addEventListener("input", renderJobs);
+    category.addEventListener("change", renderJobs);
+
+    reset.addEventListener("click", () => {
+        search.value = "";
+        category.value = "";
+        renderJobs();
+        search.focus();
+    });
+
+    loadJobs();
 })();
 </script>
 
