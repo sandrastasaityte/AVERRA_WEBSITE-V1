@@ -1,12 +1,14 @@
+
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/schemas/jobs.py
+Version: 2.0.1
 
 Pydantic v2 schemas for job vacancies.
 """
 
 import re
-from datetime import date, datetime
+from datetime import date, datetime, time, timezone
 from typing import Literal
 
 from pydantic import (
@@ -36,6 +38,7 @@ JobStatus = Literal[
     "draft",
     "published",
     "closed",
+    "archived",
 ]
 
 
@@ -75,6 +78,28 @@ def validate_optional_email(value: str | None) -> str | None:
         )
 
     return value.lower()
+
+
+def closing_date_to_datetime(
+    value: date | datetime | None,
+) -> datetime | None:
+    """
+    Convert a calendar date to midnight UTC for database storage.
+
+    Existing datetime values are preserved. This helper can be used
+    by the API when mapping validated input to the SQLAlchemy model.
+    """
+    if value is None:
+        return None
+
+    if isinstance(value, datetime):
+        return value
+
+    return datetime.combine(
+        value,
+        time.min,
+        tzinfo=timezone.utc,
+    )
 
 
 # ============================================================
@@ -321,9 +346,7 @@ class JobResponse(BaseModel):
         cls,
         value: date | datetime | None,
     ) -> date | None:
-        """
-        Convert a database datetime into a calendar date.
-        """
+        """Convert a database datetime into a calendar date."""
         if isinstance(value, datetime):
             return value.date()
 

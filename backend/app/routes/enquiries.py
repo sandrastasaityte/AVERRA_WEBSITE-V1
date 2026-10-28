@@ -56,7 +56,9 @@ def create_enquiry(
         db.rollback()
 
         # Keep database details in server logs, not in the public response.
-        logger.exception("Database error while saving a customer enquiry.")
+        logger.exception(
+            "Database error while saving a customer enquiry."
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -67,7 +69,9 @@ def create_enquiry(
         db.rollback()
 
         # Catch unexpected failures without exposing internal details.
-        logger.exception("Unexpected error while saving a customer enquiry.")
+        logger.exception(
+            "Unexpected error while saving a customer enquiry."
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

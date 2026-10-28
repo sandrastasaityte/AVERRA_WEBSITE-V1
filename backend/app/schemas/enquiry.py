@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/schemas/enquiry.py
-Version: 2.0.0
+Version: 2.0.1
 
 Pydantic v2 schemas for customer enquiries.
 Validates public submissions and separates public responses
@@ -22,17 +22,14 @@ from pydantic import (
 )
 
 
-
-
 EnquiryStatus = Literal[
     "new",
     "in_progress",
-  "unread"
+    "responded",
     "closed",
-    "contacted",
-    "replied",
-"resolved"
+    "spam",
 ]
+
 
 class EnquiryBase(BaseModel):
     """Shared fields for customer enquiries."""

@@ -67,7 +67,9 @@ def readiness_check(
         db.execute(text("SELECT 1"))
 
     except SQLAlchemyError:
-        logger.exception("AVERRA readiness check failed: database unavailable.")
+        logger.exception(
+            "AVERRA readiness check failed: database unavailable."
+        )
 
         return {
             "status": "unavailable",

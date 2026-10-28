@@ -31,6 +31,7 @@ __all__ = [
     "EnquiryResponse",
     "EnquiryDetail",
     "EnquiryStatusUpdate",
+
     # Job schemas
     "JobBase",
     "JobCreate",

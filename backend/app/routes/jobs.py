@@ -57,7 +57,6 @@ def list_published_jobs(
     db: Session = Depends(get_db),
 ) -> list[Job]:
     """List published, unexpired vacancies for the Careers page."""
-
     statement = (
         _get_public_job_statement()
         .order_by(Job.created_at.desc(), Job.id.desc())
@@ -87,7 +86,6 @@ def get_published_job(
     db: Session = Depends(get_db),
 ) -> Job:
     """Return one published vacancy that has not expired."""
-
     statement = _get_public_job_statement().where(Job.id == job_id)
 
     try:
