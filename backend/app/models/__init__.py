@@ -1,5 +1,6 @@
 
-"""AVERRA STAFFING SOLUTIONS LTD
+"""
+AVERRA STAFFING SOLUTIONS LTD
 Central exports for SQLAlchemy database models.
 """
 

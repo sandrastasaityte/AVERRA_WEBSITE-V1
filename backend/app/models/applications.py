@@ -1,5 +1,6 @@
 
-"""AVERRA STAFFING SOLUTIONS LTD
+"""
+AVERRA STAFFING SOLUTIONS LTD
 Database model for website job applications.
 """
 
@@ -78,8 +79,8 @@ class Application(Base):
         nullable=False,
     )
 
-    # CV bytes are stored in the database so that the file is not
-    # dependent on Render's temporary local filesystem.
+    # Store CV bytes in the database so they are not dependent
+    # on Render's temporary local filesystem.
     cv_content: Mapped[bytes] = mapped_column(
         LargeBinary,
         nullable=False,
