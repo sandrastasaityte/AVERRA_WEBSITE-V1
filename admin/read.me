@@ -1,14 +1,194 @@
-admin website: https://averra-admin-smoky.vercel.app/
+# AVERRA Staffing Solutions Ltd
 
-AVERRA_ADMIN_TOKEN=Kk1pcQCodPiP4JjxAkGBzEGsu_uuNfRFRC1z8K0GRZBfxwlqLBq1TAT0sUYtMdnT
+**Connecting UK Businesses with Global Talent**
 
-deployed backend: https://averra-backend-dn23.onrender.com/api/jobs?utm_source=chatgpt.com
+AVERRA Staffing Solutions Ltd is a UK-based outsourcing and staffing business connecting UK companies with skilled professionals based in India. The platform supports public vacancy listings, job applications, business enquiries and administrator-managed recruitment content.
 
-endpoints:
-Your admin job endpoints are:
-Action	Endpoint:
-Create a vacancy	POST /api/admin/jobs
-List all vacancies for admin	GET /api/admin/jobs
-Update a vacancy	PATCH /api/admin/jobs/{job_id}
-List public vacancies	GET /api/jobs
-View a public vacancy	GET /api/jobs/{job_id}
+---
+
+## 1. Project Overview
+
+The AVERRA website project consists of three main components:
+
+- **Public website:** The customer-facing website for company information, services, vacancies and applications.
+- **Admin panel:** A private management interface for administrator login, dashboard, enquiries and vacancy management.
+- **Backend API:** A FastAPI application responsible for data processing, vacancy management, applications, enquiries and administrator-protected operations.
+
+### Live Deployments
+
+| Component | URL |
+|---|---|
+| Public website | https://averrawebsite-v1-frontend-9ha2.vercel.app/ |
+| Admin panel | https://averra-admin-smoky.vercel.app/ |
+| Backend API | https://averra-backend-dn23.onrender.com |
+| API documentation | https://averra-backend-dn23.onrender.com/docs |
+
+The production website currently uses deployment URLs. Configure the custom domain and production environment settings separately when required.
+
+---
+
+## 2. Project Structure
+
+```text
+AVERRA_WEBSITE_v1/
+│
+├── frontend/
+│   └── index.html
+│       └── Public website homepage
+│
+├── admin/
+│   ├── index.html
+│   │   └── Administrator login
+│   │
+│   ├── dashboard.html
+│   │   └── Administrator dashboard
+│   │
+│   ├── enquiries.html
+│   │   └── Enquiry management
+│   │
+│   ├── jobs.html
+│   │   └── Vacancy listing and management
+│   │
+│   ├── job-form.html
+│   │   └── Create and edit vacancies
+│   │
+│   ├── css/
+│   │   └── admin.css
+│   │
+│   └── js/
+│       ├── auth.js
+│       ├── job-form.js
+│       ├── jobs.js
+│       └── dashboard.js
+│
+├── backend/
+│   ├── main.py
+│   ├── database/
+│   ├── logs/
+│   └── uploads/
+│
+└── README.md
+```
+
+Additional backend modules, configuration files, database models and dependencies may exist in the actual project and should be retained.
+
+---
+
+## 3. Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| HTML | Website and admin page structure |
+| CSS | Website styling and responsive layouts |
+| JavaScript | Frontend interactions and API requests |
+| Python | Backend application |
+| FastAPI | REST API framework |
+| SQLite | Local database storage |
+| Vercel | Frontend and admin deployment |
+| Render | Backend API hosting |
+| Git and GitHub | Source control and project versioning |
+
+---
+
+## 4. Vacancy Management API
+
+The vacancy management system separates administrator operations from public vacancy access.
+
+### Administrator endpoints
+
+These endpoints are intended for authorised administrators.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/api/admin/jobs` | Create a vacancy |
+| `GET` | `/api/admin/jobs` | Retrieve vacancies for administration |
+| `PATCH` | `/api/admin/jobs/{job_id}` | Update an existing vacancy |
+
+Administrator requests must include the authentication credentials expected by the backend. Never expose administrator secrets in public website code or commit them to GitHub.
+
+### Public endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/api/jobs` | Retrieve published public vacancies |
+| `GET` | `/api/jobs/{job_id}` | Retrieve an individual public vacancy |
+
+Public vacancy endpoints should return only vacancies that meet the backend's publication and visibility rules.
+
+### Example API URLs
+
+```text
+GET https://averra-backend-dn23.onrender.com/api/jobs
+
+GET https://averra-backend-dn23.onrender.com/api/jobs/1
+
+GET https://averra-backend-dn23.onrender.com/api/admin/jobs
+
+POST https://averra-backend-dn23.onrender.com/api/admin/jobs
+
+PATCH https://averra-backend-dn23.onrender.com/api/admin/jobs/1
+```
+
+The example job ID `1` is illustrative; it does not imply that a vacancy with that ID exists.
+
+---
+
+## 5. Local Development Setup
+
+### Requirements
+
+Install the following before running the project:
+
+- Python
+- Git, if using version control
+- A code editor such as PyCharm or Visual Studio Code
+- The Python dependencies specified by the backend project
+
+### Start the public website
+
+Open a terminal in the project directory and run:
+
+```bash
+python -m http.server 8000 --directory frontend
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000
+```
+
+This serves the frontend files locally. It does not automatically start the backend API.
+
+### Start the backend
+
+Open a separate terminal:
+
+```bash
+cd backend
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+**Important:** The frontend and backend cannot both use the same port at the same time. If both need to run locally, start the frontend on a different port, for example:
+
+```bash
+python -m http.server 8080 --directory frontend
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8080
+```
+
+The backend API documentation should be available at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Use the project's existing dependency file and environment configuration if available. Do not replace project configuration without checking the current setup.
+
+---
+
+##

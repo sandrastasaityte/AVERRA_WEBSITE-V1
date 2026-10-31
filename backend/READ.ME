@@ -1,26 +1,306 @@
-to reload main.py
+# AVERRA Staffing Solutions – Backend
+
+**Project:** AVERRA Staffing Solutions Ltd
+**Backend framework:** FastAPI
+**Programming language:** Python
+**Database:** SQLite
+**Deployment:** Render
+**Frontend hosting:** Vercel
+
+---
+
+## 1. Project Overview
+
+The AVERRA backend powers the AVERRA Staffing Solutions website and its administration system.
+
+It provides the backend infrastructure for:
+
+- Job vacancy management
+- Job listing and publication
+- Business enquiries
+- Job applications
+- CV uploads
+- Administrator authentication
+- Database management
+- API communication between the frontend and backend
+
+AVERRA connects UK businesses with skilled professionals based in India.
+
+## 2. Project Structure
+
+```text
+AVERRA_WEBSITE_v1/
+│
+├── backend/
+│   │
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── .env
+│   ├── .env.example
+│   ├── .gitignore
+│   │
+│   ├── app/
+│   │   ├── __init__.py
+│   │   │
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── jobs.py
+│   │   │   ├── enquiries.py
+│   │   │   └── applications.py
+│   │   │
+│   │   ├── routes/
+│   │   │   ├── __init__.py
+│   │   │   ├── enquiries.py
+│   │   │   ├── health.py
+│   │   │   └── jobs.py
+│   │   │
+│   │   ├── schemas/
+│   │   │   ├── __init__.py
+│   │   │   ├── jobs.py
+│   │   │   ├── enquiry.py
+│   │   │   └── applications.py
+│   │   │
+│   │   └── services/
+│   │       └── __init__.py
+│   │
+│   ├── database/
+│   │   ├── __init__.py
+│   │   ├── connection.py
+│   │   ├── averra.db
+│   │   └── migrations/
+│   │       └── 001_initial_schema.sql
+│   │
+│   ├── uploads/
+│   │   └── upload_service.py
+│   │
+│   ├── logs/
+│   │   ├── application.log
+│   │   └── logging_config.py
+│   │
+│   ├── tests/
+│   │   └── test_api.py
+│   │
+│   └── docs/
+│       └── API_DOCUMENTATION.md
+│
+└── frontend/
+```
+
+## 3. Technology Stack
+
+| Component | Technology |
+|---|---|
+| Backend | Python |
+| API framework | FastAPI |
+| API server | Uvicorn |
+| Database | SQLite |
+| ORM | SQLAlchemy |
+| Data validation | Pydantic |
+| API documentation | Swagger / OpenAPI |
+| Backend hosting | Render |
+| Frontend hosting | Vercel |
+
+## 4. Local Development Setup
+
+### Requirements
+
+Install:
+
+- Python 3
+- PyCharm
+- pip
+- Git
+
+### Navigate to the backend folder
+
+Open the PyCharm terminal:
+
+```powershell
+cd "C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1\backend"
+```
+
+### Install dependencies
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+### Run the backend
+
+```powershell
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+```
+
+The local backend should now be available at:
+
+http://127.0.0.1:8000
+
+### Local API documentation
+
+http://127.0.0.1:8000/docs
+
+Uvicorn automatically reloads the application when Python files are saved.
+
+To stop the server, press `CTRL + C`.
+
+## 5. Environment Variables
+
+The backend uses environment variables for configuration and security.
+
+The `.env` file should remain private and must not be committed to GitHub.
+
+Example configuration:
+
+```env
+SECRET_KEY=your_secret_key
+AVERRA_ADMIN_TOKEN=your_secure_admin_token
+
+APP_ENV=development
+DEBUG=true
+
+DATABASE_URL=sqlite:///./database/averra.db
+```
+
+The actual variables required depend on the configuration in `main.py` and the database connection module.
+
+### Generate secure secrets
+
+Run:
+
+```powershell
+python -c "import secrets; print('SECRET_KEY=' + secrets.token_urlsafe(48)); print('AVERRA_ADMIN_TOKEN=' + secrets.token_urlsafe(48))"
+```
+
+Use the generated values in your local environment and configure the appropriate environment variables in Render.
+
+**Security requirements:**
+
+- Never publish administrator tokens.
+- Never upload `.env` to GitHub.
+- Use a different secret for production.
+- Do not share private credentials.
+
+## 6. API Endpoints
+
+The application provides API functionality for:
+
+| Functionality | Purpose |
+|---|---|
+| Health | Backend health checks |
+| Jobs | Retrieve and manage vacancies |
+| Enquiries | Receive and manage business enquiries |
+| Applications | Receive job applications and CVs |
+| Administration | Protected administrator operations |
+
+The exact available routes and HTTP methods are documented by the running application.
+
+### Swagger documentation
+
+Local:
+
+http://127.0.0.1:8000/docs
+
+Production:
+
+https://averra-backend-dn23.onrender.com/docs
+
+## 7. Production Deployment
+
+### Backend – Render
+
+Production backend:
+
+https://averra-backend-dn23.onrender.com
+
+API documentation:
+
+https://averra-backend-dn23.onrender.com/docs
+
+### Frontend – Vercel
+
+Production website:
+
 https://averrawebsite-v1-frontend-9ha2.vercel.app/
 
-http://127.0.0.1:8000/docs.
+### Production configuration
 
-google app password smpt_password: nsbz ugzm ggpe uoww   do not ;loose it
+Check the following when deploying:
 
- if your application defines that endpoint.
- https://averra-backend-dn23.onrender.com
-https://averra-backend-dn23.onrender.com/docs
-https://averra-backend-dn23.onrender.com/docs?utm_source=chatgpt.com
-render:
+- Correct Python dependencies.
+- Correct Render start command.
+- Production environment variables.
+- Valid administrator authentication token.
+- Correct database configuration.
+- Frontend API base URL.
+- CORS configuration.
+- Database persistence and backup arrangements.
 
+The production database must use persistent storage or an external database service; a temporary Render filesystem should not be relied upon for permanent SQLite data.
 
-— only if your application defines that endpoint.
+## 8. Security
 
-cd "C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1\backend"
-python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+The backend should protect:
 
+- Administrator endpoints.
+- Administrator authentication tokens.
+- Application and CV information.
+- Database access.
+- Uploaded documents.
+- Environment variables.
+
+Administrator requests use the `X-Admin-Token` authentication header.
+
+Never expose private administrator credentials in frontend source code or public repositories.
+
+## 9. Testing
+
+Run the backend test suite from the backend directory:
+
+```powershell
+python -m pytest
+```
+
+To check installed packages:
+
+```powershell
 python -m pip show fastapi starlette httpx httpx2
+```
 
-to run main.py:
-python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+## 10. Troubleshooting
 
-secret code:
-python -c "import secrets; print('SECRET_KEY=' + secrets.token_urlsafe(48)); print('AVERRA_ADMIN_TOKEN=' + secrets.token_urlsafe(48))"
+### Administrator authentication is not configured
+
+Check that `AVERRA_ADMIN_TOKEN` is configured correctly in the Render environment variables.
+
+### Cannot connect to the backend
+
+Check that Uvicorn is running and that the frontend uses the correct API base URL.
+
+### API documentation does not open
+
+Check the server terminal for Python errors and confirm that the FastAPI application started successfully.
+
+### Database errors
+
+Check `database/connection.py`, the database URL and the availability of the database file.
+
+### CV upload errors
+
+Check file validation, upload limits and the application endpoint configuration.
+
+## 11. Important Project Addresses
+
+| Resource | URL |
+|---|---|
+| Frontend | https://averrawebsite-v1-frontend-9ha2.vercel.app/ |
+| Production API | https://averra-backend-dn23.onrender.com |
+| Production API docs | https://averra-backend-dn23.onrender.com/docs |
+| Local API | http://127.0.0.1:8000 |
+| Local API docs | http://127.0.0.1:8000/docs |
+
+---
+
+**AVERRA STAFFING SOLUTIONS LTD**
+
+*Connecting UK Businesses with Global Talent.*
