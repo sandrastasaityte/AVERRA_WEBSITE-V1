@@ -1,13 +1,18 @@
 
 """
 AVERRA STAFFING SOLUTIONS LTD
+
+File: backend/app/models/applications.py
+
 Database model for website job applications.
+Version: 2.0.0
 """
 
 from datetime import datetime, timezone
 
 from sqlalchemy import (
     Boolean,
+    CheckConstraint,
     DateTime,
     ForeignKey,
     Integer,
@@ -29,6 +34,15 @@ class Application(Base):
     """Store submitted job applications and their CV files."""
 
     __tablename__ = "applications"
+
+    __table_args__ = (
+        CheckConstraint(
+            "status IN "
+            "('new', 'reviewing', 'shortlisted', "
+            "'rejected', 'hired', 'withdrawn')",
+            name="application_status",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(
         Integer,
@@ -79,7 +93,7 @@ class Application(Base):
         nullable=False,
     )
 
-    # Store CV bytes in the database so they are not dependent
+    # Store CV bytes in the database to avoid depending
     # on Render's temporary local filesystem.
     cv_content: Mapped[bytes] = mapped_column(
         LargeBinary,
@@ -110,4 +124,11 @@ class Application(Base):
         nullable=False,
         default=utc_now,
         index=True,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=utc_now,
+        onupdate=utc_now,
     )
