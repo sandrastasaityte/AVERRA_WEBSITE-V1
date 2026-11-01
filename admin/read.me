@@ -25,50 +25,7 @@ The AVERRA website project consists of three main components:
 
 The production website currently uses deployment URLs. Configure the custom domain and production environment settings separately when required.
 
----
 
-## 2. Project Structure
-
-```text
-AVERRA_WEBSITE_v1/
-│
-├── frontend/
-│   └── index.html
-│       └── Public website homepage
-│
-├── admin/
-│   ├── index.html
-│   │   └── Administrator login
-│   │
-│   ├── dashboard.html
-│   │   └── Administrator dashboard
-│   │
-│   ├── enquiries.html
-│   │   └── Enquiry management
-│   │
-│   ├── jobs.html
-│   │   └── Vacancy listing and management
-│   │
-│   ├── job-form.html
-│   │   └── Create and edit vacancies
-│   │
-│   ├── css/
-│   │   └── admin.css
-│   │
-│   └── js/
-│       ├── auth.js
-│       ├── job-form.js
-│       ├── jobs.js
-│       └── dashboard.js
-│
-├── backend/
-│   ├── main.py
-│   ├── database/
-│   ├── logs/
-│   └── uploads/
-│
-└── README.md
-```
 
 Additional backend modules, configuration files, database models and dependencies may exist in the actual project and should be retained.
 
@@ -224,7 +181,7 @@ Your original setup is:
 Port	Server	Purpose
 63342	PyCharm	Frontend website
 8000	FastAPI / Uvicorn	Backend API
-5500	Python HTTP server	Temporary server we introduced for admin testing
+
 
 
 Frontend: PyCharm localhost:63342
