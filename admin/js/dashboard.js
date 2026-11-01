@@ -4,24 +4,28 @@
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    File: admin/js/dashboard.js
-   Version: 2.2.0
+   Version: 2.3.0
 
    Administrator dashboard.
-   Compatible with admin/js/auth.js v3.x.
 
    FEATURES
    - Administrator session verification
-   - Dashboard statistics
+   - Vacancy statistics
+   - Application statistics
    - Recent vacancies
+   - Applications dashboard integration
    - API response validation
    - Loading, empty and error states
    - Retry and refresh controls
    - Safe text rendering
    - No duplicate logout handlers
 
+   AUTHENTICATION
+   Compatible with AVERRA_ADMIN authentication object.
+
    IMPORTANT
-   Backend authentication must be configured on Render.
-   This file does not bypass or replace backend authentication.
+   Backend authentication must be configured.
+   This file does not bypass backend authentication.
    ============================================================ */
 
 (function () {
@@ -34,12 +38,18 @@
     );
 
     async function initialise() {
+
         const elements = {
             message: document.getElementById("dashboard-message"),
+
             recentJobs: document.getElementById("recent-jobs"),
+
             totalJobs: document.getElementById("total-jobs"),
             publishedJobs: document.getElementById("published-jobs"),
             draftJobs: document.getElementById("draft-jobs"),
+
+            totalApplications: document.getElementById("total-applications"),
+
             logoutButton: document.getElementById("logout-button"),
             refreshButton: document.getElementById("refresh-dashboard")
         };
@@ -53,6 +63,7 @@
            ======================================================== */
 
         function showMessage(text, type) {
+
             if (!elements.message) {
                 console.log("AVERRA dashboard:", text);
                 return;
@@ -73,15 +84,22 @@
         }
 
         function setMetric(element, value) {
+
             if (element) {
                 element.textContent = String(value);
             }
         }
 
-        function setStatisticsUnavailable() {
+        function setVacancyStatisticsUnavailable() {
+
             setMetric(elements.totalJobs, "—");
             setMetric(elements.publishedJobs, "—");
             setMetric(elements.draftJobs, "—");
+        }
+
+        function setApplicationStatisticsUnavailable() {
+
+            setMetric(elements.totalApplications, "—");
         }
 
         /* ========================================================
@@ -89,6 +107,7 @@
            ======================================================== */
 
         function showEmptyState(text) {
+
             if (!elements.recentJobs) {
                 return;
             }
@@ -98,7 +117,7 @@
             const row = document.createElement("tr");
             const cell = document.createElement("td");
 
-            cell.colSpan = 3;
+            cell.colSpan = 4;
             cell.className = "empty-state";
             cell.textContent = text;
 
@@ -107,6 +126,7 @@
         }
 
         function addCell(row, value) {
+
             const cell = document.createElement("td");
 
             cell.textContent = String(value);
@@ -115,45 +135,58 @@
         }
 
         function normaliseJobs(response) {
+
             let jobs;
 
             if (Array.isArray(response)) {
+
                 jobs = response;
+
             } else if (
                 response &&
                 typeof response === "object" &&
                 Array.isArray(response.items)
             ) {
+
                 jobs = response.items;
+
             } else if (
                 response &&
                 typeof response === "object" &&
                 Array.isArray(response.jobs)
             ) {
+
                 jobs = response.jobs;
+
             } else if (
                 response &&
                 typeof response === "object" &&
                 Array.isArray(response.results)
             ) {
+
                 jobs = response.results;
+
             } else {
+
                 throw new Error(
                     "The jobs API returned an unexpected response format. " +
-                    "Check the /api/admin/jobs endpoint in the backend."
+                    "Check /api/admin/jobs in the backend."
                 );
             }
 
             return jobs.filter(function (job) {
+
                 return (
                     job !== null &&
                     typeof job === "object" &&
                     !Array.isArray(job)
                 );
+
             });
         }
 
         function getStatus(job) {
+
             const status = String(
                 job.status || "draft"
             ).trim().toLowerCase();
@@ -161,7 +194,8 @@
             if (
                 status === "published" ||
                 status === "draft" ||
-                status === "closed"
+                status === "closed" ||
+                status === "archived"
             ) {
                 return status;
             }
@@ -170,6 +204,7 @@
         }
 
         function getTimestamp(job) {
+
             const value = job.created_at || job.updated_at;
 
             if (!value) {
@@ -184,6 +219,7 @@
         }
 
         function renderJobs(jobs) {
+
             if (!elements.recentJobs) {
                 return;
             }
@@ -191,6 +227,7 @@
             elements.recentJobs.replaceChildren();
 
             if (jobs.length === 0) {
+
                 showEmptyState(
                     "No vacancies found. Add your first job to get started."
                 );
@@ -201,11 +238,14 @@
             const sortedJobs = jobs
                 .slice()
                 .sort(function (a, b) {
+
                     return getTimestamp(b) - getTimestamp(a);
+
                 })
                 .slice(0, 5);
 
             sortedJobs.forEach(function (job) {
+
                 const row = document.createElement("tr");
 
                 addCell(
@@ -220,6 +260,7 @@
 
                 const statusCell = document.createElement("td");
                 const badge = document.createElement("span");
+
                 const status = getStatus(job);
 
                 badge.className = "status " + status;
@@ -231,23 +272,42 @@
                 statusCell.appendChild(badge);
                 row.appendChild(statusCell);
 
+                const actionsCell = document.createElement("td");
+                const editLink = document.createElement("a");
+
+                editLink.href =
+                    "job-form.html?id=" +
+                    encodeURIComponent(String(job.id || ""));
+
+                editLink.textContent = "Manage";
+                editLink.className = "btn btn-secondary";
+
+                actionsCell.appendChild(editLink);
+                row.appendChild(actionsCell);
+
                 elements.recentJobs.appendChild(row);
+
             });
         }
 
         /* ========================================================
-           DASHBOARD STATISTICS
+           VACANCY STATISTICS
            ======================================================== */
 
-        function updateStatistics(jobs) {
+        function updateVacancyStatistics(jobs) {
+
             const total = jobs.length;
 
             const published = jobs.filter(function (job) {
+
                 return getStatus(job) === "published";
+
             }).length;
 
             const drafts = jobs.filter(function (job) {
+
                 return getStatus(job) === "draft";
+
             }).length;
 
             setMetric(elements.totalJobs, total);
@@ -256,15 +316,118 @@
         }
 
         /* ========================================================
+           APPLICATION STATISTICS
+           ======================================================== */
+
+        function getApplicationCount(response) {
+
+            /*
+             * Supported response formats:
+             *
+             * 1. { total: 25, applications: [...] }
+             * 2. { count: 25, items: [...] }
+             * 3. { applications: [...] }
+             * 4. { items: [...] }
+             * 5. [...]
+             */
+
+            if (Array.isArray(response)) {
+                return response.length;
+            }
+
+            if (
+                !response ||
+                typeof response !== "object"
+            ) {
+                throw new Error(
+                    "The applications API returned an invalid response."
+                );
+            }
+
+            if (
+                Number.isInteger(response.total) &&
+                response.total >= 0
+            ) {
+                return response.total;
+            }
+
+            if (
+                Number.isInteger(response.count) &&
+                response.count >= 0
+            ) {
+                return response.count;
+            }
+
+            if (Array.isArray(response.applications)) {
+                return response.applications.length;
+            }
+
+            if (Array.isArray(response.items)) {
+                return response.items.length;
+            }
+
+            if (Array.isArray(response.results)) {
+                return response.results.length;
+            }
+
+            throw new Error(
+                "The applications API did not return a total count."
+            );
+        }
+
+        async function loadApplicationStatistics(admin) {
+
+            if (!elements.totalApplications) {
+                return;
+            }
+
+            try {
+
+                const response = await admin.api(
+                    "/api/admin/applications?limit=1&offset=0"
+                );
+
+                const total = getApplicationCount(response);
+
+                setMetric(elements.totalApplications, total);
+
+                console.info(
+                    "AVERRA: Application statistics loaded:",
+                    total
+                );
+
+                return total;
+
+            } catch (error) {
+
+                console.error(
+                    "AVERRA application statistics error:",
+                    error
+                );
+
+                setApplicationStatisticsUnavailable();
+
+                return null;
+            }
+        }
+
+        /* ========================================================
            LOADING STATE
            ======================================================== */
 
         function setLoadingState() {
-            setStatisticsUnavailable();
 
-            showMessage("Loading dashboard…", "");
+            setVacancyStatisticsUnavailable();
+            setApplicationStatisticsUnavailable();
 
-            showEmptyState("Loading vacancies…");
+            showMessage(
+                "Loading dashboard…",
+                ""
+            );
+
+            showEmptyState(
+                "Loading vacancies…"
+            );
 
             if (retryButton) {
                 retryButton.hidden = true;
@@ -280,6 +443,7 @@
            ======================================================== */
 
         function ensureRetryButton() {
+
             if (retryButton) {
                 return retryButton;
             }
@@ -295,21 +459,25 @@
             retryButton.addEventListener(
                 "click",
                 function () {
+
                     loadDashboard();
+
                 }
             );
 
             if (elements.message) {
+
                 elements.message.insertAdjacentElement(
                     "afterend",
                     retryButton
                 );
+
             } else {
+
                 console.warn(
-                    "AVERRA: #dashboard-message is missing. " +
-                    "The retry button could not be positioned " +
-                    "next to the dashboard message."
+                    "AVERRA: #dashboard-message is missing."
                 );
+
             }
 
             return retryButton;
@@ -320,6 +488,7 @@
            ======================================================== */
 
         function showError(error) {
+
             console.error(
                 "AVERRA dashboard error:",
                 error
@@ -343,7 +512,7 @@
                 "Check the backend connection and try again."
             );
 
-            setStatisticsUnavailable();
+            setVacancyStatisticsUnavailable();
 
             const retry = ensureRetryButton();
 
@@ -357,6 +526,7 @@
            ======================================================== */
 
         async function loadDashboard() {
+
             if (isLoading || destroyed) {
                 return;
             }
@@ -366,45 +536,48 @@
             setLoadingState();
 
             if (retryButton) {
+
                 retryButton.disabled = true;
                 retryButton.textContent = "Loading…";
+
             }
 
             try {
+
                 /*
-                 * Resolve the authentication object when needed.
-                 * auth.js must be included by dashboard.html.
+                 * Resolve the authentication object.
                  */
+
                 const admin = window.AVERRA_ADMIN;
 
                 if (
                     !admin ||
                     typeof admin.api !== "function"
                 ) {
+
                     throw new Error(
-                        "The authentication script is missing or " +
-                        "failed to initialise. Check that admin/js/auth.js " +
-                        "loads successfully before admin/js/dashboard.js."
+                        "The authentication script is missing or failed " +
+                        "to initialise. Check admin/js/auth.js."
                     );
+
                 }
 
                 /*
-                 * Verify the administrator session before
-                 * requesting protected dashboard data.
+                 * Verify the administrator session.
                  */
+
                 if (
                     typeof admin.requireLogin === "function"
                 ) {
+
                     const permitted = await admin.requireLogin();
 
                     if (!permitted) {
-                        /*
-                         * The authentication script may be
-                         * redirecting to the login page.
-                         */
                         return;
                     }
+
                 } else {
+
                     const hasToken =
                         typeof admin.getToken === "function"
                             ? Boolean(admin.getToken())
@@ -413,14 +586,19 @@
                                 : false;
 
                     if (!hasToken) {
+
                         if (typeof admin.logout === "function") {
+
                             admin.logout();
+
                         } else {
+
                             showMessage(
                                 "Your administrator session is missing. " +
                                 "Please sign in again.",
                                 "error"
                             );
+
                         }
 
                         return;
@@ -428,33 +606,50 @@
                 }
 
                 /*
-                 * Fetch protected vacancy records.
-                 * The backend must authenticate this request.
+                 * LOAD VACANCIES
                  */
-                const response = await admin.api(
+
+                const jobsResponse = await admin.api(
                     "/api/admin/jobs"
                 );
 
-                const jobs = normaliseJobs(response);
+                const jobs = normaliseJobs(jobsResponse);
 
-                updateStatistics(jobs);
+                updateVacancyStatistics(jobs);
                 renderJobs(jobs);
 
+                /*
+                 * LOAD APPLICATION STATISTICS
+                 *
+                 * An application endpoint failure does not
+                 * prevent vacancy statistics from displaying.
+                 */
+
+                await loadApplicationStatistics(admin);
+
+                /*
+                 * DASHBOARD READY
+                 */
+
                 showMessage(
-                    "Dashboard loaded. " +
+                    "Dashboard loaded successfully. " +
                     jobs.length +
                     " job record" +
                     (jobs.length === 1 ? "" : "s") +
-                    " returned by the API.",
+                    " retrieved.",
                     "success"
                 );
 
                 if (retryButton) {
                     retryButton.hidden = true;
                 }
+
             } catch (error) {
+
                 showError(error);
+
             } finally {
+
                 isLoading = false;
 
                 if (elements.refreshButton) {
@@ -462,11 +657,13 @@
                 }
 
                 if (retryButton) {
+
                     retryButton.disabled = false;
 
                     if (!retryButton.hidden) {
                         retryButton.textContent = "Try again";
                     }
+
                 }
             }
         }
@@ -476,35 +673,47 @@
            ======================================================== */
 
         /*
-         * auth.js already binds #logout-button.
-         * Do not register another logout handler here.
+         * auth.js manages the logout button.
+         * Do not register a second logout handler here.
          */
 
         if (elements.refreshButton) {
+
             elements.refreshButton.addEventListener(
                 "click",
                 function (event) {
+
                     event.preventDefault();
+
                     loadDashboard();
+
                 }
             );
+
         }
 
         /*
-         * Start only after the DOM and dashboard controls
-         * are available.
+         * Start the dashboard.
          */
+
         await loadDashboard();
 
         /*
-         * Retain a reference for optional future page cleanup.
+         * Public dashboard controls.
          */
+
         window.AVERRA_DASHBOARD = {
-            version: "2.2.0",
+
+            version: "2.3.0",
+
             refresh: loadDashboard,
+
             destroy: function () {
                 destroyed = true;
             }
+
         };
+
     }
+
 })();

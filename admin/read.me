@@ -219,3 +219,14 @@ Update application status	PATCH /api/admin/applications/{application_id}
 Download CV	GET /api/admin/applications/{application_id}/cv
 Delete application	DELETE /api/admin/applications/{application_id}
 Update enquiry and notes	PATCH /api/admin/enquiries/{enquiry_id}
+
+Your original setup is:
+Port	Server	Purpose
+63342	PyCharm	Frontend website
+8000	FastAPI / Uvicorn	Backend API
+5500	Python HTTP server	Temporary server we introduced for admin testing
+
+
+Frontend: PyCharm localhost:63342
+Backend: FastAPI localhost:8000 locally
+Production backend: Render averra-backend-dn23.onrender.com
