@@ -4,25 +4,35 @@
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    File: admin/js/jobs.js
-   Version: 3.7.0
+   Version: 3.8.0
 
    FEATURES
    - Load and refresh vacancies
    - Request up to 200 vacancy records
    - Search by title and location
-   - Filter by draft, published and closed status
+   - Filter by draft, published, closed and archived status
    - Edit vacancies
    - Publish and unpublish vacancies
-   - Close vacancies
+   - Close and reopen vacancies
+   - Restore archived vacancies to draft
    - Delete vacancies with confirmation
+   - Require administrator authentication for changes
    - Prevent duplicate actions
-   - Display API and authentication errors
    - Safely render vacancy information
    ============================================================ */
 
 (function () {
+    "use strict";
+
     const API_ENDPOINT = "/api/admin/jobs";
     const MAX_JOBS = 200;
+
+    const VALID_STATUSES = new Set([
+        "draft",
+        "published",
+        "closed",
+        "archived"
+    ]);
 
     const state = {
         jobs: [],
@@ -35,6 +45,10 @@
     let elements = {};
 
     document.addEventListener("DOMContentLoaded", initialise);
+
+    // ------------------------------------------------------------
+    // INITIALISATION
+    // ------------------------------------------------------------
 
     function initialise() {
         elements = {
@@ -51,7 +65,11 @@
 
         const admin = window.AVERRA_ADMIN;
 
-        if (!admin || typeof admin.api !== "function") {
+        if (
+            !admin ||
+            typeof admin.api !== "function" ||
+            typeof admin.requireLogin !== "function"
+        ) {
             showMessage(
                 "Authentication could not be initialized. Check that js/auth.js loads successfully before js/jobs.js.",
                 "error"
@@ -65,6 +83,10 @@
         bindEvents(admin);
         loadJobs();
     }
+
+    // ------------------------------------------------------------
+    // EVENT BINDING
+    // ------------------------------------------------------------
 
     function bindEvents(admin) {
         if (elements.search) {
@@ -110,8 +132,41 @@
         }
     }
 
+    // ------------------------------------------------------------
+    // AUTHENTICATION
+    // ------------------------------------------------------------
+
+    async function ensureAuthenticated() {
+        const admin = window.AVERRA_ADMIN;
+
+        if (
+            !admin ||
+            typeof admin.requireLogin !== "function"
+        ) {
+            throw new Error(
+                "Administrator authentication is unavailable."
+            );
+        }
+
+        const permitted = await admin.requireLogin();
+
+        if (permitted === false) {
+            throw new Error(
+                "Please sign in again to manage vacancies."
+            );
+        }
+
+        return true;
+    }
+
+    // ------------------------------------------------------------
+    // MESSAGE AND TABLE HELPERS
+    // ------------------------------------------------------------
+
     function showMessage(message, type) {
-        if (!elements.message) return;
+        if (!elements.message) {
+            return;
+        }
 
         elements.message.textContent = String(message || "");
         elements.message.className = "message";
@@ -120,7 +175,11 @@
             elements.message.classList.add(type);
         }
 
-        elements.message.setAttribute("role", "status");
+        elements.message.setAttribute(
+            "role",
+            type === "error" ? "alert" : "status"
+        );
+
         elements.message.setAttribute("aria-live", "polite");
     }
 
@@ -131,7 +190,9 @@
     }
 
     function showTableMessage(message) {
-        if (!elements.table) return;
+        if (!elements.table) {
+            return;
+        }
 
         elements.table.replaceChildren();
 
@@ -145,6 +206,10 @@
         row.appendChild(cell);
         elements.table.appendChild(row);
     }
+
+    // ------------------------------------------------------------
+    // API RESPONSE HELPERS
+    // ------------------------------------------------------------
 
     function normaliseJobs(response) {
         let jobs;
@@ -180,7 +245,7 @@
         return (
             id !== null &&
             id !== undefined &&
-            String(id).trim() !== ""
+            /^[1-9]\d*$/.test(String(id).trim())
         );
     }
 
@@ -189,10 +254,63 @@
             job && job.status ? job.status : "draft"
         ).trim().toLowerCase();
 
-        return ["draft", "published", "closed"].includes(status)
+        return VALID_STATUSES.has(status)
             ? status
             : "draft";
     }
+
+    function getErrorMessage(error) {
+        if (!error) {
+            return "An unexpected error occurred. Please try again.";
+        }
+
+        if (error.status === 401) {
+            return "Your administrator session is invalid. Please sign in again.";
+        }
+
+        if (error.status === 403) {
+            return "You are not authorised to perform this action.";
+        }
+
+        if (error.status === 409) {
+            return error.detail ||
+                "This vacancy cannot be deleted because it has linked applications. Close or archive it instead.";
+        }
+
+        if (error.status === 503) {
+            return error.detail ||
+                "Administrator authentication is not configured on the backend.";
+        }
+
+        if (typeof error.detail === "string") {
+            return error.detail;
+        }
+
+        if (Array.isArray(error.detail)) {
+            return error.detail.map(function (item) {
+                const message = item?.msg || "Invalid value";
+                const location = Array.isArray(item?.loc)
+                    ? item.loc.filter(function (part) {
+                        return part !== "body";
+                    }).join(".")
+                    : "";
+
+                return location
+                    ? location + ": " + message
+                    : message;
+            }).join(" ");
+        }
+
+        if (typeof error.message === "string") {
+            return error.message;
+        }
+
+        return "An unexpected error occurred. Please try again.";
+    }
+
+    // ------------------------------------------------------------
+    // FILTERING
+    // ------------------------------------------------------------
 
     function getFilteredJobs() {
         return state.jobs.filter(function (job) {
@@ -211,6 +329,10 @@
             return matchesSearch && matchesStatus;
         });
     }
+
+    // ------------------------------------------------------------
+    // TABLE ELEMENT HELPERS
+    // ------------------------------------------------------------
 
     function addCell(row, value) {
         const cell = document.createElement("td");
@@ -241,8 +363,70 @@
         return button;
     }
 
+    // ------------------------------------------------------------
+    // ACTION BUTTONS
+    // ------------------------------------------------------------
+
+    function createStatusAction(job, id, status, actions) {
+        let label = "";
+        let nextStatus = "";
+
+        if (status === "published") {
+            label = "Unpublish";
+            nextStatus = "draft";
+        } else if (status === "draft") {
+            label = "Publish";
+            nextStatus = "published";
+        } else if (status === "closed") {
+            label = "Reopen";
+            nextStatus = "draft";
+        } else if (status === "archived") {
+            label = "Restore";
+            nextStatus = "draft";
+        }
+
+        if (!label) {
+            return;
+        }
+
+        const button = makeButton(
+            label,
+            "job-action job-action-edit",
+            function () {
+                if (
+                    status === "archived" &&
+                    !window.confirm(
+                        "Restore this archived vacancy to Draft? It will remain unpublished until you publish it."
+                    )
+                ) {
+                    return;
+                }
+
+                if (
+                    status === "closed" &&
+                    !window.confirm(
+                        "Reopen this vacancy by changing its status to Draft? You can publish it afterwards."
+                    )
+                ) {
+                    return;
+                }
+
+                changeStatus(id, nextStatus, button);
+            },
+            !hasValidId(id)
+        );
+
+        actions.appendChild(button);
+    }
+
+    // ------------------------------------------------------------
+    // RENDER VACANCIES
+    // ------------------------------------------------------------
+
     function renderJobs() {
-        if (!elements.table) return;
+        if (!elements.table) {
+            return;
+        }
 
         const jobs = getFilteredJobs();
 
@@ -265,6 +449,7 @@
                     ? "No vacancies have been created yet."
                     : "No vacancies match your search or filters."
             );
+
             return;
         }
 
@@ -321,45 +506,52 @@
 
             actions.appendChild(editButton);
 
-            if (status !== "closed") {
-                const nextStatus =
-                    status === "published" ? "draft" : "published";
+            createStatusAction(job, id, status, actions);
 
-                const statusButton = makeButton(
-                    status === "published" ? "Unpublish" : "Publish",
-                    "job-action job-action-edit",
-                    function () {
-                        changeStatus(id, nextStatus, statusButton);
-                    },
-                    !hasId
-                );
+            const closeButton = makeButton(
+                "Close",
+                "job-action job-action-edit",
+                function () {
+                    if (!hasId) {
+                        showMessage(
+                            "This vacancy has no record ID.",
+                            "error"
+                        );
+                        return;
+                    }
 
-                actions.appendChild(statusButton);
+                    if (!window.confirm(
+                        "Close this vacancy? It will no longer be marked as an open position."
+                    )) {
+                        return;
+                    }
 
-                const closeButton = makeButton(
-                    "Close",
-                    "job-action job-action-edit",
-                    function () {
-                        if (!hasId) {
-                            showMessage(
-                                "This vacancy has no record ID.",
-                                "error"
-                            );
-                            return;
-                        }
+                    changeStatus(id, "closed", closeButton);
+                },
+                !hasId || status === "closed" || status === "archived"
+            );
 
-                        if (!window.confirm(
-                            "Close this vacancy? It will no longer be marked as open."
-                        )) {
-                            return;
-                        }
-
-                        changeStatus(id, "closed", closeButton);
-                    },
-                    !hasId
-                );
-
+            if (status === "draft" || status === "published") {
                 actions.appendChild(closeButton);
+            }
+
+            const archiveButton = makeButton(
+                "Archive",
+                "job-action job-action-edit",
+                function () {
+                    if (!window.confirm(
+                        "Archive this vacancy? It will no longer be advertised as an open position."
+                    )) {
+                        return;
+                    }
+
+                    changeStatus(id, "archived", archiveButton);
+                },
+                !hasId || status === "archived"
+            );
+
+            if (status === "closed") {
+                actions.appendChild(archiveButton);
             }
 
             const deleteButton = makeButton(
@@ -375,12 +567,19 @@
 
             actionsCell.appendChild(actions);
             row.appendChild(actionsCell);
+
             elements.table.appendChild(row);
         });
     }
 
+    // ------------------------------------------------------------
+    // LOAD VACANCIES
+    // ------------------------------------------------------------
+
     async function loadJobs() {
-        if (state.loading) return;
+        if (state.loading) {
+            return;
+        }
 
         const admin = window.AVERRA_ADMIN;
 
@@ -395,27 +594,29 @@
         state.loading = true;
         setRefreshState(true);
 
-        showMessage("Loading vacancies…");
-        setCount("Loading vacancy records…");
-        showTableMessage("Loading vacancies…");
+        showMessage("Loading vacancies...");
+        setCount("Loading vacancy records...");
+        showTableMessage("Loading vacancies...");
 
         try {
-            if (typeof admin.requireLogin === "function") {
-                const permitted = await admin.requireLogin();
+            const permitted = await admin.requireLogin();
 
-                if (!permitted) {
-                    showMessage(
-                        "Please sign in to view vacancy records.",
-                        "error"
-                    );
-                    showTableMessage("Sign-in is required.");
-                    setCount("Sign-in required.");
-                    return;
-                }
+            if (permitted === false) {
+                showMessage(
+                    "Please sign in to view vacancy records.",
+                    "error"
+                );
+
+                showTableMessage("Sign-in is required.");
+                setCount("Sign-in required.");
+                return;
             }
 
             const response = await admin.api(
-                API_ENDPOINT + "?limit=" + MAX_JOBS + "&offset=0"
+                API_ENDPOINT + "?limit=" + MAX_JOBS + "&offset=0",
+                {
+                    method: "GET"
+                }
             );
 
             state.jobs = normaliseJobs(response);
@@ -431,11 +632,15 @@
                 showMessage(
                     "The first " + MAX_JOBS +
                     " vacancies are loaded. Older records may require pagination.",
-                    "success"
+                    "info"
                 );
             }
+
         } catch (error) {
-            console.error("AVERRA jobs loading error:", error);
+            console.error(
+                "AVERRA jobs loading error:",
+                error
+            );
 
             showMessage(
                 "Unable to load vacancies: " +
@@ -445,6 +650,7 @@
 
             showTableMessage("Vacancies could not be loaded.");
             setCount("Unable to load vacancy records.");
+
         } finally {
             state.loading = false;
             setRefreshState(false);
@@ -452,36 +658,42 @@
     }
 
     function setRefreshState(isLoading) {
-        if (!elements.refresh) return;
-
-        elements.refresh.disabled = isLoading;
-        elements.refresh.textContent = isLoading
-            ? "Loading…"
-            : "Refresh list";
-    }
-
-    function getErrorMessage(error) {
-        if (error && typeof error.message === "string") {
-            return error.message;
-        }
-
-        return "An unexpected error occurred. Please try again.";
-    }
-
-    async function changeStatus(id, newStatus, button) {
-        if (!hasValidId(id)) {
-            showMessage("A valid vacancy ID is required.", "error");
+        if (!elements.refresh) {
             return;
         }
 
-        if (!["draft", "published", "closed"].includes(newStatus)) {
-            showMessage("The requested vacancy status is invalid.", "error");
+        elements.refresh.disabled = isLoading;
+        elements.refresh.textContent = isLoading
+            ? "Loading..."
+            : "Refresh list";
+    }
+
+    // ------------------------------------------------------------
+    // UPDATE VACANCY STATUS
+    // ------------------------------------------------------------
+
+    async function changeStatus(id, newStatus, button) {
+        if (!hasValidId(id)) {
+            showMessage(
+                "A valid vacancy ID is required.",
+                "error"
+            );
+            return;
+        }
+
+        if (!VALID_STATUSES.has(newStatus)) {
+            showMessage(
+                "The requested vacancy status is invalid.",
+                "error"
+            );
             return;
         }
 
         const key = String(id);
 
-        if (state.activeActions.has(key)) return;
+        if (state.activeActions.has(key)) {
+            return;
+        }
 
         const admin = window.AVERRA_ADMIN;
 
@@ -498,13 +710,18 @@
         const originalText = button.textContent;
 
         button.disabled = true;
-        button.textContent = "Saving…";
+        button.textContent = "Saving...";
 
         try {
+            await ensureAuthenticated();
+
             await admin.api(
                 API_ENDPOINT + "/" + encodeURIComponent(key),
                 {
                     method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({
                         status: newStatus
                     })
@@ -517,14 +734,19 @@
             );
 
             await loadJobs();
+
         } catch (error) {
-            console.error("AVERRA status update error:", error);
+            console.error(
+                "AVERRA status update error:",
+                error
+            );
 
             showMessage(
                 "Unable to update vacancy: " +
                 getErrorMessage(error),
                 "error"
             );
+
         } finally {
             state.activeActions.delete(key);
             button.disabled = false;
@@ -532,18 +754,28 @@
         }
     }
 
+    // ------------------------------------------------------------
+    // DELETE VACANCY
+    // ------------------------------------------------------------
+
     async function deleteJobRecord(id, button) {
         if (!hasValidId(id)) {
-            showMessage("A valid vacancy ID is required.", "error");
+            showMessage(
+                "A valid vacancy ID is required.",
+                "error"
+            );
             return;
         }
 
         const key = String(id);
 
-        if (state.activeActions.has(key)) return;
+        if (state.activeActions.has(key)) {
+            return;
+        }
 
         if (!window.confirm(
-            "Are you sure you want to delete this vacancy? This action may be permanent."
+            "Are you sure you want to delete this vacancy?\n\n" +
+            "This action may be permanent. If applications are linked to this vacancy, the server may prevent deletion."
         )) {
             return;
         }
@@ -560,26 +792,26 @@
 
         state.activeActions.add(key);
 
-        const originalText = button ? button.textContent : "Delete";
+        const originalText = button
+            ? button.textContent
+            : "Delete";
 
         if (button) {
             button.disabled = true;
-            button.textContent = "Deleting…";
+            button.textContent = "Deleting...";
         }
 
         try {
-            showMessage("Deleting vacancy…");
+            await ensureAuthenticated();
 
-            if (typeof admin.deleteJob === "function") {
-                await admin.deleteJob(key);
-            } else {
-                await admin.api(
-                    API_ENDPOINT + "/" + encodeURIComponent(key),
-                    {
-                        method: "DELETE"
-                    }
-                );
-            }
+            showMessage("Deleting vacancy...", "info");
+
+            await admin.api(
+                API_ENDPOINT + "/" + encodeURIComponent(key),
+                {
+                    method: "DELETE"
+                }
+            );
 
             state.jobs = state.jobs.filter(function (job) {
                 return String(getJobId(job)) !== key;
@@ -591,15 +823,20 @@
                 "Vacancy deleted successfully.",
                 "success"
             );
+
         } catch (error) {
-            console.error("AVERRA vacancy deletion error:", error);
+            console.error(
+                "AVERRA vacancy deletion error:",
+                error
+            );
 
             showMessage(
                 "Unable to delete vacancy: " +
                 getErrorMessage(error) +
-                " If this vacancy has linked applications, close it instead.",
+                " If this vacancy has linked applications, close or archive it instead.",
                 "error"
             );
+
         } finally {
             state.activeActions.delete(key);
 
@@ -609,6 +846,10 @@
             }
         }
     }
+
+    // ------------------------------------------------------------
+    // FILTER CONTROLS
+    // ------------------------------------------------------------
 
     function clearFilters() {
         state.search = "";
@@ -624,4 +865,5 @@
 
         renderJobs();
     }
+
 })();

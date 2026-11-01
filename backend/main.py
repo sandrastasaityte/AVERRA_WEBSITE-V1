@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.4.1
+Version: 4.5.0
 
 FastAPI application for the AVERRA website.
 """
@@ -10,6 +10,7 @@ FastAPI application for the AVERRA website.
 from __future__ import annotations
 
 import logging
+import mimetypes
 import os
 import secrets
 import smtplib
@@ -20,6 +21,7 @@ from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from dotenv import load_dotenv
 from fastapi import (
@@ -34,8 +36,9 @@ from fastapi import (
     status,
 )
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel, ConfigDict, field_validator
-from sqlalchemy import inspect, select, text
+from sqlalchemy import inspect, or_, select, text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -50,7 +53,6 @@ DATABASE_DIR = BASE_DIR / "database"
 LOG_DIR = BASE_DIR / "logs"
 UPLOAD_DIR = BASE_DIR / "uploads"
 
-# Render environment variables take precedence over .env.
 load_dotenv(BASE_DIR / ".env", override=False)
 
 for directory in (DATABASE_DIR, LOG_DIR, UPLOAD_DIR):
@@ -61,7 +63,7 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = "4.4.1"
+APP_VERSION = "4.5.0"
 
 APP_ENV = os.getenv(
     "APP_ENV",
@@ -138,7 +140,7 @@ from database.connection import (
     get_db,
 )
 
-from app.models import Base, Enquiry, Job, Application  # noqa: F401
+from app.models import Base, Enquiry, Job, Application
 
 from app.schemas.enquiry import (
     EnquiryCreate,
@@ -176,6 +178,36 @@ logger = logging.getLogger("averra")
 
 
 # ============================================================
+# TIME HELPERS
+# ============================================================
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def iso_datetime(value: datetime | None) -> str | None:
+    if value is None:
+        return None
+
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+
+    return value.isoformat()
+
+
+def is_job_expired(job: Job) -> bool:
+    if not job.closing_date:
+        return False
+
+    closing_date = job.closing_date
+
+    if closing_date.tzinfo is None:
+        closing_date = closing_date.replace(tzinfo=timezone.utc)
+
+    return closing_date < utc_now()
+
+
+# ============================================================
 # GMAIL SMTP CONFIGURATION
 # ============================================================
 
@@ -197,50 +229,10 @@ SMTP_FROM_EMAIL = os.getenv(
 SMTP_TIMEOUT = 20
 
 
-def send_enquiry_notification(enquiry: Enquiry) -> bool:
-    """Email the company when a website enquiry is saved."""
-
+def send_email(message: EmailMessage) -> bool:
     if not SMTP_USERNAME or not SMTP_PASSWORD:
-        logger.warning(
-            "Enquiry notification not sent: SMTP credentials are missing."
-        )
+        logger.warning("Email not sent: SMTP credentials are missing.")
         return False
-
-    message = EmailMessage()
-    message["Subject"] = (
-        f"New website enquiry - {enquiry.name or 'Website visitor'}"
-    )
-    message["From"] = SMTP_FROM_EMAIL
-    message["To"] = COMPANY_EMAIL
-
-    received = (
-        enquiry.created_at.isoformat()
-        if enquiry.created_at
-        else datetime.now(timezone.utc).isoformat()
-    )
-
-    message.set_content(
-        f"""
-A new contact enquiry has been submitted through the AVERRA website.
-
-Company: {COMPANY_NAME}
-Enquiry ID: {enquiry.id}
-Received: {received}
-
-Name: {enquiry.name or "Not provided"}
-Email: {enquiry.email or "Not provided"}
-Phone: {enquiry.phone or "Not provided"}
-Company: {enquiry.company or "Not provided"}
-Subject: {enquiry.subject or "Not provided"}
-
-Message:
-{enquiry.message or "No message provided"}
-
-Website: {COMPANY_WEBSITE}
-
-Please log in to your administration system to review this enquiry.
-""".strip()
-    )
 
     try:
         tls_context = ssl.create_default_context()
@@ -256,26 +248,63 @@ Please log in to your administration system to review this enquiry.
             server.login(SMTP_USERNAME, SMTP_PASSWORD)
             server.send_message(message)
 
-        logger.info(
-            "Enquiry notification email sent: id=%s",
-            enquiry.id,
-        )
         return True
 
     except Exception:
-        logger.exception(
-            "Enquiry saved, but notification email failed: id=%s",
-            enquiry.id,
-        )
+        logger.exception("SMTP email delivery failed.")
         return False
 
 
+def send_enquiry_notification(enquiry: Enquiry) -> bool:
+    message = EmailMessage()
+
+    message["Subject"] = (
+        f"New website enquiry - {enquiry.name or 'Website visitor'}"
+    )
+    message["From"] = SMTP_FROM_EMAIL
+    message["To"] = COMPANY_EMAIL
+
+    message.set_content(
+        f"""
+A new contact enquiry has been submitted through the AVERRA website.
+
+Company: {COMPANY_NAME}
+Enquiry ID: {enquiry.id}
+Received: {iso_datetime(enquiry.created_at)}
+
+Name: {enquiry.name or "Not provided"}
+Email: {enquiry.email or "Not provided"}
+Phone: {enquiry.phone or "Not provided"}
+Company: {enquiry.company or "Not provided"}
+Subject: {enquiry.subject or "Not provided"}
+
+Message:
+{enquiry.message or "No message provided"}
+
+Website: {COMPANY_WEBSITE}
+""".strip()
+    )
+
+    sent = send_email(message)
+
+    if sent:
+        logger.info("Enquiry notification sent: id=%s", enquiry.id)
+    else:
+        logger.warning("Enquiry notification failed: id=%s", enquiry.id)
+
+    return sent
+
+
 # ============================================================
-# DATABASE INITIALISATION AND MIGRATIONS
+# DATABASE INITIALISATION
 # ============================================================
 
 def migrate_existing_database() -> None:
-    """Add supported columns to existing SQLite tables."""
+    """
+    Apply only the existing additive SQLite column migrations.
+
+    This function does not delete or replace existing records.
+    """
 
     if engine.dialect.name != "sqlite":
         return
@@ -284,6 +313,7 @@ def migrate_existing_database() -> None:
     tables = set(inspector.get_table_names())
 
     with engine.begin() as connection:
+
         if "enquiries" in tables:
             columns = {
                 column["name"]
@@ -318,9 +348,8 @@ def migrate_existing_database() -> None:
 
 
 def initialise_database() -> None:
-    """Create missing tables and apply compatible migrations."""
-
     _ = Base.metadata
+
     create_tables()
     migrate_existing_database()
 
@@ -330,18 +359,12 @@ def initialise_database() -> None:
     logger.info("Database initialised successfully")
 
 
-def utc_now() -> datetime:
-    return datetime.now(timezone.utc)
-
-
 # ============================================================
 # APPLICATION LIFECYCLE
 # ============================================================
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
-    """Initialise the database when the application starts."""
-
     logger.info("%s starting in %s mode", APP_NAME, APP_ENV)
 
     try:
@@ -378,7 +401,7 @@ app = FastAPI(
 
 
 # ============================================================
-# CORS CONFIGURATION
+# CORS
 # ============================================================
 
 DEFAULT_ORIGINS = [
@@ -446,13 +469,13 @@ def home() -> dict[str, Any]:
         "jobs_endpoint": "/api/jobs",
         "enquiries_endpoint": "/api/enquiries",
         "admin_jobs_endpoint": "/api/admin/jobs",
+        "admin_enquiries_endpoint": "/api/admin/enquiries",
+        "admin_applications_endpoint": "/api/admin/applications",
     }
 
 
 @app.get("/api/health", tags=["General"])
 def health_check() -> dict[str, str]:
-    """Check API and database connectivity."""
-
     try:
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
@@ -486,8 +509,6 @@ def create_enquiry(
     enquiry_data: EnquiryCreate,
     db: Session = Depends(get_db),
 ):
-    """Save a website enquiry and email the company."""
-
     enquiry = Enquiry(
         name=enquiry_data.name,
         email=str(enquiry_data.email).strip().lower(),
@@ -531,16 +552,23 @@ def list_jobs(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """Return published vacancies only."""
+    """Return published vacancies that have not passed their closing date."""
 
     try:
         statement = (
             select(Job)
-            .where(Job.status == "published")
+            .where(
+                Job.status == "published",
+                or_(
+                    Job.closing_date.is_(None),
+                    Job.closing_date >= utc_now(),
+                ),
+            )
             .order_by(Job.created_at.desc(), Job.id.desc())
             .offset(offset)
             .limit(limit)
         )
+
         return db.scalars(statement).all()
 
     except SQLAlchemyError:
@@ -560,14 +588,13 @@ def get_job(
     job_id: int,
     db: Session = Depends(get_db),
 ):
-    """Return one published vacancy."""
-
     try:
-        statement = select(Job).where(
-            Job.id == job_id,
-            Job.status == "published",
-        )
-        job = db.scalars(statement).first()
+        job = db.scalars(
+            select(Job).where(
+                Job.id == job_id,
+                Job.status == "published",
+            )
+        ).first()
 
     except SQLAlchemyError:
         logger.exception("Could not retrieve vacancy id=%s", job_id)
@@ -576,7 +603,7 @@ def get_job(
             detail="Unable to retrieve this vacancy.",
         ) from None
 
-    if job is None:
+    if job is None or is_job_expired(job):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Vacancy not found.",
@@ -584,32 +611,32 @@ def get_job(
 
     return job
 
+
 # ============================================================
 # PUBLIC JOB APPLICATIONS
 # ============================================================
 
 MAX_CV_BYTES = 5 * 1024 * 1024
-ALLOWED_CV_EXTENSIONS = {".pdf", ".doc", ".docx"}
+
+ALLOWED_CV_EXTENSIONS = {
+    ".pdf",
+    ".doc",
+    ".docx",
+}
+
 PDF_SIGNATURE = b"%PDF-"
 DOC_SIGNATURE = bytes.fromhex("D0 CF 11 E0 A1 B1 1A E1")
 DOCX_SIGNATURE = b"PK"
 
 
 def send_application_notification(application: Application) -> bool:
-    """Notify the company that a CV application has been saved.
+    """Notify AVERRA that an application has been received.
 
-    The CV itself is deliberately not attached to the notification email.
-    The uploaded CV is stored in the database.
+    The CV itself is deliberately not attached to the email.
     """
-    if not SMTP_USERNAME or not SMTP_PASSWORD:
-        logger.warning(
-            "Application notification not sent: SMTP credentials are missing. "
-            "application_id=%s",
-            application.id,
-        )
-        return False
 
     message = EmailMessage()
+
     message["Subject"] = (
         f"New job application - {application.job_title} "
         f"(Application #{application.id})"
@@ -623,7 +650,7 @@ A new application has been submitted through the AVERRA website.
 
 Company: {COMPANY_NAME}
 Application reference: {application.id}
-Received: {application.created_at.isoformat() if application.created_at else utc_now().isoformat()}
+Received: {iso_datetime(application.created_at)}
 
 Applicant: {application.full_name}
 Email: {application.email}
@@ -635,44 +662,30 @@ CV size: {application.cv_size} bytes
 Privacy consent: {"Yes" if application.privacy_consent else "No"}
 Application status: {application.status}
 
-The CV is stored in the application database. The notification email does not
-contain the CV attachment. Review the application through your secured
-administration workflow.
+The CV is stored in the application database. The notification email
+does not contain the CV attachment.
 
 Website: {COMPANY_WEBSITE}
 """.strip()
     )
 
-    try:
-        tls_context = ssl.create_default_context()
+    sent = send_email(message)
 
-        with smtplib.SMTP(
-            SMTP_HOST,
-            SMTP_PORT,
-            timeout=SMTP_TIMEOUT,
-        ) as server:
-            server.ehlo()
-            server.starttls(context=tls_context)
-            server.ehlo()
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
-            server.send_message(message)
-
+    if sent:
         logger.info(
             "Application notification email sent: id=%s",
             application.id,
         )
-        return True
-
-    except Exception:
-        logger.exception(
-            "Application saved, but notification email failed: id=%s",
+    else:
+        logger.warning(
+            "Application notification email failed: id=%s",
             application.id,
         )
-        return False
+
+    return sent
 
 
 def _valid_cv_signature(extension: str, content: bytes) -> bool:
-    """Check that the uploaded file signature matches its extension."""
     if extension == ".pdf":
         return content.startswith(PDF_SIGNATURE)
 
@@ -680,7 +693,6 @@ def _valid_cv_signature(extension: str, content: bytes) -> bool:
         return content.startswith(DOC_SIGNATURE)
 
     if extension == ".docx":
-        # DOCX is a ZIP-based Office Open XML document.
         return content.startswith(DOCX_SIGNATURE)
 
     return False
@@ -702,7 +714,7 @@ async def create_application(
     cv: UploadFile = File(...),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
-    """Validate, store and notify AVERRA about a submitted CV application."""
+
     full_name = full_name.strip()
     email = email.strip().lower()
     phone = phone.strip()
@@ -710,7 +722,7 @@ async def create_application(
 
     if not full_name or len(full_name) > 150:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Please provide a name of no more than 150 characters.",
         )
 
@@ -723,39 +735,43 @@ async def create_application(
         or any(character.isspace() for character in email)
     ):
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Please provide a valid email address.",
         )
 
     if len(phone) > 50:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Phone number must be 50 characters or fewer.",
         )
 
     if len(cover_letter) > 10000:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Cover letter must be 10,000 characters or fewer.",
         )
 
-    if privacy_consent.strip().lower() not in {"true", "1", "yes", "on"}:
+    if privacy_consent.strip().lower() not in {
+        "true", "1", "yes", "on"
+    }:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Privacy consent is required to submit an application.",
         )
 
     original_name = Path(cv.filename or "").name.strip()
+
     if not original_name or len(original_name) > 255:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Please upload a CV with a valid filename.",
         )
 
     extension = Path(original_name).suffix.lower()
+
     if extension not in ALLOWED_CV_EXTENSIONS:
         raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            status_code=415,
             detail="CV must be a PDF, DOC or DOCX file.",
         )
 
@@ -766,19 +782,19 @@ async def create_application(
 
     if not cv_content:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="The uploaded CV file is empty.",
         )
 
     if len(cv_content) > MAX_CV_BYTES:
         raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            status_code=413,
             detail="CV must be no larger than 5 MB.",
         )
 
     if not _valid_cv_signature(extension, cv_content):
         raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            status_code=415,
             detail="The uploaded file content does not match a supported CV format.",
         )
 
@@ -786,17 +802,18 @@ async def create_application(
     parsed_job_id: int | None = None
 
     if job_id.strip() and job_id.strip().lower() != "general":
+
         try:
             parsed_job_id = int(job_id.strip())
         except ValueError:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=422,
                 detail="The selected vacancy is invalid. Please select it again.",
             ) from None
 
         if parsed_job_id <= 0:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=422,
                 detail="The selected vacancy is invalid.",
             )
 
@@ -807,34 +824,23 @@ async def create_application(
                     Job.status == "published",
                 )
             ).first()
+
         except SQLAlchemyError:
             logger.exception(
                 "Could not verify selected job id=%s",
                 parsed_job_id,
             )
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=500,
                 detail="Unable to verify the selected vacancy. Please try again.",
             ) from None
 
-        if selected_job is None:
+        if selected_job is None or is_job_expired(selected_job):
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=422,
                 detail="The selected vacancy is no longer available.",
             )
 
-        if selected_job.closing_date:
-            closing_date = selected_job.closing_date
-            if closing_date.tzinfo is None:
-                closing_date = closing_date.replace(tzinfo=timezone.utc)
-
-            if closing_date < utc_now():
-                raise HTTPException(
-                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail="Applications for this vacancy are closed.",
-                )
-
-    # Use the database's vacancy title rather than trusting a browser value.
     authoritative_job_title = (
         selected_job.title if selected_job else "General Application"
     )
@@ -858,27 +864,29 @@ async def create_application(
         db.add(application)
         db.commit()
         db.refresh(application)
+
     except SQLAlchemyError:
         db.rollback()
         logger.exception("Could not save job application")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to save your application. Please try again later.",
         ) from None
 
     notification_sent = send_application_notification(application)
 
     try:
-        application.email_status = "sent" if notification_sent else "failed"
+        application.email_status = (
+            "sent" if notification_sent else "failed"
+        )
         db.commit()
+
     except SQLAlchemyError:
         db.rollback()
         logger.exception(
             "Could not update application email status: id=%s",
             application.id,
         )
-        # The application has already been saved, so do not report the
-        # submission itself as failed solely because this status update failed.
         notification_sent = False
 
     logger.info(
@@ -907,7 +915,6 @@ def require_admin(
         alias="X-Admin-Token",
     ),
 ) -> None:
-    """Require the configured private administrator token."""
 
     expected_token = os.getenv("AVERRA_ADMIN_TOKEN", "").strip()
 
@@ -923,8 +930,9 @@ def require_admin(
             is_placeholder,
             len(expected_token),
         )
+
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            status_code=503,
             detail="Administrator authentication is not configured.",
         )
 
@@ -933,13 +941,13 @@ def require_admin(
         or not secrets.compare_digest(x_admin_token, expected_token)
     ):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Invalid or missing administrator token.",
         )
 
 
 # ============================================================
-# ADMIN: ENQUIRY STATUS COMPATIBILITY
+# ADMIN ENQUIRY STATUS COMPATIBILITY
 # ============================================================
 
 ENQUIRY_STATUS_MAP = {
@@ -947,32 +955,99 @@ ENQUIRY_STATUS_MAP = {
     "unread": "new",
     "contacted": "in_progress",
     "in_progress": "in_progress",
-    "replied": "in_progress",
-    "responded": "in_progress",
-    "resolved": "resolved",
-    "closed": "resolved",
+    "replied": "responded",
+    "responded": "responded",
+    "resolved": "closed",
+    "closed": "closed",
     "spam": "spam",
+}
+
+VALID_ENQUIRY_DATABASE_STATUSES = {
+    "new",
+    "in_progress",
+    "responded",
+    "closed",
+    "spam",
 }
 
 
 def canonical_enquiry_status(value: str) -> str:
-    """Convert an admin status to a database-supported status."""
-
     normalized = value.strip().lower()
 
     try:
-        return ENQUIRY_STATUS_MAP[normalized]
+        result = ENQUIRY_STATUS_MAP[normalized]
     except KeyError:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail="Invalid enquiry status.",
         ) from None
 
+    if result not in VALID_ENQUIRY_DATABASE_STATUSES:
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid enquiry status.",
+        )
+
+    return result
+
+
+class EnquiryStatusUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: str
+    internal_notes: str | None = None
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, value: str) -> str:
+        value = value.strip().lower()
+
+        if value not in ENQUIRY_STATUS_MAP:
+            raise ValueError("Invalid enquiry status.")
+
+        return value
+
+    @field_validator("internal_notes")
+    @classmethod
+    def validate_internal_notes(
+        cls,
+        value: str | None,
+    ) -> str | None:
+        if value is not None:
+            value = value.strip()
+
+            if len(value) > 10000:
+                raise ValueError(
+                    "Internal notes must be 10,000 characters or fewer."
+                )
+
+        return value
+
+
+def enquiry_to_admin_dict(item: Enquiry) -> dict[str, Any]:
+    return {
+        "id": item.id,
+        "name": item.name,
+        "email": item.email,
+        "phone": item.phone,
+        "company": item.company,
+        "subject": item.subject,
+        "message": item.message,
+        "status": item.status,
+        "internal_notes": item.internal_notes,
+        "created_at": iso_datetime(item.created_at),
+        "updated_at": iso_datetime(item.updated_at),
+    }
+
+
 # ============================================================
-# ADMIN: LIST CONTACT ENQUIRIES
+# ADMIN: LIST ENQUIRIES
 # ============================================================
 
-@app.get("/api/admin/enquiries", tags=["Admin - Enquiries"])
+@app.get(
+    "/api/admin/enquiries",
+    tags=["Admin - Enquiries"],
+)
 def list_admin_enquiries(
     _: None = Depends(require_admin),
     limit: int = Query(default=100, ge=1, le=200),
@@ -980,13 +1055,13 @@ def list_admin_enquiries(
     enquiry_status: str | None = Query(default=None, alias="status"),
     db: Session = Depends(get_db),
 ):
-    """List enquiries for authenticated administrators."""
 
     try:
         statement = select(Enquiry)
 
         if enquiry_status:
             canonical_status = canonical_enquiry_status(enquiry_status)
+
             statement = statement.where(
                 Enquiry.status == canonical_status
             )
@@ -1001,21 +1076,7 @@ def list_admin_enquiries(
         enquiries = db.scalars(statement).all()
 
         return [
-            {
-                "id": item.id,
-                "name": item.name,
-                "email": item.email,
-                "phone": item.phone,
-                "company": item.company,
-                "subject": item.subject,
-                "message": item.message,
-                "status": item.status,
-                "created_at": (
-                    item.created_at.isoformat()
-                    if item.created_at
-                    else None
-                ),
-            }
+            enquiry_to_admin_dict(item)
             for item in enquiries
         ]
 
@@ -1025,42 +1086,14 @@ def list_admin_enquiries(
     except SQLAlchemyError:
         logger.exception("Could not retrieve administrator enquiries")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to retrieve contact enquiries.",
         ) from None
 
 
 # ============================================================
-# ADMIN: UPDATE ENQUIRY STATUS
+# ADMIN: UPDATE ENQUIRY STATUS AND INTERNAL NOTES
 # ============================================================
-
-class EnquiryStatusUpdate(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    status: str
-
-    @field_validator("status")
-    @classmethod
-    def validate_status(cls, value: str) -> str:
-        allowed_statuses = {
-            "new",
-            "unread",
-            "contacted",
-            "in_progress",
-            "replied",
-            "responded",
-            "resolved",
-            "closed",
-            "spam",
-        }
-
-        value = value.strip().lower()
-
-        if value not in allowed_statuses:
-            raise ValueError("Invalid enquiry status.")
-
-        return value
-
 
 @app.patch(
     "/api/admin/enquiries/{enquiry_id}",
@@ -1072,18 +1105,27 @@ def update_admin_enquiry(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Update an existing enquiry status."""
 
     try:
         enquiry = db.get(Enquiry, enquiry_id)
 
         if enquiry is None:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=404,
                 detail="Enquiry not found.",
             )
 
-        enquiry.status = canonical_enquiry_status(enquiry_data.status)
+        enquiry.status = canonical_enquiry_status(
+            enquiry_data.status
+        )
+
+        if enquiry_data.internal_notes is not None:
+            enquiry.internal_notes = (
+                enquiry_data.internal_notes or None
+            )
+
+        if hasattr(enquiry, "updated_at"):
+            enquiry.updated_at = utc_now()
 
         db.commit()
         db.refresh(enquiry)
@@ -1094,21 +1136,7 @@ def update_admin_enquiry(
             enquiry.status,
         )
 
-        return {
-            "id": enquiry.id,
-            "name": enquiry.name,
-            "email": enquiry.email,
-            "phone": enquiry.phone,
-            "company": enquiry.company,
-            "subject": enquiry.subject,
-            "message": enquiry.message,
-            "status": enquiry.status,
-            "created_at": (
-                enquiry.created_at.isoformat()
-                if enquiry.created_at
-                else None
-            ),
-        }
+        return enquiry_to_admin_dict(enquiry)
 
     except HTTPException:
         raise
@@ -1120,8 +1148,60 @@ def update_admin_enquiry(
             enquiry_id,
         )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unable to update enquiry status.",
+            status_code=500,
+            detail="Unable to update enquiry.",
+        ) from None
+
+
+# ============================================================
+# ADMIN: DELETE ENQUIRY
+# ============================================================
+
+@app.delete(
+    "/api/admin/enquiries/{enquiry_id}",
+    tags=["Admin - Enquiries"],
+)
+def delete_admin_enquiry(
+    enquiry_id: int,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+
+    try:
+        enquiry = db.get(Enquiry, enquiry_id)
+
+        if enquiry is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Enquiry not found.",
+            )
+
+        db.delete(enquiry)
+        db.commit()
+
+        logger.warning(
+            "Administrator deleted enquiry id=%s",
+            enquiry_id,
+        )
+
+        return {
+            "success": True,
+            "message": "Enquiry deleted successfully.",
+            "id": enquiry_id,
+        }
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        db.rollback()
+        logger.exception(
+            "Could not delete enquiry id=%s",
+            enquiry_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to delete the enquiry.",
         ) from None
 
 
@@ -1140,7 +1220,6 @@ def create_job(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Create a vacancy."""
 
     job = Job(**job_data.model_dump())
 
@@ -1156,7 +1235,7 @@ def create_job(
         db.rollback()
         logger.exception("Could not create job vacancy")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to create the job vacancy.",
         ) from None
 
@@ -1176,7 +1255,6 @@ def list_admin_jobs(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    """List all vacancies, including unpublished jobs."""
 
     try:
         statement = (
@@ -1185,18 +1263,19 @@ def list_admin_jobs(
             .offset(offset)
             .limit(limit)
         )
+
         return db.scalars(statement).all()
 
     except SQLAlchemyError:
         logger.exception("Could not retrieve administrator job list")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to retrieve job vacancies.",
         ) from None
 
 
 # ============================================================
-# ADMIN: EDIT, PUBLISH OR CLOSE A VACANCY
+# ADMIN: UPDATE VACANCY
 # ============================================================
 
 @app.patch(
@@ -1210,14 +1289,13 @@ def update_job(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Partially update a vacancy."""
 
     try:
         job = db.get(Job, job_id)
 
         if job is None:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=404,
                 detail="Job vacancy not found.",
             )
 
@@ -1225,7 +1303,7 @@ def update_job(
 
         if not updates:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=422,
                 detail="Provide at least one field to update.",
             )
 
@@ -1248,12 +1326,13 @@ def update_job(
         db.rollback()
         logger.exception("Could not update job id=%s", job_id)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to update the job vacancy.",
         ) from None
 
+
 # ============================================================
-# ADMIN: DELETE A VACANCY, ENQUIRY OR APPLICATION
+# ADMIN: DELETE VACANCY
 # ============================================================
 
 @app.delete(
@@ -1264,18 +1343,14 @@ def delete_job(
     job_id: int,
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
-) -> dict[str, Any]:
-    """Delete a vacancy only when no applications reference it.
+):
 
-    If applications exist, the administrator must close or unpublish the
-    vacancy instead. This prevents accidental loss of application history.
-    """
     try:
         job = db.get(Job, job_id)
 
         if job is None:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=404,
                 detail="Job vacancy not found.",
             )
 
@@ -1287,7 +1362,7 @@ def delete_job(
 
         if linked_application is not None:
             raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
+                status_code=409,
                 detail=(
                     "This vacancy has applications and cannot be deleted. "
                     "Close or unpublish the vacancy to preserve application history."
@@ -1298,6 +1373,7 @@ def delete_job(
         db.commit()
 
         logger.warning("Administrator deleted job id=%s", job_id)
+
         return {
             "success": True,
             "message": "Job vacancy deleted successfully.",
@@ -1311,51 +1387,327 @@ def delete_job(
         db.rollback()
         logger.exception("Could not delete job id=%s", job_id)
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to delete the job vacancy.",
         ) from None
 
 
-@app.delete(
-    "/api/admin/enquiries/{enquiry_id}",
-    tags=["Admin - Enquiries"],
-)
-def delete_admin_enquiry(
-    enquiry_id: int,
-    _: None = Depends(require_admin),
-    db: Session = Depends(get_db),
-) -> dict[str, Any]:
-    """Permanently delete one enquiry after administrator confirmation."""
-    try:
-        enquiry = db.get(Enquiry, enquiry_id)
+# ============================================================
+# ADMIN APPLICATION MANAGEMENT
+# ============================================================
 
-        if enquiry is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Enquiry not found.",
+APPLICATION_STATUSES = {
+    "new",
+    "reviewing",
+    "shortlisted",
+    "rejected",
+    "hired",
+    "withdrawn",
+}
+
+
+class ApplicationStatusUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: str
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, value: str) -> str:
+        value = value.strip().lower()
+
+        if value not in APPLICATION_STATUSES:
+            raise ValueError("Invalid application status.")
+
+        return value
+
+
+def application_to_admin_dict(
+    application: Application,
+    include_cover_letter: bool = True,
+) -> dict[str, Any]:
+
+    result = {
+        "id": application.id,
+        "full_name": application.full_name,
+        "email": application.email,
+        "phone": application.phone,
+        "job_id": application.job_id,
+        "job_title": application.job_title,
+        "cv_original_name": application.cv_original_name,
+        "cv_size": application.cv_size,
+        "privacy_consent": application.privacy_consent,
+        "status": application.status,
+        "email_status": application.email_status,
+        "created_at": iso_datetime(application.created_at),
+        "updated_at": iso_datetime(application.updated_at),
+        "cv_download_url": (
+            f"/api/admin/applications/{application.id}/cv"
+        ),
+    }
+
+    if include_cover_letter:
+        result["cover_letter"] = application.cover_letter
+
+    return result
+
+
+# ============================================================
+# ADMIN: LIST APPLICATIONS
+# ============================================================
+
+@app.get(
+    "/api/admin/applications",
+    tags=["Admin - Applications"],
+)
+def list_admin_applications(
+    _: None = Depends(require_admin),
+    limit: int = Query(default=100, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    application_status: str | None = Query(
+        default=None,
+        alias="status",
+    ),
+    job_id: int | None = Query(default=None, ge=1),
+    db: Session = Depends(get_db),
+):
+
+    try:
+        statement = select(Application)
+
+        if application_status:
+            normalized_status = application_status.strip().lower()
+
+            if normalized_status not in APPLICATION_STATUSES:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Invalid application status filter.",
+                )
+
+            statement = statement.where(
+                Application.status == normalized_status
             )
 
-        db.delete(enquiry)
-        db.commit()
+        if job_id is not None:
+            statement = statement.where(
+                Application.job_id == job_id
+            )
 
-        logger.warning("Administrator deleted enquiry id=%s", enquiry_id)
-        return {
-            "success": True,
-            "message": "Enquiry deleted successfully.",
-            "id": enquiry_id,
-        }
+        statement = (
+            statement
+            .order_by(
+                Application.created_at.desc(),
+                Application.id.desc(),
+            )
+            .offset(offset)
+            .limit(limit)
+        )
+
+        applications = db.scalars(statement).all()
+
+        return [
+            application_to_admin_dict(item)
+            for item in applications
+        ]
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        logger.exception("Could not retrieve administrator applications")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve applications.",
+        ) from None
+
+
+# ============================================================
+# ADMIN: GET ONE APPLICATION
+# ============================================================
+
+@app.get(
+    "/api/admin/applications/{application_id}",
+    tags=["Admin - Applications"],
+)
+def get_admin_application(
+    application_id: int,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+
+    try:
+        application = db.get(Application, application_id)
+
+        if application is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Application not found.",
+            )
+
+        return application_to_admin_dict(application)
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        logger.exception(
+            "Could not retrieve application id=%s",
+            application_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve the application.",
+        ) from None
+
+
+# ============================================================
+# ADMIN: UPDATE APPLICATION STATUS
+# ============================================================
+
+@app.patch(
+    "/api/admin/applications/{application_id}",
+    tags=["Admin - Applications"],
+)
+def update_admin_application(
+    application_id: int,
+    application_data: ApplicationStatusUpdate,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+
+    try:
+        application = db.get(Application, application_id)
+
+        if application is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Application not found.",
+            )
+
+        application.status = application_data.status
+
+        if hasattr(application, "updated_at"):
+            application.updated_at = utc_now()
+
+        db.commit()
+        db.refresh(application)
+
+        logger.info(
+            "Administrator updated application id=%s status=%s",
+            application.id,
+            application.status,
+        )
+
+        return application_to_admin_dict(application)
 
     except HTTPException:
         raise
 
     except SQLAlchemyError:
         db.rollback()
-        logger.exception("Could not delete enquiry id=%s", enquiry_id)
+        logger.exception(
+            "Could not update application id=%s",
+            application_id,
+        )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unable to delete the enquiry.",
+            status_code=500,
+            detail="Unable to update the application.",
         ) from None
 
+
+# ============================================================
+# ADMIN: DOWNLOAD APPLICATION CV
+# ============================================================
+
+@app.get(
+    "/api/admin/applications/{application_id}/cv",
+    tags=["Admin - Applications"],
+)
+def download_application_cv(
+    application_id: int,
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+
+    try:
+        application = db.get(Application, application_id)
+
+        if application is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Application not found.",
+            )
+
+        cv_content = application.cv_content
+        original_name = application.cv_original_name or (
+            f"application-{application_id}"
+        )
+
+        if not cv_content:
+            raise HTTPException(
+                status_code=404,
+                detail="The CV file is not available.",
+            )
+
+        safe_name = Path(original_name).name
+        extension = Path(safe_name).suffix.lower()
+
+        allowed_types = {
+            ".pdf": "application/pdf",
+            ".doc": "application/msword",
+            ".docx": (
+                "application/vnd.openxmlformats-officedocument."
+                "wordprocessingml.document"
+            ),
+        }
+
+        media_type = allowed_types.get(
+            extension,
+            "application/octet-stream",
+        )
+
+        ascii_name = (
+            safe_name.encode("ascii", "ignore")
+            .decode("ascii")
+            .replace('"', "")
+            .replace("\\", "_")
+        )
+
+        if not ascii_name:
+            ascii_name = f"application-{application_id}{extension}"
+
+        encoded_name = quote(safe_name, safe="")
+
+        return Response(
+            content=cv_content,
+            media_type=media_type,
+            headers={
+                "Content-Disposition": (
+                    f'attachment; filename="{ascii_name}"; '
+                    f"filename*=UTF-8''{encoded_name}"
+                ),
+                "Cache-Control": "private, no-store",
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError:
+        logger.exception(
+            "Could not download CV for application id=%s",
+            application_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to download the CV.",
+        ) from None
+
+
+# ============================================================
+# ADMIN: DELETE APPLICATION
+# ============================================================
 
 @app.delete(
     "/api/admin/applications/{application_id}",
@@ -1365,14 +1717,14 @@ def delete_admin_application(
     application_id: int,
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
-) -> dict[str, Any]:
-    """Permanently delete an application and its CV stored in the database."""
+):
+
     try:
         application = db.get(Application, application_id)
 
         if application is None:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=404,
                 detail="Application not found.",
             )
 
@@ -1383,6 +1735,7 @@ def delete_admin_application(
             "Administrator permanently deleted application and stored CV: id=%s",
             application_id,
         )
+
         return {
             "success": True,
             "message": "Application and stored CV deleted successfully.",
@@ -1399,7 +1752,7 @@ def delete_admin_application(
             application_id,
         )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail="Unable to delete the application.",
         ) from None
 

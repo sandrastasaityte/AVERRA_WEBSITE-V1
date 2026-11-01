@@ -148,16 +148,19 @@
 
     .panel-header h2 { margin: 0; font-size: 18px; }
 
-    .filters input, .filters select, .status-editor select {
+    .filters input, .filters select, .status-editor select,
+    .status-editor textarea {
       min-height: 42px;
       border: 1px solid #cbd5e1;
       border-radius: 7px;
       padding: 9px 12px;
       background: white;
       color: #172033;
+      width: 100%;
     }
 
     .filters input { min-width: 230px; }
+    .status-editor textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
 
     .button {
       display: inline-flex;
@@ -219,10 +222,11 @@
       color: #334155;
     }
 
-    .status-new, .status-unread { background: #dbeafe; color: #1d4ed8; }
+    .status-new { background: #dbeafe; color: #1d4ed8; }
     .status-in_progress { background: #fef3c7; color: #92400e; }
-    .status-contacted, .status-replied { background: #e0e7ff; color: #3730a3; }
-    .status-resolved, .status-closed { background: #dcfce7; color: #166534; }
+    .status-responded { background: #e0e7ff; color: #3730a3; }
+    .status-closed { background: #dcfce7; color: #166534; }
+    .status-spam { background: #fee2e2; color: #991b1b; }
 
     .table-actions { display: flex; gap: 7px; flex-wrap: wrap; }
     .table-actions .button { padding: 7px 10px; min-height: 33px; }
@@ -312,9 +316,23 @@
       min-height: 80px;
     }
 
-    .status-editor { margin-top: 25px; padding-top: 22px; border-top: 1px solid var(--border); }
-    .status-editor label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 700; color: var(--navy); }
-    .status-editor select { width: 100%; max-width: 340px; }
+    .status-editor {
+      margin-top: 25px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      display: grid;
+      gap: 15px;
+    }
+
+    .editor-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .editor-help { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
 
     .modal-actions {
       display: flex;
@@ -406,7 +424,7 @@
       <div class="stat-number" id="stat-total">—</div>
     </div>
     <div class="stat-card">
-      <span class="stat-label">New / unread</span>
+      <span class="stat-label">New enquiries</span>
       <div class="stat-number" id="stat-new">—</div>
     </div>
     <div class="stat-card">
@@ -414,8 +432,8 @@
       <div class="stat-number" id="stat-progress">—</div>
     </div>
     <div class="stat-card">
-      <span class="stat-label">Resolved / closed</span>
-      <div class="stat-number" id="stat-resolved">—</div>
+      <span class="stat-label">Closed enquiries</span>
+      <div class="stat-number" id="stat-closed">—</div>
     </div>
   </section>
 
@@ -427,12 +445,10 @@
         <select id="status-filter" aria-label="Filter by status">
           <option value="">All statuses</option>
           <option value="new">New</option>
-          <option value="unread">Unread</option>
-          <option value="contacted">Contacted</option>
           <option value="in_progress">In progress</option>
-          <option value="replied">Replied</option>
-          <option value="resolved">Resolved</option>
+          <option value="responded">Responded</option>
           <option value="closed">Closed</option>
+          <option value="spam">Spam</option>
         </select>
       </div>
     </div>
@@ -500,16 +516,22 @@
       </div>
 
       <div class="status-editor">
-        <label for="detail-status">Enquiry status</label>
-        <select id="detail-status">
-          <option value="new">New</option>
-          <option value="unread">Unread</option>
-          <option value="contacted">Contacted</option>
-          <option value="in_progress">In progress</option>
-          <option value="replied">Replied</option>
-          <option value="resolved">Resolved</option>
-          <option value="closed">Closed</option>
-        </select>
+        <div class="editor-field">
+          <label for="detail-status">Enquiry status</label>
+          <select id="detail-status">
+            <option value="new">New</option>
+            <option value="in_progress">In progress</option>
+            <option value="responded">Responded</option>
+            <option value="closed">Closed</option>
+            <option value="spam">Spam</option>
+          </select>
+        </div>
+
+        <div class="editor-field">
+          <label for="detail-internal-notes">Internal notes</label>
+          <textarea id="detail-internal-notes" maxlength="10000" placeholder="Add private notes about this enquiry. These notes are for AVERRA administrators and are not sent to the customer."></textarea>
+          <p class="editor-help">Internal notes are for administration only. They should not contain passwords or sensitive payment details.</p>
+        </div>
       </div>
 
       <div id="modal-notice" class="notice" role="status" aria-live="polite"></div>
@@ -521,7 +543,7 @@
         </div>
         <div class="modal-actions-right">
           <a id="reply-link" class="button button-gold" href="#">Reply by email</a>
-          <button type="button" class="button button-primary" id="save-status-button">Save status</button>
+          <button type="button" class="button button-primary" id="save-enquiry-button">Save changes</button>
         </div>
       </div>
     </div>
@@ -534,12 +556,10 @@
 
   const STATUS_LABELS = {
     new: "New",
-    unread: "Unread",
-    contacted: "Contacted",
     in_progress: "In progress",
-    replied: "Replied",
-    resolved: "Resolved",
-    closed: "Closed"
+    responded: "Responded",
+    closed: "Closed",
+    spam: "Spam"
   };
 
   const VALID_STATUSES = Object.keys(STATUS_LABELS);
@@ -566,12 +586,13 @@
     modalNotice: byId("modal-notice"),
     replyLink: byId("reply-link"),
     statusSelect: byId("detail-status"),
-    saveButton: byId("save-status-button"),
+    notesInput: byId("detail-internal-notes"),
+    saveButton: byId("save-enquiry-button"),
     deleteButton: byId("delete-enquiry-button")
   };
 
-  function showPageMessage(text, type = "") {
-    el.pageMessage.textContent = text;
+  function showPageMessage(message, type = "") {
+    el.pageMessage.textContent = message;
     el.pageMessage.className = "message-area" + (type ? " " + type : "");
     el.pageMessage.hidden = false;
   }
@@ -580,8 +601,8 @@
     el.pageMessage.hidden = true;
   }
 
-  function showModalNotice(text, type) {
-    el.modalNotice.textContent = text;
+  function showModalNotice(message, type) {
+    el.modalNotice.textContent = message;
     el.modalNotice.className = "notice " + type;
   }
 
@@ -602,6 +623,7 @@
   function getName(item) {
     const first = item?.first_name || item?.firstName || "";
     const last = item?.last_name || item?.lastName || "";
+
     return item?.name || item?.full_name || item?.fullName ||
       [first, last].filter(Boolean).join(" ") || "Unknown";
   }
@@ -631,8 +653,13 @@
       item?.date || item?.timestamp || "";
   }
 
+  function getInternalNotes(item) {
+    return String(item?.internal_notes || item?.internalNotes || "");
+  }
+
   function formatDate(value) {
     if (!value) return "—";
+
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return String(value);
 
@@ -671,16 +698,16 @@
   function updateStatistics(items) {
     byId("stat-total").textContent = items.length;
 
-    byId("stat-new").textContent = items.filter((item) =>
-      ["new", "unread"].includes(getStatus(item))
+    byId("stat-new").textContent = items.filter(
+      (item) => getStatus(item) === "new"
     ).length;
 
-    byId("stat-progress").textContent = items.filter((item) =>
-      ["contacted", "in_progress", "replied"].includes(getStatus(item))
+    byId("stat-progress").textContent = items.filter(
+      (item) => getStatus(item) === "in_progress"
     ).length;
 
-    byId("stat-resolved").textContent = items.filter((item) =>
-      ["resolved", "closed"].includes(getStatus(item))
+    byId("stat-closed").textContent = items.filter(
+      (item) => getStatus(item) === "closed"
     ).length;
   }
 
@@ -694,8 +721,15 @@
       if (selectedStatus && status !== selectedStatus) return false;
 
       const searchable = [
-        getId(item), getName(item), getEmail(item), getPhone(item),
-        getCompany(item), getSubject(item), getMessage(item), status
+        getId(item),
+        getName(item),
+        getEmail(item),
+        getPhone(item),
+        getCompany(item),
+        getSubject(item),
+        getMessage(item),
+        getInternalNotes(item),
+        status
       ].map((value) => String(value ?? "")).join(" ").toLowerCase();
 
       return !query || searchable.includes(query);
@@ -705,6 +739,7 @@
   function makeCell(value, className = "") {
     const cell = document.createElement("td");
     cell.textContent = String(value ?? "—");
+
     if (className) cell.className = className;
     return cell;
   }
@@ -724,11 +759,13 @@
 
     if (!items.length) {
       el.tableContainer.hidden = true;
+
       showPageMessage(
         state.enquiries.length === 0
           ? "There are no enquiries yet."
           : "No enquiries match your search or selected status."
       );
+
       return;
     }
 
@@ -745,6 +782,7 @@
       row.appendChild(makeCell(id));
 
       const contactCell = document.createElement("td");
+
       const name = document.createElement("div");
       name.className = "cell-primary";
       name.textContent = getName(item);
@@ -764,6 +802,7 @@
       const badge = document.createElement("span");
       badge.className = "status-badge status-" + status;
       badge.textContent = STATUS_LABELS[status];
+
       statusCell.appendChild(badge);
       row.appendChild(statusCell);
 
@@ -776,8 +815,9 @@
       );
 
       if (getEmail(item)) {
-        const reply = makeButton("Reply", "button-gold", () => replyByEmail(item));
-        actionGroup.appendChild(reply);
+        actionGroup.appendChild(
+          makeButton("Reply", "button-gold", () => replyByEmail(item))
+        );
       }
 
       if (validId(id)) {
@@ -788,6 +828,7 @@
 
       actionCell.appendChild(actionGroup);
       row.appendChild(actionCell);
+
       fragment.appendChild(row);
     });
 
@@ -807,10 +848,13 @@
     setText("detail-company", getCompany(item));
     setText("detail-subject", getSubject(item));
     setText("detail-date", formatDate(getDate(item)));
-    byId("detail-message").textContent = getMessage(item) || "No message provided.";
+
+    byId("detail-message").textContent =
+      getMessage(item) || "No message provided.";
 
     const email = getEmail(item);
     const emailElement = byId("detail-email");
+
     emailElement.replaceChildren();
 
     if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -818,6 +862,7 @@
       link.href = "mailto:" + email;
       link.textContent = email;
       emailElement.appendChild(link);
+
       el.replyLink.href = "mailto:" + email;
       el.replyLink.hidden = false;
     } else {
@@ -827,8 +872,11 @@
     }
 
     el.statusSelect.value = getStatus(item);
+    el.notesInput.value = getInternalNotes(item);
+
     el.saveButton.disabled = false;
     el.deleteButton.disabled = false;
+
     clearModalNotice();
 
     el.modal.classList.add("open");
@@ -839,6 +887,7 @@
   function closeModal() {
     el.modal.classList.remove("open");
     el.modal.setAttribute("aria-hidden", "true");
+
     state.currentEnquiry = null;
     clearModalNotice();
 
@@ -855,7 +904,9 @@
       return;
     }
 
-    const subject = "Re: " + (getSubject(item) || "Your enquiry to AVERRA Staffing Solutions Ltd");
+    const subject = "Re: " +
+      (getSubject(item) || "Your enquiry to AVERRA Staffing Solutions Ltd");
+
     const body = [
       "Dear " + getName(item) + ",",
       "",
@@ -876,18 +927,16 @@
 
     state.loading = true;
     el.refreshButton.disabled = true;
+
     showPageMessage("Loading enquiries…");
 
     try {
-      /*
-       * This endpoint must be protected by the backend.
-       * auth.js attaches the administrator token.
-       */
       const response = await apiRequest("/api/admin/enquiries", {
         method: "GET"
       });
 
       state.enquiries = unwrapEnquiries(response);
+
       updateStatistics(state.enquiries);
       renderTable();
 
@@ -899,6 +948,7 @@
       }
     } catch (error) {
       console.error("AVERRA enquiry loading failed:", error);
+
       el.tableContainer.hidden = true;
       el.tableBody.replaceChildren();
 
@@ -908,7 +958,7 @@
         "error"
       );
 
-      ["stat-total", "stat-new", "stat-progress", "stat-resolved"].forEach((id) => {
+      ["stat-total", "stat-new", "stat-progress", "stat-closed"].forEach((id) => {
         byId(id).textContent = "—";
       });
     } finally {
@@ -917,12 +967,14 @@
     }
   }
 
-  async function saveStatus() {
+  async function saveEnquiry() {
     const item = state.currentEnquiry;
+
     if (!item || state.saving) return;
 
     const id = getId(item);
     const status = el.statusSelect.value;
+    const internalNotes = el.notesInput.value.trim();
 
     if (!validId(id)) {
       showModalNotice("This enquiry has an invalid ID.", "error");
@@ -934,48 +986,60 @@
       return;
     }
 
+    if (internalNotes.length > 10000) {
+      showModalNotice("Internal notes cannot exceed 10,000 characters.", "error");
+      return;
+    }
+
     state.saving = true;
     el.saveButton.disabled = true;
-    showModalNotice("Saving status…", "success");
+    el.deleteButton.disabled = true;
+
+    showModalNotice("Saving changes…", "success");
 
     try {
-      /*
-       * Requires a protected backend PATCH endpoint.
-       * If your backend uses a different route or payload,
-       * update this request to match its implementation.
-       */
       await apiRequest(`/api/admin/enquiries/${encodeURIComponent(id)}`, {
         method: "PATCH",
-        body: JSON.stringify({ status })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          status: status,
+          internal_notes: internalNotes || null
+        })
       });
 
       state.enquiries = state.enquiries.map((entry) =>
         String(getId(entry)) === String(id)
-          ? { ...entry, status }
+          ? {
+              ...entry,
+              status: status,
+              internal_notes: internalNotes
+            }
           : entry
       );
 
       updateStatistics(state.enquiries);
       renderTable();
-      showModalNotice("Enquiry status saved successfully.", "success");
-      showPageMessage("Enquiry status updated.", "success");
 
       state.currentEnquiry = state.enquiries.find(
         (entry) => String(getId(entry)) === String(id)
       ) || null;
 
-      if (state.currentEnquiry) {
-        el.statusSelect.value = getStatus(state.currentEnquiry);
-      }
+      showModalNotice("Enquiry changes saved successfully.", "success");
+      showPageMessage("Enquiry updated successfully.", "success");
     } catch (error) {
-      console.error("AVERRA enquiry status update failed:", error);
+      console.error("AVERRA enquiry update failed:", error);
+
       showModalNotice(
-        "Could not save status: " + (error?.message || "Please try again."),
+        "Could not save changes: " +
+        (error?.message || "Please try again."),
         "error"
       );
     } finally {
       state.saving = false;
       el.saveButton.disabled = false;
+      el.deleteButton.disabled = false;
     }
   }
 
@@ -987,19 +1051,21 @@
       return;
     }
 
+    if (state.deleting) return;
+
     const confirmed = window.confirm(
       `Permanently delete enquiry #${id} from "${getName(item)}"?\n\nThis action cannot be undone.`
     );
 
     if (!confirmed) return;
 
-    const deleteButton = el.deleteButton;
-    if (deleteButton) deleteButton.disabled = true;
+    state.deleting = true;
+    el.deleteButton.disabled = true;
 
     try {
       const admin = window.AVERRA_ADMIN;
 
-      if (typeof admin.deleteEnquiry === "function") {
+      if (admin && typeof admin.deleteEnquiry === "function") {
         await admin.deleteEnquiry(String(id));
       } else {
         await apiRequest(`/api/admin/enquiries/${encodeURIComponent(id)}`, {
@@ -1024,24 +1090,29 @@
       showPageMessage("Enquiry deleted successfully.", "success");
     } catch (error) {
       console.error("AVERRA enquiry deletion failed:", error);
+
       const errorText =
         "Could not delete enquiry: " +
         (error?.message || "Please try again.");
 
-      if (state.currentEnquiry && String(getId(state.currentEnquiry)) === String(id)) {
+      if (
+        state.currentEnquiry &&
+        String(getId(state.currentEnquiry)) === String(id)
+      ) {
         showModalNotice(errorText, "error");
       } else {
         showPageMessage(errorText, "error");
       }
     } finally {
-      if (deleteButton) deleteButton.disabled = false;
+      state.deleting = false;
+      el.deleteButton.disabled = false;
     }
   }
 
   el.searchInput.addEventListener("input", renderTable);
   el.statusFilter.addEventListener("change", renderTable);
   el.refreshButton.addEventListener("click", loadEnquiries);
-  el.saveButton.addEventListener("click", saveStatus);
+  el.saveButton.addEventListener("click", saveEnquiry);
 
   el.deleteButton.addEventListener("click", () => {
     if (state.currentEnquiry) {
@@ -1062,26 +1133,27 @@
     }
   });
 
-  /*
-   * auth.js owns the logout handler.
-   * Do not register a second logout click listener here.
-   */
+  async function initialise() {
+    const admin = window.AVERRA_ADMIN;
 
-  const admin = window.AVERRA_ADMIN;
+    if (!admin || typeof admin.api !== "function") {
+      showPageMessage(
+        "Administrator authentication is unavailable. Check that js/auth.js loads correctly.",
+        "error"
+      );
+      return;
+    }
 
-  if (!admin || typeof admin.api !== "function") {
-    showPageMessage(
-      "Administrator authentication is unavailable. Check that js/auth.js loads correctly.",
-      "error"
-    );
-    return;
+    if (typeof admin.requireLogin === "function") {
+      const authenticated = await admin.requireLogin();
+
+      if (authenticated === false) return;
+    }
+
+    await loadEnquiries();
   }
 
-  if (typeof admin.requireLogin === "function" && !admin.requireLogin()) {
-    return;
-  }
-
-  loadEnquiries();
+  initialise();
 })();
 </script>
 </body>
