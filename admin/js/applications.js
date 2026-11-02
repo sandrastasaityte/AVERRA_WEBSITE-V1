@@ -2,7 +2,7 @@
 /*
  * AVERRA STAFFING SOLUTIONS LTD
  * File: admin/js/applications.js
- * Version: 1.0.0
+ * Version: 1.1.0
  *
  * Administrator application management.
  *
@@ -13,15 +13,15 @@
  * GET    /api/admin/applications/{id}/cv
  * DELETE /api/admin/applications/{id}
  *
- * Uses the shared admin/js/auth.js authentication helper.
+ * Compatible with admin/js/auth.js v3.8.0.
  */
 
 "use strict";
 
 (() => {
     const API_BASE_URL = (
+        window.AVERRA_ADMIN?.API_BASE_URL ||
         window.AVERRA_API_BASE_URL ||
-        window.AVERRA_ADMIN_API_BASE_URL ||
         "https://averra-backend-dn23.onrender.com"
     ).replace(/\/+$/, "");
 
@@ -38,8 +38,7 @@
         applications: [],
         filteredApplications: [],
         selectedApplication: null,
-        loading: false,
-        busyIds: new Set()
+        loading: false
     };
 
     const elements = {};
@@ -48,45 +47,47 @@
         return document.getElementById(id);
     }
 
-    function cacheElements() {
-        elements.tableBody =
-            getElement("applications-table-body") ||
-            getElement("applications-body") ||
-            getElement("applications-list");
 
-        elements.search = getElement("application-search");
-        elements.statusFilter = getElement("status-filter");
-        elements.refreshButton = getElement("refresh-applications");
-        elements.loading = getElement("applications-loading");
-        elements.error = getElement("applications-error");
-        elements.empty = getElement("applications-empty");
-        elements.count = getElement("applications-count");
+function cacheElements() {
+    elements.tableBody =
+        getElement("applications-table-body") ||
+        getElement("applications-body") ||
+        getElement("applications-list") ||
+        document.querySelector("#applications-table tbody") ||
+        document.querySelector("#applications tbody") ||
+        document.querySelector("table tbody");
 
-        elements.modal = getElement("application-modal");
-        elements.modalContent = getElement("application-details");
-        elements.modalClose = getElement("close-application-modal");
+    elements.search = getElement("application-search");
+    elements.statusFilter = getElement("status-filter");
+    elements.refreshButton = getElement("refresh-applications");
+    elements.loading = getElement("applications-loading");
+    elements.error = getElement("applications-error");
+    elements.empty = getElement("applications-empty");
+    elements.count = getElement("applications-count");
 
-        elements.detailName = getElement("detail-name");
-        elements.detailEmail = getElement("detail-email");
-        elements.detailPhone = getElement("detail-phone");
-        elements.detailJob = getElement("detail-job");
-        elements.detailDate = getElement("detail-date");
-        elements.detailStatus = getElement("detail-status");
-        elements.detailCoverLetter = getElement("detail-cover-letter");
-        elements.detailCv = getElement("detail-cv");
+    elements.modal = getElement("application-modal");
+    elements.modalContent = getElement("application-details");
+    elements.modalClose = getElement("close-application-modal");
 
-        elements.saveStatusButton = getElement("save-application-status");
-        elements.deleteButton = getElement("delete-application");
-    }
+    elements.detailName = getElement("detail-name");
+    elements.detailEmail = getElement("detail-email");
+    elements.detailPhone = getElement("detail-phone");
+    elements.detailJob = getElement("detail-job");
+    elements.detailDate = getElement("detail-date");
+    elements.detailStatus = getElement("detail-status");
+    elements.detailCoverLetter = getElement("detail-cover-letter");
+    elements.detailCv = getElement("detail-cv");
 
-    function escapeText(value) {
-        return String(value ?? "");
-    }
+    elements.saveStatusButton = getElement("save-application-status");
+    elements.deleteButton = getElement("delete-application");
+}
 
     function showMessage(message, type = "error") {
         if (!elements.error) {
             if (type === "error") {
                 console.error(message);
+            } else {
+                console.info(message);
             }
             return;
         }
@@ -191,45 +192,67 @@
         return button;
     }
 
+    /*
+     * IMPORTANT:
+     * auth.js v3.8.0 returns parsed JSON, not a Response object.
+     */
     async function apiRequest(path, options = {}) {
-        if (!window.AVERRA_ADMIN || typeof window.AVERRA_ADMIN.api !== "function") {
+        if (
+            !window.AVERRA_ADMIN ||
+            typeof window.AVERRA_ADMIN.api !== "function"
+        ) {
             throw new Error(
-                "The AVERRA authentication helper is unavailable. Check that js/auth.js loads before applications.js."
+                "AVERRA authentication is unavailable. " +
+                "Check that auth.js loads before applications.js."
             );
         }
 
-        const url = `${API_BASE_URL}${path}`;
-
-        return window.AVERRA_ADMIN.api(url, {
+        return window.AVERRA_ADMIN.api(path, {
             method: options.method || "GET",
             headers: options.headers || {},
             body: options.body
         });
     }
 
-    async function readResponse(response) {
-        const contentType = response.headers.get("content-type") || "";
-
-        if (contentType.includes("application/json")) {
-            return response.json();
+    async function ensureAuthenticated() {
+        if (
+            !window.AVERRA_ADMIN ||
+            typeof window.AVERRA_ADMIN.requireLogin !== "function"
+        ) {
+            throw new Error(
+                "AVERRA administrator authentication is unavailable."
+            );
         }
 
-        return response.text();
+        return await window.AVERRA_ADMIN.requireLogin();
     }
 
-    async function ensureAuthenticated() {
-        if (!window.AVERRA_ADMIN ||
-            typeof window.AVERRA_ADMIN.requireLogin !== "function") {
-            throw new Error("AVERRA administrator authentication is unavailable.");
+    function unwrapApplication(data) {
+        if (!data || typeof data !== "object") {
+            return data;
         }
 
-        const result = await window.AVERRA_ADMIN.requireLogin();
+        return data.application || data.item || data;
+    }
 
-        if (result === false) {
-            return false;
+    function unwrapApplications(data) {
+        if (Array.isArray(data)) {
+            return data;
         }
 
-        return true;
+        if (Array.isArray(data?.applications)) {
+            return data.applications;
+        }
+
+        if (Array.isArray(data?.items)) {
+            return data.items;
+        }
+
+        if (Array.isArray(data?.results)) {
+            return data.results;
+        }
+
+        return [];
     }
 
     async function loadApplications() {
@@ -242,37 +265,21 @@
 
             setLoading(true);
 
-            const response = await apiRequest(
+            const data = await apiRequest(
                 "/api/admin/applications?limit=200&offset=0"
             );
 
-            if (!response.ok) {
-                const error = await readResponse(response);
-
-                if (response.status === 404 || response.status === 405) {
-                    throw new Error(
-                        "The application-list endpoint is not available yet. The backend must be updated before applications can be displayed."
-                    );
-                }
-
-                throw new Error(
-                    error?.detail || "Unable to load applications."
-                );
-            }
-
-            const data = await response.json();
-
-            state.applications = Array.isArray(data)
-                ? data
-                : Array.isArray(data.applications)
-                    ? data.applications
-                    : [];
+            state.applications = unwrapApplications(data);
 
             applyFilters();
 
         } catch (error) {
             console.error("AVERRA applications:", error);
-            showMessage(error.message || "Unable to load applications.");
+
+            showMessage(
+                error.message || "Unable to load applications."
+            );
+
         } finally {
             setLoading(false);
         }
@@ -287,23 +294,27 @@
             ? elements.statusFilter.value
             : "all";
 
-        state.filteredApplications = state.applications.filter(application => {
-            const status = normaliseStatus(application.status);
+        state.filteredApplications =
+            state.applications.filter(application => {
+                const status = normaliseStatus(application.status);
 
-            if (selectedStatus !== "all" && status !== selectedStatus) {
-                return false;
-            }
+                if (
+                    selectedStatus !== "all" &&
+                    status !== selectedStatus
+                ) {
+                    return false;
+                }
 
-            const searchable = [
-                application.id,
-                application.full_name,
-                application.email,
-                application.phone,
-                application.job_title
-            ].join(" ").toLowerCase();
+                const searchable = [
+                    application.id,
+                    application.full_name,
+                    application.email,
+                    application.phone,
+                    application.job_title
+                ].join(" ").toLowerCase();
 
-            return searchable.includes(searchTerm);
-        });
+                return searchable.includes(searchTerm);
+            });
 
         renderApplications();
     }
@@ -311,7 +322,8 @@
     function renderApplications() {
         if (!elements.tableBody) {
             console.error(
-                "Applications table body not found. Expected #applications-table-body."
+                "Applications table body not found. " +
+                "Expected #applications-table-body."
             );
             return;
         }
@@ -338,23 +350,29 @@
 
             const applicantName = document.createElement("strong");
             applicantName.textContent =
-                escapeText(application.full_name) || "Unknown applicant";
+                application.full_name || "Unknown applicant";
 
             const applicantEmail = document.createElement("small");
             applicantEmail.textContent =
-                escapeText(application.email) || "No email";
+                application.email || "No email";
 
-            applicantCell.append(applicantName, document.createElement("br"), applicantEmail);
+            applicantCell.append(
+                applicantName,
+                document.createElement("br"),
+                applicantEmail
+            );
 
             const jobCell = document.createElement("td");
             jobCell.textContent =
-                escapeText(application.job_title) || "General Application";
+                application.job_title || "General Application";
 
             const dateCell = document.createElement("td");
             dateCell.textContent = formatDate(application.created_at);
 
             const statusCell = document.createElement("td");
-            statusCell.appendChild(createStatusBadge(application.status));
+            statusCell.appendChild(
+                createStatusBadge(application.status)
+            );
 
             const actionsCell = document.createElement("td");
 
@@ -387,12 +405,17 @@
 
             if (!authenticated) return;
 
-            const application = state.applications.find(
-                item => Number(item.id) === Number(applicationId)
+            /*
+             * Load full application details from the backend.
+             */
+            const data = await apiRequest(
+                `/api/admin/applications/${encodeURIComponent(applicationId)}`
             );
 
+            const application = unwrapApplication(data);
+
             if (!application) {
-                throw new Error("Application not found in the current list.");
+                throw new Error("Application details were not returned.");
             }
 
             state.selectedApplication = application;
@@ -405,7 +428,11 @@
             }
 
         } catch (error) {
-            showMessage(error.message || "Unable to open application.");
+            console.error(error);
+
+            showMessage(
+                error.message || "Unable to open application."
+            );
         }
     }
 
@@ -421,21 +448,25 @@
         setText(elements.detailPhone, application.phone);
         setText(elements.detailJob, application.job_title);
         setText(elements.detailDate, formatDate(application.created_at));
+
         setText(
             elements.detailCoverLetter,
             application.cover_letter || "No cover letter provided."
         );
 
         if (elements.detailStatus) {
-            elements.detailStatus.value = normaliseStatus(application.status);
+            elements.detailStatus.value =
+                normaliseStatus(application.status);
         }
 
         if (elements.detailCv) {
-            elements.detailCv.textContent = application.cv_original_name
-                ? `${application.cv_original_name} (${formatFileSize(application.cv_size)})`
-                : "No CV information available.";
+            elements.detailCv.textContent =
+                application.cv_original_name
+                    ? `${application.cv_original_name} (${formatFileSize(application.cv_size)})`
+                    : "No CV information available.";
 
-            elements.detailCv.disabled = !application.cv_original_name;
+            elements.detailCv.disabled =
+                !application.cv_original_name;
         }
     }
 
@@ -465,7 +496,7 @@
                 elements.saveStatusButton.disabled = true;
             }
 
-            const response = await apiRequest(
+            const data = await apiRequest(
                 `/api/admin/applications/${encodeURIComponent(application.id)}`,
                 {
                     method: "PATCH",
@@ -478,14 +509,7 @@
                 }
             );
 
-            if (!response.ok) {
-                const error = await readResponse(response);
-                throw new Error(
-                    error?.detail || "Unable to update application status."
-                );
-            }
-
-            const updated = await response.json();
+            const updated = unwrapApplication(data) || {};
 
             const index = state.applications.findIndex(
                 item => Number(item.id) === Number(application.id)
@@ -497,18 +521,36 @@
                     ...updated,
                     status: newStatus
                 };
+
+                state.selectedApplication =
+                    state.applications[index];
+            } else {
+                state.selectedApplication = {
+                    ...application,
+                    ...updated,
+                    status: newStatus
+                };
             }
 
-            state.selectedApplication = state.applications[index];
+            displayApplicationDetails(
+                state.selectedApplication
+            );
 
-            displayApplicationDetails(state.selectedApplication);
             applyFilters();
 
-            showMessage("Application status updated successfully.", "success");
+            showMessage(
+                "Application status updated successfully.",
+                "success"
+            );
 
         } catch (error) {
             console.error(error);
-            showMessage(error.message || "Unable to update application status.");
+
+            showMessage(
+                error.message ||
+                "Unable to update application status."
+            );
+
         } finally {
             if (elements.saveStatusButton) {
                 elements.saveStatusButton.disabled = false;
@@ -516,6 +558,10 @@
         }
     }
 
+    /*
+     * CV download requires a raw fetch because auth.js api()
+     * parses successful responses as JSON.
+     */
     async function downloadCv() {
         const application = state.selectedApplication;
 
@@ -524,38 +570,81 @@
             return;
         }
 
+        if (!application.cv_original_name) {
+            showMessage("No CV is available for this application.");
+            return;
+        }
+
         try {
             const authenticated = await ensureAuthenticated();
 
             if (!authenticated) return;
 
-            const response = await apiRequest(
-                `/api/admin/applications/${encodeURIComponent(application.id)}/cv`
-            );
+            const token = window.AVERRA_ADMIN.getToken();
+
+            if (!token) {
+                throw new Error(
+                    "Your administrator session has expired. Please sign in again."
+                );
+            }
+
+            const url =
+                `${API_BASE_URL}/api/admin/applications/` +
+                `${encodeURIComponent(application.id)}/cv`;
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-Admin-Token": token
+                },
+                credentials: "omit",
+                cache: "no-store"
+            });
 
             if (!response.ok) {
-                const error = await readResponse(response);
-                throw new Error(
-                    error?.detail || "Unable to download this CV."
-                );
+                let message = "Unable to download this CV.";
+
+                try {
+                    const result = await response.json();
+
+                    if (result.detail) {
+                        message = typeof result.detail === "string"
+                            ? result.detail
+                            : JSON.stringify(result.detail);
+                    }
+                } catch (_) {
+                    // Keep fallback message.
+                }
+
+                throw new Error(message);
             }
 
             const blob = await response.blob();
             const objectUrl = URL.createObjectURL(blob);
 
             const link = document.createElement("a");
+
             link.href = objectUrl;
-            link.download = application.cv_original_name || "applicant-cv";
+            link.download =
+                application.cv_original_name || "applicant-cv";
 
             document.body.appendChild(link);
             link.click();
             link.remove();
 
-            URL.revokeObjectURL(objectUrl);
+            /*
+             * Revoke after the browser has initiated the download.
+             */
+            window.setTimeout(() => {
+                URL.revokeObjectURL(objectUrl);
+            }, 1000);
 
         } catch (error) {
             console.error(error);
-            showMessage(error.message || "Unable to download CV.");
+
+            showMessage(
+                error.message || "Unable to download CV."
+            );
         }
     }
 
@@ -578,33 +667,33 @@
 
             if (!authenticated) return;
 
-            const response = await apiRequest(
+            await apiRequest(
                 `/api/admin/applications/${encodeURIComponent(application.id)}`,
                 {
                     method: "DELETE"
                 }
             );
 
-            if (!response.ok) {
-                const error = await readResponse(response);
-                throw new Error(
-                    error?.detail || "Unable to delete application."
-                );
-            }
-
             state.applications = state.applications.filter(
                 item => Number(item.id) !== Number(application.id)
             );
 
             state.selectedApplication = null;
+
             closeModal();
             applyFilters();
 
-            showMessage("Application and stored CV deleted.", "success");
+            showMessage(
+                "Application and stored CV deleted.",
+                "success"
+            );
 
         } catch (error) {
             console.error(error);
-            showMessage(error.message || "Unable to delete application.");
+
+            showMessage(
+                error.message || "Unable to delete application."
+            );
         }
     }
 
@@ -613,16 +702,23 @@
 
         elements.modal.hidden = true;
         elements.modal.setAttribute("aria-hidden", "true");
+
         state.selectedApplication = null;
     }
 
     function bindEvents() {
         if (elements.search) {
-            elements.search.addEventListener("input", applyFilters);
+            elements.search.addEventListener(
+                "input",
+                applyFilters
+            );
         }
 
         if (elements.statusFilter) {
-            elements.statusFilter.addEventListener("change", applyFilters);
+            elements.statusFilter.addEventListener(
+                "change",
+                applyFilters
+            );
         }
 
         if (elements.refreshButton) {
@@ -633,7 +729,10 @@
         }
 
         if (elements.modalClose) {
-            elements.modalClose.addEventListener("click", closeModal);
+            elements.modalClose.addEventListener(
+                "click",
+                closeModal
+            );
         }
 
         if (elements.saveStatusButton) {
@@ -651,22 +750,31 @@
         }
 
         if (elements.detailCv) {
-            elements.detailCv.addEventListener("click", downloadCv);
+            elements.detailCv.addEventListener(
+                "click",
+                downloadCv
+            );
         }
 
         if (elements.modal) {
-            elements.modal.addEventListener("click", event => {
-                if (event.target === elements.modal) {
-                    closeModal();
+            elements.modal.addEventListener(
+                "click",
+                event => {
+                    if (event.target === elements.modal) {
+                        closeModal();
+                    }
                 }
-            });
+            );
         }
 
-        document.addEventListener("keydown", event => {
-            if (event.key === "Escape") {
-                closeModal();
+        document.addEventListener(
+            "keydown",
+            event => {
+                if (event.key === "Escape") {
+                    closeModal();
+                }
             }
-        });
+        );
     }
 
     async function initialise() {
@@ -674,15 +782,20 @@
 
         if (!elements.tableBody) {
             console.error(
-                "AVERRA Applications: table body is missing from applications.html."
+                "AVERRA Applications: applications table body is missing."
             );
             return;
         }
 
         bindEvents();
+
         await loadApplications();
     }
 
-    document.addEventListener("DOMContentLoaded", initialise);
+    document.addEventListener(
+        "DOMContentLoaded",
+        initialise,
+        { once: true }
+    );
 
 })();

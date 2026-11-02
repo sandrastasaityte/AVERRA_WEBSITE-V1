@@ -1998,6 +1998,54 @@ def delete_admin_application(
 
 
 # ============================================================
+# ADMIN DASHBOARD STATISTICS
+# ============================================================
+
+@app.get("/api/admin/dashboard/stats", tags=["Admin - Dashboard"])
+def admin_dashboard_stats(
+    _: None = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    """
+    Return accurate dashboard statistics directly from the database.
+    """
+
+    total_jobs = (
+        db.scalar(
+            select(func.count()).select_from(Job)
+        ) or 0
+    )
+
+    published_jobs = (
+        db.scalar(
+            select(func.count())
+            .select_from(Job)
+            .where(Job.status == "published")
+        ) or 0
+    )
+
+    draft_jobs = (
+        db.scalar(
+            select(func.count())
+            .select_from(Job)
+            .where(Job.status == "draft")
+        ) or 0
+    )
+
+    total_applications = (
+        db.scalar(
+            select(func.count()).select_from(Application)
+        ) or 0
+    )
+
+    return {
+        "total_jobs": total_jobs,
+        "published_jobs": published_jobs,
+        "draft_jobs": draft_jobs,
+        "total_applications": total_applications
+    }
+
+# ============================================================
 # STARTUP
 # ============================================================
 
