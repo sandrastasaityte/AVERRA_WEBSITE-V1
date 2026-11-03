@@ -5,16 +5,17 @@
    AVERRA STAFFING SOLUTIONS LTD
    CENTRAL WEBSITE IMAGE MANAGEMENT SYSTEM
    File: frontend/images/images.js
-   Version: 12.1
+   Version: 12.2.0
 
    FEATURES
    - Verified catalogue for image1 through image33
-   - Exact filename extensions from the current inventory
+   - Exact filename extensions from current inventory
    - Backwards-compatible public image helpers
    - data-image-key and data-image support
+   - data-image-alt accessible descriptions
+   - Preserves explicitly empty alt="" for decorative images
    - CSS background image support
    - Optional semantic aliases
-   - Accessible alt-text defaults
    - Missing-image diagnostics
    - Catalogue validation
    - Dynamic element support through MutationObserver
@@ -25,7 +26,7 @@
 (function (window, document) {
     "use strict";
 
-    const VERSION = "12.1";
+    const VERSION = "12.2.0";
     const COMPANY = "AVERRA Staffing Solutions Ltd";
 
     const CONFIG = Object.freeze({
@@ -35,7 +36,7 @@
         autoInitialise: true,
         observeNewElements: true,
         missingImageClass: "averra-image-missing",
-        defaultAlt: "AVERRA Staffing Solutions Ltd",
+        defaultAlt: COMPANY,
         debug: false
     });
 
@@ -82,8 +83,7 @@
     /* --------------------------------------------------------
        SEMANTIC ALIASES
 
-       These are convenience names. They do not verify the
-       actual contents of the image files.
+       Alias names do not verify the actual contents of images.
        -------------------------------------------------------- */
 
     const IMAGE_ALIASES = Object.freeze({
@@ -150,7 +150,9 @@
     }
 
     function normaliseKey(key) {
-        return typeof key === "string" ? key.trim() : "";
+        return typeof key === "string"
+            ? key.trim()
+            : "";
     }
 
     function resolveKey(key) {
@@ -160,17 +162,21 @@
             return "";
         }
 
-        if (Object.prototype.hasOwnProperty.call(
-            IMAGE_FILES,
-            normalised
-        )) {
+        if (
+            Object.prototype.hasOwnProperty.call(
+                IMAGE_FILES,
+                normalised
+            )
+        ) {
             return normalised;
         }
 
-        if (Object.prototype.hasOwnProperty.call(
-            IMAGE_ALIASES,
-            normalised
-        )) {
+        if (
+            Object.prototype.hasOwnProperty.call(
+                IMAGE_ALIASES,
+                normalised
+            )
+        ) {
             return IMAGE_ALIASES[normalised];
         }
 
@@ -178,15 +184,18 @@
     }
 
     function cleanBasePath(path) {
-        const value = typeof path === "string"
-            ? path.trim()
-            : CONFIG.basePath;
+        const value =
+            typeof path === "string"
+                ? path.trim()
+                : CONFIG.basePath;
 
         if (!value) {
             return "";
         }
 
-        return value.endsWith("/") ? value : value + "/";
+        return value.endsWith("/")
+            ? value
+            : value + "/";
     }
 
     function makeImagePath(key, customBasePath) {
@@ -196,9 +205,10 @@
             return "";
         }
 
-        const basePath = customBasePath === undefined
-            ? cleanBasePath(CONFIG.basePath)
-            : cleanBasePath(customBasePath);
+        const basePath =
+            customBasePath === undefined
+                ? cleanBasePath(CONFIG.basePath)
+                : cleanBasePath(customBasePath);
 
         return basePath + IMAGE_FILES[resolvedKey];
     }
@@ -238,7 +248,9 @@
         return Boolean(
             isElement(element) &&
             element.matches &&
-            element.matches("img[data-image-key], img[data-image]")
+            element.matches(
+                "img[data-image-key], img[data-image]"
+            )
         );
     }
 
@@ -253,6 +265,46 @@
     }
 
     /* --------------------------------------------------------
+       ACCESSIBLE ALT TEXT
+       -------------------------------------------------------- */
+
+    function applyAltText(element) {
+        if (!isImageElement(element)) {
+            return;
+        }
+
+        /*
+         * data-image-alt takes priority.
+         *
+         * Existing alt="" is preserved for decorative images.
+         *
+         * If neither data-image-alt nor alt exists,
+         * apply the generic company default.
+         */
+
+        if (element.hasAttribute("data-image-alt")) {
+            const description =
+                element.getAttribute("data-image-alt");
+
+            element.setAttribute(
+                "alt",
+                description === null
+                    ? ""
+                    : description.trim()
+            );
+
+            return;
+        }
+
+        if (!element.hasAttribute("alt")) {
+            element.setAttribute(
+                "alt",
+                CONFIG.defaultAlt
+            );
+        }
+    }
+
+    /* --------------------------------------------------------
        STATUS AND DIAGNOSTICS
        -------------------------------------------------------- */
 
@@ -261,8 +313,13 @@
             return;
         }
 
-        element.classList.remove(CONFIG.missingImageClass);
-        element.removeAttribute("data-image-error-key");
+        element.classList.remove(
+            CONFIG.missingImageClass
+        );
+
+        element.removeAttribute(
+            "data-image-error-key"
+        );
     }
 
     function markMissing(element, path) {
@@ -270,8 +327,14 @@
             return;
         }
 
-        element.classList.add(CONFIG.missingImageClass);
-        element.setAttribute("data-image-status", "missing");
+        element.classList.add(
+            CONFIG.missingImageClass
+        );
+
+        element.setAttribute(
+            "data-image-status",
+            "missing"
+        );
 
         if (reportedFailures.get(element) !== path) {
             reportedFailures.set(element, path);
@@ -290,7 +353,12 @@
         }
 
         clearMissingState(element);
-        element.setAttribute("data-image-status", "loaded");
+
+        element.setAttribute(
+            "data-image-status",
+            "loaded"
+        );
+
         reportedFailures.delete(element);
     }
 
@@ -299,12 +367,30 @@
             return;
         }
 
-        element.classList.add(CONFIG.missingImageClass);
-        element.setAttribute("data-image-status", "missing");
+        element.classList.add(
+            CONFIG.missingImageClass
+        );
 
-        if (element.getAttribute("data-image-error-key") !== key) {
-            element.setAttribute("data-image-error-key", key);
-            warn("Unknown image key:", key, element);
+        element.setAttribute(
+            "data-image-status",
+            "missing"
+        );
+
+        if (
+            element.getAttribute(
+                "data-image-error-key"
+            ) !== key
+        ) {
+            element.setAttribute(
+                "data-image-error-key",
+                key
+            );
+
+            warn(
+                "Unknown image key:",
+                key,
+                element
+            );
         }
     }
 
@@ -323,7 +409,9 @@
     function getImageFilename(key) {
         const resolvedKey = resolveKey(key);
 
-        return resolvedKey ? IMAGE_FILES[resolvedKey] : "";
+        return resolvedKey
+            ? IMAGE_FILES[resolvedKey]
+            : "";
     }
 
     function getImageKey(key) {
@@ -375,50 +463,87 @@
             return false;
         }
 
-        element.removeAttribute("data-image-error-key");
+        element.removeAttribute(
+            "data-image-error-key"
+        );
 
-        if (!element.hasAttribute("alt")) {
-            element.setAttribute("alt", CONFIG.defaultAlt);
-        }
+        applyAltText(element);
 
         if (!processedImages.has(element)) {
-            element.addEventListener("load", function () {
-                const currentKey = getElementKey(element);
-                const currentPath = makeImagePath(currentKey);
-                const managedPath = element.getAttribute(
-                    "data-image-managed-src"
-                );
+            element.addEventListener(
+                "load",
+                function () {
+                    const currentKey =
+                        getElementKey(element);
 
-                if (currentPath && currentPath === managedPath) {
-                    markLoaded(element);
+                    const currentPath =
+                        makeImagePath(currentKey);
+
+                    const managedPath =
+                        element.getAttribute(
+                            "data-image-managed-src"
+                        );
+
+                    if (
+                        currentPath &&
+                        currentPath === managedPath
+                    ) {
+                        markLoaded(element);
+                    }
                 }
-            });
+            );
 
-            element.addEventListener("error", function () {
-                const currentKey = getElementKey(element);
-                const currentPath = makeImagePath(currentKey);
-                const managedPath = element.getAttribute(
-                    "data-image-managed-src"
-                );
+            element.addEventListener(
+                "error",
+                function () {
+                    const currentKey =
+                        getElementKey(element);
 
-                if (currentPath && currentPath === managedPath) {
-                    markMissing(element, managedPath);
+                    const currentPath =
+                        makeImagePath(currentKey);
+
+                    const managedPath =
+                        element.getAttribute(
+                            "data-image-managed-src"
+                        );
+
+                    if (
+                        currentPath &&
+                        currentPath === managedPath
+                    ) {
+                        markMissing(
+                            element,
+                            managedPath
+                        );
+                    }
                 }
-            });
+            );
 
             processedImages.add(element);
         }
 
-        const previousPath = element.getAttribute(
-            "data-image-managed-src"
-        );
+        const previousPath =
+            element.getAttribute(
+                "data-image-managed-src"
+            );
 
         if (previousPath !== path) {
             clearMissingState(element);
 
-            element.setAttribute("data-image-status", "loading");
-            element.setAttribute("data-image-managed-src", path);
-            element.setAttribute("src", path);
+            element.setAttribute(
+                "data-image-status",
+                "loading"
+            );
+
+            element.setAttribute(
+                "data-image-managed-src",
+                path
+            );
+
+            element.setAttribute(
+                "src",
+                path
+            );
 
             return true;
         }
@@ -428,6 +553,7 @@
             element.naturalWidth === 0
         ) {
             markMissing(element, path);
+
         } else if (
             element.complete &&
             element.naturalWidth > 0
@@ -460,35 +586,57 @@
             return false;
         }
 
-        element.removeAttribute("data-image-error-key");
+        element.removeAttribute(
+            "data-image-error-key"
+        );
 
-        const previousPath = processedBackgrounds.get(element);
+        const previousPath =
+            processedBackgrounds.get(element);
 
         if (previousPath === path) {
             return true;
         }
 
-        processedBackgrounds.set(element, path);
+        processedBackgrounds.set(
+            element,
+            path
+        );
+
         clearMissingState(element);
 
         element.style.backgroundImage =
             'url("' +
-            path.replace(/\\/g, "\\\\").replace(/"/g, '\\"') +
+            path
+                .replace(/\\/g, "\\\\")
+                .replace(/"/g, '\\"') +
             '")';
 
-        element.setAttribute("data-image-status", "loading");
+        element.setAttribute(
+            "data-image-status",
+            "loading"
+        );
 
         const probe = new window.Image();
 
         probe.onload = function () {
-            if (processedBackgrounds.get(element) === path) {
+            if (
+                processedBackgrounds.get(element) ===
+                path
+            ) {
                 clearMissingState(element);
-                element.setAttribute("data-image-status", "loaded");
+
+                element.setAttribute(
+                    "data-image-status",
+                    "loaded"
+                );
             }
         };
 
         probe.onerror = function () {
-            if (processedBackgrounds.get(element) === path) {
+            if (
+                processedBackgrounds.get(element) ===
+                path
+            ) {
                 markMissing(element, path);
             }
         };
@@ -510,7 +658,10 @@
             container.nodeType !== 9 &&
             container.nodeType !== 11
         ) {
-            warn("Invalid root passed to initialiseImages().");
+            warn(
+                "Invalid root passed to initialiseImages()."
+            );
+
             return 0;
         }
 
@@ -546,7 +697,10 @@
             });
         }
 
-        log("Processed elements:", processedCount);
+        log(
+            "Processed elements:",
+            processedCount
+        );
 
         return processedCount;
     }
@@ -568,35 +722,48 @@
             observer.disconnect();
         }
 
-        observer = new window.MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (mutation.type === "attributes") {
-                    const element = mutation.target;
+        observer = new window.MutationObserver(
+            function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (
+                        mutation.type === "attributes"
+                    ) {
+                        const element =
+                            mutation.target;
 
-                    if (matchesImage(element)) {
-                        processImageElement(element);
-                    } else if (matchesBackground(element)) {
-                        processBackgroundElement(element);
+                        if (matchesImage(element)) {
+                            processImageElement(element);
+
+                        } else if (
+                            matchesBackground(element)
+                        ) {
+                            processBackgroundElement(element);
+                        }
+
+                        return;
                     }
 
-                    return;
-                }
-
-                mutation.addedNodes.forEach(function (node) {
-                    if (isElement(node)) {
-                        initialiseImages(node);
-                    }
+                    mutation.addedNodes.forEach(
+                        function (node) {
+                            if (isElement(node)) {
+                                initialiseImages(node);
+                            }
+                        }
+                    );
                 });
-            });
-        });
+            }
+        );
 
         observer.observe(document.body, {
             childList: true,
             subtree: true,
             attributes: true,
+
             attributeFilter: [
                 "data-image-key",
                 "data-image",
+                "data-image-alt",
+                "alt",
                 "data-background-image",
                 "data-bg-image"
             ]
@@ -616,18 +783,24 @@
 
     function validateImageCatalogue() {
         const inventory = getImageInventory();
+
         const keys = new Set();
         const filenames = new Set();
+
         const problems = [];
 
         inventory.forEach(function (item) {
             if (keys.has(item.key)) {
-                problems.push("Duplicate image key: " + item.key);
+                problems.push(
+                    "Duplicate image key: " +
+                    item.key
+                );
             }
 
             if (filenames.has(item.filename)) {
                 problems.push(
-                    "Duplicate image filename: " + item.filename
+                    "Duplicate image filename: " +
+                    item.filename
                 );
             }
 
@@ -635,20 +808,28 @@
             filenames.add(item.filename);
 
             if (!item.filename) {
-                problems.push("Missing filename for " + item.key);
-            }
-        });
-
-        Object.keys(IMAGE_ALIASES).forEach(function (alias) {
-            if (!Object.prototype.hasOwnProperty.call(
-                IMAGE_FILES,
-                IMAGE_ALIASES[alias]
-            )) {
                 problems.push(
-                    "Alias points to an unknown image: " + alias
+                    "Missing filename for " +
+                    item.key
                 );
             }
         });
+
+        Object.keys(IMAGE_ALIASES).forEach(
+            function (alias) {
+                if (
+                    !Object.prototype.hasOwnProperty.call(
+                        IMAGE_FILES,
+                        IMAGE_ALIASES[alias]
+                    )
+                ) {
+                    problems.push(
+                        "Alias points to an unknown image: " +
+                        alias
+                    );
+                }
+            }
+        );
 
         return {
             valid: problems.length === 0,
@@ -669,42 +850,74 @@
                     getElementKey(element) ||
                     getBackgroundKey(element) ||
                     "",
+
                 source:
-                    element.getAttribute("data-image-managed-src") ||
+                    element.getAttribute(
+                        "data-image-managed-src"
+                    ) ||
                     element.style.backgroundImage ||
                     element.currentSrc ||
                     element.src ||
                     "",
-                status: element.getAttribute("data-image-status"),
+
+                status:
+                    element.getAttribute(
+                        "data-image-status"
+                    ),
+
                 element: element
             };
         });
     }
 
     function auditImages() {
-        const catalogue = validateImageCatalogue();
+        const catalogue =
+            validateImageCatalogue();
 
         const report = {
             company: COMPANY,
             version: VERSION,
-            catalogueCount: getImageCount(),
-            catalogueValid: catalogue.valid,
-            catalogueProblems: catalogue.problems,
-            imagesOnPage: document.querySelectorAll("img").length,
-            managedImages: document.querySelectorAll(
-                "img[data-image-key], img[data-image]"
-            ).length,
-            missingImages: getFailedImages()
+
+            catalogueCount:
+                getImageCount(),
+
+            catalogueValid:
+                catalogue.valid,
+
+            catalogueProblems:
+                catalogue.problems,
+
+            imagesOnPage:
+                document.querySelectorAll("img").length,
+
+            managedImages:
+                document.querySelectorAll(
+                    "img[data-image-key], img[data-image]"
+                ).length,
+
+            missingImages:
+                getFailedImages()
         };
 
-        console.group("[AVERRA Images] Image audit");
+        console.group(
+            "[AVERRA Images] Image audit"
+        );
 
         console.table({
-            "Catalogue entries": report.catalogueCount,
-            "Catalogue valid": report.catalogueValid,
-            "Images on page": report.imagesOnPage,
-            "Managed images": report.managedImages,
-            "Missing images": report.missingImages.length
+            "Catalogue entries":
+                report.catalogueCount,
+
+            "Catalogue valid":
+                report.catalogueValid,
+
+            "Images on page":
+                report.imagesOnPage,
+
+            "Managed images":
+                report.managedImages,
+
+            "Missing images":
+                report.missingImages.length
         });
 
         if (catalogue.problems.length) {
@@ -756,47 +969,58 @@
         files: IMAGE_FILES,
         aliases: IMAGE_ALIASES,
 
-        getImagePath: getImagePath,
-        getImageUrl: getImageUrl,
-        getImageFilename: getImageFilename,
-        getImageKey: getImageKey,
-        getImageInventory: getImageInventory,
-        getImageAliases: getImageAliases,
-        getImageCount: getImageCount,
-        hasImage: hasImage,
+        getImagePath,
+        getImageUrl,
+        getImageFilename,
+        getImageKey,
+        getImageInventory,
+        getImageAliases,
+        getImageCount,
+        hasImage,
 
-        initialiseImages: initialiseImages,
+        initialiseImages,
         initializeImages: initialiseImages,
-        init: init,
+        init,
 
-        validateImageCatalogue: validateImageCatalogue,
-        getFailedImages: getFailedImages,
-        auditImages: auditImages,
+        validateImageCatalogue,
+        getFailedImages,
+        auditImages,
 
-        stopObserving: stopObserving
+        stopObserving
     });
 
     window.AVERRAImages = publicAPI;
     window.AVERRAImageManager = publicAPI;
 
-    // Preserve helper functions if another script already owns them.
-    if (typeof window.getImagePath !== "function") {
+    // Preserve existing global helpers if already defined.
+
+    if (
+        typeof window.getImagePath !== "function"
+    ) {
         window.getImagePath = getImagePath;
     }
 
-    if (typeof window.getImageUrl !== "function") {
+    if (
+        typeof window.getImageUrl !== "function"
+    ) {
         window.getImageUrl = getImageUrl;
     }
 
-    if (typeof window.getImageInventory !== "function") {
-        window.getImageInventory = getImageInventory;
+    if (
+        typeof window.getImageInventory !== "function"
+    ) {
+        window.getImageInventory =
+            getImageInventory;
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init, {
-            once: true
-        });
+        document.addEventListener(
+            "DOMContentLoaded",
+            init,
+            { once: true }
+        );
     } else {
         init();
     }
+
 })(window, document);

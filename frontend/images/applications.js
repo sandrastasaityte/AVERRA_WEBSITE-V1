@@ -4,14 +4,15 @@
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    File: frontend/images/applications.js
-   Version: 7.0.0
+   Version: 7.1.0
 
    RESPONSIBILITIES
    - Validate candidate details and CV files
    - Submit applications to POST /api/applications
    - Display success and error messages
-   - Keep the submit button state consistent
-   - Expose a small public API for application testing
+   - Prevent duplicate submissions
+   - Handle network errors and timeouts
+   - Expose a public API for application testing
 
    VACANCY MANAGEMENT
    Handled by images/jobs.js.
@@ -19,6 +20,9 @@
 
    BACKEND
    https://averra-backend-dn23.onrender.com
+
+   CONTACT
+   enquiries@averrastaffing.co.uk
 
    EXPECTED MULTIPART FIELDS
    full_name, email, phone, job_id, job_title,
@@ -33,10 +37,15 @@
 
         applicationsEndpoint: "/api/applications",
 
-        requestTimeout: 20000,
+        requestTimeout: 30000,
+
         maxCvSize: 5 * 1024 * 1024,
 
-        acceptedExtensions: [".pdf", ".doc", ".docx"],
+        acceptedExtensions: [
+            ".pdf",
+            ".doc",
+            ".docx"
+        ],
 
         acceptedMimeTypes: [
             "application/pdf",
@@ -46,7 +55,7 @@
             "binary/octet-stream"
         ],
 
-        contactEmail: "info@averrastaffing.co.uk"
+        contactEmail: "enquiries@averrastaffing.co.uk"
     });
 
     const SELECTORS = Object.freeze({
@@ -79,6 +88,10 @@
         );
     }
 
+    /* ========================================================
+       MESSAGE DISPLAY
+       ======================================================== */
+
     function showMessage(element, message, type = "info") {
         if (!element) {
             if (message) {
@@ -109,6 +122,10 @@
         element.hidden = true;
     }
 
+    /* ========================================================
+       API REQUEST
+       ======================================================== */
+
     async function apiRequest(endpoint, options = {}) {
         const controller = new AbortController();
 
@@ -121,6 +138,7 @@
             const response = await fetch(apiUrl(endpoint), {
                 ...options,
                 signal: controller.signal,
+
                 headers: {
                     Accept: "application/json",
                     ...(options.headers || {})
@@ -135,14 +153,10 @@
                 try {
                     data = JSON.parse(responseText);
                 } catch {
-                    if (response.ok) {
-                        throw new Error(
-                            "The server returned an unexpected response. Please contact AVERRA before submitting again."
-                        );
-                    }
-
                     throw new Error(
-                        "The server could not process your request. Please try again later."
+                        response.ok
+                            ? "The server returned an unexpected response. Please contact AVERRA."
+                            : "The server could not process your request. Please try again later."
                     );
                 }
             }
@@ -158,7 +172,8 @@
                     throw new Error(
                         detail
                             .map(item =>
-                                item?.msg || "Invalid information"
+                                item?.msg ||
+                                "Please check the information provided."
                             )
                             .join(" ")
                     );
@@ -168,20 +183,22 @@
             }
 
             return data;
+
         } catch (error) {
             if (error.name === "AbortError") {
                 throw new Error(
-                    "The request timed out. Please try again."
+                    "The request timed out. Please try again. If you are unsure whether your application was received, contact AVERRA before submitting again."
                 );
             }
 
             if (error instanceof TypeError) {
                 throw new Error(
-                    "Unable to connect to the AVERRA server. Please check your connection and try again."
+                    "Unable to connect to the AVERRA server. Please check your internet connection and try again."
                 );
             }
 
             throw error;
+
         } finally {
             window.clearTimeout(timeoutId);
         }
@@ -209,9 +226,11 @@
         }
 
         const dot = file.name.lastIndexOf(".");
-        const extension = dot >= 0
-            ? file.name.slice(dot).toLowerCase()
-            : "";
+
+        const extension =
+            dot >= 0
+                ? file.name.slice(dot).toLowerCase()
+                : "";
 
         if (!CONFIG.acceptedExtensions.includes(extension)) {
             return "Please upload your CV as a PDF, DOC or DOCX file.";
@@ -251,13 +270,17 @@
 
         const name = nameInput.value.trim();
         const email = emailInput.value.trim();
-        const phone = (phoneInput?.value || "").trim();
-        const coverLetter = (
-            coverLetterInput?.value || ""
-        ).trim();
+
+        const phone =
+            (phoneInput?.value || "").trim();
+
+        const coverLetter =
+            (coverLetterInput?.value || "").trim();
 
         if (!name) {
-            return { error: "Please enter your full name." };
+            return {
+                error: "Please enter your full name."
+            };
         }
 
         if (name.length > 150) {
@@ -306,10 +329,13 @@
         }
 
         const file = cvInput.files?.[0];
+
         const cvError = validateCv(file);
 
         if (cvError) {
-            return { error: cvError };
+            return {
+                error: cvError
+            };
         }
 
         if (!privacyInput.checked) {
@@ -325,7 +351,9 @@
             phone,
             coverLetter,
             file,
+
             jobId: jobInput.value,
+
             jobTitle:
                 selectedOption.dataset.jobTitle ||
                 selectedOption.textContent.trim()
@@ -345,18 +373,31 @@
 
         if (isSubmitting) {
             if (button.dataset.originalText === undefined) {
-                button.dataset.originalText = button.textContent;
+                button.dataset.originalText =
+                    button.textContent;
             }
 
             button.disabled = true;
-            button.textContent = "Submitting application...";
-            button.setAttribute("aria-busy", "true");
+
+            button.textContent =
+                "Submitting application...";
+
+            button.setAttribute(
+                "aria-busy",
+                "true"
+            );
+
         } else {
             button.disabled = false;
-            button.removeAttribute("aria-busy");
+
+            button.removeAttribute(
+                "aria-busy"
+            );
 
             if (button.dataset.originalText !== undefined) {
-                button.textContent = button.dataset.originalText;
+                button.textContent =
+                    button.dataset.originalText;
+
                 delete button.dataset.originalText;
             }
         }
@@ -367,7 +408,9 @@
        ======================================================== */
 
     async function submitApplication(form) {
-        if (state.submitting) return;
+        if (state.submitting) {
+            return;
+        }
 
         const statusElement = $(SELECTORS.status);
 
@@ -378,22 +421,61 @@
         const values = validateForm(form);
 
         if (values.error) {
-            showMessage(statusElement, values.error, "error");
+            showMessage(
+                statusElement,
+                values.error,
+                "error"
+            );
+
             return;
         }
 
         const formData = new FormData();
 
-        formData.append("full_name", values.name);
-        formData.append("email", values.email);
-        formData.append("phone", values.phone);
-        formData.append("job_id", values.jobId);
-        formData.append("job_title", values.jobTitle);
-        formData.append("cover_letter", values.coverLetter);
-        formData.append("privacy_consent", "true");
-        formData.append("cv", values.file, values.file.name);
+        formData.append(
+            "full_name",
+            values.name
+        );
+
+        formData.append(
+            "email",
+            values.email
+        );
+
+        formData.append(
+            "phone",
+            values.phone
+        );
+
+        formData.append(
+            "job_id",
+            values.jobId
+        );
+
+        formData.append(
+            "job_title",
+            values.jobTitle
+        );
+
+        formData.append(
+            "cover_letter",
+            values.coverLetter
+        );
+
+        formData.append(
+            "privacy_consent",
+            "true"
+        );
+
+        formData.append(
+            "cv",
+            values.file,
+            values.file.name
+        );
 
         setSubmitting(form, true);
+
+        hideMessage(statusElement);
 
         showMessage(
             statusElement,
@@ -411,10 +493,18 @@
             );
 
             /*
-             * Do not report success unless the backend explicitly
-             * confirms it. The backend response format must match.
+             * Backend success response expected:
+             * {
+             *   "success": true,
+             *   "message": "...",
+             *   "application_id": ...
+             * }
              */
-            if (!result || result.success !== true) {
+
+            if (
+                !result ||
+                result.success !== true
+            ) {
                 throw new Error(
                     "The server did not confirm receipt of your application. Please contact AVERRA before trying again."
                 );
@@ -422,33 +512,43 @@
 
             showMessage(
                 statusElement,
+
                 result.message ||
                     "Thank you. Your application has been received.",
+
                 "success"
             );
 
             form.reset();
 
-            const jobSelect = $(SELECTORS.job, form);
-
             /*
-             * Restore the placeholder after reset. Do not rebuild
-             * the options here: jobs.js owns the vacancy dropdown.
+             * jobs.js owns the vacancy dropdown.
+             * Restore the default option without rebuilding it.
              */
+
+            const jobSelect =
+                $(SELECTORS.job, form);
+
             if (jobSelect) {
                 jobSelect.value = "";
             }
 
             form.dispatchEvent(
-                new CustomEvent("averra:application-submitted", {
-                    bubbles: true,
-                    detail: {
-                        applicationId:
-                            result.application_id ?? null,
-                        result
+                new CustomEvent(
+                    "averra:application-submitted",
+                    {
+                        bubbles: true,
+
+                        detail: {
+                            applicationId:
+                                result.application_id ?? null,
+
+                            result
+                        }
                     }
-                })
+                )
             );
+
         } catch (error) {
             console.error(
                 "[AVERRA] Application submission failed:",
@@ -457,11 +557,15 @@
 
             showMessage(
                 statusElement,
+
                 error.message ||
-                    "We could not submit your application. Please try again later or contact " +
-                    CONFIG.contactEmail + ".",
+                    "We could not submit your application. Please contact " +
+                    CONFIG.contactEmail +
+                    ".",
+
                 "error"
             );
+
         } finally {
             setSubmitting(form, false);
         }
@@ -469,8 +573,6 @@
 
     /* ========================================================
        INITIALIZATION
-       This file does not attach vacancy-search listeners.
-       images/jobs.js owns vacancy loading and filtering.
        ======================================================== */
 
     function initialize() {
@@ -491,18 +593,24 @@
             form &&
             form.dataset.averraApplicationInitialized !== "true"
         ) {
-            form.dataset.averraApplicationInitialized = "true";
+            form.dataset.averraApplicationInitialized =
+                "true";
 
-            form.addEventListener("submit", event => {
-                event.preventDefault();
-                submitApplication(form);
-            });
+            form.addEventListener(
+                "submit",
+                event => {
+                    event.preventDefault();
+
+                    submitApplication(form);
+                }
+            );
         }
 
         const year = $(SELECTORS.year);
 
         if (year) {
-            year.textContent = String(new Date().getFullYear());
+            year.textContent =
+                String(new Date().getFullYear());
         }
     }
 
@@ -523,8 +631,15 @@
     window.AVERRAApplications = Object.freeze({
         getConfig: () => ({
             apiBaseUrl: CONFIG.apiBaseUrl,
-            applicationsEndpoint: CONFIG.applicationsEndpoint,
-            maxCvSize: CONFIG.maxCvSize
+
+            applicationsEndpoint:
+                CONFIG.applicationsEndpoint,
+
+            maxCvSize:
+                CONFIG.maxCvSize,
+
+            contactEmail:
+                CONFIG.contactEmail
         }),
 
         getStatus: () => ({
@@ -533,4 +648,5 @@
 
         initialize
     });
+
 })();

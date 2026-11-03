@@ -5,7 +5,7 @@
    AVERRA STAFFING SOLUTIONS LTD
    JOBS PAGE MANAGEMENT
    File: frontend/images/jobs.js
-   Version: 5.3.0
+   Version: 5.4.0
 
    FEATURES
    - Loads vacancies from the AVERRA Render API
@@ -27,7 +27,7 @@
 (function (window, document) {
     "use strict";
 
-    const VERSION = "5.3.0";
+    const VERSION = "5.4.0";
 
     if (
         window.AVERRAJobs &&
@@ -44,7 +44,9 @@
         jobsEndpoint: "/api/jobs",
         requestTimeout: 20000,
         jobsLimit: 100,
-        contactEmail: "info@averrastaffing.co.uk"
+
+        // Updated AVERRA contact email
+        contactEmail: "enquiries@averrastaffing.co.uk"
     });
 
     window.AVERRA_API_BASE_URL =
@@ -290,13 +292,6 @@
 
     /* --------------------------------------------------------
        DATE HANDLING
-
-       Date-only values are validated as calendar dates.
-       Timestamps are converted to the visitor's local date.
-
-       A missing deadline means no expiry is specified.
-       A supplied but invalid deadline hides the vacancy so
-       malformed dates do not accidentally keep jobs published.
        -------------------------------------------------------- */
 
     function parseDate(value) {
@@ -433,14 +428,6 @@
 
     /* --------------------------------------------------------
        API RESPONSE NORMALISATION
-
-       Supports arrays and common wrappers, including:
-       { jobs: [...] }
-       { items: [...] }
-       { results: [...] }
-       { data: [...] }
-       { data: { jobs: [...] } }
-       { data: { items: [...] } }
        -------------------------------------------------------- */
 
     function extractJobs(payload) {
@@ -492,6 +479,7 @@
 
     function makeUrl(path) {
         const base = CONFIG.apiBaseUrl.replace(/\/+$/, "");
+
         const endpoint = path.startsWith("/")
             ? path
             : "/" + path;
@@ -501,9 +489,6 @@
 
     /* --------------------------------------------------------
        API REQUEST
-
-       Checks HTTP errors, reports useful server messages,
-       handles timeouts, and clears its timeout reliably.
        -------------------------------------------------------- */
 
     async function apiRequest(path) {
@@ -516,14 +501,17 @@
         try {
             const response = await window.fetch(makeUrl(path), {
                 method: "GET",
+
                 headers: {
                     Accept: "application/json"
                 },
+
                 signal: controller.signal,
                 credentials: "omit"
             });
 
             const responseText = await response.text();
+
             let payload = null;
 
             if (responseText) {
@@ -555,6 +543,7 @@
             }
 
             return payload;
+
         } catch (error) {
             if (error && error.name === "AbortError") {
                 throw new Error(
@@ -570,6 +559,7 @@
             }
 
             throw error;
+
         } finally {
             window.clearTimeout(timeoutId);
         }
@@ -589,9 +579,19 @@
         }
 
         statusElement.textContent = message;
-        statusElement.dataset.statusType = type || "info";
-        statusElement.setAttribute("role", "status");
-        statusElement.setAttribute("aria-live", "polite");
+
+        statusElement.dataset.statusType =
+            type || "info";
+
+        statusElement.setAttribute(
+            "role",
+            "status"
+        );
+
+        statusElement.setAttribute(
+            "aria-live",
+            "polite"
+        );
     }
 
     function updateJobCount(count) {
@@ -621,7 +621,11 @@
             container.replaceChildren();
 
             container.appendChild(
-                createElement("p", "jobs-error", message)
+                createElement(
+                    "p",
+                    "jobs-error",
+                    message
+                )
             );
         });
 
@@ -637,7 +641,10 @@
             return;
         }
 
-        const item = createElement("p", "job-meta-item");
+        const item = createElement(
+            "p",
+            "job-meta-item"
+        );
 
         const strong = createElement(
             "strong",
@@ -646,7 +653,11 @@
         );
 
         item.appendChild(strong);
-        item.appendChild(document.createTextNode(value));
+
+        item.appendChild(
+            document.createTextNode(value)
+        );
+
         card.appendChild(item);
     }
 
@@ -660,27 +671,45 @@
         const department = getJobDepartment(job);
         const closingDate = getClosingDate(job);
 
-        const card = createElement("article", "job-card");
+        const card = createElement(
+            "article",
+            "job-card"
+        );
 
         if (jobId) {
             card.dataset.jobId = jobId;
         }
 
         card.appendChild(
-            createElement("h3", "job-title", title)
+            createElement(
+                "h3",
+                "job-title",
+                title
+            )
         );
 
-        const metadata = createElement("div", "job-meta");
+        const metadata = createElement(
+            "div",
+            "job-meta"
+        );
 
         if (location) {
             metadata.appendChild(
-                createElement("span", "job-location", location)
+                createElement(
+                    "span",
+                    "job-location",
+                    location
+                )
             );
         }
 
         if (jobType) {
             metadata.appendChild(
-                createElement("span", "job-type", jobType)
+                createElement(
+                    "span",
+                    "job-type",
+                    jobType
+                )
             );
         }
 
@@ -688,8 +717,17 @@
             card.appendChild(metadata);
         }
 
-        appendMetadata(card, "Department", department);
-        appendMetadata(card, "Salary", salary);
+        appendMetadata(
+            card,
+            "Department",
+            department
+        );
+
+        appendMetadata(
+            card,
+            "Salary",
+            salary
+        );
 
         if (description) {
             card.appendChild(
@@ -712,7 +750,10 @@
             );
         }
 
-        const actions = createElement("div", "job-actions");
+        const actions = createElement(
+            "div",
+            "job-actions"
+        );
 
         const applyButton = createElement(
             "button",
@@ -721,6 +762,7 @@
         );
 
         applyButton.type = "button";
+
         applyButton.dataset.jobApply = "true";
 
         applyButton.setAttribute(
@@ -734,11 +776,15 @@
 
         applyButton.dataset.jobTitle = title;
 
-        applyButton.addEventListener("click", function () {
-            selectJobForApplication(job);
-        });
+        applyButton.addEventListener(
+            "click",
+            function () {
+                selectJobForApplication(job);
+            }
+        );
 
         actions.appendChild(applyButton);
+
         card.appendChild(actions);
 
         return card;
@@ -789,8 +835,8 @@
             }
 
             if (selectedCategory) {
-                const category = getJobCategory(job)
-                    .toLowerCase();
+                const category =
+                    getJobCategory(job).toLowerCase();
 
                 if (category !== selectedCategory) {
                     return false;
@@ -811,6 +857,7 @@
                 "AVERRA Jobs: no jobs container found. " +
                 "Expected #jobs-grid or a supported alternative."
             );
+
             return;
         }
 
@@ -842,7 +889,9 @@
                 document.createDocumentFragment();
 
             filteredJobs.forEach(function (job) {
-                fragment.appendChild(createJobCard(job));
+                fragment.appendChild(
+                    createJobCard(job)
+                );
             });
 
             container.appendChild(fragment);
@@ -868,44 +917,58 @@
 
     /* --------------------------------------------------------
        APPLICATION FORM INTEGRATION
-
-       Selects the vacancy only. Actual application submission
-       and CV upload remain the responsibility of applications.js.
        -------------------------------------------------------- */
 
     function getApplicationForm() {
-        return queryFirst(SELECTORS.applicationForms);
+        return queryFirst(
+            SELECTORS.applicationForms
+        );
     }
 
-    function setSelectValue(select, jobId, jobTitle) {
-        const options = Array.from(select.options);
+    function setSelectValue(
+        select,
+        jobId,
+        jobTitle
+    ) {
+        const options = Array.from(
+            select.options
+        );
 
-        let matchingOption = options.find(function (option) {
-            return jobId && option.value === jobId;
-        });
+        let matchingOption = options.find(
+            function (option) {
+                return jobId &&
+                    option.value === jobId;
+            }
+        );
 
         if (!matchingOption) {
-            matchingOption = options.find(function (option) {
-                return option.textContent.trim() === jobTitle;
-            });
+            matchingOption = options.find(
+                function (option) {
+                    return option.textContent.trim() ===
+                        jobTitle;
+                }
+            );
         }
 
         if (!matchingOption) {
-            matchingOption = options.find(function (option) {
-                return option.value.trim().toLowerCase() ===
-                    jobTitle.trim().toLowerCase();
-            });
+            matchingOption = options.find(
+                function (option) {
+                    return option.value.trim().toLowerCase() ===
+                        jobTitle.trim().toLowerCase();
+                }
+            );
         }
 
-        /*
-         * Add an option for the selected vacancy if the form's
-         * dropdown does not already contain it. The value uses
-         * the vacancy ID where available.
-         */
         if (!matchingOption && (jobId || jobTitle)) {
-            matchingOption = document.createElement("option");
-            matchingOption.value = jobId || jobTitle;
-            matchingOption.textContent = jobTitle;
+            matchingOption =
+                document.createElement("option");
+
+            matchingOption.value =
+                jobId || jobTitle;
+
+            matchingOption.textContent =
+                jobTitle;
+
             select.appendChild(matchingOption);
         }
 
@@ -926,13 +989,16 @@
 
     function selectJobForApplication(job) {
         const form = getApplicationForm();
+
         const jobId = getJobId(job);
         const jobTitle = getJobTitle(job);
 
         if (!form) {
             setStatus(
-                "To apply, email " + CONFIG.contactEmail +
-                " and include the job title: " + jobTitle + ".",
+                "To apply, email " +
+                CONFIG.contactEmail +
+                " and include the job title: " +
+                jobTitle + ".",
                 "info"
             );
 
@@ -951,7 +1017,13 @@
                 return;
             }
 
-            if (setSelectValue(select, jobId, jobTitle)) {
+            if (
+                setSelectValue(
+                    select,
+                    jobId,
+                    jobTitle
+                )
+            ) {
                 selectionMade = true;
             }
         });
@@ -960,7 +1032,10 @@
             'input[name="job_id"]'
         );
 
-        if (hiddenJobId && hiddenJobId.type !== "file") {
+        if (
+            hiddenJobId &&
+            hiddenJobId.type !== "file"
+        ) {
             hiddenJobId.value = jobId || "";
 
             hiddenJobId.dispatchEvent(
@@ -991,10 +1066,6 @@
             selectionMade = true;
         }
 
-        /*
-         * If no matching form field exists, do not claim that
-         * the vacancy was selected successfully.
-         */
         form.scrollIntoView({
             behavior: "smooth",
             block: "start"
@@ -1002,13 +1073,15 @@
 
         if (selectionMade) {
             setStatus(
-                "Selected vacancy: " + jobTitle +
+                "Selected vacancy: " +
+                jobTitle +
                 ". Complete the application form below.",
                 "info"
             );
         } else {
             setStatus(
-                "You selected " + jobTitle +
+                "You selected " +
+                jobTitle +
                 ". Please select the same vacancy in the application form.",
                 "info"
             );
@@ -1030,9 +1103,6 @@
 
     /* --------------------------------------------------------
        LOAD VACANCIES
-
-       Requests are guarded against overlap. Failed requests
-       preserve the error for diagnostics and offer a retry.
        -------------------------------------------------------- */
 
     async function loadJobs() {
@@ -1043,7 +1113,8 @@
         state.loading = true;
         state.error = null;
 
-        const requestNumber = ++state.requestNumber;
+        const requestNumber =
+            ++state.requestNumber;
 
         setStatus(
             "Loading current vacancies…",
@@ -1065,7 +1136,10 @@
                 "&offset=0"
             );
 
-            if (requestNumber !== state.requestNumber) {
+            if (
+                requestNumber !==
+                state.requestNumber
+            ) {
                 return;
             }
 
@@ -1082,8 +1156,12 @@
             state.error = null;
 
             renderJobs();
+
         } catch (error) {
-            if (requestNumber !== state.requestNumber) {
+            if (
+                requestNumber !==
+                state.requestNumber
+            ) {
                 return;
             }
 
@@ -1101,8 +1179,12 @@
                 "We couldn't load the vacancies right now. " +
                 "Please try again shortly."
             );
+
         } finally {
-            if (requestNumber === state.requestNumber) {
+            if (
+                requestNumber ===
+                state.requestNumber
+            ) {
                 state.loading = false;
 
                 retryButtons.forEach(function (button) {
@@ -1123,17 +1205,22 @@
 
         retryButtons.forEach(function (button) {
             if (
-                button.dataset.averraJobsRetryReady === "true"
+                button.dataset.averraJobsRetryReady ===
+                "true"
             ) {
                 return;
             }
 
-            button.dataset.averraJobsRetryReady = "true";
+            button.dataset.averraJobsRetryReady =
+                "true";
 
-            button.addEventListener("click", function (event) {
-                event.preventDefault();
-                loadJobs();
-            });
+            button.addEventListener(
+                "click",
+                function (event) {
+                    event.preventDefault();
+                    loadJobs();
+                }
+            );
         });
     }
 
@@ -1148,34 +1235,44 @@
 
         searchInputs.forEach(function (input) {
             if (
-                input.dataset.averraJobsFilterReady === "true"
+                input.dataset.averraJobsFilterReady ===
+                "true"
             ) {
                 return;
             }
 
-            input.dataset.averraJobsFilterReady = "true";
+            input.dataset.averraJobsFilterReady =
+                "true";
 
-            input.addEventListener("input", function () {
-                if (state.loaded) {
-                    renderJobs();
+            input.addEventListener(
+                "input",
+                function () {
+                    if (state.loaded) {
+                        renderJobs();
+                    }
                 }
-            });
+            );
         });
 
         categoryFilters.forEach(function (select) {
             if (
-                select.dataset.averraJobsFilterReady === "true"
+                select.dataset.averraJobsFilterReady ===
+                "true"
             ) {
                 return;
             }
 
-            select.dataset.averraJobsFilterReady = "true";
+            select.dataset.averraJobsFilterReady =
+                "true";
 
-            select.addEventListener("change", function () {
-                if (state.loaded) {
-                    renderJobs();
+            select.addEventListener(
+                "change",
+                function () {
+                    if (state.loaded) {
+                        renderJobs();
+                    }
                 }
-            });
+            );
         });
     }
 
@@ -1185,7 +1282,8 @@
         );
 
         forms.forEach(function (form) {
-            form.dataset.averraApplicationFormDetected = "true";
+            form.dataset.averraApplicationFormDetected =
+                "true";
         });
     }
 
@@ -1218,11 +1316,14 @@
                 loading: state.loading,
                 loaded: state.loaded,
                 error: state.error,
-                count: state.jobs.filter(isPublished).length
+
+                count:
+                    state.jobs.filter(isPublished).length
             };
         },
 
-        selectJobForApplication: selectJobForApplication
+        selectJobForApplication:
+            selectJobForApplication
     };
 
     if (document.readyState === "loading") {
@@ -1234,4 +1335,5 @@
     } else {
         initialise();
     }
-})();
+
+})(window, document);
