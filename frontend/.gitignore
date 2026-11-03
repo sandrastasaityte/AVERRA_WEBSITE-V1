@@ -19,17 +19,21 @@ __pycache__/
 .env.*
 !.env.example
 
-# Local databases and backups
+# Local databases and database backups
 *.db
 *.sqlite
 *.sqlite3
 *.db-journal
+*.sqlite-wal
+*.sqlite-shm
 *.bak
 *.backup
+*.dump
 
 # Logs
 *.log
 logs/
+backend/logs/
 
 # Operating system files
 .DS_Store
@@ -56,15 +60,27 @@ coverage/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.pyright/
 htmlcov/
 *.egg-info/
 
 # Node.js dependencies
 node_modules/
 
-# Local exports and private uploads
+# Private files and candidate uploads
 private/
 uploads/
+backend/uploads/
+frontend/uploads/
+
+# Ignore candidate CVs and private application documents
+# in designated upload directories only
+backend/uploads/**/*.pdf
+backend/uploads/**/*.doc
+backend/uploads/**/*.docx
+uploads/**/*.pdf
+uploads/**/*.doc
+uploads/**/*.docx
 
 # Python test and coverage files
 .coverage
@@ -76,24 +92,14 @@ junit.xml
 .streamlit/secrets.toml
 instance/
 *.pid
-
-# Deployment and platform secrets
-.env.production
-.env.development
-
-# Editor and local tooling caches
 .cache/
-.pyright/
-# Candidate CVs and application uploads
-*.pdf
-*.doc
-*.docx
-
-# Local database exports
-*.dump
-*.sql
-*.sqlite-wal
-*.sqlite-shm
 
 # Python environment configuration
-.python-version
+# Keep .python-version tracked if used for deployment
+
+# ============================================================
+# IMPORTANT:
+# Do not globally ignore *.pdf, *.doc, *.docx or *.sql.
+# Legitimate business documents and SQL migrations may belong
+# in Git. Keep confidential documents out of the repository.
+# ============================================================

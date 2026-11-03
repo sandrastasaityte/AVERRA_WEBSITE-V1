@@ -1,11 +1,11 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="AVERRA Staffing Solutions connects UK businesses with skilled professionals based in India through remote staffing and outsourcing.">
   <meta name="theme-color" content="#0b1f33">
+
   <title>AVERRA Staffing Solutions Ltd | Connecting UK Businesses with Global Talent</title>
 
   <link rel="stylesheet" href="style.css">
@@ -19,6 +19,7 @@
       --averra-light: #f4f7fa;
       --averra-text: #253447;
       --averra-white: #fff;
+      --averra-border: #e0e7ee;
     }
 
     * { box-sizing: border-box; }
@@ -35,8 +36,25 @@
       line-height: 1.65;
     }
 
-    img { max-width: 100%; height: auto; }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
     a { color: var(--averra-blue); }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--averra-gold);
+      outline-offset: 3px;
+    }
 
     .container {
       width: min(1180px, 92%);
@@ -45,7 +63,7 @@
 
     .site-header {
       position: relative;
-      z-index: 10;
+      z-index: 100;
       background: var(--averra-white);
       border-bottom: 1px solid #e5eaf0;
     }
@@ -106,11 +124,9 @@
       border: 1px solid #d8e0e8;
       border-radius: 5px;
       cursor: pointer;
-      font: inherit;
     }
 
     .hero {
-      position: relative;
       display: flex;
       align-items: center;
       min-height: 500px;
@@ -143,6 +159,13 @@
       font-size: 18px;
     }
 
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
     .button {
       display: inline-block;
       padding: 13px 21px;
@@ -153,6 +176,7 @@
       font-weight: 700;
       text-decoration: none;
       cursor: pointer;
+      transition: background .2s ease, border-color .2s ease;
     }
 
     .button:hover,
@@ -172,6 +196,11 @@
       color: var(--averra-white);
       background: var(--averra-blue);
       border-color: var(--averra-blue);
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: .6;
     }
 
     .section { padding: 72px 0; }
@@ -201,7 +230,7 @@
     .card {
       overflow: hidden;
       background: var(--averra-white);
-      border: 1px solid #e0e7ee;
+      border: 1px solid var(--averra-border);
       border-radius: 8px;
       box-shadow: 0 8px 25px rgba(11,31,51,.05);
     }
@@ -280,7 +309,6 @@
       background: var(--averra-white);
       border: 1px solid #ccd6e0;
       border-radius: 5px;
-      font: inherit;
     }
 
     .field textarea {
@@ -325,11 +353,11 @@
     }
 
     .application-panel {
-      max-width: 760px;
+      max-width: 800px;
       margin-inline: auto;
       padding: 30px;
       background: var(--averra-white);
-      border: 1px solid #e0e7ee;
+      border: 1px solid var(--averra-border);
       border-radius: 8px;
     }
 
@@ -344,6 +372,43 @@
     .form-note {
       color: #596b7b;
       font-size: 13px;
+    }
+
+    .privacy-field {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .privacy-field input {
+      width: auto;
+      min-height: auto;
+      margin-top: 6px;
+    }
+
+    .application-status {
+      padding: 12px;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+
+    .application-status:empty {
+      display: none;
+    }
+
+    .application-status.success {
+      color: #155724;
+      background: #d4edda;
+    }
+
+    .application-status.error {
+      color: #721c24;
+      background: #f8d7da;
+    }
+
+    .application-status.info {
+      color: #0c5460;
+      background: #d1ecf1;
     }
 
     .site-footer {
@@ -428,7 +493,7 @@
         gap: 0;
         padding: 12px 4% 20px;
         background: var(--averra-white);
-        border-bottom: 1px solid #e0e7ee;
+        border-bottom: 1px solid var(--averra-border);
         box-shadow: 0 10px 20px rgba(11,31,51,.08);
       }
 
@@ -441,16 +506,28 @@
         text-align: center;
       }
 
-      .cards, .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cards, .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 650px) {
-      .hero { min-height: 420px; padding: 58px 0; }
+      .hero {
+        min-height: 420px;
+        padding: 58px 0;
+      }
+
       .section { padding: 52px 0; }
 
-      .cards, .steps, .footer-grid,
-      .application-form, .jobs-toolbar {
+      .cards,
+      .steps,
+      .footer-grid,
+      .application-form,
+      .jobs-toolbar {
         grid-template-columns: 1fr;
       }
 
@@ -459,10 +536,6 @@
       .footer-bottom { flex-direction: column; }
     }
   </style>
-
-  <script src="images/images.js" defer></script>
-  <script src="images/jobs.js" defer></script>
-  <script src="images/applications.js" defer></script>
 </head>
 
 <body>
@@ -473,9 +546,13 @@
         <span>Connecting UK Businesses with Global Talent</span>
       </a>
 
-      <button class="menu-toggle" id="menu-toggle" type="button"
-              aria-controls="main-navigation" aria-expanded="false"
-              aria-label="Open navigation menu">
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        type="button"
+        aria-controls="main-navigation"
+        aria-expanded="false"
+        aria-label="Open navigation menu">
         <span aria-hidden="true">☰</span>
         <span>Menu</span>
       </button>
@@ -493,20 +570,27 @@
   </header>
 
   <main>
+    <!-- HERO -->
     <section class="hero">
       <div class="container hero-content">
         <span class="eyebrow">UK–India Outsourcing</span>
+
         <h1>Connecting UK Businesses with Global Talent</h1>
+
         <p>
           AVERRA Staffing Solutions helps UK businesses access skilled
           professionals based in India through remote staffing and outsourcing
           solutions tailored to business needs.
         </p>
-        <a class="button button-gold" href="lets-talk.html">Let’s Talk</a>
-        <a class="button" href="services.html">Explore Our Services</a>
+
+        <div class="hero-actions">
+          <a class="button button-gold" href="lets-talk.html">Let's Talk</a>
+          <a class="button" href="services.html">Explore Our Services</a>
+        </div>
       </div>
     </section>
 
+    <!-- ABOUT -->
     <section class="section">
       <div class="container">
         <div class="section-heading">
@@ -524,7 +608,10 @@
             <img src="images/image2.jpg" alt="Professionals collaborating in an office" loading="lazy">
             <div class="card-content">
               <h3>Access Global Talent</h3>
-              <p>Find professionals whose skills align with your business requirements and agreed responsibilities.</p>
+              <p>
+                Find professionals whose skills align with your business
+                requirements and agreed responsibilities.
+              </p>
             </div>
           </article>
 
@@ -532,7 +619,10 @@
             <img src="images/image3.jpg" alt="Professional working on a computer" loading="lazy">
             <div class="card-content">
               <h3>Flexible Remote Support</h3>
-              <p>Explore remote staffing options for finance, technology, administration and other professional functions.</p>
+              <p>
+                Explore remote staffing options for finance, technology,
+                administration and other professional functions.
+              </p>
             </div>
           </article>
 
@@ -540,19 +630,26 @@
             <img src="images/image4.jpg" alt="Business team discussing a project" loading="lazy">
             <div class="card-content">
               <h3>Business-Focused Solutions</h3>
-              <p>Discuss your goals, expected workload and support needs so the service can be matched to your organisation.</p>
+              <p>
+                Discuss your goals, expected workload and support needs so
+                the service can be matched to your organisation.
+              </p>
             </div>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- SERVICES -->
     <section class="section section-light">
       <div class="container">
         <div class="section-heading">
           <span class="eyebrow">Our Services</span>
           <h2>Professional Support for Growing Businesses</h2>
-          <p>Explore areas where remote professionals may support your day-to-day operations.</p>
+          <p>
+            Explore areas where remote professionals may support your
+            day-to-day operations.
+          </p>
         </div>
 
         <div class="cards">
@@ -560,7 +657,10 @@
             <img src="images/image5.jpg" alt="Finance professional working with reports" loading="lazy">
             <div class="card-content">
               <h3>Finance &amp; Administration</h3>
-              <p>Finance administration, reconciliations, document handling and reporting support, depending on the agreed scope.</p>
+              <p>
+                Finance administration, reconciliations, document handling
+                and reporting support, depending on the agreed scope.
+              </p>
               <a class="button" href="services.html">Explore Services</a>
             </div>
           </article>
@@ -569,7 +669,10 @@
             <img src="images/image6.jpg" alt="Developer working on a computer" loading="lazy">
             <div class="card-content">
               <h3>Technology &amp; Development</h3>
-              <p>Website development, maintenance and digital project support aligned with your technical requirements.</p>
+              <p>
+                Website development, maintenance and digital project support
+                aligned with your technical requirements.
+              </p>
               <a class="button" href="services.html">Explore Services</a>
             </div>
           </article>
@@ -578,7 +681,10 @@
             <img src="images/image7.jpg" alt="Professionals planning business operations" loading="lazy">
             <div class="card-content">
               <h3>Business Operations</h3>
-              <p>Administrative and operational support to help teams manage tasks, documents and workflows.</p>
+              <p>
+                Administrative and operational support to help teams manage
+                tasks, documents and workflows.
+              </p>
               <a class="button" href="services.html">Explore Services</a>
             </div>
           </article>
@@ -586,26 +692,41 @@
       </div>
     </section>
 
+    <!-- HOW IT WORKS -->
     <section class="section">
       <div class="container">
         <div class="section-heading">
           <span class="eyebrow">How It Works</span>
           <h2>A Straightforward Approach</h2>
-          <p>We start by understanding your requirements and discussing suitable options for remote support.</p>
+          <p>
+            We start by understanding your requirements and discussing
+            suitable options for remote support.
+          </p>
         </div>
 
         <div class="steps">
           <article class="step">
             <h3>1. Understand Your Needs</h3>
-            <p>Discuss your business, the tasks involved, required skills and preferred working arrangements.</p>
+            <p>
+              Discuss your business, the tasks involved, required skills
+              and preferred working arrangements.
+            </p>
           </article>
+
           <article class="step">
             <h3>2. Identify Suitable Support</h3>
-            <p>Consider relevant skills, experience, availability and the responsibilities agreed for the role.</p>
+            <p>
+              Consider relevant skills, experience, availability and the
+              responsibilities agreed for the role.
+            </p>
           </article>
+
           <article class="step">
             <h3>3. Agree the Arrangement</h3>
-            <p>Confirm the scope, communication, responsibilities and commercial terms before work begins.</p>
+            <p>
+              Confirm the scope, communication, responsibilities and
+              commercial terms before work begins.
+            </p>
           </article>
         </div>
 
@@ -615,19 +736,26 @@
       </div>
     </section>
 
-    <!-- LIVE JOBS: LOADED FROM THE AVERRA BACKEND -->
+    <!-- LIVE JOBS -->
     <section class="section section-light" id="job-opportunities">
       <div class="container">
         <div class="section-heading">
           <span class="eyebrow">Careers at AVERRA</span>
           <h2>Explore Job Opportunities</h2>
-          <p>Explore published vacancies for professional roles supporting UK businesses remotely from India.</p>
+          <p>
+            Explore published vacancies for professional roles supporting
+            UK businesses remotely from India.
+          </p>
         </div>
 
         <div class="jobs-toolbar">
           <div class="field">
             <label for="job-search">Search job opportunities</label>
-            <input id="job-search" type="search" placeholder="Search job titles or skills" autocomplete="off">
+            <input
+              id="job-search"
+              type="search"
+              placeholder="Search job titles or skills"
+              autocomplete="off">
           </div>
 
           <div class="field">
@@ -656,7 +784,9 @@
           <button class="button" id="reset-jobs" type="button">Reset</button>
         </div>
 
-        <p class="job-count" id="jobs-count" aria-live="polite">Loading published vacancies…</p>
+        <p class="job-count" id="jobs-count" aria-live="polite">
+          Loading published vacancies…
+        </p>
 
         <div class="cards" id="job-list" aria-live="polite"></div>
 
@@ -665,7 +795,7 @@
           <p id="jobs-empty-message">
             Please check again later, or register your general interest below.
           </p>
-          <a class="button" href="#application" data-role="other">Register General Interest</a>
+          <a class="button" href="#application">Register General Interest</a>
         </div>
 
         <p style="text-align:center;margin-top:30px">
@@ -676,64 +806,139 @@
       </div>
     </section>
 
+    <!-- APPLICATION FORM -->
     <section class="section" id="application">
       <div class="container">
         <div class="section-heading">
-          <span class="eyebrow">Register Your Interest</span>
-          <h2>Tell Us About Yourself</h2>
-          <p>Share your contact details and the type of professional role you are interested in.</p>
+          <span class="eyebrow">Apply for a Role</span>
+          <h2>Submit Your Application</h2>
+          <p>
+            Complete the form below and upload your CV to apply for a vacancy
+            or register your general interest.
+          </p>
         </div>
 
         <div class="application-panel">
-          <form class="application-form" id="job-application-form">
+          <form
+            class="application-form"
+            id="cv-application-form"
+            enctype="multipart/form-data">
+
             <div class="field">
               <label for="applicant-name">Full name *</label>
-              <input id="applicant-name" name="name" type="text" autocomplete="name" required maxlength="150">
+              <input
+                id="applicant-name"
+                name="full_name"
+                type="text"
+                autocomplete="name"
+                maxlength="150"
+                required>
             </div>
 
             <div class="field">
               <label for="applicant-email">Email address *</label>
-              <input id="applicant-email" name="email" type="email" autocomplete="email" required maxlength="254">
+              <input
+                id="applicant-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                maxlength="254"
+                required>
             </div>
 
             <div class="field">
               <label for="applicant-phone">Phone number</label>
-              <input id="applicant-phone" name="phone" type="tel" autocomplete="tel" maxlength="50">
+              <input
+                id="applicant-phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                maxlength="50">
             </div>
 
             <div class="field">
               <label for="applicant-role">Role of interest *</label>
-              <select id="applicant-role" name="role" required>
+              <select id="applicant-role" name="job_id" required>
                 <option value="">Select a role</option>
-                <option value="other">Other professional role / general interest</option>
+                <option value="other">General interest / other role</option>
               </select>
             </div>
 
             <div class="field field-full">
-              <label for="applicant-message">Tell us about your skills and experience</label>
-              <textarea id="applicant-message" name="message" maxlength="5000"
-                placeholder="Briefly describe your skills, experience and the role you are interested in."></textarea>
+              <label for="applicant-cover-letter">Cover letter or message</label>
+              <textarea
+                id="applicant-cover-letter"
+                name="cover_letter"
+                maxlength="5000"
+                placeholder="Tell us about your skills, experience and the role you are interested in."></textarea>
             </div>
 
             <div class="field field-full">
-              <button class="button" type="submit">Prepare Email</button>
+              <label for="applicant-cv">Upload your CV *</label>
+              <input
+                id="applicant-cv"
+                name="cv"
+                type="file"
+                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                required>
+
               <p class="form-note">
-                This form prepares an email to info@averrastaffing.co.uk. It does not send or store your application on this website.
-                Your application is submitted only if you send the message from your email application.
+                Accepted formats: PDF, DOC or DOCX. Maximum file size: 5 MB.
               </p>
-              <p id="application-status" role="status" aria-live="polite"></p>
+            </div>
+
+            <div class="field field-full">
+              <label class="privacy-field" for="applicant-privacy">
+                <input
+                  id="applicant-privacy"
+                  name="privacy_consent"
+                  type="checkbox"
+                  required>
+
+                <span>
+                  I have read the
+                  <a href="privacy.html" target="_blank" rel="noopener noreferrer">
+                    AVERRA Privacy Policy
+                  </a>
+                  and consent to AVERRA processing my information for recruitment
+                  purposes. *
+                </span>
+              </label>
+            </div>
+
+            <div class="field field-full">
+              <button class="button" id="cv-submit-button" type="submit">
+                Submit Application
+              </button>
+
+              <p class="form-note">
+                Your application and CV will be submitted to AVERRA's application
+                system. Please do not upload sensitive documents that are not
+                required for your application.
+              </p>
+
+              <p
+                id="cv-application-status"
+                class="application-status"
+                role="status"
+                aria-live="polite"></p>
             </div>
           </form>
         </div>
       </div>
     </section>
 
+    <!-- BUSINESS CTA -->
     <section class="section section-light">
       <div class="container">
         <div class="section-heading">
           <span class="eyebrow">For UK Businesses</span>
           <h2>Discuss Your Staffing Requirements</h2>
-          <p>Tell us which tasks your business needs support with, and we can discuss potential outsourcing arrangements.</p>
+          <p>
+            Tell us which tasks your business needs support with, and we can
+            discuss potential outsourcing arrangements.
+          </p>
+
           <p style="margin-top:25px">
             <a class="button button-gold" href="lets-talk.html">Talk to Us</a>
           </p>
@@ -742,26 +947,35 @@
     </section>
   </main>
 
-  <!-- STANDARD AVERRA FOOTER -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-company-column">
-          <a class="footer-brand" href="index.html">AVERRA Staffing Solutions Ltd</a>
+          <a class="footer-brand" href="index.html">
+            AVERRA Staffing Solutions Ltd
+          </a>
 
           <p class="footer-description">
-            Connecting UK businesses with skilled professionals based in India through remote staffing and outsourcing solutions.
+            Connecting UK businesses with skilled professionals based in India
+            through remote staffing and outsourcing solutions.
           </p>
 
           <div class="footer-contact">
             <p>
               <strong>Email:</strong>
-              <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
+              <a href="mailto:info@averrastaffing.co.uk">
+                info@averrastaffing.co.uk
+              </a>
             </p>
+
             <p>
               <strong>Website:</strong>
-              <a href="https://averrastaffing.co.uk/">https://averrastaffing.co.uk</a>
+              <a href="https://averrastaffing.co.uk/">
+                averrastaffing.co.uk
+              </a>
             </p>
+
             <p>
               <strong>Phone:</strong>
               <a href="tel:+447857290628">+44 7857 290628</a>
@@ -770,7 +984,7 @@
         </div>
 
         <div class="footer-section">
-          <h3 class="footer-heading">Explore AVERRA</h3>
+          <h3>Explore AVERRA</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About Us</a></li>
@@ -782,7 +996,7 @@
         </div>
 
         <div class="footer-section">
-          <h3 class="footer-heading">Information</h3>
+          <h3>Information</h3>
           <ul class="footer-links">
             <li><a href="pricing.html">Pricing</a></li>
             <li><a href="faq.html">Frequently Asked Questions</a></li>
@@ -792,7 +1006,7 @@
         </div>
 
         <div class="footer-section">
-          <h3 class="footer-heading">Legal</h3>
+          <h3>Legal</h3>
           <ul class="footer-links">
             <li><a href="privacy.html">Privacy Policy</a></li>
           </ul>
@@ -804,6 +1018,7 @@
           &copy; <span id="current-year">2026</span>
           AVERRA Staffing Solutions Ltd. All rights reserved.
         </p>
+
         <p>UK–India Outsourcing · Connecting Businesses with Global Talent</p>
       </div>
     </div>
@@ -815,19 +1030,29 @@
     document.addEventListener("DOMContentLoaded", function () {
       const API_BASE = "https://averra-backend-dn23.onrender.com";
       const JOBS_API = API_BASE + "/api/jobs";
+      const APPLICATIONS_API = API_BASE + "/api/applications";
+      const MAX_CV_SIZE = 5 * 1024 * 1024;
+
+      const allowedExtensions = ["pdf", "doc", "docx"];
 
       const yearElement = document.getElementById("current-year");
-      if (yearElement) yearElement.textContent = String(new Date().getFullYear());
+      if (yearElement) {
+        yearElement.textContent = String(new Date().getFullYear());
+      }
 
-      // Mobile menu.
+      // Mobile navigation
       const menuButton = document.getElementById("menu-toggle");
       const navigation = document.getElementById("main-navigation");
 
       if (menuButton && navigation) {
         menuButton.addEventListener("click", function () {
           const isOpen = navigation.classList.toggle("is-open");
+
           menuButton.setAttribute("aria-expanded", String(isOpen));
-          menuButton.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+          menuButton.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation menu" : "Open navigation menu"
+          );
         });
 
         navigation.querySelectorAll("a").forEach(function (link) {
@@ -839,7 +1064,7 @@
         });
       }
 
-      // Live vacancies.
+      // Jobs elements
       const jobList = document.getElementById("job-list");
       const searchInput = document.getElementById("job-search");
       const categorySelect = document.getElementById("job-category");
@@ -850,18 +1075,22 @@
       const emptyMessage = document.getElementById("jobs-empty-message");
       const roleSelect = document.getElementById("applicant-role");
 
+      const applicationForm = document.getElementById("cv-application-form");
+      const applicationStatus = document.getElementById("cv-application-status");
+      const submitButton = document.getElementById("cv-submit-button");
+      const cvInput = document.getElementById("applicant-cv");
+
       let allJobs = [];
-      let jobsLoadFailed = false;
+      let isSubmitting = false;
 
       const categoryLabels = {
         finance: "Finance & Accounting",
         accounting: "Finance & Accounting",
-        "finance & accounting": "Finance & Accounting",
+        "finance accounting": "Finance & Accounting",
         technology: "IT & Software Development",
         tech: "IT & Software Development",
         it: "IT & Software Development",
         software: "IT & Software Development",
-        "it & software development": "IT & Software Development",
         architecture: "Architecture & Design",
         design: "Architecture & Design",
         engineering: "Engineering & Technical",
@@ -870,7 +1099,6 @@
         admin: "Administration & Data Entry",
         "data entry": "Administration & Data Entry",
         "customer service": "Customer Service & Support",
-        "customer-service": "Customer Service & Support",
         sales: "Sales & Business Development",
         marketing: "Digital Marketing",
         "digital marketing": "Digital Marketing",
@@ -890,48 +1118,50 @@
         other: "Other Professional Roles"
       };
 
-      function getFirst(job, keys, fallback) {
+      function getFirst(object, keys, fallback) {
         for (const key of keys) {
-          const value = job[key];
-          if (value !== undefined && value !== null && String(value).trim() !== "") {
+          const value = object && object[key];
+
+          if (
+            value !== undefined &&
+            value !== null &&
+            String(value).trim() !== ""
+          ) {
             return value;
           }
         }
+
         return fallback;
       }
 
       function normaliseCategory(value) {
         const raw = String(value || "").trim();
-        const key = raw.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ");
+
+        const key = raw
+          .toLowerCase()
+          .replace(/[_-]+/g, " ")
+          .replace(/\s+/g, " ");
+
         return categoryLabels[key] || raw || "Other Professional Roles";
       }
 
       function categoryValue(label) {
-        const entry = Object.entries(categoryLabels).find(function (item) {
-          return item[1].toLowerCase() === label.toLowerCase();
+        const normalizedLabel = String(label || "").toLowerCase();
+
+        const match = Object.entries(categoryLabels).find(function (entry) {
+          return entry[1].toLowerCase() === normalizedLabel;
         });
-        return entry ? entry[1].toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") : "other";
-      }
 
-      function isPublished(job) {
-        // The public /api/jobs endpoint should already return published jobs.
-        // If the response also provides publication fields, honour them.
-        if (job.is_published === false || job.published === false) return false;
-        if (job.is_published === 0 || job.published === 0) return false;
-
-        const status = String(job.status || "").trim().toLowerCase();
-        if (["draft", "unpublished", "closed", "archived", "inactive"].includes(status)) return false;
-
-        const closingDate = getFirst(job, ["closing_date", "application_deadline", "expires_at"], "");
-        if (closingDate) {
-          const closing = new Date(closingDate);
-          if (!Number.isNaN(closing.getTime())) {
-            closing.setHours(23, 59, 59, 999);
-            if (closing < new Date()) return false;
-          }
+        if (match) {
+          return match[1]
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
         }
 
-        return true;
+        return normalizedLabel
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "other";
       }
 
       function extractJobs(payload) {
@@ -939,7 +1169,42 @@
         if (payload && Array.isArray(payload.jobs)) return payload.jobs;
         if (payload && Array.isArray(payload.results)) return payload.results;
         if (payload && Array.isArray(payload.data)) return payload.data;
+
         return [];
+      }
+
+      function isPublished(job) {
+        if (job.is_published === false || job.published === false) return false;
+        if (job.is_published === 0 || job.published === 0) return false;
+
+        const status = String(job.status || "").trim().toLowerCase();
+
+        if (
+          ["draft", "unpublished", "closed", "archived", "inactive"].includes(status)
+        ) {
+          return false;
+        }
+
+        const closingDate = getFirst(
+          job,
+          ["closing_date", "application_deadline", "expires_at"],
+          ""
+        );
+
+        if (closingDate) {
+          const dateText = String(closingDate);
+          const parsedDate = new Date(
+            /^\d{4}-\d{2}-\d{2}$/.test(dateText)
+              ? dateText + "T23:59:59"
+              : dateText
+          );
+
+          if (!Number.isNaN(parsedDate.getTime()) && parsedDate < new Date()) {
+            return false;
+          }
+        }
+
+        return true;
       }
 
       function setEmptyState(title, message) {
@@ -948,18 +1213,42 @@
         emptyState.hidden = false;
       }
 
+      function safeText(value, fallback) {
+        if (value === undefined || value === null || value === "") {
+          return fallback || "";
+        }
+
+        if (typeof value === "object") {
+          if (Array.isArray(value)) {
+            return value.map(String).join(", ");
+          }
+
+          if (value.text) return String(value.text);
+          if (value.name) return String(value.name);
+
+          return fallback || "";
+        }
+
+        return String(value);
+      }
+
       function populateCategoryFilter(jobs) {
         const existingValue = categorySelect.value;
-        const labels = Array.from(new Set(jobs.map(function (job) {
-          return normaliseCategory(getFirst(job, ["category", "department", "job_category", "sector"], ""));
-        }))).sort();
 
-        // Preserve the existing AVERRA category list and add any categories
-        // used by published jobs that are not already present.
+        const labels = Array.from(new Set(
+          jobs.map(function (job) {
+            return normaliseCategory(
+              getFirst(job, ["category", "department", "job_category", "sector"], "")
+            );
+          })
+        )).sort();
+
         labels.forEach(function (label) {
           const value = categoryValue(label);
+
           const exists = Array.from(categorySelect.options).some(function (option) {
-            return option.value === value || option.textContent.trim().toLowerCase() === label.toLowerCase();
+            return option.value === value ||
+              option.textContent.trim().toLowerCase() === label.toLowerCase();
           });
 
           if (!exists) {
@@ -977,23 +1266,92 @@
         }
       }
 
+      function updateApplicationRoleOptions() {
+        const selectedValue = roleSelect.value;
+
+        roleSelect.replaceChildren();
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Select a role";
+        roleSelect.appendChild(placeholder);
+
+        allJobs.forEach(function (job) {
+          const title = safeText(
+            getFirst(job, ["title", "job_title", "name", "position"], ""),
+            "Professional Opportunity"
+          );
+
+          const jobId = getFirst(job, ["id", "job_id", "uuid"], "");
+
+          if (jobId === "") return;
+
+          const option = document.createElement("option");
+          option.value = String(jobId);
+          option.textContent = title;
+          option.dataset.jobTitle = title;
+
+          roleSelect.appendChild(option);
+        });
+
+        const generalOption = document.createElement("option");
+        generalOption.value = "other";
+        generalOption.textContent = "General interest / other role";
+        roleSelect.appendChild(generalOption);
+
+        if (Array.from(roleSelect.options).some(function (option) {
+          return option.value === selectedValue;
+        })) {
+          roleSelect.value = selectedValue;
+        }
+      }
+
       function createJobCard(job) {
-        const title = String(getFirst(job, ["title", "job_title", "name", "position"], "Professional Opportunity"));
-        const description = String(getFirst(job, ["description", "job_description", "summary", "details"], "Please contact AVERRA for further information about this role."));
-        const category = normaliseCategory(getFirst(job, ["category", "department", "job_category", "sector"], ""));
-        const location = String(getFirst(job, ["location", "work_location", "country"], "India-based"));
-        const workArrangement = String(getFirst(job, ["work_type", "working_arrangement", "remote_type"], "Remote"));
-        const employmentType = String(getFirst(job, ["employment_type", "job_type", "contract_type"], ""));
-        const salary = String(getFirst(job, ["salary_range", "salary", "pay_range"], ""));
-        const closingDate = String(getFirst(job, ["closing_date", "application_deadline"], ""));
+        const title = safeText(
+          getFirst(job, ["title", "job_title", "name", "position"], ""),
+          "Professional Opportunity"
+        );
+
+        const description = safeText(
+          getFirst(job, ["description", "job_description", "summary", "details"], ""),
+          "Please contact AVERRA for further information about this role."
+        );
+
+        const category = normaliseCategory(
+          getFirst(job, ["category", "department", "job_category", "sector"], "")
+        );
+
+        const location = safeText(
+          getFirst(job, ["location", "work_location", "country"], ""),
+          "India-based"
+        );
+
+        const workArrangement = safeText(
+          getFirst(job, ["work_type", "working_arrangement", "remote_type"], ""),
+          "Remote"
+        );
+
+        const employmentType = safeText(
+          getFirst(job, ["employment_type", "job_type", "contract_type"], ""),
+          ""
+        );
+
+        const salary = safeText(
+          getFirst(job, ["salary_range", "salary", "pay_range"], ""),
+          ""
+        );
+
+        const closingDate = safeText(
+          getFirst(job, ["closing_date", "application_deadline"], ""),
+          ""
+        );
+
         const jobId = getFirst(job, ["id", "job_id", "uuid"], "");
-        const applicationUrl = getFirst(job, ["application_url", "apply_url"], "");
         const categoryKey = categoryValue(category);
 
         const card = document.createElement("article");
         card.className = "card job-card";
         card.dataset.category = categoryKey;
-        card.dataset.search = [title, description, category, location, employmentType].join(" ");
 
         const content = document.createElement("div");
         content.className = "card-content";
@@ -1009,11 +1367,12 @@
 
         const meta = document.createElement("p");
         meta.className = "job-meta";
-        meta.textContent = [location, workArrangement, employmentType].filter(Boolean).join(" · ");
+        meta.textContent = [location, workArrangement, employmentType]
+          .filter(Boolean)
+          .join(" · ");
         content.appendChild(meta);
 
         const details = document.createElement("p");
-        // textContent prevents descriptions from injecting HTML into the page.
         details.textContent = description;
         content.appendChild(details);
 
@@ -1027,82 +1386,79 @@
         if (closingDate) {
           const closingText = document.createElement("p");
           closingText.className = "job-meta";
-          const parsedDate = new Date(closingDate);
+
+          const dateText = String(closingDate);
+          const parsedDate = new Date(
+            /^\d{4}-\d{2}-\d{2}$/.test(dateText)
+              ? dateText + "T12:00:00"
+              : dateText
+          );
+
           closingText.textContent = "Closing date: " +
-            (Number.isNaN(parsedDate.getTime()) ? closingDate :
-              parsedDate.toLocaleDateString("en-GB"));
+            (Number.isNaN(parsedDate.getTime())
+              ? dateText
+              : parsedDate.toLocaleDateString("en-GB"));
+
           content.appendChild(closingText);
         }
 
-        const applyLink = document.createElement("a");
-        applyLink.className = "button";
-        applyLink.textContent = "Register Interest";
+        const applyButton = document.createElement("a");
+        applyButton.className = "button";
+        applyButton.href = "#application";
+        applyButton.textContent = "Apply for This Role";
 
-        if (applicationUrl) {
-          try {
-            const parsedUrl = new URL(applicationUrl, window.location.href);
-            if (["https:", "http:"].includes(parsedUrl.protocol)) {
-              applyLink.href = parsedUrl.href;
-            } else {
-              applyLink.href = "#application";
-            }
-          } catch (_) {
-            applyLink.href = "#application";
+        applyButton.addEventListener("click", function () {
+          if (jobId !== "") {
+            roleSelect.value = String(jobId);
           }
-        } else {
-          applyLink.href = "#application";
-        }
 
-        applyLink.addEventListener("click", function (event) {
-          if (!applicationUrl || applyLink.href.endsWith("#application")) {
-            event.preventDefault();
-            if (roleSelect) {
-              const option = document.createElement("option");
-              option.value = "job:" + String(jobId || title);
-              option.textContent = title;
-              option.dataset.dynamicJob = "true";
-
-              const existing = Array.from(roleSelect.options).find(function (item) {
-                return item.value === option.value;
-              });
-
-              if (!existing) roleSelect.appendChild(option);
-              roleSelect.value = option.value;
-            }
-
-            const messageField = document.getElementById("applicant-message");
-            if (messageField && !messageField.value.includes("Role of interest:")) {
-              messageField.value = "Role of interest: " + title + "\n\n" + messageField.value;
-            }
-
-            document.getElementById("application").scrollIntoView({ behavior: "smooth" });
-          }
+          document.getElementById("application").scrollIntoView({
+            behavior: "smooth"
+          });
         });
 
-        content.appendChild(applyLink);
+        content.appendChild(applyButton);
         card.appendChild(content);
+
         return card;
       }
 
       function renderJobs() {
         const query = searchInput.value.trim().toLowerCase();
         const selectedCategory = categorySelect.value;
+
         jobList.replaceChildren();
 
         const filteredJobs = allJobs.filter(function (job) {
-          const title = String(getFirst(job, ["title", "job_title", "name", "position"], ""));
-          const description = String(getFirst(job, ["description", "job_description", "summary", "details"], ""));
-          const category = normaliseCategory(getFirst(job, ["category", "department", "job_category", "sector"], ""));
-          const searchableText = [title, description, category,
+          const title = safeText(
+            getFirst(job, ["title", "job_title", "name", "position"], ""),
+            ""
+          );
+
+          const description = safeText(
+            getFirst(job, ["description", "job_description", "summary", "details"], ""),
+            ""
+          );
+
+          const category = normaliseCategory(
+            getFirst(job, ["category", "department", "job_category", "sector"], "")
+          );
+
+          const searchableText = [
+            title,
+            description,
+            category,
             getFirst(job, ["location", "work_location", "country"], ""),
             getFirst(job, ["employment_type", "job_type", "contract_type"], ""),
             getFirst(job, ["skills", "requirements"], "")
-          ].join(" ").toLowerCase();
+          ].map(function (value) {
+            return safeText(value, "");
+          }).join(" ").toLowerCase();
 
           const matchesSearch = !query || searchableText.includes(query);
+
           const matchesCategory = selectedCategory === "all" ||
-            categoryValue(category) === selectedCategory ||
-            category.toLowerCase() === selectedCategory.replace(/-/g, " ").toLowerCase();
+            categoryValue(category) === selectedCategory;
 
           return matchesSearch && matchesCategory;
         });
@@ -1111,14 +1467,17 @@
           jobList.appendChild(createJobCard(job));
         });
 
-        countElement.textContent = "Showing " + filteredJobs.length +
+        countElement.textContent =
+          "Showing " + filteredJobs.length +
           " of " + allJobs.length + " published vacancies.";
 
         if (filteredJobs.length === 0) {
           setEmptyState(
-            allJobs.length === 0 ? "No published vacancies are currently available" : "No vacancies match your search",
             allJobs.length === 0
-              ? "When a job is published in Admin Jobs, it can appear here. You can also register your general interest below."
+              ? "No published vacancies are currently available"
+              : "No vacancies match your search",
+            allJobs.length === 0
+              ? "Please check again later, or register your general interest below."
               : "Try another search term or category, or register your general interest below."
           );
         } else {
@@ -1143,20 +1502,23 @@
           }
 
           const payload = await response.json();
+
           allJobs = extractJobs(payload).filter(isPublished);
-          jobsLoadFailed = false;
 
           populateCategoryFilter(allJobs);
+          updateApplicationRoleOptions();
           renderJobs();
         } catch (error) {
-          console.error("Unable to load AVERRA published jobs:", error);
-          jobsLoadFailed = true;
+          console.error("AVERRA jobs loading error:", error);
+
           allJobs = [];
-          jobList.replaceChildren();
+          updateApplicationRoleOptions();
+
           countElement.textContent = "Published vacancies could not be loaded.";
+
           setEmptyState(
             "We are unable to load vacancies right now",
-            "Please try again later. If you manage AVERRA jobs, check that the Render API is running and that /api/jobs is publicly accessible."
+            "Please try again later. You can still register your general interest below."
           );
         }
       }
@@ -1170,88 +1532,137 @@
         renderJobs();
       });
 
-      // Load actual job roles into the application dropdown.
-      // Keep the general-interest option and add published roles dynamically.
-      function updateApplicationRoleOptions() {
-        const generalOption = Array.from(roleSelect.options).find(function (option) {
-          return option.value === "other";
-        });
-
-        roleSelect.replaceChildren();
-
-        const placeholder = document.createElement("option");
-        placeholder.value = "";
-        placeholder.textContent = "Select a role";
-        roleSelect.appendChild(placeholder);
-
-        allJobs.forEach(function (job) {
-          const title = String(getFirst(job, ["title", "job_title", "name", "position"], "Professional Opportunity"));
-          const id = getFirst(job, ["id", "job_id", "uuid"], title);
-          const option = document.createElement("option");
-          option.value = "job:" + String(id);
-          option.textContent = title;
-          option.dataset.jobTitle = title;
-          roleSelect.appendChild(option);
-        });
-
-        const otherOption = document.createElement("option");
-        otherOption.value = "other";
-        otherOption.textContent = "Other professional role / general interest";
-        roleSelect.appendChild(otherOption);
+      // CV application submission
+      function setApplicationStatus(message, type) {
+        applicationStatus.textContent = message;
+        applicationStatus.className = "application-status " + (type || "info");
       }
 
-      const originalRenderJobs = renderJobs;
-      renderJobs = function () {
-        originalRenderJobs();
-        updateApplicationRoleOptions();
-      };
+      function validateCv(file) {
+        if (!file) {
+          return "Please upload your CV.";
+        }
 
-      // Prepare an email draft only; no application data is stored or sent by this page.
-      const applicationForm = document.getElementById("job-application-form");
-      const statusElement = document.getElementById("application-status");
+        if (file.size > MAX_CV_SIZE) {
+          return "Your CV must be 5 MB or smaller.";
+        }
 
-      applicationForm.addEventListener("submit", function (event) {
+        const extension = file.name.split(".").pop().toLowerCase();
+
+        if (!allowedExtensions.includes(extension)) {
+          return "Please upload a PDF, DOC or DOCX file.";
+        }
+
+        return "";
+      }
+
+      applicationForm.addEventListener("submit", async function (event) {
         event.preventDefault();
+
+        if (isSubmitting) return;
+
         if (!applicationForm.reportValidity()) return;
 
-        const formData = new FormData(applicationForm);
-        const fullName = String(formData.get("name") || "").trim();
-        const email = String(formData.get("email") || "").trim();
-        const phone = String(formData.get("phone") || "").trim();
-        const roleCode = String(formData.get("role") || "");
-        const message = String(formData.get("message") || "").trim();
+        const cvFile = cvInput.files && cvInput.files[0];
+        const cvError = validateCv(cvFile);
 
+        if (cvError) {
+          setApplicationStatus(cvError, "error");
+          return;
+        }
+
+        const fullName = document.getElementById("applicant-name").value.trim();
+        const email = document.getElementById("applicant-email").value.trim();
+        const phone = document.getElementById("applicant-phone").value.trim();
+        const selectedRole = roleSelect.value;
         const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-        const roleName = selectedOption && selectedOption.dataset.jobTitle
+        const jobTitle = selectedOption && selectedOption.dataset.jobTitle
           ? selectedOption.dataset.jobTitle
-          : roleCode === "other"
-            ? "Other professional role / general interest"
-            : "General interest";
+          : selectedRole === "other"
+            ? "General interest / other role"
+            : "";
 
-        const subject = "AVERRA Careers - Register Interest - " + roleName;
-        const body = [
-          "Register of interest for AVERRA Staffing Solutions Ltd",
-          "",
-          "Full name: " + fullName,
-          "Email: " + email,
-          "Phone: " + (phone || "Not provided"),
-          "Role of interest: " + roleName,
-          "",
-          "Skills and experience:",
-          message || "Not provided"
-        ].join("\n");
+        const coverLetter = document.getElementById("applicant-cover-letter").value.trim();
+        const privacyConsent = document.getElementById("applicant-privacy").checked;
 
-        const mailtoUrl = "mailto:info@averrastaffing.co.uk" +
-          "?subject=" + encodeURIComponent(subject) +
-          "&body=" + encodeURIComponent(body);
+        if (!privacyConsent) {
+          setApplicationStatus(
+            "Please confirm that you have read the Privacy Policy.",
+            "error"
+          );
+          return;
+        }
 
-        statusElement.textContent =
-          "Your email application is being prepared. Check your email application and send the message to submit your interest.";
+        const formData = new FormData();
 
-        window.location.href = mailtoUrl;
+        formData.append("full_name", fullName);
+        formData.append("email", email);
+        formData.append("phone", phone);
+        formData.append("job_id", selectedRole === "other" ? "" : selectedRole);
+        formData.append("job_title", jobTitle);
+        formData.append("cover_letter", coverLetter);
+        formData.append("privacy_consent", "true");
+        formData.append("cv", cvFile);
+
+        isSubmitting = true;
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting…";
+
+        setApplicationStatus(
+          "Submitting your application securely. Please wait…",
+          "info"
+        );
+
+        try {
+          const response = await fetch(APPLICATIONS_API, {
+            method: "POST",
+            body: formData
+          });
+
+          let result = {};
+
+          try {
+            result = await response.json();
+          } catch (_) {
+            result = {};
+          }
+
+          if (!response.ok) {
+            const errorMessage =
+              result.detail ||
+              result.message ||
+              "The application could not be submitted. Please try again.";
+
+            throw new Error(
+              typeof errorMessage === "string"
+                ? errorMessage
+                : JSON.stringify(errorMessage)
+            );
+          }
+
+          setApplicationStatus(
+            "Thank you! Your application has been submitted successfully. AVERRA will review your details.",
+            "success"
+          );
+
+          applicationForm.reset();
+          updateApplicationRoleOptions();
+        } catch (error) {
+          console.error("AVERRA application submission error:", error);
+
+          setApplicationStatus(
+            error.message ||
+              "We could not submit your application. Please try again later.",
+            "error"
+          );
+        } finally {
+          isSubmitting = false;
+          submitButton.disabled = false;
+          submitButton.textContent = "Submit Application";
+        }
       });
 
-      // Start loading jobs as soon as the page is ready.
+      // Start loading public vacancies.
       loadJobs();
     });
   </script>
