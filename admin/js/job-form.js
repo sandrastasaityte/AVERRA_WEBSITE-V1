@@ -3,7 +3,7 @@
  * ============================================================
  * AVERRA STAFFING SOLUTIONS LTD
  * File: admin/js/job-form.js
- * Version: 3.8.0
+ * Version: 3.8.1
  * ============================================================
  *
  * Administrator vacancy create/edit form.
@@ -318,8 +318,23 @@
         const location = value("location");
         const employmentType = value("employment_type");
         const salaryRange = value("salary_range");
-        const summary = value("summary");
+
         const description = value("description");
+
+        /*
+         * FIX:
+         * Some AVERRA job-form HTML versions do not contain a separate
+         * summary field.
+         *
+         * If a summary field exists and contains text, use it.
+         * Otherwise, automatically create the summary from the
+         * beginning of the job description.
+         */
+        const enteredSummary = value("summary");
+
+        const summary = enteredSummary ||
+            description.slice(0, LIMITS.summary).trim();
+
         const email = value("application_email");
         const closingDate = value("closing_date");
         const status = value("status");

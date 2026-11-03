@@ -155,7 +155,11 @@
              * Authentication is handled by auth.js.
              * The API method returns parsed JSON.
              */
-            await admin.requireLogin();
+            const authenticated = await admin.requireLogin();
+
+if (!authenticated) {
+    return;
+}
 
             /*
              * Load accurate statistics from the database.
