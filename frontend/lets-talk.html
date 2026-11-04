@@ -8,6 +8,7 @@
     <meta name="color-scheme" content="light">
 
     <title>Let's Talk | AVERRA Staffing Solutions Ltd</title>
+
     <meta name="description" content="Contact AVERRA Staffing Solutions Ltd to discuss remote staffing, outsourcing and skilled professionals based in India for UK businesses.">
     <meta name="robots" content="index, follow">
     <meta name="author" content="AVERRA Staffing Solutions Ltd">
@@ -28,18 +29,17 @@
     <meta name="twitter:image" content="https://averrastaffing.co.uk/images/image14.jpg">
 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="style.css">
 
     <script src="images/images.js" defer></script>
-    <script src="images/jobs.js" defer></script>
     <script src="script.js" defer></script>
 
     <style>
         :root {
             --contact-navy: #0b1f33;
-            --contact-navy-dark: #071522;
+            --contact-dark: #071522;
             --contact-blue: #1d5f91;
             --contact-blue-hover: #164b73;
+            --contact-gold: #c89b3c;
             --contact-text: #172b40;
             --contact-muted: #5b6878;
             --contact-border: #e1e7ef;
@@ -80,10 +80,7 @@
         }
 
         .contact-container {
-            width: min(
-                var(--contact-container),
-                calc(100% - 40px)
-            );
+            width: min(var(--contact-container), calc(100% - 40px));
             margin-inline: auto;
         }
 
@@ -94,7 +91,7 @@
             z-index: 1000;
             padding: 12px 16px;
             border-radius: 6px;
-            background: var(--contact-white);
+            background: white;
             color: var(--contact-navy);
         }
 
@@ -102,13 +99,13 @@
             top: 15px;
         }
 
-        /* HEADER AND BRAND */
+        /* HEADER */
 
         .contact-header {
             position: relative;
             z-index: 100;
             border-bottom: 1px solid var(--contact-border);
-            background: var(--contact-white);
+            background: white;
         }
 
         .contact-header-inner {
@@ -123,13 +120,10 @@
             display: inline-flex;
             flex-shrink: 0;
             flex-direction: column;
-            justify-content: center;
-            max-width: 360px;
             color: var(--contact-navy);
             font-size: 1.05rem;
             font-weight: 900;
             line-height: 1.3;
-            letter-spacing: 0.015em;
             text-decoration: none;
         }
 
@@ -140,18 +134,7 @@
             font-size: 0.68rem;
             font-weight: 500;
             letter-spacing: 0.08em;
-            line-height: 1.5;
             text-transform: uppercase;
-        }
-
-        .contact-header .brand:hover {
-            color: var(--contact-blue);
-        }
-
-        .contact-header .brand:focus-visible {
-            outline: 2px solid var(--contact-blue);
-            outline-offset: 5px;
-            border-radius: 3px;
         }
 
         .contact-navigation {
@@ -168,42 +151,26 @@
             font-size: 0.91rem;
             font-weight: 600;
             text-decoration: none;
-            transition: color 0.2s ease;
         }
 
-        .contact-navigation a:not(.nav-contact):hover,
+        .contact-navigation a:hover,
         .contact-navigation a[aria-current="page"]:not(.nav-contact) {
             color: var(--contact-blue);
         }
 
         .contact-navigation .nav-contact {
             display: inline-flex;
-            align-items: center;
             justify-content: center;
             padding: 11px 19px;
             border: 1px solid var(--contact-blue);
             border-radius: 6px;
             background: var(--contact-blue);
-            color: #ffffff;
-            font-weight: 700;
-            line-height: 1.4;
-            text-decoration: none;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.2s ease;
+            color: white;
         }
 
         .contact-navigation .nav-contact:hover {
-            transform: translateY(-1px);
-            border-color: var(--contact-blue-hover);
             background: var(--contact-blue-hover);
-            color: #ffffff;
-        }
-
-        .contact-navigation .nav-contact[aria-current="page"] {
-            background: var(--contact-blue);
-            color: #ffffff;
+            color: white;
         }
 
         .contact-menu-toggle {
@@ -216,7 +183,7 @@
             gap: 5px;
             border: 1px solid var(--contact-border);
             border-radius: 7px;
-            background: var(--contact-white);
+            background: white;
             cursor: pointer;
         }
 
@@ -229,7 +196,7 @@
 
         /* BUTTONS */
 
-        .contact-page .contact-button {
+        .contact-button {
             display: inline-flex;
             min-height: 49px;
             align-items: center;
@@ -245,44 +212,43 @@
             text-align: center;
             text-decoration: none;
             cursor: pointer;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.2s ease;
+            transition: 0.2s ease;
         }
 
-        .contact-page .contact-button:hover {
+        .contact-button:hover {
             transform: translateY(-2px);
         }
 
-        .contact-page .button-primary {
+        .button-primary {
             border-color: var(--contact-blue);
             background: var(--contact-blue);
-            color: #ffffff;
+            color: white;
         }
 
-        .contact-page .button-primary:hover {
+        .button-primary:hover {
             border-color: var(--contact-blue-hover);
             background: var(--contact-blue-hover);
-            color: #ffffff;
+            color: white;
         }
 
-        .contact-page .button-outline {
-            border-color: rgba(255, 255, 255, 0.65);
+        .button-outline {
+            border-color: rgba(255,255,255,0.65);
             background: transparent;
-            color: #ffffff;
+            color: white;
         }
 
-        .contact-page .button-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+        .button-outline:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
 
-        .contact-page .contact-button:focus-visible,
-        .contact-page .contact-navigation a:focus-visible,
-        .contact-page a:focus-visible {
+        .contact-page a:focus-visible,
+        .contact-page button:focus-visible,
+        .contact-page input:focus-visible,
+        .contact-page select:focus-visible,
+        .contact-page textarea:focus-visible {
             outline: 3px solid #75b9e7;
-            outline-offset: 4px;
+            outline-offset: 3px;
         }
 
         /* HERO */
@@ -291,25 +257,18 @@
             padding: 82px 0;
             overflow: hidden;
             background:
-                radial-gradient(
-                    circle at 85% 15%,
-                    rgba(29, 95, 145, 0.28),
-                    transparent 32%
-                ),
-                linear-gradient(
-                    135deg,
-                    var(--contact-navy-dark),
+                radial-gradient(circle at 85% 15%,
+                    rgba(29,95,145,0.28), transparent 32%),
+                linear-gradient(135deg,
+                    var(--contact-dark),
                     var(--contact-navy) 65%,
-                    #123b59
-                );
-            color: #ffffff;
+                    #123b59);
+            color: white;
         }
 
         .contact-hero-grid {
             display: grid;
-            grid-template-columns:
-                minmax(0, 1.1fr)
-                minmax(280px, 0.9fr);
+            grid-template-columns: minmax(0,1.1fr) minmax(280px,0.9fr);
             align-items: center;
             gap: 55px;
         }
@@ -327,8 +286,8 @@
         .contact-hero h1 {
             max-width: 700px;
             margin: 0 0 23px;
-            color: #ffffff;
-            font-size: clamp(2.6rem, 5vw, 4.35rem);
+            color: white;
+            font-size: clamp(2.6rem,5vw,4.35rem);
             line-height: 1.09;
             letter-spacing: -0.04em;
         }
@@ -352,46 +311,14 @@
             gap: 13px;
         }
 
-        .contact-hero-visual {
-            min-width: 0;
-        }
-
         .contact-hero-image {
             width: 100%;
             min-height: 300px;
             max-height: 420px;
             object-fit: cover;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 20px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
-        }
-
-        .contact-image-fallback {
-            display: flex;
-            min-height: 300px;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            background: linear-gradient(
-                135deg,
-                #123b59,
-                var(--contact-navy-dark)
-            );
-            color: #ffffff;
-            text-align: center;
-        }
-
-        .contact-image-fallback strong {
-            display: block;
-            font-size: 1.5rem;
-        }
-
-        .contact-image-fallback span {
-            display: block;
-            margin-top: 8px;
-            color: #d9e3ec;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
         }
 
         .contact-hero-card {
@@ -400,22 +327,20 @@
             margin: -30px auto 0;
             padding: 22px;
             border-radius: 13px;
-            background: #ffffff;
+            background: white;
             color: var(--contact-navy);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.16);
         }
 
         .contact-hero-card strong {
             display: block;
             margin-bottom: 7px;
-            font-size: 1.05rem;
         }
 
         .contact-hero-card p {
             margin: 0;
             color: var(--contact-muted);
             font-size: 0.93rem;
-            line-height: 1.7;
         }
 
         /* SECTION HEADINGS */
@@ -433,9 +358,8 @@
         .contact-section-heading h2 {
             margin: 0 0 15px;
             color: var(--contact-navy);
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(2rem,4vw,3rem);
             line-height: 1.2;
-            letter-spacing: -0.025em;
         }
 
         .contact-section-heading h2 span {
@@ -448,7 +372,7 @@
             line-height: 1.85;
         }
 
-        /* CONTACT INFORMATION AND FORM */
+        /* CONTACT FORM SECTION */
 
         .contact-main {
             padding: 80px 0;
@@ -457,9 +381,7 @@
 
         .contact-grid {
             display: grid;
-            grid-template-columns:
-                minmax(0, 0.82fr)
-                minmax(0, 1.18fr);
+            grid-template-columns: minmax(0,0.82fr) minmax(0,1.18fr);
             align-items: start;
             gap: 32px;
         }
@@ -468,12 +390,12 @@
             padding: 32px;
             border-radius: 15px;
             background: var(--contact-navy);
-            color: #ffffff;
+            color: white;
         }
 
         .contact-information h2 {
             margin: 0 0 15px;
-            color: #ffffff;
+            color: white;
             font-size: 1.7rem;
         }
 
@@ -481,7 +403,6 @@
             margin: 0 0 28px;
             color: #d3dce6;
             font-size: 0.95rem;
-            line-height: 1.8;
         }
 
         .contact-detail {
@@ -499,14 +420,14 @@
             align-items: center;
             justify-content: center;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             color: #b8dcf6;
             font-size: 1.15rem;
         }
 
         .contact-detail h3 {
             margin: 0 0 6px;
-            color: #ffffff;
+            color: white;
             font-size: 1rem;
         }
 
@@ -519,23 +440,18 @@
             overflow-wrap: anywhere;
         }
 
-        .contact-detail a {
-            text-decoration: none;
-        }
-
         .contact-detail a:hover {
-            color: #ffffff;
+            color: white;
             text-decoration: underline;
         }
 
         .contact-information-note {
             margin-top: 30px;
             padding: 17px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255,255,255,0.18);
             border-radius: 9px;
             color: #d3dce6;
             font-size: 0.88rem;
-            line-height: 1.75;
         }
 
         .contact-form-card {
@@ -543,8 +459,8 @@
             padding: 34px;
             border: 1px solid var(--contact-border);
             border-radius: 15px;
-            background: #ffffff;
-            box-shadow: 0 14px 40px rgba(11, 31, 51, 0.06);
+            background: white;
+            box-shadow: 0 14px 40px rgba(11,31,51,0.06);
         }
 
         .contact-form-heading {
@@ -561,7 +477,6 @@
             margin: 0;
             color: #657285;
             font-size: 0.93rem;
-            line-height: 1.7;
         }
 
         .required-mark {
@@ -570,7 +485,7 @@
 
         .contact-form-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(2,minmax(0,1fr));
             gap: 19px 17px;
         }
 
@@ -599,7 +514,7 @@
             padding: 13px 14px;
             border: 1px solid #d7dee8;
             border-radius: 8px;
-            background: #ffffff;
+            background: white;
             color: var(--contact-text);
             font-family: inherit;
             font-size: 0.94rem;
@@ -620,7 +535,7 @@
         .contact-field select:focus,
         .contact-field textarea:focus {
             border-color: var(--contact-blue);
-            outline: 3px solid rgba(29, 95, 145, 0.13);
+            outline: 3px solid rgba(29,95,145,0.13);
         }
 
         .contact-privacy-note {
@@ -635,12 +550,11 @@
             margin: 0;
             color: #43576b;
             font-size: 0.82rem;
-            line-height: 1.65;
         }
 
         .contact-consent {
             display: grid;
-            grid-template-columns: 18px minmax(0, 1fr);
+            grid-template-columns: 18px minmax(0,1fr);
             align-items: start;
             gap: 11px;
             margin: 21px 0;
@@ -656,7 +570,6 @@
         .contact-consent label {
             color: #536173;
             font-size: 0.83rem;
-            line-height: 1.7;
         }
 
         .contact-consent a,
@@ -684,7 +597,6 @@
             background: #edf5fb;
             color: #163c5a;
             font-size: 0.9rem;
-            line-height: 1.6;
             overflow-wrap: anywhere;
         }
 
@@ -708,20 +620,19 @@
             margin: 17px 0 0;
             color: #697586;
             font-size: 0.84rem;
-            line-height: 1.7;
             text-align: center;
         }
 
-        /* WHAT HAPPENS NEXT */
+        /* NEXT STEPS */
 
         .contact-next {
             padding: 75px 0;
-            background: #ffffff;
+            background: white;
         }
 
         .contact-next-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(3,minmax(0,1fr));
             gap: 22px;
         }
 
@@ -729,15 +640,13 @@
             padding: 25px;
             border: 1px solid var(--contact-border);
             border-radius: 12px;
-            background: #ffffff;
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
+            background: white;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .contact-next-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(11, 31, 51, 0.07);
+            box-shadow: 0 12px 30px rgba(11,31,51,0.07);
         }
 
         .contact-next-number {
@@ -757,21 +666,19 @@
             margin: 0 0 10px;
             color: var(--contact-navy);
             font-size: 1.08rem;
-            line-height: 1.45;
         }
 
         .contact-next-card p {
             margin: 0;
             color: var(--contact-muted);
             font-size: 0.92rem;
-            line-height: 1.8;
         }
 
-        /* BOTTOM CALL TO ACTION */
+        /* CTA */
 
         .contact-bottom {
             padding: 0 0 80px;
-            background: #ffffff;
+            background: white;
         }
 
         .contact-bottom-inner {
@@ -782,19 +689,18 @@
             padding: 35px;
             border-radius: 15px;
             background: var(--contact-navy);
-            color: #ffffff;
+            color: white;
         }
 
         .contact-bottom-inner h2 {
             margin: 0 0 9px;
-            color: #ffffff;
-            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: white;
+            font-size: clamp(1.5rem,3vw,2rem);
         }
 
         .contact-bottom-inner p {
             margin: 0;
             color: #d3dce6;
-            line-height: 1.7;
         }
 
         .contact-bottom-inner .contact-button {
@@ -802,104 +708,175 @@
         }
 
         /* FOOTER */
+/* =========================================
+   AVERRA SHARED FOOTER
+========================================= */
 
-        .site-footer {
-            padding: 55px 0 22px;
-            background: #ffffff !important;
-            color: #4b5563 !important;
-            border-top: 1px solid #e5e7eb;
-        }
+.site-footer {
+    background: #071522;
+    color: #f3f6f9;
+    padding: 55px 0 0;
+    margin-top: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
 
-        .site-footer .footer-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 36px;
-            padding-bottom: 35px;
-        }
+.site-footer *,
+.site-footer *::before,
+.site-footer *::after {
+    box-sizing: border-box;
+}
 
-        .site-footer .footer-brand {
-            display: inline-block;
-            margin-bottom: 16px;
-            color: #0b1f33 !important;
-            font-size: 1.15rem;
-            font-weight: 800;
-            line-height: 1.5;
-            text-decoration: none;
-        }
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 36px;
+    padding-bottom: 38px;
+    align-items: start;
+}
 
-        .site-footer .footer-brand:hover {
-            color: #1d5f91 !important;
-        }
+.footer-company-column,
+.footer-section {
+    min-width: 0;
+}
 
-        .site-footer .footer-description {
-            margin: 0 0 20px;
-            color: #4b5563 !important;
-            line-height: 1.8;
-        }
+.footer-brand {
+    display: inline-flex;
+    flex-direction: column;
+    text-decoration: none;
+    margin-bottom: 18px;
+}
 
-        .site-footer .footer-contact p {
-            margin: 0 0 11px;
-            color: #4b5563 !important;
-            font-size: 0.92rem;
-            overflow-wrap: anywhere;
-        }
+.footer-brand-name {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
 
-        .site-footer .footer-contact strong {
-            color: #0b1f33 !important;
-        }
+.footer-brand-subtitle {
+    color: #c89b3c;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-top: 5px;
+}
 
-        .site-footer .footer-contact a,
-        .site-footer .footer-links a {
-            color: #1d5f91 !important;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
+.footer-description {
+    color: #d1dbe5;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 20px;
+    max-width: 340px;
+}
 
-        .site-footer .footer-contact a:hover,
-        .site-footer .footer-links a:hover {
-            color: #0b1f33 !important;
-            text-decoration: underline;
-        }
+.footer-contact-details {
+    color: #d1dbe5;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 14px;
+    overflow-wrap: anywhere;
+}
 
-        .site-footer .footer-heading {
-            margin: 0 0 17px;
-            color: #0b1f33 !important;
-            font-size: 1rem;
-            font-weight: 700;
-        }
+.footer-contact-details strong {
+    color: #ffffff;
+}
 
-        .site-footer .footer-links {
-            display: grid;
-            gap: 11px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
+.footer-contact-details a {
+    color: #d1dbe5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
 
-        .site-footer .footer-links li {
-            margin: 0;
-            padding: 0;
-            color: #4b5563;
-            font-size: 0.93rem;
-        }
+.footer-contact-details a:hover {
+    color: #c89b3c;
+}
 
-        .site-footer .footer-bottom {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px 24px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-        }
+.footer-section h3 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 20px;
+}
 
-        .site-footer .footer-bottom p {
-            margin: 0;
-            color: #6b7280 !important;
-            font-size: 0.85rem;
-            line-height: 1.7;
-        }
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
+.footer-section li {
+    margin-bottom: 12px;
+}
+
+.footer-section a {
+    color: #d1dbe5;
+    font-size: 14px;
+    line-height: 1.6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+    color: #ffffff;
+}
+
+.footer-bottom {
+    border-top: 1px solid #263849;
+    padding: 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-bottom p {
+    color: #b9c6d2;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.footer-tagline {
+    text-align: right;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 35px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .site-footer {
+        padding-top: 40px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding-bottom: 30px;
+    }
+
+    .footer-description {
+        max-width: 100%;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .footer-tagline {
+        text-align: left;
+    }
+}
         /* TABLET */
 
         @media (max-width: 950px) {
@@ -917,24 +894,22 @@
             }
 
             .contact-next-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2,minmax(0,1fr));
             }
 
             .site-footer .footer-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 30px;
+                grid-template-columns: repeat(2,minmax(0,1fr));
             }
         }
 
-        /* MOBILE NAVIGATION */
+        /* MOBILE NAV */
 
         @media (max-width: 760px) {
             .contact-header-inner {
                 min-height: 76px;
                 flex-wrap: wrap;
                 gap: 15px;
-                padding-top: 12px;
-                padding-bottom: 12px;
+                padding: 12px 0;
             }
 
             .contact-menu-toggle {
@@ -961,10 +936,7 @@
             }
 
             .contact-navigation .nav-contact {
-                justify-content: center;
                 margin-top: 8px;
-                padding: 12px;
-                border-top: 1px solid var(--contact-blue);
                 text-align: center;
             }
         }
@@ -991,7 +963,7 @@
             }
 
             .contact-hero h1 {
-                font-size: clamp(2.25rem, 10vw, 2.8rem);
+                font-size: clamp(2.25rem,10vw,2.8rem);
             }
 
             .contact-hero-actions {
@@ -1002,8 +974,7 @@
                 width: 100%;
             }
 
-            .contact-hero-image,
-            .contact-image-fallback {
+            .contact-hero-image {
                 min-height: 230px;
             }
 
@@ -1058,11 +1029,6 @@
                 transition: none !important;
                 animation: none !important;
             }
-
-            .contact-page .contact-button:hover,
-            .contact-page .contact-next-card:hover {
-                transform: none;
-            }
         }
     </style>
 </head>
@@ -1086,8 +1052,7 @@
             type="button"
             aria-label="Open navigation menu"
             aria-controls="contact-navigation"
-            aria-expanded="false"
-        >
+            aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
@@ -1100,14 +1065,16 @@
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="services.html">Services</a>
+
+
             <a href="how-it-works.html">How It Works</a>
             <a href="careers.html">Careers</a>
             <a href="jobs.html">Jobs</a>
             <a class="nav-contact"
                href="lets-talk.html"
                aria-current="page">Let's Talk</a>
-
         </nav>
+
     </div>
 </header>
 
@@ -1117,7 +1084,7 @@
     <section class="contact-hero">
         <div class="contact-container contact-hero-grid">
 
-            <div class="contact-hero-copy">
+            <div>
                 <span class="contact-eyebrow">Start a conversation</span>
 
                 <h1>
@@ -1132,30 +1099,25 @@
                 </p>
 
                 <div class="contact-hero-actions">
-                    <a class="contact-button button-primary"
-                       href="#enquiry-form">
-                        Send an Enquiry
-                        <span aria-hidden="true">→</span>
+                    <a class="contact-button button-primary" href="#enquiry-form">
+                        Send an Enquiry →
                     </a>
 
                     <a class="contact-button button-outline"
-                       href="mailto:info@averrastaffing.co.uk">
+                       href="mailto:enquiries@averrastaffing.co.uk">
                         Email AVERRA
                     </a>
                 </div>
             </div>
 
-            <div class="contact-hero-visual">
+            <div>
                 <img
                     class="contact-hero-image"
-                    data-image-key="about-global-network"
                     src="images/image14.jpg"
                     alt="International professionals connected through a global business network"
                     fetchpriority="high"
-                    decoding="async"
                     width="800"
-                    height="600"
-                >
+                    height="600">
 
                 <div class="contact-hero-card">
                     <strong>Let's find the right approach.</strong>
@@ -1169,7 +1131,7 @@
         </div>
     </section>
 
-    <!-- CONTACT DETAILS AND ENQUIRY FORM -->
+    <!-- CONTACT AND ENQUIRY FORM -->
     <section class="contact-main" id="enquiry-form">
         <div class="contact-container">
 
@@ -1189,16 +1151,15 @@
 
                     <p class="contact-information-intro">
                         We welcome enquiries from UK businesses interested in
-                        remote staffing, outsourcing and international
-                        talent solutions.
+                        remote staffing, outsourcing and international talent.
                     </p>
 
                     <div class="contact-detail">
                         <span class="contact-icon" aria-hidden="true">✉</span>
                         <div>
                             <h3>Email Address</h3>
-                            <a href="mailto:info@averrastaffing.co.uk">
-                                info@averrastaffing.co.uk
+                            <a href="mailto:enquiries@averrastaffing.co.uk">
+                                enquiries@averrastaffing.co.uk
                             </a>
                         </div>
                     </div>
@@ -1208,7 +1169,7 @@
                         <div>
                             <h3>Website</h3>
                             <a href="https://averrastaffing.co.uk/">
-                                https://averrastaffing.co.uk
+                                averrastaffing.co.uk
                             </a>
                         </div>
                     </div>
@@ -1238,8 +1199,7 @@
 
                     <div class="contact-information-note">
                         Not sure which service you need? Describe your
-                        business challenge in the enquiry form and use it as
-                        a starting point for discussion.
+                        business challenge in the enquiry form.
                     </div>
                 </aside>
 
@@ -1248,7 +1208,7 @@
                         <h2>Send Us an Enquiry</h2>
                         <p>
                             Fields marked with
-                            <span class="required-mark" aria-hidden="true">*</span>
+                            <span class="required-mark">*</span>
                             are required.
                         </p>
                     </div>
@@ -1259,8 +1219,7 @@
 
                             <div class="contact-field">
                                 <label for="contact-name">
-                                    Full Name
-                                    <span class="required-mark">*</span>
+                                    Full Name <span class="required-mark">*</span>
                                 </label>
                                 <input
                                     id="contact-name"
@@ -1269,28 +1228,23 @@
                                     placeholder="Enter your full name"
                                     autocomplete="name"
                                     maxlength="100"
-                                    required
-                                >
+                                    required>
                             </div>
 
                             <div class="contact-field">
-                                <label for="contact-company">
-                                    Company Name
-                                </label>
+                                <label for="contact-company">Company Name</label>
                                 <input
                                     id="contact-company"
                                     type="text"
                                     name="Company Name"
                                     placeholder="Your organisation"
                                     autocomplete="organization"
-                                    maxlength="150"
-                                >
+                                    maxlength="150">
                             </div>
 
                             <div class="contact-field">
                                 <label for="contact-email">
-                                    Business Email
-                                    <span class="required-mark">*</span>
+                                    Business Email <span class="required-mark">*</span>
                                 </label>
                                 <input
                                     id="contact-email"
@@ -1299,22 +1253,18 @@
                                     placeholder="name@company.co.uk"
                                     autocomplete="email"
                                     maxlength="254"
-                                    required
-                                >
+                                    required>
                             </div>
 
                             <div class="contact-field">
-                                <label for="contact-phone">
-                                    Phone Number
-                                </label>
+                                <label for="contact-phone">Phone Number</label>
                                 <input
                                     id="contact-phone"
                                     type="tel"
                                     name="Phone Number"
                                     placeholder="+44 ..."
                                     autocomplete="tel"
-                                    maxlength="30"
-                                >
+                                    maxlength="30">
                             </div>
 
                             <div class="contact-field contact-field-full">
@@ -1323,43 +1273,36 @@
                                     <span class="required-mark">*</span>
                                 </label>
 
-                                <select
-                                    id="contact-service"
-                                    name="service_required"
-                                    required
-                                >
+                                <select id="contact-service"
+                                        name="service_required"
+                                        required>
                                     <option value="">Select a service</option>
-                                    <option value="finance-accounting">Finance &amp; Accounting</option>
-                                    <option value="bookkeeping-payroll">Bookkeeping &amp; Payroll Support</option>
-                                    <option value="administration">Administration &amp; Business Support</option>
-                                    <option value="data-entry">Data Entry &amp; Data Processing</option>
-                                    <option value="customer-support">Customer Service &amp; Support</option>
-                                    <option value="sales-business-development">Sales &amp; Business Development</option>
-                                    <option value="digital-marketing">Digital Marketing</option>
-                                    <option value="it-software-development">IT &amp; Software Development</option>
-                                    <option value="web-development">Web Development</option>
-                                    <option value="engineering">Engineering &amp; Technical Support</option>
-                                    <option value="architecture-design">Architecture &amp; Design</option>
-                                    <option value="hr-recruitment">HR &amp; Recruitment</option>
-                                    <option value="research-data-analysis">Research &amp; Data Analysis</option>
-                                    <option value="project-management">Project Management Support</option>
-                                    <option value="procurement-supply-chain">Procurement &amp; Supply Chain</option>
-                                    <option value="legal-compliance">Legal &amp; Compliance Support</option>
-                                    <option value="healthcare-administration">Healthcare Administration</option>
-                                    <option value="dedicated-remote-employees">Dedicated Remote Employees</option>
-                                    <option value="custom-outsourcing">Custom Outsourcing Solution</option>
-                                    <option value="other">Other</option>
+                                    <option value="Finance & Accounting">Finance & Accounting</option>
+                                    <option value="Bookkeeping & Payroll Support">Bookkeeping & Payroll Support</option>
+                                    <option value="Administration & Business Support">Administration & Business Support</option>
+                                    <option value="Data Entry & Data Processing">Data Entry & Data Processing</option>
+                                    <option value="Customer Service & Support">Customer Service & Support</option>
+                                    <option value="Sales & Business Development">Sales & Business Development</option>
+                                    <option value="Digital Marketing">Digital Marketing</option>
+                                    <option value="IT & Software Development">IT & Software Development</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Engineering & Technical Support">Engineering & Technical Support</option>
+                                    <option value="Architecture & Design">Architecture & Design</option>
+                                    <option value="HR & Recruitment">HR & Recruitment</option>
+                                    <option value="Research & Data Analysis">Research & Data Analysis</option>
+                                    <option value="Project Management Support">Project Management Support</option>
+                                    <option value="Procurement & Supply Chain">Procurement & Supply Chain</option>
+                                    <option value="Legal & Compliance Support">Legal & Compliance Support</option>
+                                    <option value="Healthcare Administration">Healthcare Administration</option>
+                                    <option value="Dedicated Remote Employees">Dedicated Remote Employees</option>
+                                    <option value="Custom Outsourcing Solution">Custom Outsourcing Solution</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
 
                             <div class="contact-field">
-                                <label for="contact-team-size">
-                                    Number of Employees
-                                </label>
-                                <select
-                                    id="contact-team-size"
-                                    name="Number of Employees"
-                                >
+                                <label for="contact-team-size">Number of Employees</label>
+                                <select id="contact-team-size" name="Number of Employees">
                                     <option value="">Select if known</option>
                                     <option>1 employee</option>
                                     <option>2–5 employees</option>
@@ -1371,13 +1314,8 @@
                             </div>
 
                             <div class="contact-field">
-                                <label for="contact-start-date">
-                                    Preferred Start Date
-                                </label>
-                                <select
-                                    id="contact-start-date"
-                                    name="Preferred Start Date"
-                                >
+                                <label for="contact-start-date">Preferred Start Date</label>
+                                <select id="contact-start-date" name="Preferred Start Date">
                                     <option value="">Select if known</option>
                                     <option>As soon as possible</option>
                                     <option>Within one month</option>
@@ -1388,13 +1326,8 @@
                             </div>
 
                             <div class="contact-field contact-field-full">
-                                <label for="contact-budget">
-                                    Indicative Budget
-                                </label>
-                                <select
-                                    id="contact-budget"
-                                    name="Indicative Budget"
-                                >
+                                <label for="contact-budget">Indicative Budget</label>
+                                <select id="contact-budget" name="Indicative Budget">
                                     <option value="">Prefer not to say</option>
                                     <option>To be discussed</option>
                                     <option>I would like guidance on pricing</option>
@@ -1414,8 +1347,7 @@
                                     minlength="10"
                                     maxlength="5000"
                                     placeholder="Describe the work, skills, experience or business support you need..."
-                                    required
-                                ></textarea>
+                                    required></textarea>
                             </div>
 
                         </div>
@@ -1423,8 +1355,7 @@
                         <div class="contact-privacy-note">
                             <p>
                                 Please do not include passwords, bank account
-                                details or other sensitive personal information
-                                in your message.
+                                details or other sensitive personal information.
                             </p>
                         </div>
 
@@ -1434,23 +1365,21 @@
                                 id="contact-privacy"
                                 name="Privacy Acknowledgement"
                                 value="Acknowledged"
-                                required
-                            >
+                                required>
+
                             <label for="contact-privacy">
                                 I have read the
                                 <a href="privacy.html">Privacy Notice</a>
-                                and understand that AVERRA will use the
-                                information I provide to respond to my enquiry.
+                                and understand that AVERRA will use my
+                                information to respond to my enquiry.
                                 <span class="required-mark">*</span>
                             </label>
                         </div>
 
                         <button
                             class="contact-button button-primary contact-submit"
-                            type="submit"
-                        >
-                            Submit Enquiry
-                            <span aria-hidden="true">→</span>
+                            type="submit">
+                            Submit Enquiry →
                         </button>
 
                         <div
@@ -1458,14 +1387,12 @@
                             id="contact-form-status"
                             role="status"
                             aria-live="polite"
-                            hidden
-                        ></div>
+                            hidden></div>
 
                         <p class="contact-form-footnote">
-                            Your enquiry will be submitted to AVERRA's enquiry
-                            system. If submission fails, you can email
-                            <a href="mailto:info@averrastaffing.co.uk">
-                                info@averrastaffing.co.uk
+                            If submission fails, email
+                            <a href="mailto:enquiries@averrastaffing.co.uk">
+                                enquiries@averrastaffing.co.uk
                             </a>
                             directly.
                         </p>
@@ -1477,7 +1404,7 @@
         </div>
     </section>
 
-    <!-- WHAT HAPPENS NEXT -->
+    <!-- NEXT STEPS -->
     <section class="contact-next">
         <div class="contact-container">
 
@@ -1486,14 +1413,14 @@
                 <h2>What Happens <span>After You Contact Us?</span></h2>
                 <p>
                     A straightforward starting point for exploring your
-                    staffing requirements and possible solutions.
+                    staffing requirements and potential solutions.
                 </p>
             </div>
 
             <div class="contact-next-grid">
 
                 <article class="contact-next-card">
-                    <span class="contact-next-number" aria-hidden="true">01</span>
+                    <span class="contact-next-number">01</span>
                     <h3>We Review Your Enquiry</h3>
                     <p>
                         Your requirements help us understand your business
@@ -1502,16 +1429,16 @@
                 </article>
 
                 <article class="contact-next-card">
-                    <span class="contact-next-number" aria-hidden="true">02</span>
+                    <span class="contact-next-number">02</span>
                     <h3>We Discuss Your Needs</h3>
                     <p>
-                        Discuss the required skills, responsibilities, team
-                        size, working arrangements and budget.
+                        Discuss the required skills, responsibilities,
+                        team size, working arrangements and budget.
                     </p>
                 </article>
 
                 <article class="contact-next-card">
-                    <span class="contact-next-number" aria-hidden="true">03</span>
+                    <span class="contact-next-number">03</span>
                     <h3>We Explore the Options</h3>
                     <p>
                         Where suitable, discuss potential staffing
@@ -1523,7 +1450,7 @@
         </div>
     </section>
 
-    <!-- FINAL CALL TO ACTION -->
+    <!-- FINAL CTA -->
     <section class="contact-bottom">
         <div class="contact-container">
             <div class="contact-bottom-inner">
@@ -1536,9 +1463,8 @@
                 </div>
 
                 <a class="contact-button button-primary"
-                   href="mailto:info@averrastaffing.co.uk">
-                    Email AVERRA
-                    <span aria-hidden="true">→</span>
+                   href="mailto:enquiries@averrastaffing.co.uk">
+                    Email AVERRA →
                 </a>
             </div>
         </div>
@@ -1546,99 +1472,109 @@
 
 </main>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-company-column">
-                <a class="footer-brand" href="index.html">
-                    AVERRA Staffing Solutions Ltd
-                </a>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
 
-                <p class="footer-description">
-                    Connecting UK businesses with skilled professionals
-                    based in India through remote staffing and outsourcing solutions.
+                <div class="footer-company-column">
+                    <a class="footer-brand" href="index.html">
+                        AVERRA Staffing Solutions Ltd
+                    </a>
+
+                    <p class="footer-description">
+                        Connecting UK businesses with skilled professionals
+                        based in India through remote staffing and outsourcing solutions.
+                    </p>
+
+                    <div class="footer-contact">
+                        <p>
+                            <strong>Email:</strong>
+                            <a href="mailto:enquiries@averrastaffing.co.uk">
+                                enquiries@averrastaffing.co.uk
+                            </a>
+                        </p>
+
+                        <p>
+                            <strong>Website:</strong>
+                            <a href="https://averrastaffing.co.uk/">
+                                https://averrastaffing.co.uk
+                            </a>
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            <a href="tel:+447857290628">+44 7857 290628</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-heading">Explore AVERRA</h3>
+
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="how-it-works.html">How It Works</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="jobs.html">Job Opportunities</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-heading">Information</h3>
+
+                    <ul class="footer-links">
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="faq.html">Frequently Asked Questions</a></li>
+                        <li><a href="lets-talk.html">Contact Us</a></li>
+                        <li><a href="industries.html">Industries</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-heading">Legal</h3>
+
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    &copy; <span id="current-year">2026</span>
+                    AVERRA Staffing Solutions Ltd. All rights reserved.
                 </p>
 
-                <div class="footer-contact">
-                    <p>
-                        <strong>Email:</strong>
-                        <a href="mailto:info@averrastaffing.co.uk">info@averrastaffing.co.uk</a>
-                    </p>
-
-                    <p>
-                        <strong>Website:</strong>
-                        <a href="https://averrastaffing.co.uk/">https://averrastaffing.co.uk</a>
-                    </p>
-
-                    <p>
-                        <strong>Phone:</strong>
-                        <a href="tel:+447857290628">+44 7857 290628</a>
-                    </p>
-
-                    <p>
-                        <strong>UK phone:</strong>
-                        <a href="tel:+441234567890">+44 1234 567890</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Explore AVERRA</h3>
-                <ul class="footer-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="services.html">Our Services</a></li>
-                    <li><a href="how-it-works.html">How It Works</a></li>
-                    <li><a href="careers.html">Careers</a></li>
-                    <li><a href="jobs.html">Job Opportunities</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Information</h3>
-                <ul class="footer-links">
-                    <li><a href="pricing.html">Pricing</a></li>
-                    <li><a href="FAQ.html">Frequently Asked Questions</a></li>
-                    <li><a href="lets-talk.html">Contact Us</a></li>
-                    <li><a href="industries.html">Industries</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h3 class="footer-heading">Legal</h3>
-                <ul class="footer-links">
-                    <li><a href="privacy.html">Privacy Policy</a></li>
-                </ul>
+                <p>
+                    UK–India Outsourcing · Connecting Businesses with Global Talent
+                </p>
             </div>
         </div>
-
-        <div class="footer-bottom">
-            <p>
-                &copy; <span id="current-year">2026</span>
-                AVERRA Staffing Solutions Ltd. All rights reserved.
-            </p>
-            <p>UK–India Outsourcing · Connecting Businesses with Global Talent</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
 <script>
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-    /* Existing copyright-year behaviour. */
+
+    /* COPYRIGHT YEAR */
+
     const yearElement = document.getElementById("current-year");
 
     if (yearElement) {
         yearElement.textContent = String(new Date().getFullYear());
     }
 
-    /* Existing mobile navigation. */
+    /* MOBILE NAVIGATION */
+
     const menuToggle = document.getElementById("contact-menu-toggle");
     const navigation = document.getElementById("contact-navigation");
 
     if (menuToggle && navigation) {
+
         function closeMenu() {
             navigation.classList.remove("is-open");
             menuToggle.setAttribute("aria-expanded", "false");
@@ -1673,47 +1609,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /* Existing hero-image fallback. */
-    const heroImage = document.querySelector(".contact-hero-image");
+    /* ENQUIRY FORM */
 
-    if (heroImage) {
-        heroImage.addEventListener("error", function () {
-            const fallback = document.createElement("div");
-            fallback.className = "contact-image-fallback";
-
-            const content = document.createElement("div");
-            const heading = document.createElement("strong");
-            const description = document.createElement("span");
-
-            heading.textContent =
-                "Connecting UK Businesses with Global Talent";
-
-            description.textContent =
-                "Remote staffing and outsourcing solutions";
-
-            content.append(heading, description);
-            fallback.appendChild(content);
-
-            fallback.setAttribute("role", "img");
-            fallback.setAttribute(
-                "aria-label",
-                "Connecting UK businesses with global talent"
-            );
-
-            heroImage.replaceWith(fallback);
-        }, { once: true });
-    }
-
-    /*
-     * AVERRA ENQUIRY SUBMISSION
-     *
-     * For local testing, use the local FastAPI address below.
-     * For the live website, replace it with the actual deployed backend
-     * origin, for example https://your-backend.onrender.com
-     *
-     * Do not add /api to the end of API_BASE.
-     */
-    const API_BASE = "http://127.0.0.1:8000";
+    const API_BASE = "https://averra-backend-dn23.onrender.com";
 
     const form = document.getElementById("averra-contact-form");
     const statusBox = document.getElementById("contact-form-status");
@@ -1722,15 +1620,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    function getValue(fieldName) {
-        const field = form.elements.namedItem(fieldName);
+    function getValue(name) {
+        const field = form.elements.namedItem(name);
         return field ? String(field.value || "").trim() : "";
     }
 
-    function showStatus(message, type) {
+    function showStatus(message, state) {
         statusBox.hidden = false;
         statusBox.textContent = message;
-        statusBox.dataset.state = type;
+        statusBox.dataset.state = state;
     }
 
     form.addEventListener("submit", async function (event) {
@@ -1757,11 +1655,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ? serviceSelect.options[serviceSelect.selectedIndex].text.trim()
             : "";
 
-        /*
-         * Preserve the existing select options. These additional answers
-         * are stored in the existing database message field.
-         */
-        const enquiryDetails = [
+        const messageDetails = [
             ["Service required", selectedService],
             ["Number of employees", getValue("Number of Employees")],
             ["Preferred start date", getValue("Preferred Start Date")],
@@ -1777,8 +1671,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .join("\n\n");
 
         /*
-         * These fields match the expected FastAPI EnquiryCreate schema.
+         * Expected FastAPI enquiry fields:
+         * name, email, phone, company, subject, message
          */
+
         const payload = {
             name: getValue("Full Name"),
             email: getValue("Email Address"),
@@ -1787,10 +1683,13 @@ document.addEventListener("DOMContentLoaded", function () {
             subject: selectedService
                 ? "Website enquiry - " + selectedService
                 : "Website enquiry",
-            message: enquiryDetails
+            message: messageDetails
         };
 
-        const submitButton = form.querySelector('button[type="submit"]');
+        const submitButton = form.querySelector(
+            'button[type="submit"]'
+        );
+
         const originalButtonText = submitButton
             ? submitButton.innerHTML
             : "";
@@ -1820,22 +1719,22 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 result = await response.json();
             } catch (error) {
-                /* Handle a response that is not JSON. */
+                // Response did not contain JSON.
             }
 
             if (!response.ok) {
-                let message =
+                let errorMessage =
                     "The server could not save your enquiry. Please try again.";
 
                 if (typeof result.detail === "string") {
-                    message = result.detail;
+                    errorMessage = result.detail;
                 } else if (Array.isArray(result.detail)) {
-                    message =
+                    errorMessage =
                         "The server rejected some submitted information. " +
                         "Please check the form and try again.";
                 }
 
-                throw new Error(message);
+                throw new Error(errorMessage);
             }
 
             showStatus(
@@ -1848,20 +1747,19 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error("AVERRA enquiry submission failed:", error);
 
-            let message =
+            let errorMessage =
                 "We could not submit your enquiry. Please try again or email " +
-                "info@averrastaffing.co.uk directly.";
+                "enquiries@averrastaffing.co.uk directly.";
 
             if (error instanceof TypeError) {
-                message =
-                    "We could not connect to the AVERRA backend. Check that " +
-                    "the backend is running, the API URL is correct and the " +
-                    "backend allows requests from this website.";
+                errorMessage =
+                    "We could not connect to AVERRA's backend. Please try " +
+                    "again later or email enquiries@averrastaffing.co.uk.";
             } else if (error.message) {
-                message = error.message;
+                errorMessage = error.message;
             }
 
-            showStatus(message, "error");
+            showStatus(errorMessage, "error");
 
         } finally {
             if (submitButton) {
@@ -1870,6 +1768,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
 });
 </script>
 

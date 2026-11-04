@@ -1,30 +1,26 @@
-
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b1f33">
 
     <title>Jobs and Careers | AVERRA Staffing Solutions Ltd</title>
 
-    <meta
-        name="description"
-        content="Explore current job vacancies and submit your CV to AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals in India."
-    >
+    <meta name="description" content="Explore current job vacancies and submit your CV to AVERRA Staffing Solutions Ltd, connecting UK businesses with skilled professionals in India.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://averrastaffing.co.uk/jobs.html">
 
     <link rel="stylesheet" href="style.css">
 
-  <script>
-    window.AVERRA_API_BASE_URL =
-        "https://averra-backend-dn23.onrender.com";
-</script>
+    <script>
+        window.AVERRA_API_BASE_URL =
+            "https://averra-backend-dn23.onrender.com";
+    </script>
 
-<script src="images/images.js" defer></script>
-<script src="images/jobs.js" defer></script>
-<script src="images/applications.js" defer></script>
+    <script src="images/images.js" defer></script>
+    <script src="images/jobs.js" defer></script>
+    <script src="images/applications.js" defer></script>
 
     <style>
         :root {
@@ -32,7 +28,6 @@
             --jobs-navy-dark: #071522;
             --jobs-blue: #1d5f91;
             --jobs-gold: #c89b3c;
-            --jobs-gold-light: #e6c77f;
             --jobs-background: #f4f7fa;
             --jobs-text: #263747;
             --jobs-muted: #687786;
@@ -40,7 +35,7 @@
             --jobs-success: #176b43;
             --jobs-error: #b42318;
             --jobs-radius: 14px;
-            --jobs-shadow: 0 10px 30px rgba(11, 31, 51, 0.08);
+            --jobs-shadow: 0 10px 30px rgba(11, 31, 51, .08);
             --jobs-container: 1180px;
         }
 
@@ -63,19 +58,11 @@
             line-height: 1.65;
         }
 
-        body,
         button,
         input,
         select,
         textarea {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font-size: 16px;
+            font: inherit;
         }
 
         a {
@@ -112,7 +99,7 @@
             margin-inline: auto;
         }
 
-        /* Header compatibility with the existing AVERRA website */
+        /* HEADER */
 
         .site-header {
             position: relative;
@@ -197,7 +184,7 @@
             cursor: pointer;
         }
 
-        /* Hero */
+        /* HERO */
 
         .jobs-hero {
             position: relative;
@@ -207,7 +194,7 @@
             background:
                 radial-gradient(
                     circle at 85% 20%,
-                    rgba(200, 155, 60, 0.2),
+                    rgba(200, 155, 60, .2),
                     transparent 30%
                 ),
                 linear-gradient(
@@ -267,10 +254,7 @@
             text-align: center;
             text-decoration: none;
             cursor: pointer;
-            transition:
-                background-color 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.2s ease;
+            transition: background-color .2s ease, border-color .2s ease;
         }
 
         .jobs-button:hover {
@@ -294,16 +278,16 @@
         .jobs-button-outline {
             color: #fff;
             background: transparent;
-            border-color: rgba(255, 255, 255, 0.55);
+            border-color: rgba(255, 255, 255, .55);
         }
 
         .jobs-button-outline:hover {
             color: #fff;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, .12);
             border-color: #fff;
         }
 
-        /* General sections */
+        /* SECTIONS */
 
         .jobs-section {
             padding: 76px 0;
@@ -332,7 +316,7 @@
             color: var(--jobs-muted);
         }
 
-        /* Search and category filters */
+        /* JOB SEARCH */
 
         .jobs-search-panel {
             display: grid;
@@ -431,7 +415,7 @@
             font-size: 14px;
         }
 
-        /* Vacancy cards */
+        /* JOB CARDS */
 
         .jobs-grid {
             display: grid;
@@ -449,14 +433,12 @@
             border-radius: var(--jobs-radius);
             background: #fff;
             box-shadow: var(--jobs-shadow);
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
+            transition: transform .2s ease, box-shadow .2s ease;
         }
 
         .job-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 14px 34px rgba(11, 31, 51, 0.12);
+            box-shadow: 0 14px 34px rgba(11, 31, 51, .12);
         }
 
         .job-category {
@@ -560,11 +542,11 @@
             background: #fff7f6;
         }
 
-        /* Application section */
+        /* APPLICATION */
 
         .application-layout {
             display: grid;
-            grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+            grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
             align-items: start;
             gap: 42px;
         }
@@ -667,7 +649,7 @@
         }
 
         .application-form button:disabled {
-            opacity: 0.65;
+            opacity: .65;
             cursor: wait;
             transform: none;
         }
@@ -678,7 +660,7 @@
             font-size: 12px;
         }
 
-        /* Footer compatibility */
+        /* FOOTER */
 
         .site-footer {
             padding: 52px 0 22px;
@@ -693,7 +675,7 @@
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr 1fr 0.8fr;
+            grid-template-columns: 1.4fr 1fr 1fr .8fr;
             gap: 30px;
             padding-bottom: 32px;
         }
@@ -777,7 +759,7 @@
             line-height: 1.7;
         }
 
-        /* Responsive layouts */
+        /* RESPONSIVE */
 
         @media (max-width: 1050px) {
             .site-header .header-inner {
@@ -919,8 +901,8 @@
             *::before,
             *::after {
                 scroll-behavior: auto !important;
-                transition-duration: 0.01ms !important;
-                animation-duration: 0.01ms !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
                 animation-iteration-count: 1 !important;
             }
         }
@@ -1035,30 +1017,31 @@
 
                 <div class="jobs-toolbar">
                     <div>
-                      <label for="job-category-filter">Filter by Category</label>
-<select
-    id="job-category-filter"
-    name="job-category"
-    aria-controls="jobs-grid"
->
-    <option value="">All categories</option>
-    <option value="finance">Finance &amp; Accounting</option>
-    <option value="technology">IT &amp; Software Development</option>
-    <option value="architecture">Architecture &amp; Design</option>
-    <option value="engineering">Engineering &amp; Technical</option>
-    <option value="administration">Administration &amp; Data Entry</option>
-    <option value="customer-service">Customer Service &amp; Support</option>
-    <option value="sales">Sales &amp; Business Development</option>
-    <option value="marketing">Digital Marketing</option>
-    <option value="human-resources">Human Resources &amp; Recruitment</option>
-    <option value="operations">Business Operations</option>
-    <option value="project-management">Project Management</option>
-    <option value="legal">Legal &amp; Compliance Support</option>
-    <option value="procurement">Procurement &amp; Supply Chain</option>
-    <option value="research">Research &amp; Data Analysis</option>
-    <option value="healthcare">Healthcare Administration</option>
-    <option value="other">Other Professional Roles</option>
-</select>
+                        <label for="job-category-filter">Filter by Category</label>
+
+                        <select
+                            id="job-category-filter"
+                            name="job-category"
+                            aria-controls="jobs-grid"
+                        >
+                            <option value="">All categories</option>
+                            <option value="finance">Finance &amp; Accounting</option>
+                            <option value="technology">IT &amp; Software Development</option>
+                            <option value="architecture">Architecture &amp; Design</option>
+                            <option value="engineering">Engineering &amp; Technical</option>
+                            <option value="administration">Administration &amp; Data Entry</option>
+                            <option value="customer-service">Customer Service &amp; Support</option>
+                            <option value="sales">Sales &amp; Business Development</option>
+                            <option value="marketing">Digital Marketing</option>
+                            <option value="human-resources">Human Resources &amp; Recruitment</option>
+                            <option value="operations">Business Operations</option>
+                            <option value="project-management">Project Management</option>
+                            <option value="legal">Legal &amp; Compliance Support</option>
+                            <option value="procurement">Procurement &amp; Supply Chain</option>
+                            <option value="research">Research &amp; Data Analysis</option>
+                            <option value="healthcare">Healthcare Administration</option>
+                            <option value="other">Other Professional Roles</option>
+                        </select>
                     </div>
 
                     <button
@@ -1133,7 +1116,7 @@
 
                     <p>
                         Have questions about opportunities?
-                        <a href="mailto:info@averrastaffing.co.uk">
+                        <a href="mailto:enquiries@averrastaffing.co.uk">
                             Contact AVERRA
                         </a>.
                     </p>
@@ -1199,6 +1182,7 @@
 
                         <div class="application-field">
                             <label for="applicant-role">Vacancy *</label>
+
                             <select
                                 id="applicant-role"
                                 name="job_id"
@@ -1206,6 +1190,7 @@
                             >
                                 <option value="">Loading vacancies…</option>
                             </select>
+
                             <small>
                                 Select General Application to register
                                 your interest in future opportunities.
@@ -1216,6 +1201,7 @@
                             <label for="applicant-cover-letter">
                                 Cover Letter or Message
                             </label>
+
                             <textarea
                                 id="applicant-cover-letter"
                                 name="cover_letter"
@@ -1226,6 +1212,7 @@
 
                         <div class="application-field">
                             <label for="applicant-cv">Upload Your CV *</label>
+
                             <input
                                 type="file"
                                 id="applicant-cv"
@@ -1234,6 +1221,7 @@
                                 aria-describedby="cv-file-help"
                                 required
                             >
+
                             <small id="cv-file-help">
                                 Accepted formats: PDF, DOC and DOCX.
                                 Maximum file size: 5 MB.
@@ -1305,8 +1293,8 @@
                 <div class="footer-contact">
                     <p>
                         <strong>Email:</strong>
-                        <a href="mailto:info@averrastaffing.co.uk">
-                            info@averrastaffing.co.uk
+                        <a href="mailto:enquiries@averrastaffing.co.uk">
+                            enquiries@averrastaffing.co.uk
                         </a>
                     </p>
 
@@ -1316,16 +1304,12 @@
                             averrastaffing.co.uk
                         </a>
                     </p>
-
-                    <p>
-                        <strong>Phone:</strong>
-                        <a href="tel:+447857290628">+44 7857 290628</a>
-                    </p>
                 </div>
             </div>
 
             <div class="footer-section">
                 <h3 class="footer-heading">Explore AVERRA</h3>
+
                 <ul class="footer-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About Us</a></li>
@@ -1338,6 +1322,7 @@
 
             <div class="footer-section">
                 <h3 class="footer-heading">Information</h3>
+
                 <ul class="footer-links">
                     <li><a href="pricing.html">Pricing</a></li>
                     <li><a href="FAQ.html">Frequently Asked Questions</a></li>
@@ -1348,6 +1333,7 @@
 
             <div class="footer-section">
                 <h3 class="footer-heading">Legal</h3>
+
                 <ul class="footer-links">
                     <li><a href="privacy.html">Privacy Policy</a></li>
                 </ul>
@@ -1360,6 +1346,7 @@
                 &copy; <span id="current-year">2026</span>
                 AVERRA Staffing Solutions Ltd. All rights reserved.
             </p>
+
             <p>
                 UK–India Outsourcing · Connecting Businesses with Global Talent
             </p>
@@ -1368,10 +1355,59 @@
     </div>
 </footer>
 
-
-
-
 <script>
+    "use strict";
+
+    /* Mobile navigation */
+    (() => {
+        const menuButton = document.getElementById("menu-toggle");
+        const navigation = document.getElementById("main-navigation");
+
+        if (!menuButton || !navigation) {
+            return;
+        }
+
+        menuButton.addEventListener("click", () => {
+            const isOpen = navigation.classList.toggle("is-open");
+
+            menuButton.setAttribute("aria-expanded", String(isOpen));
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        navigation.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navigation.classList.remove("is-open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+            });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                navigation.classList.remove("is-open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+            }
+        });
+    })();
+
+    /* Current copyright year */
+    (() => {
+        const yearElement = document.getElementById("current-year");
+
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+    })();
 </script>
 
 </body>

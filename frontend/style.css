@@ -1,35 +1,41 @@
-
-
-/* HERO: TEXT LEFT, IMAGE RIGHT */
-
-.page-hero {
-    padding: 64px 0;
-    background: var(--light);
-}
-/* =========================================
-   AVERRA HOMEPAGE — BRAND STYLING
+/* =========================================================
+   AVERRA STAFFING SOLUTIONS LTD
+   Shared Website Styles
    UK–India Outsourcing
-   ========================================= */
+   ========================================================= */
+
+/* BRAND VARIABLES */
 
 :root {
     --navy: #0b1f33;
     --navy-dark: #071522;
     --blue: #1d5f91;
+    --blue-dark: #16476c;
     --gold: #c89b3c;
+    --gold-light: #ddb65f;
+
     --light: #f4f7fa;
     --white: #ffffff;
     --text: #263545;
     --muted: #647386;
     --border: #e0e7ee;
+
     --container: 1180px;
+    --radius: 10px;
+    --shadow: 0 12px 35px rgba(11, 31, 51, 0.08);
 }
 
-* {
+/* RESET */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
 }
 
 body {
@@ -46,35 +52,67 @@ img {
     height: auto;
 }
 
+a {
+    color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
 .container {
     width: min(var(--container), calc(100% - 40px));
     margin-inline: auto;
 }
 
-/* HEADER */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .site-header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.98);
     border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
 }
 
 .header-inner {
-    min-height: 82px;
     display: flex;
+    min-height: 82px;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
 }
 
+/* BRAND */
+
 .brand {
     display: inline-flex;
     flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    max-width: 360px;
+
     color: var(--navy);
     font-size: 1.05rem;
-    font-weight: 800;
+    font-weight: 900;
     line-height: 1.3;
     letter-spacing: 0.015em;
     text-decoration: none;
@@ -83,12 +121,164 @@ img {
 .brand span {
     display: block;
     margin-top: 5px;
+
     color: var(--muted);
     font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     line-height: 1.5;
     text-transform: uppercase;
+}
+
+.brand:hover {
+    color: var(--blue);
+}
+
+/* NAVIGATION */
+
+.main-navigation,
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+}
+
+.main-navigation a,
+.main-nav a {
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.main-navigation a:hover,
+.main-navigation a[aria-current="page"],
+.main-nav a:hover,
+.main-nav a[aria-current="page"] {
+    color: var(--blue);
+}
+
+/* LET'S TALK NAVIGATION BUTTON */
+
+.main-navigation .nav-contact,
+.main-navigation .nav-cta,
+.main-nav .nav-contact,
+.main-nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+
+    color: var(--white) !important;
+    background: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: 7px;
+
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.main-navigation .nav-contact:hover,
+.main-navigation .nav-cta:hover,
+.main-nav .nav-contact:hover,
+.main-nav .nav-cta:hover {
+    color: var(--white) !important;
+    background: var(--navy);
+    border-color: var(--navy);
+}
+
+/* MOBILE MENU BUTTONS */
+
+.menu-toggle,
+.mobile-menu-button,
+.mobile-nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 9px 12px;
+    color: var(--navy);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.button,
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 48px;
+    padding: 12px 22px;
+
+    color: var(--navy-dark);
+    background: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 7px;
+
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.button:hover,
+.btn:hover {
+    color: var(--navy-dark);
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: translateY(-2px);
+}
+
+.button-primary,
+.btn-primary {
+    color: var(--white);
+    background: var(--blue);
+    border-color: var(--blue);
+}
+
+.button-primary:hover,
+.btn-primary:hover {
+    color: var(--white);
+    background: var(--navy);
+    border-color: var(--navy);
+}
+
+.button-secondary {
+    color: var(--navy);
+    background: transparent;
+    border-color: var(--border);
+}
+
+.button-secondary:hover {
+    color: var(--navy);
+    background: var(--light);
+    border-color: var(--blue);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.page-hero {
+    padding: 64px 0;
+    background: var(--light);
 }
 
 .page-hero .container {
@@ -134,39 +324,38 @@ img {
     grid-column: 2;
     grid-row: 1;
     width: 100%;
-    height: auto;
-    max-height: none;
     object-fit: contain;
     border-radius: 16px;
     background: #e8edf2;
 }
 
-/* BUTTONS */
+/* HOMEPAGE HERO */
 
-.button,
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 12px 22px;
-    border: 1px solid var(--gold);
-    border-radius: 7px;
-    background: var(--gold);
-    color: var(--navy-dark);
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.2s ease;
+.hero {
+    background-color: var(--navy);
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(7, 21, 34, 0.94),
+            rgba(7, 21, 34, 0.68) 60%,
+            rgba(7, 21, 34, 0.3)
+        ),
+        url("images/image15.jpg");
+    background-position: center;
+    background-size: cover;
 }
 
-.button:hover,
-.btn:hover {
-    background: #ddb65f;
-    transform: translateY(-2px);
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.section {
+    padding: 75px 0;
 }
 
-/* SECTION HEADINGS */
+.section-light {
+    background: var(--light);
+}
 
 .section-heading {
     max-width: 780px;
@@ -185,11 +374,174 @@ img {
     color: var(--muted);
 }
 
-/* RESPONSIVE */
+.eyebrow {
+    display: inline-block;
+    color: var(--blue);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
 
-@media (max-width: 760px) {
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.site-footer {
+    padding: 55px 0 22px;
+    color: #d8e1ea;
+    background: var(--navy-dark);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 36px;
+    padding-bottom: 35px;
+}
+
+.footer-brand {
+    display: inline-block;
+    margin-bottom: 16px;
+
+    color: var(--white);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.5;
+    text-decoration: none;
+}
+
+.footer-brand:hover {
+    color: var(--gold);
+}
+
+.footer-description {
+    margin: 0 0 20px;
+    color: #c3cfda;
+    line-height: 1.8;
+}
+
+.footer-contact p {
+    margin: 0 0 11px;
+    color: #c3cfda;
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+}
+
+.footer-contact strong {
+    color: var(--white);
+}
+
+.footer-contact a,
+.footer-links a {
+    color: #c3cfda;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-contact a:hover,
+.footer-links a:hover {
+    color: var(--gold);
+}
+
+.footer-heading,
+.site-footer h3 {
+    margin: 0 0 17px;
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.footer-links {
+    display: grid;
+    gap: 11px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-links li {
+    margin: 0;
+    padding: 0;
+    font-size: 0.93rem;
+}
+
+.footer-bottom {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #aebdca;
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 4px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
     .header-inner {
-        min-height: 72px;
+        flex-wrap: wrap;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .menu-toggle,
+    .mobile-menu-button,
+    .mobile-nav-toggle {
+        display: inline-flex;
+        margin-left: auto;
+    }
+
+    .main-navigation,
+    .main-nav {
+        display: none;
+        flex: 0 0 100%;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+        padding-top: 8px;
+    }
+
+    /* Supports both existing menu scripts:
+       .active and .is-open */
+
+    .main-navigation.active,
+    .main-navigation.is-open,
+    .main-nav.active,
+    .main-nav.is-open {
+        display: flex;
+    }
+
+    .main-navigation a,
+    .main-nav a {
+        padding: 12px 8px;
+    }
+
+    .main-navigation .nav-contact,
+    .main-navigation .nav-cta,
+    .main-nav .nav-contact,
+    .main-nav .nav-cta {
+        margin-top: 8px;
+        text-align: center;
     }
 
     .page-hero {
@@ -217,6 +569,11 @@ img {
     .page-hero h1 {
         font-size: clamp(2rem, 7vw, 2.8rem);
     }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 30px;
+    }
 }
 
 @media (max-width: 520px) {
@@ -225,13 +582,34 @@ img {
     }
 
     .brand {
-        font-size: 0.9rem;
+        max-width: 245px;
+        font-size: 0.88rem;
     }
 
     .brand span {
         font-size: 0.58rem;
+        letter-spacing: 0.04em;
+    }
+
+    .section {
+        padding: 55px 0;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .site-footer {
+        padding-top: 40px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
     }
 }
+
+/* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
     html {
@@ -241,539 +619,9 @@ img {
     *,
     *::before,
     *::after {
+        scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
     }
-}
-
-/* AVERRA BRAND NAME AND TAGLINE */
-
-.brand {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    color: var(--navy, #0b1f33);
-    text-decoration: none;
-    font-size: 1.05rem;
-    font-weight: 800;
-    line-height: 1.3;
-    letter-spacing: 0.015em;
-}
-
-.brand span {
-    display: block;
-    margin-top: 5px;
-    color: var(--muted, #647386);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    line-height: 1.5;
-    text-transform: uppercase;
-}
-
-.brand:hover {
-    color: var(--blue, #1d5f91);
-}
-
-.brand:focus-visible {
-    outline: 2px solid var(--gold, #c89b3c);
-    outline-offset: 5px;
-    border-radius: 3px;
-}
-
-@media (max-width: 520px) {
-    .brand {
-        font-size: 0.9rem;
-    }
-
-    .brand span {
-        font-size: 0.58rem;
-        letter-spacing: 0.04em;
-    }
-}
-
-/* =========================================
-   AVERRA FOOTER — PRESERVE EXISTING STRUCTURE
-   ========================================= */
-
-.site-footer {
-    padding: 55px 0 22px;
-    color: #d8e1ea;
-    background: #071522;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 36px;
-    padding-bottom: 35px;
-}
-
-.footer-brand {
-    display: inline-block;
-    margin-bottom: 16px;
-    color: #ffffff;
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.5;
-    text-decoration: none;
-}
-
-.footer-brand:hover {
-    color: #c89b3c;
-}
-
-.footer-description {
-    margin: 0 0 20px;
-    color: #c3cfda;
-    line-height: 1.8;
-}
-
-.footer-contact p {
-    margin: 0 0 11px;
-    color: #c3cfda;
-    font-size: 0.92rem;
-    overflow-wrap: anywhere;
-}
-
-.footer-contact strong {
-    color: #ffffff;
-}
-
-.footer-contact a,
-.footer-links a {
-    color: #c3cfda;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer-contact a:hover,
-.footer-links a:hover {
-    color: #c89b3c;
-}
-
-.footer-heading {
-    margin: 0 0 17px;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.footer-links {
-    display: grid;
-    gap: 11px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.footer-links li {
-    margin: 0;
-    padding: 0;
-    font-size: 0.93rem;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px 24px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.footer-bottom p {
-    margin: 0;
-    color: #aebdca;
-    font-size: 0.85rem;
-    line-height: 1.7;
-}
-
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 30px;
-    }
-}
-
-@media (max-width: 520px) {
-    .site-footer {
-        padding-top: 40px;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 28px;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-    }
-}
-
-.site-footer {
-    padding: 55px 0 22px;
-    color: #d8e1ea;
-    background: #071522;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 36px;
-    padding-bottom: 35px;
-}
-
-.footer-brand {
-    display: inline-block;
-    margin-bottom: 16px;
-    color: #ffffff;
-    font-size: 1.15rem;
-    font-weight: 800;
-    line-height: 1.5;
-    text-decoration: none;
-}
-
-.footer-brand:hover {
-    color: #c89b3c;
-}
-
-.footer-description {
-    margin: 0 0 20px;
-    color: #c3cfda;
-    line-height: 1.8;
-}
-
-.footer-contact p {
-    margin: 0 0 11px;
-    color: #c3cfda;
-    font-size: 0.92rem;
-    overflow-wrap: anywhere;
-}
-
-.footer-contact strong {
-    color: #ffffff;
-}
-
-.footer-contact a,
-.footer-links a {
-    color: #c3cfda;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer-contact a:hover,
-.footer-links a:hover {
-    color: #c89b3c;
-}
-
-.footer-heading {
-    margin: 0 0 17px;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.footer-links {
-    display: grid;
-    gap: 11px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.footer-links li {
-    margin: 0;
-    padding: 0;
-    font-size: 0.93rem;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px 24px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.footer-bottom p {
-    margin: 0;
-    color: #aebdca;
-    font-size: 0.85rem;
-    line-height: 1.7;
-}
-
-@media (max-width: 900px) {
-    .footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 30px;
-    }
-}
-
-@media (max-width: 520px) {
-    .site-footer {
-        padding-top: 40px;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 28px;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-    }
-}
-/* JOBS PAGE HEADER */
-
-.site-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background: #ffffff;
-    border-bottom: 1px solid #e0e7ee;
-}
-
-.site-header .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 82px;
-}
-
-.site-header .brand {
-    flex-shrink: 0;
-}
-
-.site-header .main-navigation {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 18px;
-}
-
-.site-header .main-navigation a {
-    color: #0b1f33;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.site-header .main-navigation a:hover,
-.site-header .main-navigation a[aria-current="page"] {
-    color: #1d5f91;
-}
-
-.site-header .main-navigation .nav-cta {
-    padding: 10px 16px;
-    border-radius: 7px;
-    background: #0b1f33;
-    color: #ffffff;
-}
-
-.site-header .menu-toggle {
-    display: none;
-    padding: 9px 11px;
-    border: 1px solid #dfe6ed;
-    border-radius: 7px;
-    background: #ffffff;
-    cursor: pointer;
-}
-
-.site-header .menu-toggle span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    margin: 4px 0;
-    background: #0b1f33;
-}
-
-@media (max-width: 900px) {
-    .site-header .header-inner {
-        flex-wrap: wrap;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
-
-    .site-header .menu-toggle {
-        display: block;
-        margin-left: auto;
-    }
-
-    .site-header .main-navigation {
-        display: none;
-        flex: 0 0 100%;
-        align-items: stretch;
-        flex-direction: column;
-        gap: 0;
-        padding-top: 8px;
-    }
-
-    .site-header .main-navigation.active {
-        display: flex;
-    }
-
-    .site-header .main-navigation a {
-        padding: 12px 4px;
-    }
-
-    .site-header .main-navigation .nav-cta {
-        text-align: center;
-    }
-}
-
-/* ==========================================================
-   AVERRA — FIX HOME PAGE LET'S TALK BUTTON TEXT VISIBILITY
-   ========================================================== */
-
-.hero-actions .button-primary,
-.hero-actions .button-primary:link,
-.hero-actions .button-primary:visited,
-.hero-actions .button-primary:hover,
-.hero-actions .button-primary:focus,
-.cta-actions .button-primary,
-.cta-panel .button-primary,
-.nav-contact,
-.nav-contact:link,
-.nav-contact:visited {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    font-size: 15px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-/* Keep the button label and arrow visible */
-.hero-actions .button-primary span,
-.cta-actions .button-primary span,
-.cta-panel .button-primary span,
-.nav-contact span {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* Preserve the blue button background */
-.hero-actions .button-primary,
-.cta-actions .button-primary,
-.cta-panel .button-primary,
-.nav-contact {
-    background-color: #1d5f91 !important;
-    border-color: #1d5f91 !important;
-}
-
-/* Improve keyboard accessibility */
-.hero-actions .button-primary:focus-visible,
-.cta-actions .button-primary:focus-visible,
-.nav-contact:focus-visible {
-    outline: 3px solid #c89b3c;
-    outline-offset: 3px;
-}
-.button,
-.btn {
-    color: var(--navy-dark);
-}
-
-/* AVERRA: Ensure Let's Talk navigation button is readable */
-.site-header .main-navigation .nav-contact,
-.site-header .main-navigation .nav-contact:link,
-.site-header .main-navigation .nav-contact:visited,
-.site-header .main-navigation .nav-contact:hover,
-.site-header .main-navigation .nav-contact:focus {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #1d5f91 !important;
-    border: 1px solid #1d5f91 !important;
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    text-decoration: none !important;
-    font-weight: 700;
-}
-
-.site-header .main-navigation .nav-contact:hover {
-    background-color: #16476c !important;
-    border-color: #16476c !important;
-}
-
-.site-header .main-navigation .nav-contact * {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-}
-
-@media (max-width: 900px) {
-    .main-navigation,
-    .main-nav {
-        display: none;
-    }
-
-    .main-navigation.active,
-    .main-nav.active {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-    }
-
-    .main-navigation.active a,
-    .main-nav.active a {
-        display: block;
-        padding: 12px 16px;
-    }
-
-    .menu-toggle,
-    .mobile-menu-button,
-    .mobile-nav-toggle {
-        cursor: pointer;
-    }
-}
-.brand {
-    display: block;
-    max-width: 360px;
-    color: var(--navy);
-    font-size: 1.05rem;
-    font-weight: 900;
-    line-height: 1.3;
-    text-decoration: none;
-}
-
-.brand span {
-    display: block;
-    margin-top: 4px;
-    color: var(--blue);
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-.hero {
-    background-color: var(--navy);
-    background-image:
-        linear-gradient(
-            90deg,
-            rgba(7, 21, 34, 0.94),
-            rgba(7, 21, 34, 0.68) 60%,
-            rgba(7, 21, 34, 0.3)
-        ),
-        url("images/image15.jpg");
-    background-position: center;
-    background-size: cover;
-}
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
 }
