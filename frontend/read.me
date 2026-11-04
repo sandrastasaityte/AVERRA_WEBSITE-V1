@@ -8,7 +8,7 @@ Official website project for AVERRA Staffing Solutions Ltd, a UK-based staffing 
 |---|---|
 | Company | AVERRA Staffing Solutions Ltd |
 | Website | https://averrastaffing.co.uk |
-| Contact email | enquiries@averrastaffing.co.uk |
+| Contact email | info@averrastaffing.co.uk |
 | Business focus | Staffing, outsourcing and remote professional support |
 | Primary market | United Kingdom |
 | International talent focus | India |
@@ -24,7 +24,7 @@ The AVERRA website is designed to establish a professional online presence, expl
 
 AVERRA aims to help UK businesses explore international staffing solutions by connecting them with suitable professionals based in India.
 
-The website is being developed as a custom HTML, CSS and JavaScript application. It can be deployed to compatible web hosting without requiring a WordPress rebuild.
+The website is a custom HTML, CSS and JavaScript project. It can be deployed to compatible web hosting without requiring a WordPress rebuild.
 
 ### Core objectives
 
@@ -34,7 +34,7 @@ The website is being developed as a custom HTML, CSS and JavaScript application.
 - Generate business enquiries and requests for quotations.
 - Explain the engagement process.
 - Provide information for candidates and job seekers.
-- Publish company information, privacy information and relevant policies.
+- Publish company information and privacy information.
 - Support search engine visibility and accessibility.
 - Establish a foundation for future CRM integration.
 - Allow the website to evolve as the business develops.
@@ -68,10 +68,10 @@ The website must not imply that a particular professional, service, certificatio
 
 ### Frontend
 
-- **HTML5:** Page structure and semantic content.
-- **CSS3:** Styling, responsive layouts, branding and visual presentation.
-- **JavaScript:** Navigation, interactive components, form validation and other client-side functionality.
-- **Images and other assets:** Company logo, approved photography and supporting visual material.
+- HTML5: Page structure and semantic content.
+- CSS3: Styling, responsive layouts, branding and visual presentation.
+- JavaScript: Navigation, interactive components, form validation and other client-side functionality.
+- Images and assets: Company logo, approved photography and supporting visual material.
 
 ### Development tools
 
@@ -95,71 +95,105 @@ These integrations should be treated as future capabilities unless they have bee
 
 **Project root:**
 
-`C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1`
+C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1
 
-The actual website files may be located in a subdirectory such as `frontend`. Verify the current location before editing files or changing paths.
+The website files are currently expected to be inside the `frontend` directory. Verify the actual location in PyCharm before editing files or changing paths.
 
 ### Open the project
 
 1. Open PyCharm.
-2. Select **File → Open**.
+2. Select File → Open.
 3. Open the AVERRA project directory.
 4. Locate the HTML page you want to edit.
-5. Confirm where `style.css`, `script.js`, `images.js` and the image assets are stored.
+5. Confirm where `style.css`, `script.js`, asset JavaScript files and images are stored.
 6. Preview the website using a local development server.
 
-For example, if the homepage and supporting assets are inside `frontend`, the expected layout may resemble:
+### Current frontend structure
 
-```text
-AVERRA_WEBSITE_v1/
-├── frontend/
-│   ├── index.html
-│   ├── about.html
-│   ├── services.html
-│   ├── how-it-works.html
-│   ├── careers.html
-│   ├── jobs.html
-│   ├── lets-talk.html
-│   ├── contact.html
-│   ├── pricing.html
-│   ├── industries.html
-│   ├── FAQ.html
-│   ├── privacy.html
-│   ├── style.css
-│   ├── script.js
-│   ├── images.js
-│   └── images/
-│       ├── Logo.jpeg
-│       ├── image1.jpg
-│       ├── image2.jpg
-│       └── ...
-├── README.md
-└── .gitignore
-```
+frontend/
+├── .gitignore
+├── about.html
+├── careers.html
+├── faq.html
+├── how-it-works.html
+├── index.html
+├── industries.html
+├── jobs.html
+├── lets-talk.html
+├── pricing.html
+├── privacy.html
+├── read.me
+├── script.js
+├── services.html
+├── style.css
+└── images/
+    ├── applications.js
+    ├── images.js
+    ├── jobs.js
+    ├── image1.jpg
+    ├── image2.jpg
+    ├── image3.jpg
+    ├── image4.jpg
+    ├── image5.jpg
+    ├── image6.jpg
+    ├── image7.jpg
+    ├── image8.png
+    ├── image9.png
+    ├── image10.png
+    ├── image11.png
+    ├── image12.jpg
+    ├── image13.jpg
+    ├── image14.jpg
+    ├── image15.jpg
+    ├── image16.png
+    ├── image17.jpg
+    ├── image18.jpg
+    ├── image19.jpg
+    ├── image20.jpeg
+    ├── image21.jpg
+    ├── image22.png
+    ├── image23.png
+    ├── image24.png
+    ├── image25.jpg
+    ├── image26.jpg
+    ├── image27.png
+    ├── image28.jpg
+    ├── image29.jpg
+    ├── image30.jpg
+    ├── image31.png
+    ├── image32.jpg
+    └── image33.jpg
 
-This is an illustrative structure, not a verified inventory. Keep the actual project layout unless you deliberately reorganize it and update all affected references.
+This structure reflects the latest project tree provided. Confirm it against the actual files before making structural changes.
+
+### Inspect image filenames in PowerShell
+
+Run this command to list the image-folder files and their extensions:
+
+Get-ChildItem "C:\Users\Sandra Stasaityte\Workplace\AVERRA_WEBSITE_v1\frontend\images" -File |
+    Select-Object Name, Extension
 
 ### Running locally
 
-Use PyCharm's built-in preview or a local HTTP server.
+If the HTML files are in the `frontend` directory, run this command from the project root:
 
-If the HTML files are in the `frontend` directory, you can run the following command from the project root in a terminal:
-
-```powershell
 python -m http.server 8000 --directory frontend
-```
 
 Then open:
 
-`http://localhost:8000/`
+http://localhost:8000/
 
-Stop the server with `Ctrl+C`.
+If your terminal is already inside `frontend`, run:
 
-This command is suitable for local preview only. It does not deploy the website to the public internet.
+python -m http.server 8000
+
+Stop the server with Ctrl+C.
+
+This server is for local preview only. It does not deploy the website to the public internet.
 
 ## 5. Website Pages
 
-The following pages describe the intended website structure. Confirm that each file exists before linking to it in production.
+The latest project structure contains the following pages:
 
 | Page | File | Purpose |
 |---|---|---|
@@ -170,26 +204,21 @@ The following pages describe the intended website structure. Confirm that each f
 | Careers | `careers.html` | Provide information for interested professionals |
 | Jobs | `jobs.html` | Present verified job opportunities or explain how to enquire |
 | Let's Talk | `lets-talk.html` | Encourage prospective clients to make contact |
-| Contact | `contact.html` | Provide contact details and enquiry options |
 | Pricing | `pricing.html` | Explain pricing information or invite a quotation request |
 | Industries | `industries.html` | Describe relevant industries and potential applications |
-| FAQ | `FAQ.html` | Answer frequently asked questions |
+| FAQ | `faq.html` | Answer frequently asked questions |
 | Privacy | `privacy.html` | Explain the website's personal information practices |
 
-File names and capitalization must match the deployed files. Some hosting environments distinguish between `FAQ.html` and `faq.html`.
-
-If multiple pages provide similar functions, their purpose and navigation should be reviewed to avoid unnecessary duplication.
+**Filename note:** The current file is `faq.html` in lowercase. Links must match the deployed filename exactly. The latest project tree does not list a separate `contact.html`; do not link to it unless it is added intentionally.
 
 ## 6. Branding and Design
 
-The website should maintain a consistent visual identity across all pages.
-
 ### Brand information
 
-- **Company name:** AVERRA Staffing Solutions Ltd
-- **Tagline:** Connecting UK Businesses with Global Talent
-- **Primary domain:** `https://averrastaffing.co.uk`
-- **Business email:** `enquiries@averrastaffing.co.uk`
+- Company name: AVERRA Staffing Solutions Ltd
+- Tagline: Connecting UK Businesses with Global Talent
+- Primary domain: https://averrastaffing.co.uk
+- Business email: info@averrastaffing.co.uk
 
 ### Brand colors
 
@@ -198,11 +227,11 @@ The website should maintain a consistent visual identity across all pages.
 | Navy | `#0b1f33` | Primary brand color |
 | Dark navy | `#071522` | Dark backgrounds and contrast |
 | Blue | `#1d5f91` | Links, buttons and interactive elements |
+| Gold | `#c89b3c` | Selective accents |
 
+Use the existing logo asset if its location and filename have been confirmed. The project has previously referenced `Logo.jpeg`; verify the actual filename and capitalization before using it.
 
-Use the existing logo asset, such as `images/Logo.jpeg`, if that is its verified location.
-
-Maintain consistent typography, spacing, button styles, navigation, responsive behavior and footer presentation. Do not introduce conflicting designs between pages.
+Maintain consistent typography, spacing, button styles, navigation, responsive behavior and footer presentation. Avoid introducing conflicting designs between pages.
 
 ## 7. Frontend Architecture and Asset Management
 
@@ -212,18 +241,16 @@ Each page should use:
 
 - A valid HTML5 document structure
 - A descriptive page title
-- Appropriate meta description
+- An appropriate meta description
 - Semantic headings
 - Accessible navigation
 - Correct internal links
-- Descriptive image alternative text where images convey meaning
+- Descriptive image alternative text where needed
 - A consistent header and footer
 
-### CSS
+### CSS — style.css
 
-The shared stylesheet should be used for global presentation where practical.
-
-Expected responsibilities include:
+The shared stylesheet should manage global presentation where practical:
 
 - Brand colors and typography
 - Responsive page layouts
@@ -234,37 +261,43 @@ Expected responsibilities include:
 - Footer styling
 - Accessibility and reduced-motion preferences
 
-Keep page-specific CSS where necessary, but avoid unnecessary duplication.
+Keep page-specific CSS where necessary, but avoid unnecessary duplication or conflicting rules.
 
-### JavaScript
+### JavaScript — script.js
 
-The shared `script.js` may provide:
+The shared script may provide:
 
 - Mobile navigation
 - Active navigation states
 - Smooth anchor scrolling
 - Back-to-top behavior
 - Automatic copyright year
-- External-link security
+- External-link handling
 - Client-side form validation
 - Image error handling
 - Accessibility enhancements
 
-Page-specific features, such as FAQ filtering and accordion controls, should remain separate when appropriate.
+Verify the actual implementation before relying on any feature. Load shared scripts only once per page and avoid duplicate event handlers.
 
-Load each script only once per page and avoid duplicate event handlers.
+### Asset JavaScript files
+
+The current tree lists these files under `images/`:
+
+- `images/images.js`
+- `images/jobs.js`
+- `images/applications.js`
+
+Confirm each script's purpose and the HTML paths that load it. Do not move files without updating references.
 
 ### Image catalogue
 
-If `images.js` is used to manage image assets, keep its file paths and image references synchronized with the actual files.
+If `images.js` manages image assets, keep its paths and references synchronized with actual files.
 
-Do not assume all numbered image files exist or have the same extension. Verify the exact filenames and extensions before updating references.
+Do not assume every numbered image exists or uses the same extension. Verify filenames and extensions before updating references.
 
 Use relative paths that work both locally and after deployment.
 
 ## 8. Navigation and Internal Links
-
-Keep navigation consistent across the website.
 
 The intended main navigation may include:
 
@@ -276,11 +309,10 @@ The intended main navigation may include:
 - Jobs
 - Let's Talk
 
-Check that every navigation item points to the correct existing page.
+Check that each navigation item points to an existing page.
 
-For example:
+Example links from an HTML file in the frontend root:
 
-```html
 <a href="index.html">Home</a>
 <a href="about.html">About</a>
 <a href="services.html">Services</a>
@@ -288,17 +320,14 @@ For example:
 <a href="careers.html">Careers</a>
 <a href="jobs.html">Jobs</a>
 <a href="lets-talk.html">Let's Talk</a>
-```
 
-Use the correct relative paths for the location of each HTML file. If pages are moved into subdirectories, update their links, stylesheets, scripts and image references accordingly.
+If pages or assets are moved into subdirectories, update all relevant links, stylesheets, scripts and image references.
 
 ## 9. Enquiries, Careers and Forms
 
 The website should provide clear ways for prospective clients and candidates to contact AVERRA.
 
-### Business enquiries
-
-Potential enquiry topics include:
+### Potential business enquiry topics
 
 - Outsourcing requirements
 - Staffing requirements
@@ -322,24 +351,25 @@ Before relying on a form in production, confirm:
 - How errors and successful submissions are communicated
 - How personal information is transmitted and stored
 - Whether appropriate security and privacy measures are in place
+- Whether the form has been tested end to end
 
-Do not describe a form as operational until its submission process has been tested.
+Do not describe a form as operational until its submission process has been verified.
 
-## 10. Search Engine Optimization
+## 10. Search Engine Optimization (SEO)
 
 Each public page should have an appropriate SEO foundation.
 
-Recommended checks include:
+Recommended checks:
 
 - Unique page titles and meta descriptions
 - Descriptive headings
 - Canonical URLs where appropriate
 - Correct internal linking
-- Descriptive image alternative text
-- A consistent domain and HTTPS configuration
-- A valid `robots.txt` where required
+- Descriptive image alt text
+- Consistent domain and HTTPS configuration
+- A `robots.txt` file, if required
 - An XML sitemap
-- Appropriate structured data when supported by accurate company information
+- Accurate structured data, where appropriate
 - Useful, original page content
 - Search Console verification and monitoring, if configured
 
@@ -349,108 +379,123 @@ Structured data must accurately represent the company and website. Do not add ra
 
 The website should work across desktop, tablet and mobile devices.
 
-Important checks include:
+Important checks:
 
-- Navigation usable by keyboard
-- Visible focus indicators
-- Correct button and link semantics
-- Appropriate color contrast
-- Meaningful image alternative text
-- Labels for form fields
-- Accessible validation messages
-- Correct heading hierarchy
-- Mobile menu state communicated with ARIA attributes
-- Respect for reduced-motion preferences
-- No unintended horizontal scrolling on small screens
+- Navigation is usable by keyboard.
+- Focus indicators are visible.
+- Buttons and links use appropriate semantic elements.
+- Color contrast is sufficient.
+- Images have meaningful alt text where needed.
+- Form fields have accessible labels.
+- Validation errors are understandable.
+- Heading levels follow a logical hierarchy.
+- Mobile menu state is communicated using appropriate ARIA attributes.
+- Reduced-motion preferences are respected where applicable.
+- Small screens do not have unintended horizontal scrolling.
 
-Test these behaviors on the actual deployed website as well as locally.
+Test these behaviors locally and on the deployed website.
 
 ## 12. Privacy, Security and Trust
 
-Before launch, review the website's privacy policy and any other required company policies.
+Before launch, review the privacy policy and actual data processing practices.
 
 Check that:
 
 - Contact details are correct.
-- Privacy statements reflect actual data processing.
+- Privacy statements reflect actual practices.
 - Forms collect only necessary information.
-- External links are handled appropriately.
 - HTTPS is enabled.
-- API keys, passwords and other secrets are not included in public frontend files.
-- Any backend endpoints are protected appropriately.
+- API keys, passwords and secrets are not exposed in frontend files.
+- Backend endpoints are protected appropriately.
 - Candidate and client information is handled securely.
-- Any cookies, analytics or tracking technologies are disclosed and configured as required.
+- Uploaded files are validated and protected.
+- Cookies, analytics and tracking are disclosed and configured where required.
 
-A privacy policy should describe actual practices rather than intended or hypothetical capabilities.
+A privacy policy should describe actual practices rather than planned or hypothetical capabilities.
 
-## 13. Version Control
+This README is project documentation, not legal advice or a substitute for a privacy compliance review.
 
-Git and GitHub can be used to track website changes and support deployment.
+## 13. Version Control — Git and GitHub
 
-Before committing changes, review the files being staged.
+Git and GitHub can be used to track website changes and support deployment, where configured.
 
-Typical commands:
+### Review changes
 
-```powershell
 git status
+
+### Stage the README
+
+If the filename is `read.me`:
+
+git add read.me
+
+If you rename it to `README.md`:
+
 git add README.md
-git commit -m "Update AVERRA website documentation"
+
+### Commit changes
+
+git commit -m "Upgrade AVERRA website documentation"
+
+### Push changes
+
 git push
-```
 
-These commands assume Git has already been initialized, a remote repository is configured, and the current branch has the correct upstream.
+These commands assume Git is initialized, a remote repository is configured, and the current branch has the correct upstream. Check the repository state before initializing Git or changing remotes.
 
-If the repository is not configured, check its current state before running initialization or remote-configuration commands.
+### `.gitignore` considerations
 
-### Files that should not normally be committed
-
-Depending on the project, use `.gitignore` to exclude:
+Depending on the project, exclude:
 
 - Python virtual environments
 - Local databases containing real data
 - Logs and temporary files
 - Secrets and environment files
-- Local IDE caches
+- IDE caches
 - Uploaded files containing private information
-- Build artifacts that can be regenerated
+- Regenerable build artifacts
 
-Do not exclude required website assets or source files needed for deployment.
+Do not exclude website source files or assets required for deployment.
 
 ## 14. Hosting and Deployment
 
 **Production domain:** https://averrastaffing.co.uk
 
-The website is intended for compatible static web hosting or another hosting environment that can serve its HTML, CSS, JavaScript and assets.
+The website is intended for compatible static web hosting or another hosting environment that can serve HTML, CSS, JavaScript and assets.
 
-Before deployment:
+### Deployment checklist
 
 1. Confirm which directory contains the production website.
 2. Confirm the hosting document root.
-3. Upload or deploy the correct website files.
-4. Preserve relative directory paths.
+3. Deploy the intended frontend files.
+4. Preserve directory and asset paths.
 5. Confirm the homepage is available at the root URL.
 6. Check HTTPS and domain configuration.
 7. Test navigation, images, forms and mobile layouts.
-8. Check the browser console for JavaScript errors and missing resources.
-9. Confirm that the deployed version matches the intended release.
+8. Check browser console and network errors.
+9. Confirm the deployed version matches the intended release.
 
-### Hostinger and other hosting platforms
+### Hosting considerations
 
-Deployment configuration depends on the selected hosting product and its supported workflow.
+Deployment configuration depends on the hosting product and its supported workflow. Verify the repository, deployment directory, build settings and document root before deploying.
 
-Do not assume that every GitHub deployment feature is available on every hosting plan. Verify the configured repository, deployment directory, build settings and document root before deploying.
+If WordPress or another website already uses the production domain:
 
-If a WordPress website already uses the production domain, plan the deployment carefully to avoid replacing existing content or disrupting the live website.
+- Confirm the current hosting and document root.
+- Back up the existing website.
+- Plan the change before replacing live files.
+- Avoid overwriting unrelated content.
+- Verify DNS and deployment settings before making changes.
 
-### Important distinction
+### Frontend and backend are separate
 
-Publishing the static frontend does not automatically deploy a separate Python backend, database or CRM. Those components require their own hosting and configuration.
+Publishing the static frontend does not automatically deploy a separate Python backend, database, CRM or admin application. Each component requires its own hosting and configuration.
 
 ## 15. Future AVERRA CRM Integration
 
 The website may later integrate with the AVERRA CRM to support business development and operational workflows.
 
-Potential future capabilities include:
+Potential capabilities include:
 
 - Capturing client enquiries
 - Recording contact details
@@ -458,71 +503,89 @@ Potential future capabilities include:
 - Tracking staffing requirements
 - Managing candidate information
 - Recording placements and contracts
-- Supporting reporting and business operations
+- Supporting reports and business operations
 
-These capabilities are future development objectives unless already implemented and verified.
+These are future development objectives unless implemented and verified.
 
-Any integration should use an appropriately secured backend or API rather than exposing database credentials or private records in browser-side JavaScript.
+Any integration should use a secure backend or API. Do not expose database credentials, private tokens or confidential records in browser-side JavaScript.
 
 ## 16. Testing Checklist
 
-Before publishing an update, use this checklist.
+Use this checklist before publishing a website update.
 
 ### Website structure
 
 - [ ] Homepage loads correctly.
 - [ ] All intended pages exist.
 - [ ] Navigation links point to the correct pages.
+- [ ] Footer links point to the correct pages.
 - [ ] Header and footer are consistent.
-- [ ] No unintended duplicate scripts are loaded.
+- [ ] Scripts are not unintentionally loaded more than once.
 
 ### Visual presentation
 
 - [ ] Brand colors are consistent.
-- [ ] Layout works on desktop and mobile.
-- [ ] Buttons have readable text and appropriate contrast.
-- [ ] Images load without broken-image indicators.
-- [ ] No unintended horizontal scrolling occurs.
+- [ ] Desktop layout works.
+- [ ] Tablet layout works.
+- [ ] Mobile layout works.
+- [ ] No unintended horizontal scrolling.
+- [ ] Images load correctly.
+- [ ] Buttons and text are readable.
 
 ### Functionality
 
 - [ ] Mobile menu opens and closes correctly.
-- [ ] Escape closes the mobile menu where applicable.
-- [ ] Active navigation links are correct.
+- [ ] Escape closes the mobile menu where supported.
+- [ ] Navigation accessibility state is correct.
 - [ ] Anchor links work.
-- [ ] Back-to-top behavior works.
-- [ ] Copyright year updates automatically.
-- [ ] Forms validate correctly.
-- [ ] Form submissions are tested against their actual destination.
-- [ ] FAQ search and accordion behavior work, if present.
+- [ ] Back-to-top behavior works, if implemented.
+- [ ] Copyright year updates, if implemented.
+- [ ] Form validation works.
+- [ ] Form submission is tested against its actual destination.
+- [ ] Jobs and applications functionality works, if enabled.
 
 ### Technical checks
 
-- [ ] No missing CSS, JavaScript or image files.
-- [ ] No unexpected 404 or 403 responses.
+- [ ] No missing CSS files.
+- [ ] No missing JavaScript files.
+- [ ] No broken image paths.
+- [ ] No unexpected 404 or 403 errors.
 - [ ] No uncaught JavaScript errors.
-- [ ] Internal links use correct relative paths.
-- [ ] Production HTTPS works.
+- [ ] Relative paths work across pages.
+- [ ] HTTPS works on the production domain.
 - [ ] SEO metadata is appropriate.
-- [ ] Privacy information reflects actual processing.
+- [ ] Privacy information reflects actual practices.
 - [ ] Deployment does not overwrite unrelated production content.
 
 ## 17. Current Project Status
 
-The website is under active development.
+**Status: Under active development**
 
-The intended direction is a professional, responsive custom website that explains AVERRA's UK–India staffing and outsourcing model and supports enquiries from prospective clients and candidates.
+The current project is a custom HTML, CSS and JavaScript website for AVERRA Staffing Solutions Ltd.
 
-The following must be verified against the current project before being considered complete:
+The supplied frontend structure includes:
 
-- Actual page inventory
-- Final navigation and asset paths
+- Company and service pages
+- Shared `style.css`
+- Shared `script.js`
+- An `images` directory
+- JavaScript files listed for image handling, jobs and applications
+
+The following items should be verified in the actual code and production environment before being marked complete:
+
+- Final page inventory and navigation
+- Script locations and references
 - Image catalogue compatibility
-- Form submission functionality
+- Mobile and desktop behavior
+- Enquiry form delivery
+- Candidate application processing
+- Job listing behavior
 - Production deployment configuration
 - SEO and structured data
 - Privacy and security implementation
-- Future CRM integration
+- CRM integration
+
+Update this README as the implementation and deployment change.
 
 ## 18. Company Contact
 
@@ -536,64 +599,4 @@ Email: info@averrastaffing.co.uk
 
 ---
 
-*This README documents the intended project structure and functionality. It should be updated as the website, deployment configuration and business services change.*
-
-
-
-
-
-C:\USERS\SANDRA STASAITYTE\WORKPLACE\AVERRA_WEBSITE_V1\FRONTEND
-│   .gitignore
-│   about.html
-│   careers.html
-│   faq.html
-│   how-it-works.html
-│   index.html
-│   industries.html
-│   jobs.html
-│   lets-talk.html
-│   pricing.html
-│   privacy.html
-│   read.me
-│   script.js
-│   services.html
-│   style.css
-│
-└───images
-        applications.js
-        image1.jpg
-        image10.png
-        image11.png
-        image12.jpg
-        image13.jpg
-        image14.jpg
-        image15.jpg
-        image16.png
-        image17.jpg
-        image18.jpg
-        image19.jpg
-        image2.jpg
-        image20.jpeg
-        image21.jpg
-        image22.png
-        image23.png
-        image24.png
-        image25.jpg
-        image26.jpg
-        image27.png
-        image28.jpg
-        image29.jpg
-        image3.jpg
-        image30.jpg
-        image31.png
-        image32.jpg
-        image33.jpg
-        image4.jpg
-        image5.jpg
-        image6.jpg
-        image7.jpg
-        image8.png
-        image9.png
-        images.js
-        jobs.js
-
+*This README documents the supplied project structure and intended functionality. Maintain it as the website, deployment configuration and business services evolve.*
