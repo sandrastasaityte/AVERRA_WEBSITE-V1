@@ -51,7 +51,7 @@
             "@type": "Organization",
             "name": "AVERRA Staffing Solutions Ltd",
             "url": "https://averrastaffing.co.uk/",
-            "email": "info@averrastaffing.co.uk"
+            "email": "enquiries@averrastaffing.co.uk"
         }
     }
     </script>
@@ -1310,6 +1310,35 @@
                 transition-duration: .01ms !important;
             }
         }
+        /* LET'S TALK NAVIGATION BUTTON */
+    }
+
+.main-navigation .nav-link-contact,
+.main-navigation .nav-cta,
+.main-nav .nav-link-contact,
+.main-nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 18px;
+
+    color: var(--white) !important;
+    background: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: 7px;
+
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.main-navigation .nav-link-contact:hover,
+.main-navigation .nav-cta:hover,
+.main-nav .nav-link-contact:hover,
+.main-nav .nav-cta:hover {
+    color: var(--blue) !important;
+    background: var(--navy);
+    border-color: var(--navy);
+}
     </style>
 </head>
 
@@ -1335,7 +1364,7 @@
             <a href="careers.html" class="nav-link">Careers</a>
             <a href="jobs.html" class="nav-link">Jobs</a>
 
-            <a href="lets-talk.html" class="nav-link">Let's Talk</a>
+            <a href="lets-talk.html" class="nav-link-contact">Let's Talk</a>
         </nav>
 
         <a href="lets-talk.html" class="header-button">
@@ -1966,15 +1995,15 @@
 
                     <p>
                         <strong>Email:</strong>
-                        <a href="mailto:info@averrastaffing.co.uk">
-                            info@averrastaffing.co.uk
+                        <a href="mailto:enquiries@averrastaffing.co.uk">
+                            enquiries@averrastaffing.co.uk
                         </a>
                     </p>
 
                     <p>
                         <strong>Website:</strong>
                         <a href="https://averrastaffing.co.uk/">
-                            averrastaffing.co.uk
+                            https://averrastaffing.co.uk
                         </a>
                     </p>
 
