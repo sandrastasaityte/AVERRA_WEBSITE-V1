@@ -11,6 +11,58 @@
     <link rel="stylesheet" href="css/admin.css">
 
     <style>
+        .admin-navigation {
+            background: #0b1f33;
+            padding: 0 24px;
+        }
+
+        .admin-navigation-inner {
+            max-width: 1400px;
+            min-height: 64px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .admin-brand {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .admin-tabs a {
+            display: inline-block;
+            padding: 12px 15px;
+            color: #dbeafe;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 5px;
+            transition: background .2s ease;
+        }
+
+        .admin-tabs a:hover {
+            background: #1d5f91;
+            color: #fff;
+        }
+
+        .admin-tabs a.active {
+            background: #1d5f91;
+            color: #fff;
+            font-weight: 700;
+        }
+
         .applications-page {
             max-width: 1400px;
             margin: 0 auto;
@@ -280,6 +332,26 @@
         }
 
         @media (max-width: 650px) {
+            .admin-navigation {
+                padding: 10px 15px;
+            }
+
+            .admin-navigation-inner {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .admin-tabs {
+                width: 100%;
+                gap: 2px;
+            }
+
+            .admin-tabs a {
+                padding: 10px;
+                font-size: 13px;
+            }
+
             .applications-page {
                 padding: 15px;
             }
@@ -300,6 +372,25 @@
 </head>
 
 <body>
+
+<nav class="admin-navigation" aria-label="Administrator navigation">
+    <div class="admin-navigation-inner">
+
+        <a href="dashboard.html" class="admin-brand">
+            AVERRA ADMIN
+        </a>
+
+        <div class="admin-tabs">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="jobs.html">Jobs</a>
+            <a href="enquiries.html">Enquiries</a>
+            <a href="applications.html"
+               class="active"
+               aria-current="page">Applications</a>
+        </div>
+
+    </div>
+</nav>
 
 <main class="applications-page">
 
@@ -382,9 +473,6 @@
     </div>
 
 </main>
-
-
-<!-- Application details modal -->
 
 <div
     class="application-modal"
@@ -496,9 +584,7 @@
 
 </div>
 
-
 <!-- Authentication must load before applications.js -->
-
 <script src="js/auth.js"></script>
 <script src="js/applications.js"></script>
 
