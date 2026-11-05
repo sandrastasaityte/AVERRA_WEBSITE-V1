@@ -13,7 +13,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.database.connection import get_db
+# Correct database import: database is alongside app, not inside app.
+from database.connection import get_db
+
 from app.models.enquiry import Enquiry
 from app.schemas.enquiry import EnquiryCreate, EnquiryResponse
 
@@ -55,7 +57,6 @@ def create_enquiry(
     except SQLAlchemyError:
         db.rollback()
 
-        # Keep database details in server logs, not in the public response.
         logger.exception(
             "Database error while saving a customer enquiry."
         )
@@ -68,7 +69,6 @@ def create_enquiry(
     except Exception:
         db.rollback()
 
-        # Catch unexpected failures without exposing internal details.
         logger.exception(
             "Unexpected error while saving a customer enquiry."
         )

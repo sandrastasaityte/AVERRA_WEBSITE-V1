@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/routes/health.py
-Version: 2.0.0
+Version: 2.0.1
 
 API health-check endpoints.
 Provides basic liveness and database readiness checks.
@@ -17,7 +17,8 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.database.connection import get_db
+# Corrected database import.
+from database.connection import get_db
 
 
 logger = logging.getLogger(__name__)
