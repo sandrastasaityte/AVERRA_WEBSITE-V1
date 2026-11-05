@@ -393,21 +393,52 @@
 </nav>
 
 <main class="applications-page">
+ <header class="admin-header">
+    <div>
+      <p class="brand">
+        AVERRA <span>ADMIN</span>
+      </p>
 
-    <header class="page-heading">
-        <div>
-            <h1>Job Applications</h1>
-            <p>Manage candidates and review submitted applications.</p>
-        </div>
+      <p class="header-subtitle">
+        Staffing Solutions Ltd · Administration
+      </p>
+    </div>
 
-        <button
-            class="secondary-button"
-            id="refresh-applications"
-            type="button">
-            Refresh
-        </button>
-    </header>
+    <nav class="admin-nav" aria-label="Administrator navigation">
+      <a href="dashboard.html" aria-current="page">
+        Dashboard
+      </a>
 
+      <a href="jobs.html">
+        Jobs
+      </a>
+
+      <a href="applications.html">
+        Applications
+      </a>
+
+      <a href="enquiries.html">
+        Enquiries
+      </a>
+
+      <a
+        class="button button-secondary"
+        href="https://averrastaffing.co.uk/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View website
+      </a>
+
+      <button
+        type="button"
+        class="button button-secondary"
+        id="logout-button"
+      >
+        Log out
+      </button>
+    </nav>
+  </header>
     <div
         id="applications-error"
         class="alert"

@@ -13,35 +13,52 @@
 </head>
 
 <body>
-    <header class="admin-header">
-        <div class="admin-container admin-header-inner">
+   <header class="admin-header">
+    <div>
+      <p class="brand">
+        AVERRA <span>ADMIN</span>
+      </p>
 
-            <a class="admin-brand"
-               href="dashboard.html"
-               aria-label="AVERRA Admin Dashboard">
+      <p class="header-subtitle">
+        Staffing Solutions Ltd · Administration
+      </p>
+    </div>
 
-                <span class="admin-brand-name">AVERRA</span>
-                <span class="admin-brand-subtitle">
-                    STAFFING SOLUTIONS LTD
-                </span>
-            </a>
+    <nav class="admin-nav" aria-label="Administrator navigation">
+      <a href="dashboard.html" aria-current="page">
+        Dashboard
+      </a>
 
-            <nav class="admin-nav" aria-label="Administrator navigation">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="jobs.html">Jobs</a>
-                <a href="enquiries.html">Enquiries</a>
+      <a href="jobs.html">
+        Jobs
+      </a>
 
-                <button
-                    type="button"
-                    id="logout-button"
-                    class="btn btn-secondary"
-                    data-admin-logout>
-                    Log out
-                </button>
-            </nav>
+      <a href="applications.html">
+        Applications
+      </a>
 
-        </div>
-    </header>
+      <a href="enquiries.html">
+        Enquiries
+      </a>
+
+      <a
+        class="button button-secondary"
+        href="https://averrastaffing.co.uk/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View website
+      </a>
+
+      <button
+        type="button"
+        class="button button-secondary"
+        id="logout-button"
+      >
+        Log out
+      </button>
+    </nav>
+  </header>
 
     <main class="admin-container admin-main">
 
