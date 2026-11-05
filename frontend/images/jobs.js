@@ -1,33 +1,35 @@
-
 "use strict";
 
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    JOBS PAGE MANAGEMENT
    File: frontend/images/jobs.js
-   Version: 5.4.0
+   Version: 5.5.0
+
+   Compatible with the supplied jobs.html.
 
    FEATURES
-   - Loads vacancies from the AVERRA Render API
-   - Supports common and nested API response formats
-   - Displays published, non-expired vacancies
-   - Hides vacancies with invalid supplied closing dates
-   - Safely renders vacancy information as text
-   - Supports descriptions returned as arrays
-   - Supports vacancy search and category filters
-   - Selects the chosen vacancy in the application form
-   - Supports retrying failed requests
-   - Prevents duplicate event handlers
-   - Prevents overlapping API requests
-   - Preserves common existing page selectors
-   - Leaves application submission to applications.js
-   - Does not override shared mobile navigation
+   - Loads vacancies from the AVERRA API
+   - Supports common API response formats
+   - Displays published and non-expired vacancies
+   - Populates the application vacancy dropdown
+   - Supports general applications
+   - Supports vacancy search
+   - Supports category filtering
+   - Category matching supports slugs and category names
+   - Reset button clears search and category filters
+   - Apply buttons select the correct vacancy
+   - Visible loading, success, empty and error messages
+   - Safe DOM rendering using textContent
+   - Retry support
+   - Does not override application submission
+   - Does not override mobile navigation
    ============================================================ */
 
 (function (window, document) {
     "use strict";
 
-    const VERSION = "5.4.0";
+    const VERSION = "5.5.0";
 
     if (
         window.AVERRAJobs &&
@@ -45,7 +47,6 @@
         requestTimeout: 20000,
         jobsLimit: 100,
 
-        // Updated AVERRA contact email
         contactEmail: "enquiries@averrastaffing.co.uk"
     });
 
@@ -85,6 +86,10 @@
             "#retry-jobs",
             "#jobs-retry",
             "[data-retry-jobs]"
+        ],
+
+        resetButtons: [
+            "#reset-jobs"
         ],
 
         applicationForms: [
@@ -291,6 +296,136 @@
     }
 
     /* --------------------------------------------------------
+       CATEGORY NORMALISATION
+       -------------------------------------------------------- */
+
+    function normaliseCategory(value) {
+        return normaliseText(value)
+            .toLowerCase()
+            .replace(/&/g, "and")
+            .replace(/[^a-z0-9]+/g, "");
+    }
+
+    function getCategoryAliases(value) {
+        const category = normaliseCategory(value);
+
+        const aliases = {
+            finance: [
+                "finance",
+                "accounting",
+                "financeaccounting"
+            ],
+
+            technology: [
+                "technology",
+                "it",
+                "software",
+                "softwaredevelopment",
+                "itsoftwaredevelopment"
+            ],
+
+            architecture: [
+                "architecture",
+                "design",
+                "architecturedesign"
+            ],
+
+            engineering: [
+                "engineering",
+                "technical",
+                "engineeringtechnical"
+            ],
+
+            administration: [
+                "administration",
+                "dataentry",
+                "administrationdataentry"
+            ],
+
+            customerservice: [
+                "customerservice",
+                "support",
+                "customerservicesupport"
+            ],
+
+            sales: [
+                "sales",
+                "businessdevelopment",
+                "salesbusinessdevelopment"
+            ],
+
+            marketing: [
+                "marketing",
+                "digitalmarketing"
+            ],
+
+            humanresources: [
+                "humanresources",
+                "recruitment",
+                "humanresourcesrecruitment"
+            ],
+
+            operations: [
+                "operations",
+                "businessoperations"
+            ],
+
+            projectmanagement: [
+                "projectmanagement"
+            ],
+
+            legal: [
+                "legal",
+                "compliance",
+                "legalcompliancesupport"
+            ],
+
+            procurement: [
+                "procurement",
+                "supplychain",
+                "procurementsupplychain"
+            ],
+
+            research: [
+                "research",
+                "dataanalysis",
+                "researchdataanalysis"
+            ],
+
+            healthcare: [
+                "healthcare",
+                "healthcareadministration"
+            ],
+
+            other: [
+                "other",
+                "otherprofessionalroles"
+            ]
+        };
+
+        for (const key of Object.keys(aliases)) {
+            if (aliases[key].includes(category)) {
+                return aliases[key];
+            }
+        }
+
+        return [category];
+    }
+
+    function categoriesMatch(jobCategory, selectedCategory) {
+        if (!selectedCategory) {
+            return true;
+        }
+
+        const jobAliases = getCategoryAliases(jobCategory);
+        const selectedAliases = getCategoryAliases(selectedCategory);
+
+        return jobAliases.some(function (alias) {
+            return selectedAliases.includes(alias);
+        });
+    }
+
+    /* --------------------------------------------------------
        DATE HANDLING
        -------------------------------------------------------- */
 
@@ -336,16 +471,6 @@
         return parsed;
     }
 
-    function dateKey(date) {
-        return (
-            date.getFullYear() +
-            "-" +
-            String(date.getMonth() + 1).padStart(2, "0") +
-            "-" +
-            String(date.getDate()).padStart(2, "0")
-        );
-    }
-
     function isExpired(job) {
         const closingDateText = getClosingDate(job);
 
@@ -364,7 +489,7 @@
 
         closingDate.setHours(0, 0, 0, 0);
 
-        return dateKey(closingDate) < dateKey(today);
+        return closingDate.getTime() < today.getTime();
     }
 
     function formatDate(value) {
@@ -501,11 +626,9 @@
         try {
             const response = await window.fetch(makeUrl(path), {
                 method: "GET",
-
                 headers: {
                     Accept: "application/json"
                 },
-
                 signal: controller.signal,
                 credentials: "omit"
             });
@@ -579,19 +702,22 @@
         }
 
         statusElement.textContent = message;
+        statusElement.dataset.statusType = type || "info";
 
-        statusElement.dataset.statusType =
-            type || "info";
-
-        statusElement.setAttribute(
-            "role",
-            "status"
+        statusElement.classList.remove(
+            "info",
+            "success",
+            "error"
         );
 
-        statusElement.setAttribute(
-            "aria-live",
-            "polite"
-        );
+        if (["info", "success", "error"].includes(type)) {
+            statusElement.classList.add(type);
+        }
+
+        statusElement.hidden = !message;
+
+        statusElement.setAttribute("role", "status");
+        statusElement.setAttribute("aria-live", "polite");
     }
 
     function updateJobCount(count) {
@@ -620,16 +746,95 @@
         containers.forEach(function (container) {
             container.replaceChildren();
 
-            container.appendChild(
-                createElement(
-                    "p",
-                    "jobs-error",
-                    message
-                )
+            const errorElement = createElement(
+                "p",
+                "jobs-empty",
+                message
             );
+
+            container.appendChild(errorElement);
+            container.setAttribute("aria-busy", "false");
         });
 
         updateJobCount(0);
+    }
+
+    /* --------------------------------------------------------
+       APPLICATION DROPDOWN
+       -------------------------------------------------------- */
+
+    function populateJobSelects() {
+        const selects = queryAllUnique(
+            SELECTORS.jobSelects
+        );
+
+        const publishedJobs = state.jobs.filter(isPublished);
+
+        selects.forEach(function (select) {
+            if (select.tagName !== "SELECT") {
+                return;
+            }
+
+            const previousValue = select.value;
+
+            select.replaceChildren();
+
+            const placeholder = createElement(
+                "option",
+                "",
+                "Select a vacancy"
+            );
+
+            placeholder.value = "";
+            select.appendChild(placeholder);
+
+            const generalOption = createElement(
+                "option",
+                "",
+                "General Application"
+            );
+
+            generalOption.value = "general";
+            select.appendChild(generalOption);
+
+            publishedJobs.forEach(function (job) {
+                const jobId = getJobId(job);
+                const jobTitle = getJobTitle(job);
+
+                if (!jobId) {
+                    return;
+                }
+
+                const option = createElement(
+                    "option",
+                    "",
+                    jobTitle
+                );
+
+                option.value = jobId;
+                option.dataset.jobTitle = jobTitle;
+
+                select.appendChild(option);
+            });
+
+            const hasPreviousValue = Array.from(
+                select.options
+            ).some(function (option) {
+                return option.value === previousValue;
+            });
+
+            if (hasPreviousValue) {
+                select.value = previousValue;
+            } else {
+                select.value = "";
+            }
+
+            select.dispatchEvent(
+                new window.Event("change", {
+                    bubbles: true
+                })
+            );
+        });
     }
 
     /* --------------------------------------------------------
@@ -646,13 +851,9 @@
             "job-meta-item"
         );
 
-        const strong = createElement(
-            "strong",
-            "",
-            label + ": "
+        item.appendChild(
+            createElement("strong", "", label + ": ")
         );
-
-        item.appendChild(strong);
 
         item.appendChild(
             document.createTextNode(value)
@@ -670,6 +871,7 @@
         const salary = getJobSalary(job);
         const department = getJobDepartment(job);
         const closingDate = getClosingDate(job);
+        const category = getJobCategory(job);
 
         const card = createElement(
             "article",
@@ -678,6 +880,16 @@
 
         if (jobId) {
             card.dataset.jobId = jobId;
+        }
+
+        if (category) {
+            card.appendChild(
+                createElement(
+                    "span",
+                    "job-category",
+                    category
+                )
+            );
         }
 
         card.appendChild(
@@ -717,17 +929,8 @@
             card.appendChild(metadata);
         }
 
-        appendMetadata(
-            card,
-            "Department",
-            department
-        );
-
-        appendMetadata(
-            card,
-            "Salary",
-            salary
-        );
+        appendMetadata(card, "Department", department);
+        appendMetadata(card, "Salary", salary);
 
         if (description) {
             card.appendChild(
@@ -757,12 +960,11 @@
 
         const applyButton = createElement(
             "button",
-            "job-apply-button",
+            "jobs-button jobs-button-gold",
             "Apply for this role"
         );
 
         applyButton.type = "button";
-
         applyButton.dataset.jobApply = "true";
 
         applyButton.setAttribute(
@@ -770,21 +972,14 @@
             "Apply for " + title
         );
 
-        if (jobId) {
-            applyButton.dataset.jobId = jobId;
-        }
-
+        applyButton.dataset.jobId = jobId;
         applyButton.dataset.jobTitle = title;
 
-        applyButton.addEventListener(
-            "click",
-            function () {
-                selectJobForApplication(job);
-            }
-        );
+        applyButton.addEventListener("click", function () {
+            selectJobForApplication(job);
+        });
 
         actions.appendChild(applyButton);
-
         card.appendChild(actions);
 
         return card;
@@ -808,7 +1003,7 @@
             : "";
 
         const selectedCategory = categoryFilter
-            ? categoryFilter.value.trim().toLowerCase()
+            ? categoryFilter.value.trim()
             : "";
 
         return state.jobs.filter(function (job) {
@@ -822,7 +1017,8 @@
                 getJobLocation(job),
                 getJobType(job),
                 getJobSalary(job),
-                getJobDepartment(job)
+                getJobDepartment(job),
+                getJobCategory(job)
             ]
                 .join(" ")
                 .toLowerCase();
@@ -834,13 +1030,14 @@
                 return false;
             }
 
-            if (selectedCategory) {
-                const category =
-                    getJobCategory(job).toLowerCase();
-
-                if (category !== selectedCategory) {
-                    return false;
-                }
+            if (
+                selectedCategory &&
+                !categoriesMatch(
+                    getJobCategory(job),
+                    selectedCategory
+                )
+            ) {
+                return false;
             }
 
             return true;
@@ -854,8 +1051,7 @@
 
         if (containers.length === 0) {
             console.warn(
-                "AVERRA Jobs: no jobs container found. " +
-                "Expected #jobs-grid or a supported alternative."
+                "AVERRA Jobs: no jobs container found."
             );
 
             return;
@@ -865,20 +1061,21 @@
 
         containers.forEach(function (container) {
             container.replaceChildren();
+            container.setAttribute("aria-busy", "false");
 
             if (filteredJobs.length === 0) {
                 const hasPublishedJobs =
                     state.jobs.some(isPublished);
 
+                const message = hasPublishedJobs
+                    ? "No vacancies match your search. Try another keyword or category."
+                    : "There are currently no vacancies available. Please check again soon.";
+
                 container.appendChild(
                     createElement(
                         "p",
                         "jobs-empty",
-                        hasPublishedJobs
-                            ? "No vacancies match your search. " +
-                              "Try another keyword or category."
-                            : "There are currently no vacancies available. " +
-                              "Please check again soon."
+                        message
                     )
                 );
 
@@ -902,7 +1099,7 @@
         if (filteredJobs.length === 0) {
             setStatus(
                 "No matching vacancies found.",
-                "empty"
+                "info"
             );
         } else {
             setStatus(
@@ -925,68 +1122,6 @@
         );
     }
 
-    function setSelectValue(
-        select,
-        jobId,
-        jobTitle
-    ) {
-        const options = Array.from(
-            select.options
-        );
-
-        let matchingOption = options.find(
-            function (option) {
-                return jobId &&
-                    option.value === jobId;
-            }
-        );
-
-        if (!matchingOption) {
-            matchingOption = options.find(
-                function (option) {
-                    return option.textContent.trim() ===
-                        jobTitle;
-                }
-            );
-        }
-
-        if (!matchingOption) {
-            matchingOption = options.find(
-                function (option) {
-                    return option.value.trim().toLowerCase() ===
-                        jobTitle.trim().toLowerCase();
-                }
-            );
-        }
-
-        if (!matchingOption && (jobId || jobTitle)) {
-            matchingOption =
-                document.createElement("option");
-
-            matchingOption.value =
-                jobId || jobTitle;
-
-            matchingOption.textContent =
-                jobTitle;
-
-            select.appendChild(matchingOption);
-        }
-
-        if (!matchingOption) {
-            return false;
-        }
-
-        select.value = matchingOption.value;
-
-        select.dispatchEvent(
-            new window.Event("change", {
-                bubbles: true
-            })
-        );
-
-        return true;
-    }
-
     function selectJobForApplication(job) {
         const form = getApplicationForm();
 
@@ -1005,25 +1140,32 @@
             return;
         }
 
-        let selectionMade = false;
-
         const selects = queryAllUnique(
-            SELECTORS.jobSelects,
-            form
+            SELECTORS.jobSelects
         );
+
+        let selectionMade = false;
 
         selects.forEach(function (select) {
             if (select.tagName !== "SELECT") {
                 return;
             }
 
-            if (
-                setSelectValue(
-                    select,
-                    jobId,
-                    jobTitle
-                )
-            ) {
+            const matchingOption = Array.from(
+                select.options
+            ).find(function (option) {
+                return option.value === jobId;
+            });
+
+            if (matchingOption) {
+                select.value = matchingOption.value;
+
+                select.dispatchEvent(
+                    new window.Event("change", {
+                        bubbles: true
+                    })
+                );
+
                 selectionMade = true;
             }
         });
@@ -1032,11 +1174,8 @@
             'input[name="job_id"]'
         );
 
-        if (
-            hiddenJobId &&
-            hiddenJobId.type !== "file"
-        ) {
-            hiddenJobId.value = jobId || "";
+        if (hiddenJobId && hiddenJobId.type !== "file") {
+            hiddenJobId.value = jobId;
 
             hiddenJobId.dispatchEvent(
                 new window.Event("change", {
@@ -1051,10 +1190,7 @@
             'input[name="job_title"]'
         );
 
-        if (
-            hiddenJobTitle &&
-            hiddenJobTitle.type !== "file"
-        ) {
+        if (hiddenJobTitle && hiddenJobTitle.type !== "file") {
             hiddenJobTitle.value = jobTitle;
 
             hiddenJobTitle.dispatchEvent(
@@ -1066,7 +1202,11 @@
             selectionMade = true;
         }
 
-        form.scrollIntoView({
+        const applicationSection = document.getElementById(
+            "submit-cv"
+        );
+
+        (applicationSection || form).scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
@@ -1076,13 +1216,13 @@
                 "Selected vacancy: " +
                 jobTitle +
                 ". Complete the application form below.",
-                "info"
+                "success"
             );
         } else {
             setStatus(
                 "You selected " +
                 jobTitle +
-                ". Please select the same vacancy in the application form.",
+                ". Please select the vacancy in the application form.",
                 "info"
             );
         }
@@ -1102,6 +1242,45 @@
     }
 
     /* --------------------------------------------------------
+       RESET FILTERS
+       -------------------------------------------------------- */
+
+    function resetFilters() {
+        queryAllUnique(
+            SELECTORS.searchInputs
+        ).forEach(function (input) {
+            input.value = "";
+        });
+
+        queryAllUnique(
+            SELECTORS.categoryFilters
+        ).forEach(function (select) {
+            select.value = "";
+        });
+
+        if (state.loaded) {
+            renderJobs();
+        }
+    }
+
+    function setupResetButtons() {
+        queryAllUnique(
+            SELECTORS.resetButtons
+        ).forEach(function (button) {
+            if (button.dataset.averraJobsResetReady === "true") {
+                return;
+            }
+
+            button.dataset.averraJobsResetReady = "true";
+
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                resetFilters();
+            });
+        });
+    }
+
+    /* --------------------------------------------------------
        LOAD VACANCIES
        -------------------------------------------------------- */
 
@@ -1113,19 +1292,19 @@
         state.loading = true;
         state.error = null;
 
-        const requestNumber =
-            ++state.requestNumber;
+        const requestNumber = ++state.requestNumber;
 
-        setStatus(
-            "Loading current vacancies…",
-            "loading"
-        );
+        setStatus("Loading current vacancies…", "info");
 
-        const retryButtons = queryAllUnique(
+        queryAllUnique(
+            SELECTORS.jobsContainers
+        ).forEach(function (container) {
+            container.setAttribute("aria-busy", "true");
+        });
+
+        queryAllUnique(
             SELECTORS.retryButtons
-        );
-
-        retryButtons.forEach(function (button) {
+        ).forEach(function (button) {
             button.disabled = true;
         });
 
@@ -1136,10 +1315,7 @@
                 "&offset=0"
             );
 
-            if (
-                requestNumber !==
-                state.requestNumber
-            ) {
+            if (requestNumber !== state.requestNumber) {
                 return;
             }
 
@@ -1155,13 +1331,11 @@
             state.loaded = true;
             state.error = null;
 
+            populateJobSelects();
             renderJobs();
 
         } catch (error) {
-            if (
-                requestNumber !==
-                state.requestNumber
-            ) {
+            if (requestNumber !== state.requestNumber) {
                 return;
             }
 
@@ -1176,18 +1350,16 @@
             );
 
             showError(
-                "We couldn't load the vacancies right now. " +
-                "Please try again shortly."
+                "We couldn't load the vacancies right now. Please try again shortly."
             );
 
         } finally {
-            if (
-                requestNumber ===
-                state.requestNumber
-            ) {
+            if (requestNumber === state.requestNumber) {
                 state.loading = false;
 
-                retryButtons.forEach(function (button) {
+                queryAllUnique(
+                    SELECTORS.retryButtons
+                ).forEach(function (button) {
                     button.disabled = false;
                 });
             }
@@ -1199,91 +1371,61 @@
        -------------------------------------------------------- */
 
     function setupRetryButtons() {
-        const retryButtons = queryAllUnique(
+        queryAllUnique(
             SELECTORS.retryButtons
-        );
-
-        retryButtons.forEach(function (button) {
-            if (
-                button.dataset.averraJobsRetryReady ===
-                "true"
-            ) {
+        ).forEach(function (button) {
+            if (button.dataset.averraJobsRetryReady === "true") {
                 return;
             }
 
-            button.dataset.averraJobsRetryReady =
-                "true";
+            button.dataset.averraJobsRetryReady = "true";
 
-            button.addEventListener(
-                "click",
-                function (event) {
-                    event.preventDefault();
-                    loadJobs();
-                }
-            );
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
+                loadJobs();
+            });
         });
     }
 
     function setupFilters() {
-        const searchInputs = queryAllUnique(
+        queryAllUnique(
             SELECTORS.searchInputs
-        );
-
-        const categoryFilters = queryAllUnique(
-            SELECTORS.categoryFilters
-        );
-
-        searchInputs.forEach(function (input) {
-            if (
-                input.dataset.averraJobsFilterReady ===
-                "true"
-            ) {
+        ).forEach(function (input) {
+            if (input.dataset.averraJobsFilterReady === "true") {
                 return;
             }
 
-            input.dataset.averraJobsFilterReady =
-                "true";
+            input.dataset.averraJobsFilterReady = "true";
 
-            input.addEventListener(
-                "input",
-                function () {
-                    if (state.loaded) {
-                        renderJobs();
-                    }
+            input.addEventListener("input", function () {
+                if (state.loaded) {
+                    renderJobs();
                 }
-            );
+            });
         });
 
-        categoryFilters.forEach(function (select) {
-            if (
-                select.dataset.averraJobsFilterReady ===
-                "true"
-            ) {
+        queryAllUnique(
+            SELECTORS.categoryFilters
+        ).forEach(function (select) {
+            if (select.dataset.averraJobsFilterReady === "true") {
                 return;
             }
 
-            select.dataset.averraJobsFilterReady =
-                "true";
+            select.dataset.averraJobsFilterReady = "true";
 
-            select.addEventListener(
-                "change",
-                function () {
-                    if (state.loaded) {
-                        renderJobs();
-                    }
+            select.addEventListener("change", function () {
+                if (state.loaded) {
+                    renderJobs();
                 }
-            );
+            });
         });
     }
 
     function setupApplicationForms() {
-        const forms = queryAllUnique(
+        queryAllUnique(
             SELECTORS.applicationForms
-        );
-
-        forms.forEach(function (form) {
-            form.dataset.averraApplicationFormDetected =
-                "true";
+        ).forEach(function (form) {
+            form.dataset.averraApplicationFormDetected = "true";
         });
     }
 
@@ -1293,6 +1435,7 @@
 
     function initialise() {
         setupRetryButtons();
+        setupResetButtons();
         setupFilters();
         setupApplicationForms();
         loadJobs();
@@ -1316,14 +1459,13 @@
                 loading: state.loading,
                 loaded: state.loaded,
                 error: state.error,
-
-                count:
-                    state.jobs.filter(isPublished).length
+                count: state.jobs.filter(isPublished).length
             };
         },
 
-        selectJobForApplication:
-            selectJobForApplication
+        selectJobForApplication: selectJobForApplication,
+
+        resetFilters: resetFilters
     };
 
     if (document.readyState === "loading") {
