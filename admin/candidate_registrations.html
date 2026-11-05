@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1f33">
+    <meta name="color-scheme" content="light">
+
+    <title>Candidate Registrations | AVERRA Administrator</title>
+    <meta name="description" content="Manage AVERRA Careers candidate registrations.">
+
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin-header.css">
+
+    <style>
+        .registrations-page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 32px auto 56px;
+        }
+
+        .registrations-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .registrations-heading h1 {
+            margin: 0 0 8px;
+            color: #0b1f33;
+        }
+
+        .registrations-heading p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .registrations-panel {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 16px rgba(11, 31, 51, 0.04);
+        }
+
+        .registrations-toolbar {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) minmax(180px, 240px) auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .registrations-toolbar label,
+        .registration-detail-grid label {
+            display: block;
+            margin-bottom: 6px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .registrations-toolbar input,
+        .registrations-toolbar select,
+        .registration-status-select {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: #fff;
+            color: #0f172a;
+            font: inherit;
+        }
+
+        .registrations-toolbar input:focus,
+        .registrations-toolbar select:focus,
+        .registration-status-select:focus {
+            outline: 3px solid rgba(29, 95, 145, 0.16);
+            border-color: #1d5f91;
+        }
+
+        .registration-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 40px;
+            padding: 9px 15px;
+            border: 1px solid #1d5f91;
+            border-radius: 7px;
+            background: #1d5f91;
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .registration-button:hover {
+            background: #174c75;
+        }
+
+        .registration-button.secondary {
+            border-color: #cbd5e1;
+            background: #fff;
+            color: #0b1f33;
+        }
+
+        .registration-button.secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .registration-button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .registration-message {
+            display: none;
+            margin: 0 0 18px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .registration-message.visible {
+            display: block;
+        }
+
+        .registration-message.error {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .registration-message.success {
+            border: 1px solid #bbf7d0;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .registration-message.info {
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .registration-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .registration-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .registration-table th,
+        .registration-table td {
+            padding: 13px 11px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        .registration-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.035em;
+            text-transform: uppercase;
+        }
+
+        .registration-table td {
+            color: #334155;
+        }
+
+        .registration-name {
+            color: #0b1f33;
+            font-weight: 750;
+        }
+
+        .registration-subtext {
+            display: block;
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .registration-status-select {
+            min-width: 135px;
+            min-height: 36px;
+            padding: 6px 8px;
+            font-size: 13px;
+        }
+
+        .registration-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .registration-actions .registration-button {
+            min-height: 34px;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .registration-status-label {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 750;
+            text-transform: capitalize;
+        }
+
+        .registration-status-label.new {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .registration-status-label.reviewing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .registration-status-label.contacted {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .registration-status-label.shortlisted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .registration-status-label.rejected,
+        .registration-status-label.withdrawn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .registration-empty {
+            padding: 28px 12px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .registration-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .registration-pagination p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .registration-pagination-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .registration-detail {
+            display: none;
+        }
+
+        .registration-detail.visible {
+            display: block;
+        }
+
+        .registration-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .registration-detail-header h2 {
+            margin: 0 0 6px;
+            color: #0b1f33;
+        }
+
+        .registration-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px 24px;
+        }
+
+        .registration-detail-item {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .registration-detail-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .registration-detail-item p {
+            margin: 0;
+            color: #0f172a;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .registration-detail-divider {
+            grid-column: 1 / -1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .registration-detail-status {
+            display: flex;
+            align-items: end;
+            gap: 10px;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .registration-detail-status label {
+            flex: 1;
+        }
+
+        .registration-detail-status select {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            margin-top: 6px;
+        }
+
+        .registration-muted {
+            color: #64748b !important;
+        }
+
+        @media (max-width: 760px) {
+            .registrations-toolbar {
+                grid-template-columns: 1fr;
+            }
+
+            .registrations-heading,
+            .registration-detail-header {
+                flex-direction: column;
+            }
+
+            .registration-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .registration-detail-item.full-width,
+            .registration-detail-divider {
+                grid-column: auto;
+            }
+
+            .registration-detail-status {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .registration-detail-status select {
+                max-width: none;
+            }
+
+            .registration-pagination {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="admin-header-inner">
+            <a class="admin-brand" href="dashboard.html">
+                <strong>AVERRA</strong>
+                <span>Administrator</span>
+            </a>
+
+            <nav class="admin-navigation" aria-label="Administrator navigation">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="jobs.html">Jobs</a>
+                <a href="applications.html">Applications</a>
+                <a href="candidate-registrations.html" aria-current="page">
+                    Candidate registrations
+                </a>
+                <a href="enquiries.html">Enquiries</a>
+                <a href="https://averrastaffing.co.uk" target="_blank" rel="noopener">
+                    View website
+                </a>
+                <button type="button" id="registration-logout">Log out</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="registrations-page">
+        <div class="registrations-heading">
+            <div>
+                <h1>Candidate registrations</h1>
+                <p>
+                    Review and manage people who registered through the AVERRA Careers page.
+                    These records are separate from job applications.
+                </p>
+            </div>
+
+            <button type="button" class="registration-button secondary" id="refresh-registrations">
+                Refresh registrations
+            </button>
+        </div>
+
+        <div
+            id="registration-message"
+            class="registration-message"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+        <section class="registrations-panel" aria-label="Search candidate registrations">
+            <form id="registration-search-form" class="registrations-toolbar">
+                <div>
+                    <label for="registration-search">Search candidates</label>
+                    <input
+                        type="search"
+                        id="registration-search"
+                        name="search"
+                        placeholder="Name, email, career area or country"
+                        maxlength="200"
+                    >
+                </div>
+
+                <div>
+                    <label for="registration-status-filter">Filter by status</label>
+                    <select id="registration-status-filter" name="status">
+                        <option value="">All statuses</option>
+                        <option value="new">New</option>
+                        <option value="reviewing">Reviewing</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="withdrawn">Withdrawn</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button type="submit" class="registration-button">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="registrations-panel" aria-label="Candidate registration records">
+            <div class="registration-table-wrap">
+                <table class="registration-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Candidate</th>
+                            <th scope="col">Career area</th>
+                            <th scope="col">Experience</th>
+                            <th scope="col">Country</th>
+                            <th scope="col">Registered</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="registration-table-body">
+                        <tr>
+                            <td colspan="7" class="registration-empty">
+                                Loading candidate registrations...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="registration-pagination">
+                <p id="registration-page-info">Loading records...</p>
+
+                <div class="registration-pagination-actions">
+                    <button
+                        type="button"
+                        class="registration-button secondary"
+                        id="registration-previous"
+                        disabled
+                    >
+                        Previous
+                    </button>
+
+                    <button
+                        type="button"
+                        class="registration-button secondary"
+                        id="registration-next"
+                        disabled
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="registrations-panel registration-detail"
+            id="registration-detail"
+            aria-labelledby="registration-detail-title"
+        >
+            <div class="registration-detail-header">
+                <div>
+                    <h2 id="registration-detail-title">Candidate details</h2>
+                    <p id="registration-detail-reference" class="registration-muted"></p>
+                </div>
+
+                <button
+                    type="button"
+                    class="registration-button secondary"
+                    id="close-registration-detail"
+                >
+                    Close details
+                </button>
+            </div>
+
+            <div id="registration-detail-content" class="registration-detail-grid"></div>
+
+            <div class="registration-detail-status">
+                <label for="registration-detail-status-select">
+                    Registration status
+                    <select
+                        id="registration-detail-status-select"
+                        class="registration-status-select"
+                    >
+                        <option value="new">New</option>
+                        <option value="reviewing">Reviewing</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="withdrawn">Withdrawn</option>
+                    </select>
+                </label>
+
+                <button
+                    type="button"
+                    class="registration-button"
+                    id="save-registration-detail-status"
+                >
+                    Save status
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/auth.js" defer></script>
+    <script src="js/candidate-registrations.js" defer></script>
+</body>
+</html>

@@ -26,28 +26,17 @@
       <p class="brand">
         AVERRA <span>ADMIN</span>
       </p>
-
       <p class="header-subtitle">
         Staffing Solutions Ltd · Administration
       </p>
     </div>
 
     <nav class="admin-nav" aria-label="Administrator navigation">
-      <a href="dashboard.html" aria-current="page">
-        Dashboard
-      </a>
-
-      <a href="jobs.html">
-        Jobs
-      </a>
-
-      <a href="applications.html">
-        Applications
-      </a>
-
-      <a href="enquiries.html">
-        Enquiries
-      </a>
+      <a href="dashboard.html" aria-current="page">Dashboard</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="applications.html">Applications</a>
+      <a href="candidate-registrations.html">Candidate Registrations</a>
+      <a href="enquiries.html">Enquiries</a>
 
       <a
         class="button button-secondary"
@@ -69,17 +58,11 @@
   </header>
 
   <main class="admin-main">
-    <section
-      class="page-heading"
-      aria-labelledby="dashboard-title"
-    >
+
+    <section class="page-heading" aria-labelledby="dashboard-title">
       <div>
         <p class="eyebrow">STAFFING SOLUTIONS</p>
-
-        <h1 id="dashboard-title">
-          Dashboard
-        </h1>
-
+        <h1 id="dashboard-title">Dashboard</h1>
         <p class="muted">
           Manage your AVERRA recruitment activity.
         </p>
@@ -94,10 +77,7 @@
           Refresh
         </button>
 
-        <a
-          class="btn btn-primary"
-          href="job-form.html"
-        >
+        <a class="btn btn-primary" href="job-form.html">
           + Add vacancy
         </a>
       </div>
@@ -108,86 +88,84 @@
       class="message"
       role="status"
       aria-live="polite"
-    >
-      Loading dashboard…
-    </p>
+      hidden
+    ></p>
 
-    <section
-      class="cards"
-      aria-label="Recruitment statistics"
-    >
+    <section class="cards" aria-label="Recruitment statistics">
+
       <article class="card">
         <h2>Total vacancies</h2>
-
-        <p
-          class="metric"
-          id="total-jobs"
-          aria-live="polite"
-        >
-          —
-        </p>
+        <p class="metric" id="total-jobs" aria-live="polite">—</p>
       </article>
 
       <article class="card">
         <h2>Published vacancies</h2>
-
-        <p
-          class="metric"
-          id="published-jobs"
-          aria-live="polite"
-        >
-          —
-        </p>
+        <p class="metric" id="published-jobs" aria-live="polite">—</p>
       </article>
 
       <article class="card">
         <h2>Draft vacancies</h2>
-
-        <p
-          class="metric"
-          id="draft-jobs"
-          aria-live="polite"
-        >
-          —
-        </p>
+        <p class="metric" id="draft-jobs" aria-live="polite">—</p>
       </article>
 
       <article class="card">
         <h2>Total applications</h2>
+        <p class="metric" id="total-applications" aria-live="polite">—</p>
+        <a href="applications.html">Manage applications →</a>
+      </article>
 
+      <article class="card">
+        <h2>Candidate registrations</h2>
         <p
           class="metric"
-          id="total-applications"
+          id="total-candidate-registrations"
           aria-live="polite"
-        >
-          —
-        </p>
-
-        <a href="applications.html">
-          Manage applications →
+        >—</p>
+        <a href="candidate-registrations.html">
+          View registered candidates →
         </a>
       </article>
+
     </section>
 
-    <section
-      class="panel"
-      aria-labelledby="applications-overview-title"
-    >
+    <section class="panel" aria-labelledby="candidate-registrations-title">
       <div class="page-heading">
         <div>
-          <h2 id="applications-overview-title">
-            Candidate applications
+          <h2 id="candidate-registrations-title">
+            Candidate registrations
           </h2>
-
           <p class="muted">
-            Review candidates who have applied for your vacancies.
+            Review people who registered their interest in working with AVERRA.
           </p>
         </div>
 
         <a
           class="btn btn-primary"
-          href="applications.html"
+          href="candidate-registrations.html"
         >
+          Manage registrations →
+        </a>
+      </div>
+
+      <p class="muted">
+        Candidate registrations are separate from job applications.
+        Open this section to review contact details, professional
+        experience, skills and registration status.
+      </p>
+    </section>
+
+    <section class="panel" aria-labelledby="applications-overview-title">
+      <div class="page-heading">
+        <div>
+          <h2 id="applications-overview-title">
+            Candidate applications
+          </h2>
+          <p class="muted">
+            Review candidates who have applied for your vacancies.
+          </p>
+        </div>
+
+        <a class="btn btn-primary" href="applications.html">
           View applications →
         </a>
       </div>
@@ -198,24 +176,14 @@
       </p>
     </section>
 
-    <section
-      class="panel"
-      aria-labelledby="recent-vacancies-title"
-    >
+    <section class="panel" aria-labelledby="recent-vacancies-title">
       <div class="page-heading">
         <div>
-          <h2 id="recent-vacancies-title">
-            Recent vacancies
-          </h2>
-
-          <p class="muted">
-            Your latest job records.
-          </p>
+          <h2 id="recent-vacancies-title">Recent vacancies</h2>
+          <p class="muted">Your latest job records.</p>
         </div>
 
-        <a href="jobs.html">
-          Manage all jobs →
-        </a>
+        <a href="jobs.html">Manage all jobs →</a>
       </div>
 
       <div class="table-wrap">
@@ -231,23 +199,31 @@
 
           <tbody id="recent-jobs">
             <tr>
-              <td colspan="4">
-                Loading vacancies…
-              </td>
+              <td colspan="4">Loading vacancies…</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <p
-        id="recent-jobs-empty"
-        class="muted"
-        hidden
-      >
+      <p id="recent-jobs-empty" class="muted" hidden>
         No vacancies are available yet.
         Select Add vacancy to create your first job.
       </p>
     </section>
+
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const logoutButton = document.getElementById("logout-button");
+
+      if (logoutButton && window.AVERRA_ADMIN) {
+        logoutButton.addEventListener("click", function () {
+          window.AVERRA_ADMIN.logout();
+        });
+      }
+    });
+  </script>
+
 </body>
 </html>
