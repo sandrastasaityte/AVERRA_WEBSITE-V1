@@ -2,7 +2,7 @@
 /**
  * AVERRA STAFFING SOLUTIONS LTD
  * File: admin/js/dashboard.js
- * Version: 3.1.0
+ * Version: 3.2.0
  *
  * Requires:
  *   admin/js/auth.js
@@ -10,6 +10,11 @@
  * Backend:
  *   GET /api/admin/dashboard/stats
  *   GET /api/admin/jobs
+ *
+ * New in 3.2.0:
+ *   - Candidate registration statistics.
+ *   - Supports total_candidate_registrations.
+ *   - Preserves existing dashboard functionality.
  */
 
 (function () {
@@ -36,6 +41,11 @@
         publishedJobs: document.getElementById("published-jobs"),
         draftJobs: document.getElementById("draft-jobs"),
         totalApplications: document.getElementById("total-applications"),
+
+        // Candidate registrations
+        totalCandidateRegistrations: document.getElementById(
+            "total-candidate-registrations"
+        ),
 
         recentJobs: document.getElementById("recent-jobs"),
         recentJobsEmpty: document.getElementById("recent-jobs-empty")
@@ -119,15 +129,6 @@
             .toLowerCase();
     }
 
-    function escapeHTML(value) {
-        return String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
     function showRecentJobsMessage(message) {
         if (!elements.recentJobs) return;
 
@@ -185,7 +186,6 @@
             const statusBadge = document.createElement("span");
             statusBadge.className = "job-status";
 
-            // Only use known statuses as CSS class names.
             const allowedStatuses = [
                 "draft",
                 "published",
@@ -266,6 +266,12 @@
         setText(
             elements.totalApplications,
             formatNumber(stats.total_applications)
+        );
+
+        // Candidate registration count
+        setText(
+            elements.totalCandidateRegistrations,
+            formatNumber(stats.total_candidate_registrations)
         );
     }
 
