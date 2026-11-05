@@ -1,3 +1,4 @@
+
 """
 AVERRA STAFFING SOLUTIONS LTD
 
@@ -9,7 +10,6 @@ from .enquiry import Enquiry
 from .jobs import Job
 from .applications import Application
 from .candidate_registrations import CandidateRegistration
-
 
 __all__ = [
     "Base",
