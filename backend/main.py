@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.6.0
+Version: 4.7.0
 
 FastAPI application for the AVERRA website and administrator system.
 
@@ -17,7 +17,13 @@ Preserves:
 - Application management
 - Authenticated CV downloads
 
-Improvements:
+New in 4.7.0:
+- Careers candidate registration API router
+- Candidate registration database model integration
+- Candidate registration dashboard statistics
+- Separate candidate registrations from job applications
+
+Other improvements:
 - Safe migration for applications.updated_at
 - Existing application records and CV files preserved
 - CV BLOBs deferred in application list/detail queries
@@ -85,7 +91,7 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = "4.6.0"
+APP_VERSION = "4.7.0"
 
 APP_ENV = os.getenv(
     "APP_ENV",
@@ -163,7 +169,13 @@ from database.connection import (
     get_db,
 )
 
-from app.models import Base, Enquiry, Job, Application
+from app.models import (
+    Base,
+    Enquiry,
+    Job,
+    Application,
+    CandidateRegistration,
+)
 
 from app.schemas.enquiry import (
     EnquiryCreate,
@@ -175,6 +187,10 @@ from app.schemas.jobs import (
     JobUpdate,
     JobResponse,
     JobAdminResponse,
+)
+
+from app.routes.candidate_registrations import (
+    router as candidate_registrations_router,
 )
 
 
@@ -443,6 +459,9 @@ def migrate_existing_database() -> None:
 
     Existing tables are not dropped or rebuilt.
     Existing application records and CV BLOBs are preserved.
+
+    Candidate registration table creation is handled by
+    SQLAlchemy metadata through create_tables().
     """
 
     if engine.dialect.name != "sqlite":
@@ -534,8 +553,6 @@ def migrate_existing_database() -> None:
                 )
 
             # Preserve historical timestamps.
-            # Existing applications receive their original
-            # created_at value as their initial updated_at.
             connection.execute(
                 text(
                     """
@@ -573,6 +590,8 @@ def migrate_existing_database() -> None:
 def initialise_database() -> None:
     """Create missing tables and apply compatible migrations."""
 
+    # All imported models are registered in Base.metadata.
+    # This includes CandidateRegistration.
     _ = Base.metadata
 
     create_tables()
@@ -580,6 +599,14 @@ def initialise_database() -> None:
 
     with engine.connect() as connection:
         connection.execute(text("SELECT 1"))
+
+    # Confirm the candidate registration table exists.
+    inspector = inspect(engine)
+
+    if "candidate_registrations" not in inspector.get_table_names():
+        raise RuntimeError(
+            "Candidate registration database table was not created."
+        )
 
     logger.info(
         "Database initialised successfully."
@@ -637,6 +664,15 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
+)
+
+
+# ============================================================
+# CANDIDATE REGISTRATION ROUTER
+# ============================================================
+
+app.include_router(
+    candidate_registrations_router
 )
 
 
@@ -718,9 +754,16 @@ def home() -> dict[str, Any]:
         "health_check": "/api/health",
         "jobs_endpoint": "/api/jobs",
         "enquiries_endpoint": "/api/enquiries",
+        "applications_endpoint": "/api/applications",
+        "candidate_registrations_endpoint": (
+            "/api/candidate-registrations"
+        ),
         "admin_jobs_endpoint": "/api/admin/jobs",
         "admin_enquiries_endpoint": "/api/admin/enquiries",
         "admin_applications_endpoint": "/api/admin/applications",
+        "admin_candidate_registrations_endpoint": (
+            "/api/admin/candidate-registrations"
+        ),
     }
 
 
@@ -2380,12 +2423,22 @@ def admin_dashboard_stats(
             ) or 0
         )
 
+        total_candidate_registrations = (
+            db.scalar(
+                select(func.count())
+                .select_from(CandidateRegistration)
+            ) or 0
+        )
+
         return {
             "total_jobs": total_jobs,
             "published_jobs": published_jobs,
             "draft_jobs": draft_jobs,
             "total_applications": total_applications,
             "total_enquiries": total_enquiries,
+            "total_candidate_registrations": (
+                total_candidate_registrations
+            ),
         }
 
     except SQLAlchemyError:
