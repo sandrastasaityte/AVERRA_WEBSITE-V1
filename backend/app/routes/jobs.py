@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/routes/jobs.py
-Version: 2.0.0
+Version: 2.0.1
 
 Public job vacancy API routes.
 
@@ -20,7 +20,9 @@ from sqlalchemy import or_, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.database.connection import get_db
+# Corrected database import.
+from database.connection import get_db
+
 from app.models.jobs import Job
 from app.schemas.jobs import JobResponse
 
@@ -57,6 +59,7 @@ def list_published_jobs(
     db: Session = Depends(get_db),
 ) -> list[Job]:
     """List published, unexpired vacancies for the Careers page."""
+
     statement = (
         _get_public_job_statement()
         .order_by(Job.created_at.desc(), Job.id.desc())
@@ -86,6 +89,7 @@ def get_published_job(
     db: Session = Depends(get_db),
 ) -> Job:
     """Return one published vacancy that has not expired."""
+
     statement = _get_public_job_statement().where(Job.id == job_id)
 
     try:
