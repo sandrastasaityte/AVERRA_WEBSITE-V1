@@ -2,7 +2,7 @@
 /**
  * AVERRA STAFFING SOLUTIONS LTD
  * File: admin/js/auth.js
- * Version: 3.8.0
+ * Version: 3.9.0
  *
  * Administrator authentication and API communication.
  *
@@ -31,7 +31,9 @@
 
         REQUEST_TIMEOUT: 20000,
 
-        LOGIN_VERIFICATION_ENDPOINT: "/api/admin/jobs"
+        LOGIN_VERIFICATION_ENDPOINT: "/api/admin/jobs",
+
+        DASHBOARD_PAGE: "dashboard.html"
     });
 
     let currentToken = null;
@@ -54,18 +56,17 @@
             throw new Error("A valid administrator token is required.");
         }
 
+        const cleanToken = token.trim();
+
         try {
-            sessionStorage.setItem(
-                CONFIG.TOKEN_KEY,
-                token.trim()
-            );
-
-            currentToken = token.trim();
-
+            sessionStorage.setItem(CONFIG.TOKEN_KEY, cleanToken);
+            currentToken = cleanToken;
             return true;
         } catch (error) {
             console.error("Unable to save administrator session.", error);
-            throw new Error("Your browser could not save the login session.");
+            throw new Error(
+                "Your browser could not save the login session."
+            );
         }
     }
 
@@ -103,10 +104,12 @@
             }
         }
 
-        const text = await response.text();
+        const responseText = await response.text();
 
         return {
-            detail: text || "The server returned an unexpected response."
+            detail:
+                responseText ||
+                "The server returned an unexpected response."
         };
     }
 
@@ -120,7 +123,7 @@
         }
 
         if (statusCode === 401) {
-            return "Your administrator session is invalid. Please log in again.";
+            return "Your administrator token is invalid. Please check it and try again.";
         }
 
         if (statusCode === 403) {
@@ -153,12 +156,9 @@
 
         const controller = new AbortController();
 
-        const timeout = setTimeout(
-            function () {
-                controller.abort();
-            },
-            CONFIG.REQUEST_TIMEOUT
-        );
+        const timeout = setTimeout(function () {
+            controller.abort();
+        }, CONFIG.REQUEST_TIMEOUT);
 
         const headers = new Headers(options.headers || {});
 
@@ -243,12 +243,9 @@
 
         const controller = new AbortController();
 
-        const timeout = setTimeout(
-            function () {
-                controller.abort();
-            },
-            CONFIG.REQUEST_TIMEOUT
-        );
+        const timeout = setTimeout(function () {
+            controller.abort();
+        }, CONFIG.REQUEST_TIMEOUT);
 
         try {
             const response = await fetch(
@@ -307,6 +304,89 @@
     }
 
     // --------------------------------------------------------
+    // LOGIN FORM HANDLER
+    // --------------------------------------------------------
+
+    function initialiseLoginForm() {
+        const loginForm = document.getElementById("login-form");
+
+        // This script is also used by other administrator pages.
+        if (!loginForm) {
+            return;
+        }
+
+        const tokenInput = document.getElementById("admin-token");
+        const loginButton = document.getElementById("login-button");
+        const loginMessage = document.getElementById("login-message");
+
+        if (!tokenInput || !loginButton || !loginMessage) {
+            console.error(
+                "AVERRA login form is missing one or more required elements."
+            );
+            return;
+        }
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const candidateToken = tokenInput.value.trim();
+
+            if (!candidateToken) {
+                loginMessage.textContent =
+                    "Please enter your administrator token.";
+
+                loginMessage.style.color = "#b42318";
+                tokenInput.focus();
+                return;
+            }
+
+            const originalButtonHTML = loginButton.innerHTML;
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Verifying credentials...";
+
+            loginMessage.textContent =
+                "Connecting securely to the AVERRA server...";
+
+            loginMessage.style.color = "#1d5f91";
+
+            try {
+                await verifyLogin(candidateToken);
+
+                loginMessage.textContent =
+                    "Login successful. Opening your dashboard...";
+
+                loginMessage.style.color = "#16804a";
+
+                // Redirect only after the backend confirms the token
+                // and the browser successfully saves the session.
+                window.location.replace(CONFIG.DASHBOARD_PAGE);
+
+            } catch (error) {
+                console.error(
+                    "AVERRA administrator login failed:",
+                    error.message
+                );
+
+                loginMessage.textContent =
+                    error.message ||
+                    "Login failed. Please try again.";
+
+                loginMessage.style.color = "#b42318";
+
+                if (error.status === 401) {
+                    tokenInput.focus();
+                    tokenInput.select();
+                }
+
+            } finally {
+                loginButton.disabled = false;
+                loginButton.innerHTML = originalButtonHTML;
+            }
+        });
+    }
+
+    // --------------------------------------------------------
     // SESSION VALIDATION
     // --------------------------------------------------------
 
@@ -320,26 +400,15 @@
 
         try {
             await api(CONFIG.LOGIN_VERIFICATION_ENDPOINT);
-
             return true;
 
         } catch (error) {
-            // A 401 means the token is invalid.
-            if (error.status === 401) {
+            if (error.status === 401 || error.status === 403) {
                 clearToken();
                 redirectToLogin();
                 return false;
             }
 
-            // A 403 means access is denied.
-            if (error.status === 403) {
-                clearToken();
-                redirectToLogin();
-                return false;
-            }
-
-            // A temporary backend failure should not
-            // automatically destroy the saved session.
             console.error(
                 "Administrator session verification failed:",
                 error.message
@@ -432,7 +501,6 @@
 
     function logout() {
         clearToken();
-
         window.location.replace("index.html");
     }
 
@@ -441,7 +509,7 @@
     // --------------------------------------------------------
 
     window.AVERRA_ADMIN = Object.freeze({
-        version: "3.8.0",
+        version: "3.9.0",
 
         apiBaseUrl: CONFIG.API_BASE_URL,
 
@@ -472,10 +540,12 @@
 
     currentToken = getStoredToken();
 
+    initialiseLoginForm();
+
     console.info(
         "AVERRA administrator authentication initialised.",
         "Version:",
-        "3.8.0"
+        "3.9.0"
     );
 
 })();
