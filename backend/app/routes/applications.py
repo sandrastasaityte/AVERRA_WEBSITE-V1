@@ -1,8 +1,7 @@
-
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/app/routes/applications.py
-Version: 2.0.0
+Version: 2.1.0
 
 Public job application API routes.
 
@@ -13,7 +12,8 @@ Features:
 - Checks file signatures rather than trusting file extensions.
 - Stores CV contents directly in the database.
 - Links applications to existing published vacancies.
-- Supports general applications where no vacancy is selected.
+- Supports general applications.
+- Sends email notifications after applications are saved.
 
 Administrator application-management routes must remain
 in a separate authenticated router.
@@ -45,6 +45,7 @@ from database.connection import get_db
 
 from app.models.applications import Application
 from app.models.jobs import Job
+from app.services.email import send_application_notification
 
 
 logger = logging.getLogger(__name__)
@@ -65,10 +66,9 @@ ALLOWED_EXTENSIONS = {
 
 def _validate_email(email: str) -> str:
     """Perform basic email address validation."""
+    normalized_email = email.strip().lower()
 
-    email = email.strip().lower()
-
-    if len(email) > 254:
+    if len(normalized_email) > 254:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Email address is too long.",
@@ -76,13 +76,13 @@ def _validate_email(email: str) -> str:
 
     pattern = r"^[^@\s]+@[^@\s]+\.[^@\s]+$"
 
-    if not re.match(pattern, email):
+    if not re.match(pattern, normalized_email):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Please provide a valid email address.",
         )
 
-    return email
+    return normalized_email
 
 
 def _validate_cv(
@@ -90,7 +90,6 @@ def _validate_cv(
     content: bytes,
 ) -> None:
     """Validate CV extension, size and file signature."""
-
     extension = PurePath(filename).suffix.lower()
 
     if extension not in ALLOWED_EXTENSIONS:
@@ -111,7 +110,7 @@ def _validate_cv(
             detail="CV must not exceed 5 MB.",
         )
 
-    # PDF signature.
+    # PDF signature
     if extension == ".pdf":
         if not content.startswith(b"%PDF-"):
             raise HTTPException(
@@ -119,7 +118,7 @@ def _validate_cv(
                 detail="The uploaded PDF file is invalid.",
             )
 
-    # Legacy Microsoft Word DOC signature.
+    # Microsoft Word DOC signature
     elif extension == ".doc":
         if not content.startswith(
             bytes.fromhex("D0CF11E0A1B11AE1")
@@ -129,13 +128,15 @@ def _validate_cv(
                 detail="The uploaded DOC file is invalid.",
             )
 
-    # DOCX is a ZIP-based Office Open XML document.
+    # DOCX is a ZIP-based Office document
     elif extension == ".docx":
         try:
             with zipfile.ZipFile(BytesIO(content)) as archive:
+                names = archive.namelist()
+
                 if (
-                    "[Content_Types].xml" not in archive.namelist()
-                    or "word/document.xml" not in archive.namelist()
+                    "[Content_Types].xml" not in names
+                    or "word/document.xml" not in names
                 ):
                     raise ValueError("Invalid DOCX structure.")
 
@@ -151,7 +152,6 @@ def _get_active_job(
     job_id: int,
 ) -> Job:
     """Return a published vacancy that has not expired."""
-
     now = datetime.now(timezone.utc)
 
     statement = select(Job).where(
@@ -192,19 +192,7 @@ async def submit_application(
     cv: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
-    """
-    Submit a job application from the public AVERRA website.
-
-    Expected multipart form fields:
-    full_name
-    email
-    phone
-    job_id
-    job_title
-    cover_letter
-    privacy_consent
-    cv
-    """
+    """Submit a job application through the public website."""
 
     full_name = full_name.strip()
     job_title = job_title.strip()
@@ -222,7 +210,7 @@ async def submit_application(
     if privacy_consent is not True:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Privacy consent is required to submit an application.",
+            detail="Privacy consent is required.",
         )
 
     if not job_title:
@@ -254,6 +242,9 @@ async def submit_application(
                 numeric_job_id,
             )
 
+        except HTTPException:
+            raise
+
         except SQLAlchemyError:
             logger.exception(
                 "Database error while checking vacancy %s.",
@@ -265,7 +256,6 @@ async def submit_application(
                 detail="Unable to verify the selected vacancy.",
             ) from None
 
-        # Use the actual vacancy title, not a client-supplied title.
         job_title = selected_job.title
 
     elif job_title.lower() in {
@@ -285,10 +275,8 @@ async def submit_application(
             detail="Please upload your CV.",
         )
 
-    # Read at most 5 MB plus one byte to detect oversized uploads.
     try:
         cv_content = await cv.read(MAX_CV_SIZE + 1)
-
     finally:
         await cv.close()
 
@@ -321,19 +309,59 @@ async def submit_application(
         db.rollback()
 
         logger.exception(
-            "Failed to save an application for %s.",
+            "Failed to save application for %s.",
             email,
         )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unable to submit your application. Please try again later.",
+            detail="Unable to submit your application. Please try again.",
         ) from None
 
     logger.info(
         "Application %s successfully submitted.",
         application.id,
     )
+
+    # Send notification after saving the application.
+    # SMTP failure must not delete or invalidate the application.
+    try:
+        send_application_notification(
+            application_id=application.id,
+            full_name=application.full_name,
+            email=application.email,
+            phone=application.phone,
+            job_title=application.job_title,
+        )
+
+        application.email_status = "sent"
+        db.commit()
+
+    except Exception:
+        db.rollback()
+
+        logger.exception(
+            "Application %s saved, but email notification failed.",
+            application.id,
+        )
+
+        try:
+            application = db.get(
+                Application,
+                application.id,
+            )
+
+            if application is not None:
+                application.email_status = "failed"
+                db.commit()
+
+        except SQLAlchemyError:
+            db.rollback()
+
+            logger.exception(
+                "Unable to update email status for application %s.",
+                application.id,
+            )
 
     return {
         "success": True,
