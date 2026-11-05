@@ -6,21 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0b1f33">
+
     <title>Manage Vacancy | AVERRA Admin</title>
+
     <link rel="stylesheet" href="css/admin.css">
 </head>
+
 <body>
     <header class="admin-header">
         <div class="admin-container admin-header-inner">
-            <a class="admin-brand" href="dashboard.html" aria-label="AVERRA Admin Dashboard">
+
+            <a class="admin-brand"
+               href="dashboard.html"
+               aria-label="AVERRA Admin Dashboard">
+
                 <span class="admin-brand-name">AVERRA</span>
-                <span class="admin-brand-subtitle">STAFFING SOLUTIONS LTD</span>
+                <span class="admin-brand-subtitle">
+                    STAFFING SOLUTIONS LTD
+                </span>
             </a>
 
             <nav class="admin-nav" aria-label="Administrator navigation">
                 <a href="dashboard.html">Dashboard</a>
                 <a href="jobs.html">Jobs</a>
                 <a href="enquiries.html">Enquiries</a>
+
                 <button
                     type="button"
                     id="logout-button"
@@ -29,25 +39,40 @@
                     Log out
                 </button>
             </nav>
+
         </div>
     </header>
 
     <main class="admin-container admin-main">
+
         <div class="page-heading">
             <div>
                 <p class="eyebrow">AVERRA STAFFING SOLUTIONS LTD</p>
+
                 <h1 id="form-title">Create Vacancy</h1>
-                <p>Create a new vacancy or update an existing vacancy.</p>
+
+                <p>
+                    Create a new vacancy or update an existing vacancy.
+                </p>
             </div>
 
-            <a class="btn btn-secondary" href="jobs.html">Back to Jobs</a>
+            <a class="btn btn-secondary" href="jobs.html">
+                Back to Jobs
+            </a>
         </div>
 
         <section class="form-card" aria-labelledby="form-title">
+
             <div class="form-card-header">
                 <h2>Vacancy details</h2>
-                <p>Complete the relevant fields, then save your changes.</p>
-                <p>Fields marked with * are required.</p>
+
+                <p>
+                    Complete the relevant fields, then save your changes.
+                </p>
+
+                <p>
+                    Fields marked with * are required.
+                </p>
             </div>
 
             <div
@@ -59,13 +84,20 @@
             </div>
 
             <form id="job-form" novalidate>
-                <input type="hidden" id="job-id" name="job-id">
+
+                <input
+                    type="hidden"
+                    id="job-id"
+                    name="job-id">
 
                 <div class="form-grid">
+
+                    <!-- Vacancy title -->
                     <div class="form-group full-width">
                         <label for="title">
                             Vacancy title <span aria-hidden="true">*</span>
                         </label>
+
                         <input
                             type="text"
                             id="title"
@@ -77,8 +109,10 @@
                             placeholder="e.g. Finance Operations Specialist">
                     </div>
 
+                    <!-- Department -->
                     <div class="form-group">
                         <label for="department">Department</label>
+
                         <input
                             type="text"
                             id="department"
@@ -87,10 +121,12 @@
                             placeholder="e.g. Finance">
                     </div>
 
+                    <!-- Location -->
                     <div class="form-group">
                         <label for="location">
                             Location <span aria-hidden="true">*</span>
                         </label>
+
                         <input
                             type="text"
                             id="location"
@@ -101,14 +137,17 @@
                             placeholder="e.g. Remote — India">
                     </div>
 
+                    <!-- Employment type -->
                     <div class="form-group">
                         <label for="employment_type">
                             Employment type <span aria-hidden="true">*</span>
                         </label>
+
                         <select
                             id="employment_type"
                             name="employment_type"
                             required>
+
                             <option value="">Select employment type</option>
                             <option value="Full-time">Full-time</option>
                             <option value="Part-time">Part-time</option>
@@ -116,11 +155,14 @@
                             <option value="Temporary">Temporary</option>
                             <option value="Freelance">Freelance</option>
                             <option value="Internship">Internship</option>
+
                         </select>
                     </div>
 
+                    <!-- Salary -->
                     <div class="form-group">
                         <label for="salary_range">Salary / rate</label>
+
                         <input
                             type="text"
                             id="salary_range"
@@ -129,10 +171,12 @@
                             placeholder="e.g. £30,000–£35,000 or Competitive">
                     </div>
 
+                    <!-- Vacancy summary: single field -->
                     <div class="form-group full-width">
                         <label for="summary">
                             Short summary <span aria-hidden="true">*</span>
                         </label>
+
                         <textarea
                             id="summary"
                             name="summary"
@@ -141,36 +185,19 @@
                             maxlength="500"
                             required
                             placeholder="Write a short introduction to this vacancy."></textarea>
+
                         <small>
-                            This summary is intended for the vacancy card on your website.
-                            Maximum 500 characters.
+                            This summary appears on the vacancy card on your
+                            website. Minimum 10 and maximum 500 characters.
                         </small>
                     </div>
 
-<div class="form-group">
-    <label for="summary">
-        Vacancy summary <span aria-hidden="true">*</span>
-    </label>
-
-    <textarea
-        id="summary"
-        name="summary"
-        minlength="10"
-        maxlength="500"
-        rows="3"
-        required
-        placeholder="Write a short summary of this vacancy (at least 10 characters)."
-    ></textarea>
-
-    <small>
-        Provide a short overview of the role. Minimum 10 characters.
-    </small>
-</div>
-
+                    <!-- Full description -->
                     <div class="form-group full-width">
                         <label for="description">
                             Full description <span aria-hidden="true">*</span>
                         </label>
+
                         <textarea
                             id="description"
                             name="description"
@@ -179,58 +206,90 @@
                             maxlength="15000"
                             required
                             placeholder="Describe the role, responsibilities, skills and experience required."></textarea>
+
                         <small>
-                            Include the responsibilities, requirements and other important
-                            details. Maximum 15,000 characters.
+                            Include responsibilities, requirements and other
+                            important details. Maximum 15,000 characters.
                         </small>
                     </div>
 
+                    <!-- Application email -->
                     <div class="form-group">
-                        <label for="application_email">Application email</label>
+                        <label for="application_email">
+                            Application email
+                        </label>
+
                         <input
                             type="email"
                             id="application_email"
                             name="application_email"
                             maxlength="254"
                             autocomplete="email"
-                            placeholder="info@averrastaffing.co.uk">
+                            placeholder="enquiries@averrastaffing.co.uk">
+
                         <small>
-                            Optional. Enter a valid email address if this vacancy uses
-                            a specific application contact.
+                            Optional. Enter a valid email address if this
+                            vacancy uses a specific application contact.
                         </small>
                     </div>
 
+                    <!-- Closing date -->
                     <div class="form-group">
                         <label for="closing_date">Closing date</label>
+
                         <input
                             type="date"
                             id="closing_date"
                             name="closing_date">
+
                         <small>
-                            Optional. Check the backend date handling before relying
-                            on this date to stop applications automatically.
+                            Optional. Vacancies past their closing date should
+                            no longer appear as active opportunities.
                         </small>
                     </div>
 
+                    <!-- Vacancy status -->
                     <div class="form-group">
                         <label for="status">
                             Vacancy status <span aria-hidden="true">*</span>
                         </label>
-                        <select id="status" name="status" required>
-                            <option value="draft">Draft — not published</option>
-                            <option value="published">Published — visible to visitors</option>
-                            <option value="closed">Closed</option>
-                            <option value="archived">Archived — retained but not active</option>
+
+                        <select
+                            id="status"
+                            name="status"
+                            required>
+
+                            <option value="draft">
+                                Draft — not published
+                            </option>
+
+                            <option value="published">
+                                Published — visible to visitors
+                            </option>
+
+                            <option value="closed">
+                                Closed
+                            </option>
+
+                            <option value="archived">
+                                Archived — retained but not active
+                            </option>
+
                         </select>
+
                         <small>
-                            Draft vacancies remain unpublished. Published vacancies are
-                            intended to be visible to visitors. Closed and archived
-                            vacancies are not active recruitment opportunities.
+                            Draft vacancies remain unpublished. Published
+                            vacancies are intended to be visible to visitors.
+                            Closed and archived vacancies are not active
+                            recruitment opportunities.
                         </small>
                     </div>
+
                 </div>
 
+                <!-- Form actions -->
                 <div class="form-actions">
+
                     <button
                         type="submit"
                         id="save-button"
@@ -253,19 +312,28 @@
                         Delete Vacancy
                     </button>
 
-                    <a class="btn btn-secondary" href="jobs.html">Cancel</a>
+                    <a class="btn btn-secondary" href="jobs.html">
+                        Cancel
+                    </a>
+
                 </div>
+
             </form>
+
         </section>
 
         <footer class="admin-footer">
             <p>
-                AVERRA Staffing Solutions Ltd · Connecting UK businesses with global talent.
+                AVERRA Staffing Solutions Ltd · Connecting UK businesses
+                with global talent.
             </p>
+
             <p>
-                &copy; <span id="current-year"></span> AVERRA Staffing Solutions Ltd
+                &copy; <span id="current-year"></span>
+                AVERRA Staffing Solutions Ltd
             </p>
         </footer>
+
     </main>
 
     <script src="js/auth.js"></script>
@@ -275,20 +343,32 @@
         (() => {
             "use strict";
 
-            const yearElement = document.getElementById("current-year");
+            const yearElement =
+                document.getElementById("current-year");
 
             if (yearElement) {
-                yearElement.textContent = String(new Date().getFullYear());
+                yearElement.textContent =
+                    String(new Date().getFullYear());
             }
 
-            const resetButton = document.getElementById("reset-button");
-            const form = document.getElementById("job-form");
-            const message = document.getElementById("form-message");
-            const params = new URLSearchParams(window.location.search);
+            const resetButton =
+                document.getElementById("reset-button");
+
+            const form =
+                document.getElementById("job-form");
+
+            const message =
+                document.getElementById("form-message");
+
+            const params =
+                new URLSearchParams(window.location.search);
 
             if (resetButton && form) {
+
                 resetButton.addEventListener("click", () => {
+
                     if (params.has("id")) {
+
                         const confirmed = window.confirm(
                             "Leave this vacancy without saving your changes?"
                         );
@@ -302,9 +382,14 @@
 
                     form.reset();
 
-                    const jobId = document.getElementById("job-id");
-                    const statusField = document.getElementById("status");
-                    const employmentField = document.getElementById("employment_type");
+                    const jobId =
+                        document.getElementById("job-id");
+
+                    const statusField =
+                        document.getElementById("status");
+
+                    const employmentField =
+                        document.getElementById("employment_type");
 
                     if (jobId) {
                         jobId.value = "";
@@ -321,6 +406,7 @@
                     if (message) {
                         message.textContent = "";
                         message.hidden = true;
+
                         message.classList.remove(
                             "success",
                             "error",
@@ -331,14 +417,18 @@
                         );
                     }
 
-                    const title = document.getElementById("title");
+                    const title =
+                        document.getElementById("title");
 
                     if (title) {
                         title.focus();
                     }
+
                 });
             }
+
         })();
     </script>
+
 </body>
 </html>

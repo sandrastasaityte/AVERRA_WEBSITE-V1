@@ -33,6 +33,10 @@ wheels/
 *.db-journal
 *.sqlite-journal
 
+# Local application and candidate data
+data/*
+!data/.gitkeep
+
 # Application logs
 logs/*.log
 logs/*.log.*
@@ -48,6 +52,8 @@ uploads/*
 .coverage.*
 htmlcov/
 .tox/
+test-results/
+*.test.db
 
 # Type checking and linting caches
 .mypy_cache/

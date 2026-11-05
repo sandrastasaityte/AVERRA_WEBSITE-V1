@@ -2,7 +2,7 @@
 """
 AVERRA STAFFING SOLUTIONS LTD
 File: backend/main.py
-Version: 4.5.0
+Version: 4.6.0
 
 FastAPI application for the AVERRA website and administrator system.
 
@@ -14,15 +14,18 @@ Preserves:
 - Administrator authentication
 - Vacancy management
 - Enquiry management
-
-Adds:
-- Application listing and filtering for administrators
-- Individual application details
-- Application status management
+- Application management
 - Authenticated CV downloads
-- Enquiry internal notes
-- Correct enquiry status mapping
-- Expired vacancy filtering
+
+Improvements:
+- Safe migration for applications.updated_at
+- Existing application records and CV files preserved
+- CV BLOBs deferred in application list/detail queries
+- Consistent job closing-date conversion
+- Required job fields cannot be cleared with null
+- Accurate dashboard published-vacancy count
+- Improved database error handling
+- Updated company enquiry email default
 """
 
 from __future__ import annotations
@@ -59,7 +62,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, field_validator
 from sqlalchemy import func, inspect, or_, select, text
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, defer
 
 
 # ============================================================
@@ -82,7 +85,7 @@ APP_NAME = os.getenv(
     "AVERRA Staffing Solutions API",
 ).strip()
 
-APP_VERSION = "4.5.0"
+APP_VERSION = "4.6.0"
 
 APP_ENV = os.getenv(
     "APP_ENV",
@@ -102,7 +105,7 @@ COMPANY_NAME = "AVERRA Staffing Solutions Ltd"
 
 COMPANY_EMAIL = os.getenv(
     "COMPANY_EMAIL",
-    "info@averrastaffing.co.uk",
+    "enquiries@averrastaffing.co.uk",
 ).strip()
 
 COMPANY_WEBSITE = os.getenv(
@@ -179,8 +182,16 @@ from app.schemas.jobs import (
 # LOGGING
 # ============================================================
 
-LOG_LEVEL_NAME = os.getenv("LOG_LEVEL", "INFO").strip().upper()
-LOG_LEVEL = getattr(logging, LOG_LEVEL_NAME, logging.INFO)
+LOG_LEVEL_NAME = os.getenv(
+    "LOG_LEVEL",
+    "INFO",
+).strip().upper()
+
+LOG_LEVEL = getattr(
+    logging,
+    LOG_LEVEL_NAME,
+    logging.INFO,
+)
 
 logging.basicConfig(
     level=LOG_LEVEL,
@@ -198,18 +209,30 @@ logger = logging.getLogger("averra")
 
 
 # ============================================================
-# GMAIL SMTP CONFIGURATION
+# SMTP CONFIGURATION
 # ============================================================
 
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com").strip()
+SMTP_HOST = os.getenv(
+    "SMTP_HOST",
+    "smtp.gmail.com",
+).strip()
 
 try:
-    SMTP_PORT = int(os.getenv("SMTP_PORT", "587").strip())
+    SMTP_PORT = int(
+        os.getenv("SMTP_PORT", "587").strip()
+    )
 except ValueError:
     SMTP_PORT = 587
 
-SMTP_USERNAME = os.getenv("SMTP_USERNAME", "").strip()
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "").strip()
+SMTP_USERNAME = os.getenv(
+    "SMTP_USERNAME",
+    "",
+).strip()
+
+SMTP_PASSWORD = os.getenv(
+    "SMTP_PASSWORD",
+    "",
+).strip()
 
 SMTP_FROM_EMAIL = os.getenv(
     "SMTP_FROM_EMAIL",
@@ -224,17 +247,61 @@ SMTP_TIMEOUT = 20
 # ============================================================
 
 def utc_now() -> datetime:
+    """Return the current timezone-aware UTC datetime."""
+
     return datetime.now(timezone.utc)
 
 
-def serialise_datetime(value: datetime | date | None) -> str | None:
+def serialise_datetime(
+    value: datetime | date | None,
+) -> str | None:
+    """Convert date and datetime values to ISO strings."""
+
+    if value is None:
+        return None
+
+    return value.isoformat()
+
+
+def normalise_closing_date(
+    value: date | datetime | None,
+) -> datetime | None:
+    """
+    Convert a calendar date into midnight UTC.
+
+    Datetime values are preserved. This keeps the SQLAlchemy
+    DateTime model consistent with the API date-based schema.
+    """
+
     if value is None:
         return None
 
     if isinstance(value, datetime):
-        return value.isoformat()
+        return value
 
-    return value.isoformat()
+    if isinstance(value, date):
+        return datetime.combine(
+            value,
+            time.min,
+            tzinfo=timezone.utc,
+        )
+
+    raise ValueError("Invalid vacancy closing date.")
+
+
+def normalise_job_updates(
+    updates: dict[str, Any],
+) -> dict[str, Any]:
+    """Normalise date values before assigning them to Job."""
+
+    result = updates.copy()
+
+    if "closing_date" in result:
+        result["closing_date"] = normalise_closing_date(
+            result["closing_date"]
+        )
+
+    return result
 
 
 def job_is_expired(job: Job) -> bool:
@@ -255,7 +322,7 @@ def job_is_expired(job: Job) -> bool:
 
 
 def public_job_statement():
-    """Shared query for vacancies currently open to applicants."""
+    """Return the shared query for currently available vacancies."""
 
     return select(Job).where(
         Job.status == "published",
@@ -265,6 +332,10 @@ def public_job_statement():
         ),
     )
 
+
+# ============================================================
+# EMAIL DELIVERY
+# ============================================================
 
 def send_email(message: EmailMessage) -> bool:
     """Send an email using the configured SMTP account."""
@@ -286,7 +357,10 @@ def send_email(message: EmailMessage) -> bool:
             server.ehlo()
             server.starttls(context=tls_context)
             server.ehlo()
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.login(
+                SMTP_USERNAME,
+                SMTP_PASSWORD,
+            )
             server.send_message(message)
 
         return True
@@ -300,14 +374,17 @@ def send_email(message: EmailMessage) -> bool:
 # ENQUIRY EMAIL NOTIFICATION
 # ============================================================
 
-def send_enquiry_notification(enquiry: Enquiry) -> bool:
-    """Email the company when a website enquiry is saved."""
+def send_enquiry_notification(
+    enquiry: Enquiry,
+) -> bool:
+    """Notify the company when a website enquiry is saved."""
 
     message = EmailMessage()
 
     message["Subject"] = (
         f"New website enquiry - {enquiry.name or 'Website visitor'}"
     )
+
     message["From"] = SMTP_FROM_EMAIL
     message["To"] = COMPANY_EMAIL
 
@@ -362,20 +439,30 @@ Please log in to your administration system to review this enquiry.
 
 def migrate_existing_database() -> None:
     """
-    Add supported missing columns to existing SQLite tables.
+    Apply safe, additive SQLite migrations.
 
-    This function does not delete or rebuild existing tables.
+    Existing tables are not dropped or rebuilt.
+    Existing application records and CV BLOBs are preserved.
     """
 
     if engine.dialect.name != "sqlite":
+        logger.info(
+            "SQLite-specific migrations skipped for database dialect: %s",
+            engine.dialect.name,
+        )
         return
-
-    inspector = inspect(engine)
-    tables = set(inspector.get_table_names())
 
     with engine.begin() as connection:
 
+        inspector = inspect(connection)
+        tables = set(inspector.get_table_names())
+
+        # ----------------------------------------------------
+        # ENQUIRIES: internal_notes
+        # ----------------------------------------------------
+
         if "enquiries" in tables:
+
             columns = {
                 column["name"]
                 for column in inspect(connection).get_columns(
@@ -390,12 +477,22 @@ def migrate_existing_database() -> None:
                         "ADD COLUMN internal_notes TEXT"
                     )
                 )
-                logger.info("Added enquiries.internal_notes")
+
+                logger.info(
+                    "Migration applied: enquiries.internal_notes"
+                )
+
+        # ----------------------------------------------------
+        # JOBS: closing_date
+        # ----------------------------------------------------
 
         if "jobs" in tables:
+
             columns = {
                 column["name"]
-                for column in inspect(connection).get_columns("jobs")
+                for column in inspect(connection).get_columns(
+                    "jobs"
+                )
             }
 
             if "closing_date" not in columns:
@@ -405,7 +502,72 @@ def migrate_existing_database() -> None:
                         "ADD COLUMN closing_date DATETIME"
                     )
                 )
-                logger.info("Added jobs.closing_date")
+
+                logger.info(
+                    "Migration applied: jobs.closing_date"
+                )
+
+        # ----------------------------------------------------
+        # APPLICATIONS: updated_at
+        # ----------------------------------------------------
+
+        if "applications" in tables:
+
+            columns = {
+                column["name"]
+                for column in inspect(connection).get_columns(
+                    "applications"
+                )
+            }
+
+            if "updated_at" not in columns:
+
+                connection.execute(
+                    text(
+                        "ALTER TABLE applications "
+                        "ADD COLUMN updated_at DATETIME"
+                    )
+                )
+
+                logger.info(
+                    "Migration applied: applications.updated_at"
+                )
+
+            # Preserve historical timestamps.
+            # Existing applications receive their original
+            # created_at value as their initial updated_at.
+            connection.execute(
+                text(
+                    """
+                    UPDATE applications
+                    SET updated_at = COALESCE(
+                        created_at,
+                        CURRENT_TIMESTAMP
+                    )
+                    WHERE updated_at IS NULL
+                    """
+                )
+            )
+
+            missing_timestamps = connection.execute(
+                text(
+                    """
+                    SELECT COUNT(*)
+                    FROM applications
+                    WHERE updated_at IS NULL
+                    """
+                )
+            ).scalar_one()
+
+            if missing_timestamps:
+                raise RuntimeError(
+                    "Application timestamp migration failed: "
+                    f"{missing_timestamps} records remain without updated_at."
+                )
+
+            logger.info(
+                "Application timestamps verified successfully."
+            )
 
 
 def initialise_database() -> None:
@@ -419,7 +581,9 @@ def initialise_database() -> None:
     with engine.connect() as connection:
         connection.execute(text("SELECT 1"))
 
-    logger.info("Database initialised successfully")
+    logger.info(
+        "Database initialised successfully."
+    )
 
 
 # ============================================================
@@ -430,19 +594,30 @@ def initialise_database() -> None:
 async def lifespan(application: FastAPI):
     """Initialise the database when the application starts."""
 
-    logger.info("%s starting in %s mode", APP_NAME, APP_ENV)
+    logger.info(
+        "%s starting in %s mode",
+        APP_NAME,
+        APP_ENV,
+    )
 
     try:
         initialise_database()
+
     except Exception:
-        logger.exception("Application startup failed")
+        logger.exception(
+            "Application startup failed"
+        )
         engine.dispose()
         raise
 
     try:
         yield
+
     finally:
-        logger.info("%s shutting down", APP_NAME)
+        logger.info(
+            "%s shutting down",
+            APP_NAME,
+        )
         engine.dispose()
 
 
@@ -482,7 +657,10 @@ DEFAULT_ORIGINS = [
     "https://averra-admin-smoky.vercel.app",
 ]
 
-configured_origins = os.getenv("CORS_ORIGINS", "").strip()
+configured_origins = os.getenv(
+    "CORS_ORIGINS",
+    "",
+).strip()
 
 if configured_origins:
     allowed_origins = [
@@ -509,7 +687,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=False,
-    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_methods=[
+        "GET",
+        "POST",
+        "PATCH",
+        "DELETE",
+        "OPTIONS",
+    ],
     allow_headers=[
         "Accept",
         "Content-Type",
@@ -524,6 +708,7 @@ app.add_middleware(
 
 @app.get("/", tags=["General"])
 def home() -> dict[str, Any]:
+
     return {
         "name": APP_NAME,
         "company": COMPANY_NAME,
@@ -555,7 +740,9 @@ def health_check() -> dict[str, str]:
         }
 
     except SQLAlchemyError:
-        logger.exception("Database health check failed")
+        logger.exception(
+            "Database health check failed"
+        )
 
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -596,14 +783,20 @@ def create_enquiry(
 
     except SQLAlchemyError:
         db.rollback()
-        logger.exception("Could not save contact enquiry")
+
+        logger.exception(
+            "Could not save contact enquiry"
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to save your enquiry. Please try again later.",
         ) from None
 
-    logger.info("Contact enquiry saved: id=%s", enquiry.id)
+    logger.info(
+        "Contact enquiry saved: id=%s",
+        enquiry.id,
+    )
 
     send_enquiry_notification(enquiry)
 
@@ -620,8 +813,15 @@ def create_enquiry(
     tags=["Jobs"],
 )
 def list_jobs(
-    limit: int = Query(default=50, ge=1, le=100),
-    offset: int = Query(default=0, ge=0),
+    limit: int = Query(
+        default=50,
+        ge=1,
+        le=100,
+    ),
+    offset: int = Query(
+        default=0,
+        ge=0,
+    ),
     db: Session = Depends(get_db),
 ):
     """Return published vacancies that have not expired."""
@@ -629,7 +829,10 @@ def list_jobs(
     try:
         statement = (
             public_job_statement()
-            .order_by(Job.created_at.desc(), Job.id.desc())
+            .order_by(
+                Job.created_at.desc(),
+                Job.id.desc(),
+            )
             .offset(offset)
             .limit(limit)
         )
@@ -637,7 +840,9 @@ def list_jobs(
         return db.scalars(statement).all()
 
     except SQLAlchemyError:
-        logger.exception("Could not retrieve published jobs")
+        logger.exception(
+            "Could not retrieve published jobs"
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -657,11 +862,17 @@ def get_job(
     """Return one published, unexpired vacancy."""
 
     try:
-        statement = public_job_statement().where(Job.id == job_id)
+        statement = public_job_statement().where(
+            Job.id == job_id
+        )
+
         job = db.scalars(statement).first()
 
     except SQLAlchemyError:
-        logger.exception("Could not retrieve vacancy id=%s", job_id)
+        logger.exception(
+            "Could not retrieve vacancy id=%s",
+            job_id,
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -698,8 +909,28 @@ DOC_SIGNATURE = bytes.fromhex(
 DOCX_SIGNATURE = b"PK"
 
 
-def send_application_notification(application: Application) -> bool:
-    """Notify the company that an application has been saved.
+def valid_cv_signature(
+    extension: str,
+    content: bytes,
+) -> bool:
+    """Check that the uploaded file signature matches its extension."""
+
+    if extension == ".pdf":
+        return content.startswith(PDF_SIGNATURE)
+
+    if extension == ".doc":
+        return content.startswith(DOC_SIGNATURE)
+
+    if extension == ".docx":
+        return content.startswith(DOCX_SIGNATURE)
+
+    return False
+
+
+def send_application_notification(
+    application: Application,
+) -> bool:
+    """Notify the company when an application has been saved.
 
     The CV is not attached to the notification email.
     """
@@ -755,21 +986,6 @@ Website: {COMPANY_WEBSITE}
         )
 
     return sent
-
-
-def valid_cv_signature(extension: str, content: bytes) -> bool:
-    """Check that the uploaded file signature matches its extension."""
-
-    if extension == ".pdf":
-        return content.startswith(PDF_SIGNATURE)
-
-    if extension == ".doc":
-        return content.startswith(DOC_SIGNATURE)
-
-    if extension == ".docx":
-        return content.startswith(DOCX_SIGNATURE)
-
-    return False
 
 
 @app.post(
@@ -837,9 +1053,19 @@ async def create_application(
             detail="Privacy consent is required to submit an application.",
         )
 
-    original_name = Path(cv.filename or "").name.strip()
+    # Treat both Windows and Unix path separators safely.
+    original_name = (
+        (cv.filename or "")
+        .replace("\\", "/")
+        .rsplit("/", 1)[-1]
+        .strip()
+    )
 
-    if not original_name or len(original_name) > 255:
+    if (
+        not original_name
+        or len(original_name) > 255
+        or any(ord(character) < 32 for character in original_name)
+    ):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Please upload a CV with a valid filename.",
@@ -886,6 +1112,7 @@ async def create_application(
 
         try:
             parsed_job_id = int(job_id.strip())
+
         except ValueError:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -900,7 +1127,9 @@ async def create_application(
 
         try:
             selected_job = db.scalars(
-                public_job_statement().where(Job.id == parsed_job_id)
+                public_job_statement().where(
+                    Job.id == parsed_job_id
+                )
             ).first()
 
         except SQLAlchemyError:
@@ -951,14 +1180,19 @@ async def create_application(
 
     except SQLAlchemyError:
         db.rollback()
-        logger.exception("Could not save job application")
+
+        logger.exception(
+            "Could not save job application"
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to save your application. Please try again later.",
         ) from None
 
-    notification_sent = send_application_notification(application)
+    notification_sent = send_application_notification(
+        application
+    )
 
     try:
         application.email_status = (
@@ -1010,11 +1244,15 @@ def require_admin(
         "",
     ).strip()
 
+    normalised_token = expected_token.lower()
+
     is_placeholder = (
-        expected_token.startswith("REPLACE_WITH_")
-        or expected_token == (
-            "replace_with_your_own_long_random_secret"
-        )
+        normalised_token.startswith("replace-with-")
+        or normalised_token.startswith("replace_with_")
+        or normalised_token in {
+            "your-admin-token",
+            "your_admin_token",
+        }
     )
 
     if not expected_token or is_placeholder:
@@ -1064,10 +1302,11 @@ ENQUIRY_STATUS_MAP = {
 def canonical_enquiry_status(value: str) -> str:
     """Convert an administrator status to a database-supported status."""
 
-    normalized = value.strip().lower()
+    normalised = value.strip().lower()
 
     try:
-        return ENQUIRY_STATUS_MAP[normalized]
+        return ENQUIRY_STATUS_MAP[normalised]
+
     except KeyError:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -1075,7 +1314,9 @@ def canonical_enquiry_status(value: str) -> str:
         ) from None
 
 
-def enquiry_to_dict(item: Enquiry) -> dict[str, Any]:
+def enquiry_to_dict(
+    item: Enquiry,
+) -> dict[str, Any]:
     """Return enquiry fields for the administrator interface."""
 
     return {
@@ -1103,8 +1344,15 @@ def enquiry_to_dict(item: Enquiry) -> dict[str, Any]:
 )
 def list_admin_enquiries(
     _: None = Depends(require_admin),
-    limit: int = Query(default=100, ge=1, le=200),
-    offset: int = Query(default=0, ge=0),
+    limit: int = Query(
+        default=100,
+        ge=1,
+        le=200,
+    ),
+    offset: int = Query(
+        default=0,
+        ge=0,
+    ),
     enquiry_status: str | None = Query(
         default=None,
         alias="status",
@@ -1161,7 +1409,9 @@ def list_admin_enquiries(
 # ============================================================
 
 class EnquiryStatusUpdate(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(
+        extra="forbid",
+    )
 
     status: str | None = None
     internal_notes: str | None = None
@@ -1178,10 +1428,10 @@ class EnquiryStatusUpdate(BaseModel):
 
         value = value.strip().lower()
 
-        allowed_statuses = set(ENQUIRY_STATUS_MAP)
-
-        if value not in allowed_statuses:
-            raise ValueError("Invalid enquiry status.")
+        if value not in ENQUIRY_STATUS_MAP:
+            raise ValueError(
+                "Invalid enquiry status."
+            )
 
         return value
 
@@ -1212,7 +1462,9 @@ def update_admin_enquiry(
 ):
     """Update an enquiry status and/or internal notes."""
 
-    updates = enquiry_data.model_dump(exclude_unset=True)
+    updates = enquiry_data.model_dump(
+        exclude_unset=True
+    )
 
     if not updates:
         raise HTTPException(
@@ -1221,7 +1473,10 @@ def update_admin_enquiry(
         )
 
     try:
-        enquiry = db.get(Enquiry, enquiry_id)
+        enquiry = db.get(
+            Enquiry,
+            enquiry_id,
+        )
 
         if enquiry is None:
             raise HTTPException(
@@ -1285,7 +1540,11 @@ def create_job(
 ):
     """Create a vacancy."""
 
-    job = Job(**job_data.model_dump())
+    job_values = normalise_job_updates(
+        job_data.model_dump()
+    )
+
+    job = Job(**job_values)
 
     try:
         db.add(job)
@@ -1301,7 +1560,10 @@ def create_job(
 
     except SQLAlchemyError:
         db.rollback()
-        logger.exception("Could not create job vacancy")
+
+        logger.exception(
+            "Could not create job vacancy"
+        )
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -1320,8 +1582,15 @@ def create_job(
 )
 def list_admin_jobs(
     _: None = Depends(require_admin),
-    limit: int = Query(default=100, ge=1, le=200),
-    offset: int = Query(default=0, ge=0),
+    limit: int = Query(
+        default=100,
+        ge=1,
+        le=200,
+    ),
+    offset: int = Query(
+        default=0,
+        ge=0,
+    ),
     db: Session = Depends(get_db),
 ):
     """List all vacancies, including unpublished jobs."""
@@ -1367,21 +1636,45 @@ def update_job(
 ):
     """Partially update a vacancy."""
 
+    updates = job_data.model_dump(
+        exclude_unset=True
+    )
+
+    if not updates:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Provide at least one field to update.",
+        )
+
+    # These fields are required by the database model.
+    required_fields = {
+        "title",
+        "location",
+        "employment_type",
+        "summary",
+        "description",
+        "status",
+    }
+
+    for field in required_fields:
+        if field in updates and updates[field] is None:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"The field '{field}' cannot be null.",
+            )
+
+    updates = normalise_job_updates(updates)
+
     try:
-        job = db.get(Job, job_id)
+        job = db.get(
+            Job,
+            job_id,
+        )
 
         if job is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Job vacancy not found.",
-            )
-
-        updates = job_data.model_dump(exclude_unset=True)
-
-        if not updates:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Provide at least one field to update.",
             )
 
         for field, value in updates.items():
@@ -1405,6 +1698,7 @@ def update_job(
 
     except SQLAlchemyError:
         db.rollback()
+
         logger.exception(
             "Could not update job id=%s",
             job_id,
@@ -1432,7 +1726,10 @@ def delete_job(
     """Delete a vacancy only when no applications reference it."""
 
     try:
-        job = db.get(Job, job_id)
+        job = db.get(
+            Job,
+            job_id,
+        )
 
         if job is None:
             raise HTTPException(
@@ -1475,6 +1772,7 @@ def delete_job(
 
     except SQLAlchemyError:
         db.rollback()
+
         logger.exception(
             "Could not delete job id=%s",
             job_id,
@@ -1494,7 +1792,12 @@ def application_to_dict(
     application: Application,
     include_cover_letter: bool = False,
 ) -> dict[str, Any]:
-    """Return application information without exposing CV bytes."""
+    """
+    Return application information without exposing CV bytes.
+
+    cv_available is derived from the stored file size, so the
+    CV BLOB does not need to be loaded for list/detail responses.
+    """
 
     result = {
         "id": application.id,
@@ -1505,7 +1808,7 @@ def application_to_dict(
         "job_title": application.job_title,
         "cv_original_name": application.cv_original_name,
         "cv_size": application.cv_size,
-        "cv_available": bool(application.cv_content),
+        "cv_available": application.cv_size > 0,
         "privacy_consent": application.privacy_consent,
         "status": application.status,
         "email_status": application.email_status,
@@ -1538,7 +1841,9 @@ APPLICATION_STATUSES = {
 
 
 class ApplicationStatusUpdate(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(
+        extra="forbid",
+    )
 
     status: str
 
@@ -1569,32 +1874,47 @@ class ApplicationStatusUpdate(BaseModel):
 )
 def list_admin_applications(
     _: None = Depends(require_admin),
-    limit: int = Query(default=100, ge=1, le=200),
-    offset: int = Query(default=0, ge=0),
+    limit: int = Query(
+        default=100,
+        ge=1,
+        le=200,
+    ),
+    offset: int = Query(
+        default=0,
+        ge=0,
+    ),
     application_status: str | None = Query(
         default=None,
         alias="status",
     ),
-    job_id: int | None = Query(default=None, ge=1),
-    search: str | None = Query(default=None, max_length=200),
+    job_id: int | None = Query(
+        default=None,
+        ge=1,
+    ),
+    search: str | None = Query(
+        default=None,
+        max_length=200,
+    ),
     db: Session = Depends(get_db),
 ):
-    """List applications with optional status, vacancy and search filters."""
+    """List applications with optional filters."""
 
     try:
-        statement = select(Application)
+        statement = select(Application).options(
+            defer(Application.cv_content)
+        )
 
         if application_status:
-            normalized_status = application_status.strip().lower()
+            normalised_status = application_status.strip().lower()
 
-            if normalized_status not in APPLICATION_STATUSES:
+            if normalised_status not in APPLICATION_STATUSES:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail="Invalid application status filter.",
                 )
 
             statement = statement.where(
-                Application.status == normalized_status
+                Application.status == normalised_status
             )
 
         if job_id is not None:
@@ -1657,13 +1977,16 @@ def get_admin_application(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """Return the details of one application without its CV bytes."""
+    """Return application details without loading its CV bytes."""
 
     try:
-        application = db.get(
-            Application,
-            application_id,
+        statement = (
+            select(Application)
+            .options(defer(Application.cv_content))
+            .where(Application.id == application_id)
         )
+
+        application = db.scalars(statement).first()
 
         if application is None:
             raise HTTPException(
@@ -1708,10 +2031,13 @@ def update_admin_application(
     """Update the status of an application."""
 
     try:
-        application = db.get(
-            Application,
-            application_id,
+        statement = (
+            select(Application)
+            .options(defer(Application.cv_content))
+            .where(Application.id == application_id)
         )
+
+        application = db.scalars(statement).first()
 
         if application is None:
             raise HTTPException(
@@ -1720,9 +2046,7 @@ def update_admin_application(
             )
 
         application.status = application_data.status
-
-        if hasattr(application, "updated_at"):
-            application.updated_at = utc_now()
+        application.updated_at = utc_now()
 
         db.commit()
         db.refresh(application)
@@ -1775,14 +2099,11 @@ def download_application_cv(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    """
-    Download the CV stored in the database.
-
-    This endpoint requires administrator authentication.
-    CV bytes are never included in application list/detail JSON.
-    """
+    """Download the CV stored in the database."""
 
     try:
+        # Deliberately do not defer cv_content here:
+        # this endpoint is specifically retrieving the file.
         application = db.get(
             Application,
             application_id,
@@ -1807,8 +2128,12 @@ def download_application_cv(
             or f"application-{application_id}-cv"
         )
 
-        # Remove any path information and unsafe control characters.
-        original_name = Path(original_name).name
+        original_name = (
+            original_name
+            .replace("\\", "/")
+            .rsplit("/", 1)[-1]
+        )
+
         original_name = re.sub(
             r"[\r\n\x00-\x1f\x7f]",
             "",
@@ -1822,7 +2147,6 @@ def download_application_cv(
             "application/octet-stream",
         )
 
-        # Provide a safe ASCII fallback and UTF-8 filename.
         ascii_filename = (
             original_name.encode("ascii", "ignore")
             .decode("ascii")
@@ -1892,7 +2216,7 @@ def delete_admin_enquiry(
     _: None = Depends(require_admin),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
-    """Permanently delete one enquiry after administrator confirmation."""
+    """Permanently delete one enquiry."""
 
     try:
         enquiry = db.get(
@@ -2001,49 +2325,79 @@ def delete_admin_application(
 # ADMIN DASHBOARD STATISTICS
 # ============================================================
 
-@app.get("/api/admin/dashboard/stats", tags=["Admin - Dashboard"])
+@app.get(
+    "/api/admin/dashboard/stats",
+    tags=["Admin - Dashboard"],
+)
 def admin_dashboard_stats(
     _: None = Depends(require_admin),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    """
-    Return accurate dashboard statistics directly from the database.
-    """
+    """Return dashboard statistics from the database."""
 
-    total_jobs = (
-        db.scalar(
-            select(func.count()).select_from(Job)
-        ) or 0
-    )
+    try:
+        today = utc_now().date().isoformat()
 
-    published_jobs = (
-        db.scalar(
-            select(func.count())
-            .select_from(Job)
-            .where(Job.status == "published")
-        ) or 0
-    )
+        total_jobs = (
+            db.scalar(
+                select(func.count()).select_from(Job)
+            ) or 0
+        )
 
-    draft_jobs = (
-        db.scalar(
-            select(func.count())
-            .select_from(Job)
-            .where(Job.status == "draft")
-        ) or 0
-    )
+        published_jobs = (
+            db.scalar(
+                select(func.count())
+                .select_from(Job)
+                .where(
+                    Job.status == "published",
+                    or_(
+                        Job.closing_date.is_(None),
+                        func.date(Job.closing_date) >= today,
+                    ),
+                )
+            ) or 0
+        )
 
-    total_applications = (
-        db.scalar(
-            select(func.count()).select_from(Application)
-        ) or 0
-    )
+        draft_jobs = (
+            db.scalar(
+                select(func.count())
+                .select_from(Job)
+                .where(Job.status == "draft")
+            ) or 0
+        )
 
-    return {
-        "total_jobs": total_jobs,
-        "published_jobs": published_jobs,
-        "draft_jobs": draft_jobs,
-        "total_applications": total_applications
-    }
+        total_applications = (
+            db.scalar(
+                select(func.count())
+                .select_from(Application)
+            ) or 0
+        )
+
+        total_enquiries = (
+            db.scalar(
+                select(func.count())
+                .select_from(Enquiry)
+            ) or 0
+        )
+
+        return {
+            "total_jobs": total_jobs,
+            "published_jobs": published_jobs,
+            "draft_jobs": draft_jobs,
+            "total_applications": total_applications,
+            "total_enquiries": total_enquiries,
+        }
+
+    except SQLAlchemyError:
+        logger.exception(
+            "Could not retrieve administrator dashboard statistics"
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to retrieve dashboard statistics.",
+        ) from None
+
 
 # ============================================================
 # STARTUP
