@@ -8,7 +8,7 @@ from .base import Base
 from .enquiry import Enquiry
 from .jobs import Job
 from .applications import Application
-from .candidate_registration import CandidateRegistration
+from .candidate_registrations import CandidateRegistration
 
 
 __all__ = [
