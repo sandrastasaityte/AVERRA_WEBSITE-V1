@@ -5,24 +5,22 @@
    AVERRA STAFFING SOLUTIONS LTD
    JOBS PAGE MANAGEMENT
    File: frontend/images/jobs.js
-   Version: 5.6.0
-
-   Compatible with the supplied jobs.html.
+   Version: 5.7.0
 
    FEATURES
    - Loads vacancies from the AVERRA API
    - Supports common API response formats
    - Displays published and non-expired vacancies
-   - Populates the application vacancy dropdown
+   - Populates application vacancy dropdown
    - Supports general applications
    - Supports vacancy search
    - Supports category filtering
-   - Category matching supports slugs and category names
-   - Reset button clears search and category filters
+   - Reset button clears filters
    - Apply buttons select the correct vacancy
-   - Visible loading, success, empty and error messages
+   - Loading, success, empty and error messages
    - Retry support
    - Safe DOM rendering using textContent
+   - Expandable job descriptions (Read more / Show less)
    - Does not override application submission
    - Does not override mobile navigation
    - Does not initialise on pages without a jobs container
@@ -31,7 +29,7 @@
 (function (window, document) {
     "use strict";
 
-    const VERSION = "5.6.0";
+    const VERSION = "5.7.0";
 
     if (
         window.AVERRAJobs &&
@@ -48,8 +46,11 @@
         jobsEndpoint: "/api/jobs",
         requestTimeout: 20000,
         jobsLimit: 100,
+        contactEmail: "enquiries@averrastaffing.co.uk",
 
-        contactEmail: "enquiries@averrastaffing.co.uk"
+        // Description expansion settings
+        descriptionMaxLength: 350,
+        descriptionCollapsedHeight: "160px"
     });
 
     window.AVERRA_API_BASE_URL =
@@ -61,7 +62,8 @@
         loaded: false,
         error: null,
         requestNumber: 0,
-        initialised: false
+        initialised: false,
+        descriptionCounter: 0
     };
 
     const SELECTORS = {
@@ -841,6 +843,135 @@
     }
 
     /* --------------------------------------------------------
+       EXPANDABLE JOB DESCRIPTION
+       -------------------------------------------------------- */
+
+    function createJobDescription(description) {
+        const wrapper = createElement(
+            "div",
+            "job-description-wrapper"
+        );
+
+        const descriptionElement = createElement(
+            "p",
+            "job-description",
+            description
+        );
+
+        /*
+         * Keep descriptions with modest length fully visible.
+         * Long descriptions receive a Read more control.
+         */
+        if (
+            description.length <=
+            CONFIG.descriptionMaxLength
+        ) {
+            wrapper.appendChild(descriptionElement);
+            return wrapper;
+        }
+
+        state.descriptionCounter += 1;
+
+        const descriptionId =
+            "averra-job-description-" +
+            state.descriptionCounter;
+
+        descriptionElement.id = descriptionId;
+
+        descriptionElement.style.maxHeight =
+            CONFIG.descriptionCollapsedHeight;
+
+        descriptionElement.style.overflow = "hidden";
+
+        descriptionElement.style.position = "relative";
+
+        descriptionElement.style.whiteSpace = "pre-line";
+
+        descriptionElement.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        const toggleButton = createElement(
+            "button",
+            "job-description-toggle",
+            "Read full description"
+        );
+
+        toggleButton.type = "button";
+
+        toggleButton.setAttribute(
+            "aria-controls",
+            descriptionId
+        );
+
+        toggleButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        toggleButton.style.display = "inline-block";
+        toggleButton.style.marginTop = "8px";
+        toggleButton.style.cursor = "pointer";
+
+        toggleButton.addEventListener(
+            "click",
+            function () {
+                const isExpanded =
+                    toggleButton.getAttribute(
+                        "aria-expanded"
+                    ) === "true";
+
+                if (isExpanded) {
+                    descriptionElement.style.maxHeight =
+                        CONFIG.descriptionCollapsedHeight;
+
+                    descriptionElement.style.overflow =
+                        "hidden";
+
+                    descriptionElement.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                    toggleButton.textContent =
+                        "Read full description";
+
+                    toggleButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                } else {
+                    descriptionElement.style.maxHeight =
+                        "none";
+
+                    descriptionElement.style.overflow =
+                        "visible";
+
+                    descriptionElement.setAttribute(
+                        "aria-expanded",
+                        "true"
+                    );
+
+                    toggleButton.textContent =
+                        "Show less";
+
+                    toggleButton.setAttribute(
+                        "aria-expanded",
+                        "true"
+                    );
+                }
+            }
+        );
+
+        wrapper.appendChild(descriptionElement);
+        wrapper.appendChild(toggleButton);
+
+        return wrapper;
+    }
+
+    /* --------------------------------------------------------
        JOB CARD RENDERING
        -------------------------------------------------------- */
 
@@ -937,11 +1068,7 @@
 
         if (description) {
             card.appendChild(
-                createElement(
-                    "p",
-                    "job-description",
-                    description
-                )
+                createJobDescription(description)
             );
         }
 
@@ -1052,13 +1179,6 @@
             SELECTORS.jobsContainers
         );
 
-        /*
-         * IMPORTANT:
-         * If this script is loaded on a page without a jobs
-         * container, silently skip rendering.
-         *
-         * This fixes the careers.html console warning.
-         */
         if (containers.length === 0) {
             return;
         }
@@ -1440,11 +1560,6 @@
        -------------------------------------------------------- */
 
     function initialise() {
-        /*
-         * FIX:
-         * Do not initialise the jobs page system on unrelated
-         * pages such as careers.html when they have no jobs grid.
-         */
         const jobsContainer = queryFirst(
             SELECTORS.jobsContainers
         );
