@@ -1,8 +1,8 @@
 
 /**
  * AVERRA STAFFING SOLUTIONS LTD
- * Admin Dashboard
- * Version: 3.0.0
+ * File: admin/js/dashboard.js
+ * Version: 3.1.0
  *
  * Requires:
  *   admin/js/auth.js
@@ -17,12 +17,16 @@
 
     const admin = window.AVERRA_ADMIN;
 
-    if (!admin) {
-        console.error("AVERRA_ADMIN is unavailable. Make sure auth.js loads first.");
+    if (
+        !admin ||
+        typeof admin.api !== "function" ||
+        typeof admin.requireLogin !== "function"
+    ) {
+        console.error(
+            "AVERRA_ADMIN is unavailable. Check that auth.js loads first."
+        );
         return;
     }
-
-    const API_BASE_URL = admin.API_BASE_URL;
 
     const elements = {
         message: document.getElementById("dashboard-message"),
@@ -39,11 +43,20 @@
 
     let loading = false;
 
+    // ------------------------------------------------------------
+    // MESSAGES
+    // ------------------------------------------------------------
+
     function showMessage(message, type = "error") {
         if (!elements.message) return;
 
-        elements.message.textContent = message;
-        elements.message.className = `dashboard-message ${type}`;
+        elements.message.textContent = String(message || "");
+        elements.message.className = "message";
+
+        if (type) {
+            elements.message.classList.add(type);
+        }
+
         elements.message.hidden = false;
     }
 
@@ -52,22 +65,27 @@
 
         elements.message.textContent = "";
         elements.message.hidden = true;
+        elements.message.className = "message";
     }
+
+    // ------------------------------------------------------------
+    // HELPERS
+    // ------------------------------------------------------------
 
     function setText(element, value) {
         if (element) {
-            element.textContent = value;
+            element.textContent = String(value ?? "—");
         }
     }
 
     function formatNumber(value) {
         const number = Number(value);
 
-        if (!Number.isFinite(number)) {
-            return "0";
+        if (!Number.isFinite(number) || number < 0) {
+            return "—";
         }
 
-        return number.toLocaleString("en-GB");
+        return Math.floor(number).toLocaleString("en-GB");
     }
 
     function getJobsArray(response) {
@@ -76,19 +94,29 @@
         if (Array.isArray(response?.items)) return response.items;
         if (Array.isArray(response?.results)) return response.results;
 
-        return [];
+        throw new Error(
+            "The vacancies API returned an unexpected response format."
+        );
+    }
+
+    function getJobId(job) {
+        return job?.id ?? job?.job_id ?? null;
     }
 
     function getJobTitle(job) {
-        return job.title || job.job_title || "Untitled vacancy";
+        return job?.title || job?.job_title || "Untitled vacancy";
     }
 
     function getJobLocation(job) {
-        return job.location || job.location_name || "Location not specified";
+        return job?.location ||
+            job?.location_name ||
+            "Location not specified";
     }
 
     function getJobStatus(job) {
-        return String(job.status || "unknown").toLowerCase();
+        return String(job?.status || "unknown")
+            .trim()
+            .toLowerCase();
     }
 
     function escapeHTML(value) {
@@ -100,12 +128,37 @@
             .replaceAll("'", "&#039;");
     }
 
+    function showRecentJobsMessage(message) {
+        if (!elements.recentJobs) return;
+
+        elements.recentJobs.replaceChildren();
+
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 4;
+        cell.textContent = message;
+
+        row.appendChild(cell);
+        elements.recentJobs.appendChild(row);
+
+        if (elements.recentJobsEmpty) {
+            elements.recentJobsEmpty.hidden = true;
+        }
+    }
+
+    // ------------------------------------------------------------
+    // RECENT VACANCIES
+    // ------------------------------------------------------------
+
     function renderRecentJobs(jobs) {
         if (!elements.recentJobs) return;
 
-        elements.recentJobs.innerHTML = "";
+        elements.recentJobs.replaceChildren();
 
         if (!jobs.length) {
+            showRecentJobsMessage("No vacancies found.");
+
             if (elements.recentJobsEmpty) {
                 elements.recentJobsEmpty.hidden = false;
             }
@@ -117,27 +170,125 @@
             elements.recentJobsEmpty.hidden = true;
         }
 
-        jobs.slice(0, 5).forEach((job) => {
-            const title = escapeHTML(getJobTitle(job));
-            const location = escapeHTML(getJobLocation(job));
-            const status = escapeHTML(getJobStatus(job));
+        jobs.slice(0, 5).forEach(function (job) {
+            const row = document.createElement("tr");
 
-            const item = document.createElement("div");
-            item.className = "recent-job-item";
+            const titleCell = document.createElement("td");
+            titleCell.textContent = getJobTitle(job);
 
-            item.innerHTML = `
-                <div class="recent-job-info">
-                    <strong>${title}</strong>
-                    <span>${location}</span>
-                </div>
-                <span class="job-status status-${status}">
-                    ${status}
-                </span>
-            `;
+            const locationCell = document.createElement("td");
+            locationCell.textContent = getJobLocation(job);
 
-            elements.recentJobs.appendChild(item);
+            const statusCell = document.createElement("td");
+            const status = getJobStatus(job);
+
+            const statusBadge = document.createElement("span");
+            statusBadge.className = "job-status";
+
+            // Only use known statuses as CSS class names.
+            const allowedStatuses = [
+                "draft",
+                "published",
+                "closed",
+                "archived"
+            ];
+
+            if (allowedStatuses.includes(status)) {
+                statusBadge.classList.add("status-" + status);
+            }
+
+            statusBadge.textContent = status;
+            statusCell.appendChild(statusBadge);
+
+            const actionsCell = document.createElement("td");
+            const jobId = getJobId(job);
+
+            if (jobId !== null && jobId !== undefined) {
+                const editLink = document.createElement("a");
+
+                editLink.href =
+                    "job-form.html?id=" +
+                    encodeURIComponent(String(jobId));
+
+                editLink.textContent = "Edit";
+                editLink.setAttribute(
+                    "aria-label",
+                    "Edit " + getJobTitle(job)
+                );
+
+                actionsCell.appendChild(editLink);
+            } else {
+                actionsCell.textContent = "—";
+            }
+
+            row.appendChild(titleCell);
+            row.appendChild(locationCell);
+            row.appendChild(statusCell);
+            row.appendChild(actionsCell);
+
+            elements.recentJobs.appendChild(row);
         });
     }
+
+    // ------------------------------------------------------------
+    // DASHBOARD STATISTICS
+    // ------------------------------------------------------------
+
+    async function loadStatistics() {
+        const stats = await admin.api(
+            "/api/admin/dashboard/stats",
+            {
+                method: "GET"
+            }
+        );
+
+        if (!stats || typeof stats !== "object") {
+            throw new Error(
+                "The dashboard statistics response is invalid."
+            );
+        }
+
+        setText(
+            elements.totalJobs,
+            formatNumber(stats.total_jobs)
+        );
+
+        setText(
+            elements.publishedJobs,
+            formatNumber(stats.published_jobs)
+        );
+
+        setText(
+            elements.draftJobs,
+            formatNumber(stats.draft_jobs)
+        );
+
+        setText(
+            elements.totalApplications,
+            formatNumber(stats.total_applications)
+        );
+    }
+
+    // ------------------------------------------------------------
+    // RECENT VACANCY DATA
+    // ------------------------------------------------------------
+
+    async function loadRecentJobs() {
+        const response = await admin.api(
+            "/api/admin/jobs?limit=100&offset=0",
+            {
+                method: "GET"
+            }
+        );
+
+        const jobs = getJobsArray(response);
+
+        renderRecentJobs(jobs);
+    }
+
+    // ------------------------------------------------------------
+    // MAIN DASHBOARD LOADER
+    // ------------------------------------------------------------
 
     async function loadDashboard() {
         if (loading) return;
@@ -151,66 +302,79 @@
         }
 
         try {
-            /*
-             * Authentication is handled by auth.js.
-             * The API method returns parsed JSON.
-             */
             const authenticated = await admin.requireLogin();
 
-if (!authenticated) {
-    return;
-}
+            if (authenticated === false) {
+                return;
+            }
+
+            let statsError = null;
+            let jobsError = null;
 
             /*
-             * Load accurate statistics from the database.
+             * Load statistics and recent jobs independently.
+             * A failure in one section should not prevent
+             * the other section from loading.
              */
-            const stats = await admin.api(
-                "/api/admin/dashboard/stats",
-                {
-                    method: "GET"
-                }
-            );
 
-            setText(
-                elements.totalJobs,
-                formatNumber(stats.total_jobs)
-            );
+            try {
+                await loadStatistics();
+            } catch (error) {
+                statsError = error;
 
-            setText(
-                elements.publishedJobs,
-                formatNumber(stats.published_jobs)
-            );
+                console.error(
+                    "AVERRA dashboard statistics error:",
+                    error
+                );
+            }
 
-            setText(
-                elements.draftJobs,
-                formatNumber(stats.draft_jobs)
-            );
+            try {
+                await loadRecentJobs();
+            } catch (error) {
+                jobsError = error;
 
-            setText(
-                elements.totalApplications,
-                formatNumber(stats.total_applications)
-            );
+                console.error(
+                    "AVERRA recent vacancies error:",
+                    error
+                );
 
-            /*
-             * Load vacancies separately for the recent jobs section.
-             */
-            const jobsResponse = await admin.api(
-                "/api/admin/jobs?limit=100",
-                {
-                    method: "GET"
-                }
-            );
+                showRecentJobsMessage(
+                    "Unable to load recent vacancies. Please refresh."
+                );
+            }
 
-            const jobs = getJobsArray(jobsResponse);
-
-            renderRecentJobs(jobs);
+            if (statsError && jobsError) {
+                showMessage(
+                    "Unable to load dashboard statistics or vacancies. Please refresh.",
+                    "error"
+                );
+            } else if (statsError) {
+                showMessage(
+                    "Recent vacancies loaded, but statistics could not be loaded.",
+                    "error"
+                );
+            } else if (jobsError) {
+                showMessage(
+                    "Statistics loaded, but recent vacancies could not be loaded.",
+                    "error"
+                );
+            } else {
+                showMessage(
+                    "Dashboard updated successfully.",
+                    "success"
+                );
+            }
 
         } catch (error) {
-            console.error("Dashboard loading error:", error);
+            console.error(
+                "AVERRA dashboard loading error:",
+                error
+            );
 
             showMessage(
                 error?.message ||
-                "Unable to load dashboard. Please refresh the page."
+                "Unable to load dashboard. Please refresh.",
+                "error"
             );
 
         } finally {
@@ -218,18 +382,22 @@ if (!authenticated) {
 
             if (elements.refresh) {
                 elements.refresh.disabled = false;
-                elements.refresh.textContent = "Refresh Dashboard";
+                elements.refresh.textContent = "Refresh";
             }
         }
     }
 
+    // ------------------------------------------------------------
+    // INITIALISATION
+    // ------------------------------------------------------------
+
     if (elements.refresh) {
-        elements.refresh.addEventListener("click", loadDashboard);
+        elements.refresh.addEventListener(
+            "click",
+            loadDashboard
+        );
     }
 
-    /*
-     * Start dashboard after the scripts have loaded.
-     */
     loadDashboard();
 
 })();

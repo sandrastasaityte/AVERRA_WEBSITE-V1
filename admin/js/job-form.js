@@ -3,7 +3,7 @@
  * ============================================================
  * AVERRA STAFFING SOLUTIONS LTD
  * File: admin/js/job-form.js
- * Version: 3.8.1
+ * Version: 3.8.2
  * ============================================================
  *
  * Administrator vacancy create/edit form.
@@ -300,6 +300,7 @@
         }
     }
 
+    // FIXED: Accept normal positive numeric IDs.
     function validateJobId(id) {
         if (!/^[1-9]\d*$/.test(String(id))) {
             throw new Error(
@@ -318,18 +319,16 @@
         const location = value("location");
         const employmentType = value("employment_type");
         const salaryRange = value("salary_range");
-
         const description = value("description");
 
         /*
-         * FIX:
-         * Some AVERRA job-form HTML versions do not contain a separate
-         * summary field.
+         * Some AVERRA job-form HTML versions do not contain
+         * a separate summary field.
          *
          * If a summary field exists and contains text, use it.
-         * Otherwise, automatically create the summary from the
-         * beginning of the job description.
+         * Otherwise, generate the summary from the description.
          */
+
         const enteredSummary = value("summary");
 
         const summary = enteredSummary ||
@@ -403,9 +402,7 @@
         validateDate(closingDate);
 
         /*
-         * Matches JobCreate and JobUpdate in:
-         * backend/app/schemas/jobs.py
-         *
+         * Matches the JobCreate / JobUpdate API payload.
          * closing_date is sent as YYYY-MM-DD or null.
          */
 
@@ -814,9 +811,8 @@
         });
 
         /*
-         * The HTML page has its own Clear Form handler.
-         * This capture handler protects an existing vacancy,
-         * including one just created without a page reload.
+         * Protect an existing vacancy from accidental clearing.
+         * The HTML page may also have a Clear Form handler.
          */
 
         const resetButton = $("reset-button");
