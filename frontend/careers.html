@@ -22,6 +22,10 @@
             --text: #334155;
             --muted: #64748b;
             --border: #dce4ec;
+            --success-bg: #ecfdf5;
+            --success-text: #166534;
+            --error-bg: #fef2f2;
+            --error-text: #991b1b;
         }
 
         * { box-sizing: border-box; }
@@ -189,7 +193,14 @@
             transition: background .2s ease, transform .2s ease;
         }
 
-        .button:hover { transform: translateY(-2px); }
+        .button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .button:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
 
         .button-gold {
             color: var(--navy);
@@ -203,7 +214,9 @@
             background: var(--blue);
         }
 
-        .button-blue:hover { background: var(--navy); }
+        .button-blue:hover:not(:disabled) {
+            background: var(--navy);
+        }
 
         .hero .button { margin-top: 18px; }
 
@@ -338,12 +351,24 @@
         .form-status {
             display: none;
             margin: 15px 0;
-            padding: 12px;
+            padding: 14px;
             border-radius: 7px;
-            background: var(--light);
+            overflow-wrap: anywhere;
         }
 
         .form-status.is-visible { display: block; }
+
+        .form-status.is-success {
+            color: var(--success-text);
+            background: var(--success-bg);
+            border: 1px solid #bbf7d0;
+        }
+
+        .form-status.is-error {
+            color: var(--error-text);
+            background: var(--error-bg);
+            border: 1px solid #fecaca;
+        }
 
         .faq-list {
             max-width: 850px;
@@ -622,9 +647,9 @@
                 <h2>Register your interest</h2>
 
                 <p class="lead">
-                    Complete the form to prepare an email to our team.
-                    Please provide accurate information and do not include
-                    sensitive identity or financial documents.
+                    Complete the form to submit your registration directly
+                    to AVERRA. Please provide accurate information and do not
+                    include sensitive identity or financial documents.
                 </p>
             </div>
 
@@ -657,26 +682,28 @@
 
                     <div class="form-field">
                         <label for="first-name">First name *</label>
-                        <input id="first-name" name="First name"
-                               autocomplete="given-name" required>
+                        <input id="first-name" name="first_name"
+                               type="text" autocomplete="given-name"
+                               maxlength="75" required>
                     </div>
 
                     <div class="form-field">
                         <label for="last-name">Last name *</label>
-                        <input id="last-name" name="Last name"
-                               autocomplete="family-name" required>
+                        <input id="last-name" name="last_name"
+                               type="text" autocomplete="family-name"
+                               maxlength="75" required>
                     </div>
 
                     <div class="form-field">
                         <label for="email">Email address *</label>
-                        <input id="email" name="Email address" type="email"
-                               autocomplete="email" required>
+                        <input id="email" name="email" type="email"
+                               autocomplete="email" maxlength="254" required>
                     </div>
 
                     <div class="form-field">
                         <label for="nationality">Nationality *</label>
 
-                        <select id="nationality" name="Nationality" required>
+                        <select id="nationality" name="nationality" required>
                             <option value="">Select your nationality</option>
                             <option>Afghan</option>
                             <option>Albanian</option>
@@ -876,7 +903,7 @@
                     <div class="form-field">
                         <label for="country">Country of residence *</label>
 
-                        <select id="country" name="Country of residence"
+                        <select id="country" name="country_of_residence"
                                 autocomplete="country-name" required>
                             <option value="">Select your country of residence</option>
                             <option>Afghanistan</option>
@@ -956,7 +983,7 @@
 
                     <div class="form-field">
                         <label for="career-area">Career area *</label>
-                        <select id="career-area" name="Career area" required>
+                        <select id="career-area" name="career_area" required>
                             <option value="">Select a career area</option>
                             <option>Finance and Accounting</option>
                             <option>Administration and Business Support</option>
@@ -970,7 +997,7 @@
 
                     <div class="form-field">
                         <label for="experience">Professional experience *</label>
-                        <select id="experience" name="Professional experience" required>
+                        <select id="experience" name="professional_experience" required>
                             <option value="">Select your experience</option>
                             <option>Entry level</option>
                             <option>Less than 2 years</option>
@@ -986,7 +1013,7 @@
                         </label>
 
                         <select id="working-preference"
-                                name="Preferred working arrangement">
+                                name="working_preference">
                             <option value="">Select an arrangement</option>
                             <option>Remote</option>
                             <option>Hybrid</option>
@@ -997,22 +1024,23 @@
 
                     <div class="form-field">
                         <label for="skills">Skills and experience</label>
-                        <textarea id="skills" name="Skills and experience"
+                        <textarea id="skills" name="skills"
                                   maxlength="3000"
                                   placeholder="Describe your skills, qualifications and relevant experience."></textarea>
                     </div>
 
                     <div class="form-field">
                         <label for="additional">Additional information</label>
-                        <textarea id="additional" name="Additional information"
+                        <textarea id="additional" name="additional_info"
                                   maxlength="2000"
                                   placeholder="Tell us about the opportunities you are interested in."></textarea>
                     </div>
 
                     <label class="privacy-consent">
-                        <input type="checkbox"
-                               name="Privacy acknowledgement"
-                               value="Yes" required>
+                        <input id="privacy-consent"
+                               type="checkbox"
+                               name="privacy_consent"
+                               value="true" required>
 
                         <span>
                             I have read the
@@ -1027,15 +1055,20 @@
                     <div class="form-status" id="form-status"
                          role="status" aria-live="polite"></div>
 
-                    <button class="button button-blue" type="submit">
-                        Prepare Registration Email
+                    <button class="button button-blue" id="submit-registration"
+                            type="submit">
+                        Submit Registration
                     </button>
 
                     <p class="form-note">
-                        This form opens your email application. It does not send
-                        or store your details on the website. Review the prepared
-                        email and press Send. If no email application opens,
-                        contact enquiries@averrastaffing.co.uk directly.
+                        Your registration will be submitted securely to the
+                        AVERRA registration system. It will be stored separately
+                        from applications for specific vacancies. You will receive
+                        an on-screen confirmation if it is successfully saved.
+                        Alternatively, contact
+                        <a href="mailto:enquiries@averrastaffing.co.uk">
+                            enquiries@averrastaffing.co.uk
+                        </a>.
                     </p>
 
                 </form>
@@ -1198,6 +1231,10 @@
             yearElement.textContent = String(new Date().getFullYear());
         }
 
+        // ----------------------------------------------------
+        // MOBILE NAVIGATION
+        // ----------------------------------------------------
+
         const menuToggle = document.getElementById("menu-toggle");
         const menuLabel = document.getElementById("menu-label");
         const navigation = document.getElementById("main-navigation");
@@ -1260,59 +1297,199 @@
             });
         }
 
-        const form = document.getElementById("candidate-form");
-        const status = document.getElementById("form-status");
+        // ----------------------------------------------------
+        // CANDIDATE REGISTRATION
+        // ----------------------------------------------------
 
-        if (!form || !status) {
+        const form = document.getElementById("candidate-form");
+        const statusBox = document.getElementById("form-status");
+        const submitButton = document.getElementById("submit-registration");
+
+        if (!form || !statusBox || !submitButton) {
             return;
         }
 
-        form.addEventListener("submit", event => {
+        // Use the configured API base URL if the website provides one.
+        // Otherwise, use the live AVERRA backend.
+        const configuredApiBase =
+            typeof window.AVERRA_API_BASE_URL === "string"
+                ? window.AVERRA_API_BASE_URL.trim()
+                : "";
+
+        const API_BASE_URL = (
+            configuredApiBase ||
+            "https://averra-backend-dn23.onrender.com"
+        ).replace(/\/+$/, "");
+
+        const REGISTRATION_ENDPOINT =
+            API_BASE_URL + "/api/candidate-registrations";
+
+        const showStatus = (message, type) => {
+            statusBox.textContent = message;
+
+            statusBox.classList.remove(
+                "is-success",
+                "is-error"
+            );
+
+            statusBox.classList.add(
+                "is-visible",
+                type === "success" ? "is-success" : "is-error"
+            );
+        };
+
+        const getErrorMessage = (data, fallback) => {
+            if (typeof data?.detail === "string") {
+                return data.detail;
+            }
+
+            if (Array.isArray(data?.detail)) {
+                return data.detail
+                    .map(item => item.msg || "Please check your information.")
+                    .join(" ");
+            }
+
+            if (typeof data?.message === "string") {
+                return data.message;
+            }
+
+            return fallback;
+        };
+
+        form.addEventListener("submit", async event => {
             event.preventDefault();
 
             if (!form.reportValidity()) {
                 return;
             }
 
-            const formData = new FormData(form);
+            if (submitButton.disabled) {
+                return;
+            }
 
-            const lines = [
-                "AVERRA STAFFING SOLUTIONS LTD",
-                "CANDIDATE EXPRESSION OF INTEREST",
-                "",
-                "Candidate registration details:",
-                ""
-            ];
+            const payload = {
+                first_name: form.elements.first_name.value.trim(),
+                last_name: form.elements.last_name.value.trim(),
+                email: form.elements.email.value.trim().toLowerCase(),
 
-            formData.forEach((value, key) => {
-                lines.push(key + ": " + String(value).trim());
-                lines.push("");
-            });
+                nationality: form.elements.nationality.value.trim(),
+                country_of_residence:
+                    form.elements.country_of_residence.value.trim(),
 
-            lines.push(
-                "Please review these details before sending this email."
+                career_area: form.elements.career_area.value.trim(),
+
+                professional_experience:
+                    form.elements.professional_experience.value.trim(),
+
+                working_preference:
+                    form.elements.working_preference.value.trim() || null,
+
+                skills:
+                    form.elements.skills.value.trim() || null,
+
+                additional_info:
+                    form.elements.additional_info.value.trim() || null,
+
+                privacy_consent:
+                    form.elements.privacy_consent.checked
+            };
+
+            // Client-side check before sending.
+            if (!payload.privacy_consent) {
+                showStatus(
+                    "Please read and accept the Privacy Policy acknowledgement.",
+                    "error"
+                );
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Submitting registration...";
+
+            statusBox.classList.remove(
+                "is-visible",
+                "is-success",
+                "is-error"
             );
 
-            const recipient = "enquiries@averrastaffing.co.uk";
+            try {
+                const response = await fetch(REGISTRATION_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            const subject =
-                "AVERRA Careers - Candidate Expression of Interest";
+                let responseData = {};
 
-            const body = lines.join("\r\n");
+                try {
+                    responseData = await response.json();
+                } catch {
+                    responseData = {};
+                }
 
-            const mailtoUrl =
-                "mailto:" + recipient +
-                "?subject=" + encodeURIComponent(subject) +
-                "&body=" + encodeURIComponent(body);
+                if (!response.ok) {
+                    throw new Error(
+                        getErrorMessage(
+                            responseData,
+                            "Your registration could not be submitted. Please try again."
+                        )
+                    );
+                }
 
-            status.classList.add("is-visible");
+                if (
+                    responseData.success !== true ||
+                    !responseData.registration_id
+                ) {
+                    throw new Error(
+                        "The server response could not be confirmed. Please contact AVERRA before submitting again."
+                    );
+                }
 
-            status.textContent =
-                "Your email application should open with your registration " +
-                "details. Please review the email and press Send. If it does " +
-                "not open, email enquiries@averrastaffing.co.uk directly.";
+                showStatus(
+                    "Thank you. Your registration has been successfully saved. " +
+                    "Your registration reference is #" +
+                    responseData.registration_id +
+                    ". You can use this reference if you contact AVERRA about your registration.",
+                    "success"
+                );
 
-            window.location.href = mailtoUrl;
+                form.reset();
+
+                submitButton.textContent = "Registration Submitted";
+
+                // Restore the button after a successful submission.
+                window.setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Submit Another Registration";
+                }, 2500);
+
+            } catch (error) {
+                console.error(
+                    "AVERRA candidate registration error:",
+                    error
+                );
+
+                let message = error.message ||
+                    "We could not submit your registration.";
+
+                if (
+                    error instanceof TypeError ||
+                    message.toLowerCase().includes("failed to fetch")
+                ) {
+                    message =
+                        "We could not connect to the AVERRA registration server. " +
+                        "Please check your internet connection and try again. " +
+                        "If the problem continues, contact enquiries@averrastaffing.co.uk.";
+                }
+
+                showStatus(message, "error");
+
+                submitButton.disabled = false;
+                submitButton.textContent = "Try Again";
+            }
         });
 
     });
@@ -1321,3 +1498,4 @@
 
 </body>
 </html>
+
