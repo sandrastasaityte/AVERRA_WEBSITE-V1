@@ -1,0 +1,194 @@
+/* ============================================================
+   AVERRA STAFFING SOLUTIONS LTD
+   File: admin/css/admin-header.css
+   Version: 1.0.0
+
+   Shared responsive administrator navigation.
+   ============================================================ */
+
+.admin-header[data-shared-admin-header] {
+    position: relative;
+    z-index: 100;
+    width: 100%;
+    min-height: 86px;
+    padding: 14px 28px;
+    background: #0b1f33;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-sizing: border-box;
+    border-bottom: 3px solid #c89b3c;
+}
+
+.admin-header[data-shared-admin-header] *,
+.admin-header[data-shared-admin-header] *::before,
+.admin-header[data-shared-admin-header] *::after {
+    box-sizing: border-box;
+}
+
+.admin-header .admin-header-brand {
+    flex: 0 0 auto;
+    min-width: 190px;
+}
+
+.admin-header .brand {
+    margin: 0;
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    line-height: 1.2;
+}
+
+.admin-header .brand span {
+    color: #c89b3c;
+}
+
+.admin-header .header-subtitle {
+    margin: 5px 0 0;
+    color: #cbd5e1;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+.admin-header .admin-menu-toggle {
+    display: none;
+    min-height: 42px;
+    padding: 8px 13px;
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 6px;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-header .admin-primary-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.admin-header .admin-primary-nav a,
+.admin-header .admin-primary-nav button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 13px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        color .2s ease,
+        border-color .2s ease;
+}
+
+.admin-header .admin-primary-nav a:hover,
+.admin-header .admin-primary-nav button:hover {
+    background: #1d5f91;
+    color: #ffffff;
+}
+
+.admin-header .admin-primary-nav a.active {
+    background: #1d5f91;
+    border-color: #397eae;
+    color: #ffffff;
+}
+
+.admin-header .admin-primary-nav .admin-website-link {
+    margin-left: 8px;
+    border-color: rgba(255, 255, 255, .35);
+}
+
+.admin-header .admin-primary-nav .admin-logout-button {
+    border-color: #c89b3c;
+    color: #f5d99b;
+}
+
+.admin-header .admin-primary-nav .admin-logout-button:hover {
+    background: #c89b3c;
+    border-color: #c89b3c;
+    color: #071522;
+}
+
+.admin-header a:focus-visible,
+.admin-header button:focus-visible {
+    outline: 3px solid #f2c66d;
+    outline-offset: 3px;
+}
+
+@media (max-width: 1000px) {
+    .admin-header[data-shared-admin-header] {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px;
+    }
+
+    .admin-header .admin-header-top {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .admin-header .admin-menu-toggle {
+        display: inline-flex;
+    }
+
+    .admin-header .admin-primary-nav {
+        display: none;
+        width: 100%;
+        align-items: stretch;
+        justify-content: flex-start;
+        flex-direction: column;
+        gap: 5px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, .16);
+    }
+
+    .admin-header .admin-primary-nav.is-open {
+        display: flex;
+    }
+
+    .admin-header .admin-primary-nav a,
+    .admin-header .admin-primary-nav button {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 11px 13px;
+    }
+
+    .admin-header .admin-primary-nav .admin-website-link {
+        margin: 5px 0 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-header[data-shared-admin-header] {
+        padding: 14px 15px;
+    }
+
+    .admin-header .brand {
+        font-size: 20px;
+    }
+
+    .admin-header .header-subtitle {
+        font-size: 11px;
+    }
+}
