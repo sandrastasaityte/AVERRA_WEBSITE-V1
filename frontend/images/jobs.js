@@ -1,10 +1,11 @@
+
 "use strict";
 
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    JOBS PAGE MANAGEMENT
    File: frontend/images/jobs.js
-   Version: 5.5.0
+   Version: 5.6.0
 
    Compatible with the supplied jobs.html.
 
@@ -20,16 +21,17 @@
    - Reset button clears search and category filters
    - Apply buttons select the correct vacancy
    - Visible loading, success, empty and error messages
-   - Safe DOM rendering using textContent
    - Retry support
+   - Safe DOM rendering using textContent
    - Does not override application submission
    - Does not override mobile navigation
+   - Does not initialise on pages without a jobs container
    ============================================================ */
 
 (function (window, document) {
     "use strict";
 
-    const VERSION = "5.5.0";
+    const VERSION = "5.6.0";
 
     if (
         window.AVERRAJobs &&
@@ -58,7 +60,8 @@
         loading: false,
         loaded: false,
         error: null,
-        requestNumber: 0
+        requestNumber: 0,
+        initialised: false
     };
 
     const SELECTORS = {
@@ -1049,11 +1052,14 @@
             SELECTORS.jobsContainers
         );
 
+        /*
+         * IMPORTANT:
+         * If this script is loaded on a page without a jobs
+         * container, silently skip rendering.
+         *
+         * This fixes the careers.html console warning.
+         */
         if (containers.length === 0) {
-            console.warn(
-                "AVERRA Jobs: no jobs container found."
-            );
-
             return;
         }
 
@@ -1434,10 +1440,30 @@
        -------------------------------------------------------- */
 
     function initialise() {
+        /*
+         * FIX:
+         * Do not initialise the jobs page system on unrelated
+         * pages such as careers.html when they have no jobs grid.
+         */
+        const jobsContainer = queryFirst(
+            SELECTORS.jobsContainers
+        );
+
+        if (!jobsContainer) {
+            return;
+        }
+
+        if (state.initialised) {
+            return;
+        }
+
+        state.initialised = true;
+
         setupRetryButtons();
         setupResetButtons();
         setupFilters();
         setupApplicationForms();
+
         loadJobs();
     }
 
