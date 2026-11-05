@@ -1702,3 +1702,248 @@ dialog {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* =========================================================
+   26. AVERRA SHARED ADMIN HEADER
+========================================================= */
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    min-height: 88px;
+    padding: 16px max(20px, calc((100% - 1180px) / 2));
+    background: linear-gradient(110deg, #071522, #102d47);
+    border-bottom: 3px solid var(--admin-gold);
+    box-shadow: 0 5px 18px rgba(7, 21, 34, 0.12);
+}
+
+.admin-header > div {
+    min-width: 190px;
+}
+
+.admin-header .brand {
+    margin: 0;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+}
+
+.admin-header .brand span {
+    color: var(--admin-gold);
+}
+
+.admin-header .header-subtitle {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+}
+
+.admin-header .admin-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.admin-header .admin-nav a {
+    padding: 9px 12px;
+    color: rgba(255, 255, 255, 0.85);
+    background: transparent;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.admin-header .admin-nav a:hover,
+.admin-header .admin-nav a[aria-current="page"] {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.admin-header .admin-nav a.button-secondary {
+    color: var(--admin-navy);
+    background: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+.admin-header .admin-nav a.button-secondary:hover {
+    color: var(--admin-blue-dark);
+    background: #edf4f9;
+}
+
+.admin-header .admin-nav button.button-secondary {
+    color: var(--admin-navy);
+    background: var(--admin-gold);
+    border-color: var(--admin-gold);
+}
+
+.admin-header .admin-nav button.button-secondary:hover {
+    background: #d6aa52;
+    border-color: #d6aa52;
+}
+
+/* =========================================================
+   27. LOGIN HEADER
+========================================================= */
+
+.login-header {
+    margin-bottom: 22px;
+    text-align: center;
+}
+
+.login-header .brand {
+    margin-bottom: 5px;
+    color: var(--admin-navy);
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+}
+
+.login-header .brand span {
+    color: var(--admin-gold);
+}
+
+.login-header .header-subtitle {
+    margin-bottom: 18px;
+    color: var(--admin-text-muted);
+    font-size: 12px;
+}
+
+.login-intro {
+    margin: 0;
+    color: var(--admin-navy);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.login-divider {
+    height: 1px;
+    margin: 22px 0;
+    background: var(--admin-border);
+}
+
+.login-footer {
+    padding-top: 20px;
+    margin-top: 22px;
+    border-top: 1px solid var(--admin-border);
+    text-align: center;
+}
+
+.login-footer p {
+    margin-bottom: 5px;
+}
+
+.login-footer a {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   28. JOBS PAGE SUPPORT
+========================================================= */
+
+.jobs-panel {
+    overflow: hidden;
+}
+
+.jobs-filters {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) minmax(170px, 220px) auto;
+    align-items: end;
+    gap: 14px;
+    margin: 20px 0;
+}
+
+.jobs-filters > div {
+    min-width: 0;
+}
+
+.jobs-filters label {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.jobs-results {
+    margin: 12px 0;
+}
+
+.jobs-results p {
+    margin-bottom: 0;
+}
+
+.jobs-empty-state {
+    padding: 30px 15px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =========================================================
+   29. RESPONSIVE ADMIN HEADER AND JOB FILTERS
+========================================================= */
+
+@media (max-width: 850px) {
+    .admin-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px 20px;
+    }
+
+    .admin-header .admin-nav {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .jobs-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .jobs-clear-filter {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 520px) {
+    .admin-header .admin-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .admin-header .admin-nav a,
+    .admin-header .admin-nav button {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .jobs-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .jobs-clear-filter {
+        grid-column: auto;
+    }
+
+    .login-card {
+        padding: 26px 20px;
+    }
+}
+
