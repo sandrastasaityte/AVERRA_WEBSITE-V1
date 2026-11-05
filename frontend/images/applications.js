@@ -4,29 +4,23 @@
 /* ============================================================
    AVERRA STAFFING SOLUTIONS LTD
    File: frontend/images/applications.js
-   Version: 7.1.0
+   Version: 7.2.0
+
+   Compatible with backend/main.py v4.6.0.
 
    RESPONSIBILITIES
-   - Validate candidate details and CV files
-   - Submit applications to POST /api/applications
-   - Display success and error messages
+   - Validate application details and CV files
+   - Submit multipart applications
    - Prevent duplicate submissions
    - Handle network errors and timeouts
-   - Expose a public API for application testing
+   - Display application status
+   - Expose a public testing API
 
-   VACANCY MANAGEMENT
-   Handled by images/jobs.js.
-   This file does NOT fetch, filter or render vacancies.
+   VACANCIES
+   Managed by images/jobs.js.
 
    BACKEND
    https://averra-backend-dn23.onrender.com
-
-   CONTACT
-   enquiries@averrastaffing.co.uk
-
-   EXPECTED MULTIPART FIELDS
-   full_name, email, phone, job_id, job_title,
-   cover_letter, privacy_consent, cv
    ============================================================ */
 
 (() => {
@@ -41,11 +35,7 @@
 
         maxCvSize: 5 * 1024 * 1024,
 
-        acceptedExtensions: [
-            ".pdf",
-            ".doc",
-            ".docx"
-        ],
+        acceptedExtensions: [".pdf", ".doc", ".docx"],
 
         acceptedMimeTypes: [
             "application/pdf",
@@ -75,7 +65,8 @@
     });
 
     const state = {
-        submitting: false
+        submitting: false,
+        initialized: false
     };
 
     const $ = (selector, root = document) =>
@@ -89,7 +80,7 @@
     }
 
     /* ========================================================
-       MESSAGE DISPLAY
+       STATUS MESSAGES
        ======================================================== */
 
     function showMessage(element, message, type = "info") {
@@ -97,11 +88,14 @@
             if (message) {
                 console.info("[AVERRA]", message);
             }
+
             return;
         }
 
         element.textContent = message;
-        element.className = "jobs-message " + type;
+
+        element.className = "application-status " + type;
+
         element.hidden = !message;
 
         element.setAttribute(
@@ -137,6 +131,7 @@
         try {
             const response = await fetch(apiUrl(endpoint), {
                 ...options,
+
                 signal: controller.signal,
 
                 headers: {
@@ -187,7 +182,7 @@
         } catch (error) {
             if (error.name === "AbortError") {
                 throw new Error(
-                    "The request timed out. Please try again. If you are unsure whether your application was received, contact AVERRA before submitting again."
+                    "The request timed out. Please contact AVERRA before submitting again if you are unsure whether your application was received."
                 );
             }
 
@@ -277,15 +272,10 @@
         const coverLetter =
             (coverLetterInput?.value || "").trim();
 
-        if (!name) {
+        if (!name || name.length > 150) {
             return {
-                error: "Please enter your full name."
-            };
-        }
-
-        if (name.length > 150) {
-            return {
-                error: "Your name must be 150 characters or fewer."
+                error:
+                    "Please enter your full name using no more than 150 characters."
             };
         }
 
@@ -299,16 +289,17 @@
             };
         }
 
-        if (phone.length > 40) {
+        if (phone.length > 50) {
             return {
-                error: "Your phone number must be 40 characters or fewer."
+                error:
+                    "Your phone number must be 50 characters or fewer."
             };
         }
 
-        if (coverLetter.length > 5000) {
+        if (coverLetter.length > 10000) {
             return {
                 error:
-                    "Your cover letter must be no longer than 5,000 characters."
+                    "Your cover letter must be no longer than 10,000 characters."
             };
         }
 
@@ -333,9 +324,7 @@
         const cvError = validateCv(file);
 
         if (cvError) {
-            return {
-                error: cvError
-            };
+            return { error: cvError };
         }
 
         if (!privacyInput.checked) {
@@ -345,6 +334,15 @@
             };
         }
 
+        const selectedValue =
+            String(jobInput.value).trim();
+
+        const isGeneralApplication = [
+            "",
+            "general",
+            "other"
+        ].includes(selectedValue.toLowerCase());
+
         return {
             name,
             email,
@@ -352,11 +350,16 @@
             coverLetter,
             file,
 
-            jobId: jobInput.value,
+            jobId: isGeneralApplication
+                ? ""
+                : selectedValue,
 
-            jobTitle:
-                selectedOption.dataset.jobTitle ||
-                selectedOption.textContent.trim()
+            jobTitle: isGeneralApplication
+                ? "General Application"
+                : (
+                    selectedOption.dataset.jobTitle ||
+                    selectedOption.textContent.trim()
+                )
         };
     }
 
@@ -382,17 +385,12 @@
             button.textContent =
                 "Submitting application...";
 
-            button.setAttribute(
-                "aria-busy",
-                "true"
-            );
+            button.setAttribute("aria-busy", "true");
 
         } else {
             button.disabled = false;
 
-            button.removeAttribute(
-                "aria-busy"
-            );
+            button.removeAttribute("aria-busy");
 
             if (button.dataset.originalText !== undefined) {
                 button.textContent =
@@ -408,15 +406,11 @@
        ======================================================== */
 
     async function submitApplication(form) {
-        if (state.submitting) {
-            return;
-        }
+        if (state.submitting) return;
 
         const statusElement = $(SELECTORS.status);
 
-        if (!form.reportValidity()) {
-            return;
-        }
+        if (!form.reportValidity()) return;
 
         const values = validateForm(form);
 
@@ -432,40 +426,16 @@
 
         const formData = new FormData();
 
-        formData.append(
-            "full_name",
-            values.name
-        );
+        formData.append("full_name", values.name);
+        formData.append("email", values.email);
+        formData.append("phone", values.phone);
 
-        formData.append(
-            "email",
-            values.email
-        );
+        // Backend v4.6.0 expects blank for General Application.
+        formData.append("job_id", values.jobId);
 
-        formData.append(
-            "phone",
-            values.phone
-        );
-
-        formData.append(
-            "job_id",
-            values.jobId
-        );
-
-        formData.append(
-            "job_title",
-            values.jobTitle
-        );
-
-        formData.append(
-            "cover_letter",
-            values.coverLetter
-        );
-
-        formData.append(
-            "privacy_consent",
-            "true"
-        );
+        formData.append("job_title", values.jobTitle);
+        formData.append("cover_letter", values.coverLetter);
+        formData.append("privacy_consent", "true");
 
         formData.append(
             "cv",
@@ -492,18 +462,10 @@
                 }
             );
 
-            /*
-             * Backend success response expected:
-             * {
-             *   "success": true,
-             *   "message": "...",
-             *   "application_id": ...
-             * }
-             */
-
             if (
                 !result ||
-                result.success !== true
+                result.success !== true ||
+                result.application_id == null
             ) {
                 throw new Error(
                     "The server did not confirm receipt of your application. Please contact AVERRA before trying again."
@@ -521,13 +483,7 @@
 
             form.reset();
 
-            /*
-             * jobs.js owns the vacancy dropdown.
-             * Restore the default option without rebuilding it.
-             */
-
-            const jobSelect =
-                $(SELECTORS.job, form);
+            const jobSelect = $(SELECTORS.job, form);
 
             if (jobSelect) {
                 jobSelect.value = "";
@@ -541,7 +497,7 @@
 
                         detail: {
                             applicationId:
-                                result.application_id ?? null,
+                                result.application_id,
 
                             result
                         }
@@ -578,9 +534,11 @@
     function initialize() {
         const form = $(SELECTORS.form);
 
-        const cvInput = form
-            ? $(SELECTORS.cv, form)
-            : null;
+        if (!form) {
+            return;
+        }
+
+        const cvInput = $(SELECTORS.cv, form);
 
         if (cvInput) {
             cvInput.setAttribute(
@@ -590,21 +548,29 @@
         }
 
         if (
-            form &&
-            form.dataset.averraApplicationInitialized !== "true"
+            form.dataset.averraApplicationInitialized === "true"
         ) {
-            form.dataset.averraApplicationInitialized =
-                "true";
-
-            form.addEventListener(
-                "submit",
-                event => {
-                    event.preventDefault();
-
-                    submitApplication(form);
-                }
-            );
+            return;
         }
+
+        form.dataset.averraApplicationInitialized = "true";
+
+        /*
+         * Capture-phase handler:
+         * prevents an existing homepage inline/bubble handler
+         * from submitting the same form a second time.
+         */
+
+        form.addEventListener(
+            "submit",
+            event => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                submitApplication(form);
+            },
+            true
+        );
 
         const year = $(SELECTORS.year);
 
@@ -612,6 +578,8 @@
             year.textContent =
                 String(new Date().getFullYear());
         }
+
+        state.initialized = true;
     }
 
     if (document.readyState === "loading") {
@@ -631,22 +599,29 @@
     window.AVERRAApplications = Object.freeze({
         getConfig: () => ({
             apiBaseUrl: CONFIG.apiBaseUrl,
-
-            applicationsEndpoint:
-                CONFIG.applicationsEndpoint,
-
-            maxCvSize:
-                CONFIG.maxCvSize,
-
-            contactEmail:
-                CONFIG.contactEmail
+            applicationsEndpoint: CONFIG.applicationsEndpoint,
+            maxCvSize: CONFIG.maxCvSize,
+            contactEmail: CONFIG.contactEmail
         }),
 
         getStatus: () => ({
-            submitting: state.submitting
+            submitting: state.submitting,
+            initialized: state.initialized
         }),
 
-        initialize
+        initialize,
+
+        submit: () => {
+            const form = $(SELECTORS.form);
+
+            if (form) {
+                return submitApplication(form);
+            }
+
+            return Promise.reject(
+                new Error("Application form not found.")
+            );
+        }
     });
 
 })();
