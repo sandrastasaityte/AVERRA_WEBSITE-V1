@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
@@ -43,9 +44,7 @@
 
     a { color: var(--averra-blue); }
 
-    button, input, select, textarea {
-      font: inherit;
-    }
+    button, input, select, textarea { font: inherit; }
 
     button:focus-visible,
     a:focus-visible,
@@ -316,8 +315,87 @@
       resize: vertical;
     }
 
+    /* Jobs section toolbar */
+    .jobs-display-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 14px 18px;
+      background: var(--averra-white);
+      border: 1px solid var(--averra-border);
+      border-radius: 8px;
+    }
+
+    .jobs-display-controls p {
+      margin: 0;
+      color: #4d5c6d;
+      font-size: 14px;
+    }
+
+    .jobs-toggle-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      color: var(--averra-white);
+      background: var(--averra-navy);
+      border: 1px solid var(--averra-navy);
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    .jobs-toggle-button:hover {
+      background: var(--averra-blue);
+      border-color: var(--averra-blue);
+    }
+
+    .jobs-toggle-icon {
+      display: inline-block;
+      transition: transform .2s ease;
+    }
+
+    .jobs-toggle-button[aria-expanded="false"] .jobs-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Scrollable published jobs panel */
+    .jobs-scroll-area {
+      max-height: 490px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 5px 8px 15px 5px;
+      border-radius: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--averra-blue) #e5edf4;
+    }
+
+    .jobs-scroll-area::-webkit-scrollbar {
+      width: 9px;
+    }
+
+    .jobs-scroll-area::-webkit-scrollbar-track {
+      background: #e5edf4;
+      border-radius: 10px;
+    }
+
+    .jobs-scroll-area::-webkit-scrollbar-thumb {
+      background: var(--averra-blue);
+      border-radius: 10px;
+    }
+
+    .jobs-scroll-area::-webkit-scrollbar-thumb:hover {
+      background: var(--averra-navy);
+    }
+
     .job-count {
-      margin: 0 0 22px;
+      margin: 0 0 14px;
       color: #4d5c6d;
       font-size: 14px;
     }
@@ -392,9 +470,7 @@
       font-weight: 600;
     }
 
-    .application-status:empty {
-      display: none;
-    }
+    .application-status:empty { display: none; }
 
     .application-status.success {
       color: #155724;
@@ -534,6 +610,31 @@
       .application-panel { padding: 20px; }
       .field-full { grid-column: auto; }
       .footer-bottom { flex-direction: column; }
+
+      .jobs-scroll-area {
+        max-height: 430px;
+        padding: 3px 3px 10px;
+      }
+
+      .jobs-display-controls {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .jobs-toggle-button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
     }
   </style>
 </head>
@@ -574,9 +675,7 @@
     <section class="hero">
       <div class="container hero-content">
         <span class="eyebrow">UK–India Outsourcing</span>
-
         <h1>Connecting UK Businesses with Global Talent</h1>
-
         <p>
           AVERRA Staffing Solutions helps UK businesses access skilled
           professionals based in India through remote staffing and outsourcing
@@ -784,18 +883,34 @@
           <button class="button" id="reset-jobs" type="button">Reset</button>
         </div>
 
-        <p class="job-count" id="jobs-count" aria-live="polite">
-          Loading published vacancies…
-        </p>
-
-        <div class="cards" id="job-list" aria-live="polite"></div>
-
-        <div class="empty-state" id="no-jobs" hidden>
-          <h3 id="jobs-empty-title">No published vacancies are currently available</h3>
-          <p id="jobs-empty-message">
-            Please check again later, or register your general interest below.
+        <!-- Jobs count and minimize/expand control -->
+        <div class="jobs-display-controls">
+          <p id="jobs-count" aria-live="polite">
+            Loading published vacancies…
           </p>
-          <a class="button" href="#application">Register General Interest</a>
+
+          <button
+            class="jobs-toggle-button"
+            id="toggle-jobs-view"
+            type="button"
+            aria-controls="jobs-scroll-area"
+            aria-expanded="true">
+            <span id="jobs-toggle-label">Hide vacancies</span>
+            <span class="jobs-toggle-icon" aria-hidden="true">▲</span>
+          </button>
+        </div>
+
+        <!-- Collapsible scrollable job panel -->
+        <div class="jobs-scroll-area" id="jobs-scroll-area">
+          <div class="cards" id="job-list" aria-live="polite"></div>
+
+          <div class="empty-state" id="no-jobs" hidden>
+            <h3 id="jobs-empty-title">No published vacancies are currently available</h3>
+            <p id="jobs-empty-message">
+              Please check again later, or register your general interest below.
+            </p>
+            <a class="button" href="#application">Register General Interest</a>
+          </div>
         </div>
 
         <p style="text-align:center;margin-top:30px">
@@ -1075,6 +1190,11 @@
       const emptyMessage = document.getElementById("jobs-empty-message");
       const roleSelect = document.getElementById("applicant-role");
 
+      // Jobs collapse/expand controls
+      const jobsScrollArea = document.getElementById("jobs-scroll-area");
+      const jobsToggleButton = document.getElementById("toggle-jobs-view");
+      const jobsToggleLabel = document.getElementById("jobs-toggle-label");
+
       const applicationForm = document.getElementById("cv-application-form");
       const applicationStatus = document.getElementById("cv-application-status");
       const submitButton = document.getElementById("cv-submit-button");
@@ -1082,6 +1202,32 @@
 
       let allJobs = [];
       let isSubmitting = false;
+      let jobsExpanded = true;
+
+      // Minimize / expand published vacancies
+      if (jobsToggleButton && jobsScrollArea) {
+        jobsToggleButton.addEventListener("click", function () {
+          jobsExpanded = !jobsExpanded;
+
+          jobsScrollArea.hidden = !jobsExpanded;
+
+          jobsToggleButton.setAttribute(
+            "aria-expanded",
+            String(jobsExpanded)
+          );
+
+          jobsToggleLabel.textContent = jobsExpanded
+            ? "Hide vacancies"
+            : "Show vacancies";
+
+          jobsToggleButton.setAttribute(
+            "aria-label",
+            jobsExpanded
+              ? "Hide published vacancies"
+              : "Show published vacancies"
+          );
+        });
+      }
 
       const categoryLabels = {
         finance: "Finance & Accounting",
